@@ -90,7 +90,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [1025 1025]
+base_shape := [4097 4097]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
