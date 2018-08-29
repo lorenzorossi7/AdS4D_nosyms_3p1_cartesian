@@ -90,7 +90,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [1025 513]
+base_shape := [65 33]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
@@ -180,7 +180,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 32000
+steps := 1
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-12
@@ -209,18 +209,18 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 3
-save_1_vars := [ "iresxx" "iresyy" "irespsi" ]
+num_save_1_vars := 1
+save_1_vars := [ "iresall" ]
 
-num_save_2_vars := 1
-save_2_vars := [ "phi1" ]
+num_save_2_vars := 2
+save_2_vars := [ "phi1" "psi" ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_BG_qb2_L5_"
+save_tag := "AdS4D_BG_qb2_L1_"
 
-save_ivec := 1-*/80
+save_ivec := 1-*/1
 
 #-----------------------------------------------------
 

@@ -252,7 +252,7 @@ c-----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         ! initialize metric given zeta, using full metric expression
-        ! g0_ij=g0_ij_ads*zeta^2, and 
+        ! g0_ij=g0_ij_ads*zeta^4, and 
         ! g-bar expression g0_ij=g0_ij_ads+gb_ij*(1-rho0^2)
         ! psi expression g0_psi=g0_psi_ads+psi*(1-rho0^2)*y0^2
         do i=2,Nx-1
@@ -361,7 +361,6 @@ c----------------------------------------------------------------------
         f0_x(2)=(f0(i+1,j)-f0(i-1,j))/2/dx!f_x
         f0_x(3)=(f0(i,j+1)-f0(i,j-1))/2/dy!f_y
         f0_x(4)=0
-        f0_x(5)=0
 
         f0_xx(1,1)=0
         f0_xx(1,2)=0
