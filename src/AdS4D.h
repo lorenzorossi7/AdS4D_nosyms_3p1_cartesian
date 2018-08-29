@@ -36,7 +36,6 @@ extern real ex_r[MAX_BHS][2],ex_xc[MAX_BHS][2];
 
 extern int bh_background,background,skip_constraints;
 extern int use_bg_inc,output_ires,output_quasiset;
-extern int which_gb_ii_res,which_gb_ii_delta_ads; 
 
 extern int interptype;
 extern int i_shift;
@@ -121,7 +120,7 @@ extern real *mask,*mask_mg,*chr,*chr_mg,AMRD_ex;
 extern real *gu_tt,*gu_tx,*gu_ty,*gu_xx,*gu_xy,*gu_yy,*m_g_det;
 extern real *kg_ires,*alpha,*theta,*f,*K;
 
-extern real *phi1_res,*phi4_res,*gb_res,*gb_ii_res;
+extern real *phi1_res,*phi4_res,*gb_res;
 extern real *efe_tt_ires,*efe_tx_ires,*efe_ty_ires;
 extern real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires;
 extern real *efe_psi_ires;
@@ -186,7 +185,7 @@ extern int Hb_y_gfn,Hb_y_n_gfn,Hb_y_np1_gfn,Hb_y_nm1_gfn;
 extern int mask_gfn,mask_mg_gfn,chr_gfn,chr_mg_gfn;
 extern int kg_ires_gfn,alpha_gfn,theta_gfn;
 
-extern int phi1_res_gfn,phi4_res_gfn,gb_res_gfn,gb_ii_res_gfn;
+extern int phi1_res_gfn,phi4_res_gfn,gb_res_gfn;
 extern int phi4_r_res_gfn,phi4_i_res_gfn;
 extern int efe_tt_ires_gfn,efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn;
 extern int efe_psi_ires_gfn;
