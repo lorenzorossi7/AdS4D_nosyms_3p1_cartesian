@@ -1,6 +1,7 @@
 c----------------------------------------------------------------------
 c Relaxation, Lop, Residual routines for MG solver for zeta
 c satisfying L.zeta=0, with induced MG right-hand side R giving L.zeta=R
+c with g0_ij=g0_ij_ads*zeta^4 following 4D discussion in Chapter 6 gr-qc/0703035
 c----------------------------------------------------------------------
 
 c-----------------------------------------------------------------------
@@ -140,7 +141,7 @@ c-----------------------------------------------------------------------
 
                 ! computes normal residual L.zeta
                 !(NOTE: the physical energy density rhoE is such that
-                ! rhoE_grad=trhoE_grad*zeta^(-2), rhoE_ptl=trhoE_ptl)
+                ! rhoE_grad=trhoE_grad*zeta^(-4), rhoE_ptl=trhoE_ptl)
                 call df_int(zeta,zeta_x,ddzeta,ddzeta_Jac,
      &                      grad_zeta_sq,
      &                      x,y,i,j,chr,L,ex,Nx,Ny)
