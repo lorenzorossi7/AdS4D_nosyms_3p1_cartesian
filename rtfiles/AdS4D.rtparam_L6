@@ -5,15 +5,15 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.0056174
+phi1_amp_1 := 0.005
 phi1_r0_1 := 0.0
-phi1_delta_1 := 0.2
+phi1_delta_1 := 0.3
 phi1_x0_1 := [0.0 0.0]
 phi1_ecc_1 := [0 0]
-phi1_B_1 := 0.004
+phi1_B_1 := 0.00
 
-rhoc := 0.4
-rhod := 0.8
+rhoc := 0.0
+rhod := 0.46
 stype := 1
 
 #AdS4D-Schwarzschild BH ID#
@@ -180,7 +180,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 8
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-12
@@ -220,7 +220,7 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_BG_qb2_L6_"
 
-save_ivec := 1-*/1
+save_ivec := 1-*/8
 
 #-----------------------------------------------------
 
