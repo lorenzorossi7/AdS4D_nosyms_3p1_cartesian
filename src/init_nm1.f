@@ -157,14 +157,14 @@ c----------------------------------------------------------------------
         !(lambda4=-(n-1)(n-2)/2/L^2) for n=4 dimensional AdS)
         lambda4=-3/L/L
 
-        is=1
-        js=1
-        ie=Nx
-        je=Ny
-        if (phys_bdy(1).eq.1) is=2
-        if (phys_bdy(3).eq.1) js=2
-        if (phys_bdy(2).eq.1) ie=Nx-1
-        if (phys_bdy(4).eq.1) je=Ny-1
+        is=2
+        js=2
+        ie=Nx-1
+        je=Ny-1
+!        if (phys_bdy(1).eq.1) is=2
+!        if (phys_bdy(3).eq.1) js=2
+!        if (phys_bdy(2).eq.1) ie=Nx-1
+!        if (phys_bdy(4).eq.1) je=Ny-1
 
         do i=is,ie
           do j=js,je
