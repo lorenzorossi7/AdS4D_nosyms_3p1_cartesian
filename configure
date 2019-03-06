@@ -916,7 +916,7 @@ else
 
                     
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                     
@@ -932,33 +932,33 @@ else
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS="-O6 -fno-second-underscore"
+      F77FLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS="-O6 -fno-second-underscore"
+      F77LFLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS="-O6 -fno-second-underscore"
+      F90FLAGS="-O3 -fno-second-underscore"
    fi
 
                     else
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                     fi
@@ -999,7 +999,7 @@ else
 
                  
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                  
@@ -1014,12 +1014,12 @@ else
 
                  
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                  
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                  
@@ -1029,7 +1029,7 @@ else
 
                  
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                  F77_TRANSFORM="touch";
@@ -1774,7 +1774,7 @@ else
 
                     
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                     
@@ -1790,33 +1790,33 @@ else
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS="-O6 -fno-second-underscore"
+      F77FLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS="-O6 -fno-second-underscore"
+      F77LFLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS="-O6 -fno-second-underscore"
+      F90FLAGS="-O3 -fno-second-underscore"
    fi
 
                     else
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                     fi
@@ -1857,7 +1857,7 @@ else
 
                  
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                  
@@ -1872,12 +1872,12 @@ else
 
                  
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                  
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                  
@@ -1887,7 +1887,7 @@ else
 
                  
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                  F77_TRANSFORM="touch";
@@ -2397,7 +2397,7 @@ else
 
                     
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                     
@@ -2413,33 +2413,33 @@ else
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS="-O6 -fno-second-underscore"
+      F77FLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS="-O6 -fno-second-underscore"
+      F77LFLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS="-O6 -fno-second-underscore"
+      F90FLAGS="-O3 -fno-second-underscore"
    fi
 
                     else
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                     fi
@@ -2480,7 +2480,7 @@ else
 
                  
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                  
@@ -2495,12 +2495,12 @@ else
 
                  
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                  
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                  
@@ -2510,7 +2510,7 @@ else
 
                  
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                  F77_TRANSFORM="touch";
@@ -3115,7 +3115,7 @@ else
 
                     
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                     
@@ -3131,33 +3131,33 @@ else
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS="-O6 -fno-second-underscore"
+      F77FLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS="-O6 -fno-second-underscore"
+      F77LFLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS="-O6 -fno-second-underscore"
+      F90FLAGS="-O3 -fno-second-underscore"
    fi
 
                     else
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                     fi
@@ -3198,7 +3198,7 @@ else
 
                  
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                  
@@ -3213,12 +3213,12 @@ else
 
                  
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                  
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                  
@@ -3228,7 +3228,7 @@ else
 
                  
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                  F77_TRANSFORM="touch";
@@ -3803,7 +3803,7 @@ else
 
                     
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                     
@@ -3819,33 +3819,33 @@ else
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS="-O6 -fno-second-underscore"
+      F77FLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS="-O6 -fno-second-underscore"
+      F77LFLAGS="-O3 -fno-second-underscore"
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS="-O6 -fno-second-underscore"
+      F90FLAGS="-O3 -fno-second-underscore"
    fi
 
                     else
                        
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                        
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                        
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                     fi
@@ -3886,7 +3886,7 @@ else
 
                  
    if test "X${CFLAGS}" = "X"; then
-      CFLAGS=-O6
+      CFLAGS=-O3
    fi
 
                  
@@ -3901,12 +3901,12 @@ else
 
                  
    if test "X${F77FLAGS}" = "X"; then
-      F77FLAGS=-O6
+      F77FLAGS=-O3
    fi
 
                  
    if test "X${F77LFLAGS}" = "X"; then
-      F77LFLAGS=-O6
+      F77LFLAGS=-O3
    fi
 
                  
@@ -3916,7 +3916,7 @@ else
 
                  
    if test "X${F90FLAGS}" = "X"; then
-      F90FLAGS=-O6
+      F90FLAGS=-O3
    fi
 
                  F77_TRANSFORM="touch";

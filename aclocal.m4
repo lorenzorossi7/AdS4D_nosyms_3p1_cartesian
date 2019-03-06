@@ -406,17 +406,17 @@ dnl                 CXXFLAGS="$CXXFLAGS -DLINUX -D__ -DLINUX_PG -DPORT_GROUP -DW
                     BBH_SYSTEM=LINUX
                     BBH_SETDEF(CC,gcc)
                     BBH_SETDEF(CXX,gcc)
-                    BBH_SETDEF(CFLAGS,-O6)
+                    BBH_SETDEF(CFLAGS,-O3)
                     BBH_SETDEF(CPPFLAGS,"")
                     BBH_SETDEF(F77,g77)
                     if test "X$DOUBLE_UNDERSCORE" = "X"; then
-                       BBH_SETDEF(F77FLAGS,"-O6 -fno-second-underscore")
-                       BBH_SETDEF(F77LFLAGS,"-O6 -fno-second-underscore")
-                       BBH_SETDEF(F90FLAGS,"-O6 -fno-second-underscore")
+                       BBH_SETDEF(F77FLAGS,"-O3 -fno-second-underscore")
+                       BBH_SETDEF(F77LFLAGS,"-O3 -fno-second-underscore")
+                       BBH_SETDEF(F90FLAGS,"-O3 -fno-second-underscore")
                     else
-                       BBH_SETDEF(F77FLAGS,-O6)
-                       BBH_SETDEF(F77LFLAGS,-O6)
-                       BBH_SETDEF(F90FLAGS,-O6)
+                       BBH_SETDEF(F77FLAGS,-O3)
+                       BBH_SETDEF(F77LFLAGS,-O3)
+                       BBH_SETDEF(F90FLAGS,-O3)
                     fi
                     BBH_SETDEF(F90,g77)
                     F77_TRANSFORM="touch";
@@ -449,13 +449,13 @@ dnl ----------------------------------------------------------------------
                  BBH_SYSTEM=DARWIN
                  BBH_SETDEF(CC,gcc)
                  BBH_SETDEF(CXX,gcc)
-                 BBH_SETDEF(CFLAGS,-O6)
+                 BBH_SETDEF(CFLAGS,-O3)
                  BBH_SETDEF(CPPFLAGS,"")
                  BBH_SETDEF(F77,g77)
-                 BBH_SETDEF(F77FLAGS,-O6)
-                 BBH_SETDEF(F77LFLAGS,-O6)
+                 BBH_SETDEF(F77FLAGS,-O3)
+                 BBH_SETDEF(F77LFLAGS,-O3)
                  BBH_SETDEF(F90,g77)
-                 BBH_SETDEF(F90FLAGS,-O6)
+                 BBH_SETDEF(F90FLAGS,-O3)
                  F77_TRANSFORM="touch";
                  CC_TRANSFORM="cat"
                  CFLAGS="$CFLAGS"

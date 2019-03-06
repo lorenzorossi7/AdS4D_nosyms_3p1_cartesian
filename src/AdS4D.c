@@ -678,10 +678,10 @@ void remove_redundant_AH()
             {
                if (my_rank==0) printf("\n\nremove_redundant_AH: the following two excised regions "
                   "overlap ... removing the smallest one (is_1in2=%i, is_2in1=%i).\n"
-                  "1: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf],  "
-                  "2: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n\n",is_1in2,is_2in1,
-                  ex_r[i1][0],ex_r[i1][1],ex_r[i1][2],ex_xc[i1][0],ex_xc[i1][1],ex_xc[i1][2],
-                  ex_r[i2][0],ex_r[i2][1],ex_r[i2][2],ex_xc[i2][0],ex_xc[i2][1],ex_xc[i2][2]);
+                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
+                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",is_1in2,is_2in1,
+                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
+                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
                if (is_2in1) rem[i2]=1; else rem[i1]=1;
             }
 
@@ -694,10 +694,10 @@ void remove_redundant_AH()
             if (i2==MAX_BHS-1 && i1!=MAX_BHS-2 && intr) 
             {
                if (my_rank==0) printf("\nremove_redundant_AH: encapsulating BH found, removing intersecting BHs.\n"
-                  "1: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf],  "
-                  "2: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n\n",
-                  ex_r[i1][0],ex_r[i1][1],ex_r[i1][2],ex_xc[i1][0],ex_xc[i1][1],ex_xc[i1][2],
-                  ex_r[i2][0],ex_r[i2][1],ex_r[i2][2],ex_xc[i2][0],ex_xc[i2][1],ex_xc[i2][2]);
+                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
+                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",
+                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
+                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
                rem[i1]=1;
             }
 
@@ -710,7 +710,6 @@ void remove_redundant_AH()
    {
        ex_r[i1][0]=0;
        ex_r[i1][1]=0;
-       ex_r[i1][2]=0;
        AH_max_iter[i1]=0;
    }
 }
@@ -747,20 +746,20 @@ int no_AH_intersect(real ex_r0[3],real ex_xc0[3],int inew)
             }
             
             if (my_rank==0) printf("\nno_AH_intersect: new BH intersects existing BH\n"
-                   "new: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf.%lf],"
-                   "current(%i): ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n",
-                   ex_r0[0],ex_r0[1],ex_r0[2],ex_xc0[0],ex_xc0[1],ex_xc0[2],i,
-                   ex_r[i][0],ex_r[i][1],ex_r[i][2],ex_xc[i][0],ex_xc[i][1],ex_xc[i][2]);
+                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
+                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
+                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
+                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
             if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
          }
 
          if (ex0_in_exi)
          {
             if (my_rank==0) printf("no_AH_intersect: WARNING ... new BH is *entirely* contained in existing BH\n"
-                   "new: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf.%lf],"
-                   "current(%i): ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n",
-                   ex_r0[0],ex_r0[1],ex_r0[2],ex_xc0[0],ex_xc0[1],ex_xc0[2],i,
-                   ex_r[i][0],ex_r[i][1],ex_r[i][2],ex_xc[i][0],ex_xc[i][1],ex_xc[i][2]);
+                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
+                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
+                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
+                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
             if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
             return 0;
          }
@@ -1792,8 +1791,8 @@ void AdS4D_pre_tstep(int L)
             }
 
             // fill in excision parameters 
-            // ( ex_xc0[0],ex_xc0[1],ex_xc0[2] are filled with coordinate center for excision
-            //   and ex_r0[0],ex_r0[1],ex_r0[2] are filled with principle axis radii for excision )
+            // ( ex_xc0[0],ex_xc0[1] are filled with coordinate center for excision
+            //   and ex_r0[0],ex_r0[1] are filled with principle axis radii for excision )
             if (found_AH[l] && AH[l] && AMRD_do_ex)
             {
                fill_ex_params_(AH_R[l],AH_xc[l],ex_r0,ex_xc0,&AH_Nchi[l],&AH_Nphi[l],&dx,&dy,&axisym);
