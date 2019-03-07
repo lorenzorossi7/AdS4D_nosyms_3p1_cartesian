@@ -28,7 +28,7 @@ c-----------------------------------------------------------------------
 
         ! see if linear interpolation does the trick ... either in x or y
 
-        if (abs(x(i)).gt.abs(y(i))) then
+        if (abs(x(i)).gt.abs(y(j))) then
            xi=asin(y(j)/rho_bdy)
            if (x(i).lt.0) then
               xi=PI-xi
