@@ -5,12 +5,12 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.0
+phi1_amp_1 := 2.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0]
 phi1_ecc_1 := [0 0]
-phi1_B_1 := 0.004
+phi1_B_1 := 0.00
 
 rhoc := 0.4
 rhod := 0.8
@@ -183,7 +183,7 @@ cp_restore_fname := "cp_L0_A"
 steps := 1
 evo_max_iter := 20
 evo_min_iter := 1
-evo_tol := 1.0e-12
+evo_tol := 1.0e-10
 
 MG_max_iter := 25
 MG_min_iter := 1
@@ -191,8 +191,8 @@ MG_max_citer := 1000
 MG_pre_swp := 3
 MG_pst_swp := 3
 MG_w0 := 1.0
-MG_tol := 1.0e-12
-MG_crtol := 1.0e-3
+MG_tol := 1.0e-8
+MG_crtol := 1.0e-2
 MG_extrap_method := 0
 MG_eps_c := 1.0
 
@@ -209,8 +209,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 3
-save_1_vars := [ "iresxx" "iresyy" "irespsi" ]
+num_save_1_vars := 4
+save_1_vars := [ "iresxx" "iresyy" "irespsi" "iresall" ]
 
 num_save_2_vars := 1
 save_2_vars := [ "phi1" ]

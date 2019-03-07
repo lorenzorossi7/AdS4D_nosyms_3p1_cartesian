@@ -90,7 +90,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [1025 513]
+base_shape := [257 129]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
@@ -218,7 +218,7 @@ save_2_vars := [ "phi1" ]
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_BG_qb2_L4_"
+save_tag := "AdS4D_BG_qb2_L2_"
 
 save_ivec := 1-*/1
 
