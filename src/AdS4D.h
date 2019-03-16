@@ -252,7 +252,7 @@ void g_evo_opt_(real *gb_res, real *phi1_res, real *cl_res,
                 int *interptype, int *i_shift, int *regtype,
                 int *diss_kmax, real *tfunction);
 
-void init_ads5d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, 
+void init_ads4d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, 
                   real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi,
                   real *gb_tt_t, real *gb_tx_t, real *gb_ty_t, 
                   real *gb_xx_t, real *gb_xy_t, real *gb_yy_t, real *psi_t,

@@ -996,9 +996,9 @@ c------------------------------------------------------------------------
 
 c----------------------------------------------------------------------
 c initializes the metric to an exact black hole solution
-c with radius parameter r0
+c with radius parameter r0=2*BHmass
 c----------------------------------------------------------------------
-        subroutine init_ads5d_bh(r0,L,gb_tt,gb_tx,gb_ty,gb_xx,
+        subroutine init_ads4d_bh(r0,L,gb_tt,gb_tx,gb_ty,gb_xx,
      &                         gb_xy,gb_yy,psi,
      &                         gb_tt_t,gb_tx_t,gb_ty_t,gb_xx_t,gb_xy_t,
      &                         gb_yy_t,psi_t,
@@ -1028,7 +1028,7 @@ c----------------------------------------------------------------------
         real*8 x(Nx),y(Ny)
 
         integer n
-        parameter (n=6)
+        parameter (n=3)
 
         integer i,j
 
@@ -1053,13 +1053,15 @@ c----------------------------------------------------------------------
         ! compute horizon global radius r_h and corresponding compactified rho_h
         !(NOTE ... here the x0,y0,rho0 are compactified (CODE)
         ! versions of the coordinates)
-        r_h=(-2*3**0.3333333333333333*L**2 + 
-     &      2**0.3333333333333333*(9*L**2*r0 + Sqrt(12*L**6 +
-     &      81*L**4*r0**2))**
-     &      0.6666666666666666)/
-     &      (6**0.6666666666666666*(9*L**2*r0 + Sqrt(12*L**6 +
-     &      81*L**4*r0**2))**
-     &      0.3333333333333333)
+
+        r_h=-L**2
+     &   /(3**(1.0d0/3.0d0))
+     &   /((9*L**2*(r0/2)+sqrt(3.0d0)*sqrt(L**6+27*L**4*(r0/2)**2))
+     &    **(1.0d0/3.0d0))
+     &   +((9*L**2*(r0/2)+sqrt(3.0d0)*sqrt(L**6+27*L**4*(r0/2)**2))
+     &    **(1.0d0/3.0d0))
+     &   /(3**(2.0d0/3.0d0))
+
         rho_h=(-1 + sqrt(1 + r_h**2))/r_h
 
         ! initialize metric 
@@ -1092,39 +1094,35 @@ c----------------------------------------------------------------------
                  rho0=sqrt(x0**2+y0**2)
 
                  ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
-                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!
-                 gb_tt(i,j)=-(r0*(-1 + rho0**2))/(2*rho0)
-                 gb_tx(i,j)=(2*(-1 + rho0)**2*(1 + rho0**2)*x0)/
-     &                      (rho0*(1 + rho0)**2*(-1 + rho_h)**4)
-                 gb_ty(i,j)=(2*(-1 + rho0)**2*(1 + rho0**2)*y0)/
-     &                      (rho0*(1 + rho0)**2*(-1 + rho_h)**4)
-                 gb_xx(i,j)=(4*(-(-1 + rho0**2)**2 - (2*(-1 +
-     &                      rho0**4)**2*(rho0 - rho_h)*(-2+rho0+rho_h)*
-     &                      (2 + (-2 + rho0)*rho0 + (-2 + rho_h)*rho_h)*
-     &                      (2 + (-2 + rho0)*rho0*(2 +(-2+rho0)*rho0) + 
-     &                      (-2+rho_h)*rho_h*
-     &                      (2+(-2+rho_h)*rho_h))*x0**2)/
-     &                      (rho0*(r0*(-1 + rho0**2)**3 + 
-     &                      2*rho0*(1 + rho0**2)**2)*(-1 + rho_h)**8) + 
-     &                      ((-1 + rho0**2)**2*y0**2)/rho0**2))/
-     &                      (-1 + rho0**2)**4
-                 gb_xy(i,j)=(4*(-1 + (rho0*(2 - 2*r0*rho0 + 4*rho0**2 +
-     &                      7*r0*rho0**3 + 2*rho0**4 - 
-     &                      9*r0*rho0**5 + 5*r0*rho0**7 - r0*rho0**9 - 
-     &                      (2*(-1 + rho0)**10*(1 + rho0 + rho0**2 +
-     &                      rho0**3)**2)/(-1 + rho_h)**8))/
-     &                      (r0*(-1 + rho0**2)**3 + 
-     &                      2*rho0*(1 + rho0**2)**2))*x0*y0)/
-     &                      (rho0**2*(-1 + rho0**2)**4)
-                 gb_yy(i,j)=(4*(-rho0**2 + x0**2 - (2*rho0*(1 +
-     &                      rho0**2)**2*(rho0 - rho_h)*(-2+rho0+rho_h)*
-     &                      (2 + (-2 + rho0)*rho0 + (-2 + rho_h)*rho_h)*
-     &                      (2 + (-2 + rho0)*rho0*(2 +(-2+rho0)*rho0) + 
-     &                      (-2+rho_h)*rho_h*
-     &                      (2+(-2+rho_h)*rho_h))*y0**2)/
-     &                      ((r0*(-1+rho0**2)**3+2*rho0*(1+rho0**2)**2)*
-     &                      (-1 +rho_h)**8)))/
-     &                      (rho0 - rho0**3)**2
+                 
+                 gb_tt(i,j)=(r0/2)*(1/rho0-rho0)
+
+                 gb_tx(i,j)=2*x0*(1+rho0**2)*((1-rho_h)/(1-rho0))**(-n)
+     &                      /rho0/(1-rho0**2)**2
+                 gb_ty(i,j)=2*y0*(1+rho0**2)*((1-rho_h)/(1-rho0))**(-n)
+     &                      /rho0/(1-rho0**2)**2
+                 gb_xx(i,j)=4*x0**2*(1+rho0**2)**2
+     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
+     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
+     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+     &                       *(rho0+(r0/2)*(-1+rho0**2))))
+     &                      /rho0**2/(1-rho0**2)**2
+                 gb_xy(i,j)=4*L**2*x0*y0*(1+rho0**2)**2
+     &                      *(-4*rho0**3+L**2*(1-rho0**2)**2
+     &                      *(-rho0-(r0/2)*(-1+rho0**2)
+     &                      *((1-rho_h)/(1-rho0))**(2*n)))
+     &                      *((1-rho_h)/(1-rho0))**(-2*n)
+     &                      /rho0**2/(1-rho0**2)**2
+     &                      /(4*rho0**2+L**2*(1-rho0**2)**2)
+     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+     &                       *(rho0+(r0/2)*(-1+rho0**2)))
+
+                 gb_yy(i,j)=4*y0**2*(1+rho0**2)**2
+     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
+     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
+     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+     &                       *(rho0+(r0/2)*(-1+rho0**2))))
+     &                      /rho0**2/(1-rho0**2)**2
 
 !                 ! (Schw coordinates)!
 !                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!

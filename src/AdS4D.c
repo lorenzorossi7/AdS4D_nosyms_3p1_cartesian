@@ -1170,7 +1170,7 @@ void AdS4D_t0_cnst_data(void)
    {
      if (gb_xx_nm1) //"np1,n,nm1" variables only allocated on finest MG level
      {
-       init_ads5d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
+       init_ads4d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
                       gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,gb_xx_t_n,gb_xy_t_n,gb_yy_t_n,psi_t_n,
                       Hb_t,Hb_x,Hb_y,Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                       phys_bdy,x,y,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&regtype);
