@@ -1052,16 +1052,16 @@ void AdS4D_var_post_init(char *pfile)
    // ief_bh_r0 is BH radius parameter, ex_r is excision radius
    int l,ah_finder_is_off=1; 
    for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
-   if (ah_finder_is_off) 
+   if (ah_finder_is_off||ief_bh_r0) 
    {
      real rh,rhoh,mh;
-     rh=(-2*pow(3,0.3333333333333333)*pow(AdS_L,2) + 
-        pow(2,0.3333333333333333)*pow(9*pow(AdS_L,2)*ief_bh_r0 + 
-        sqrt(12*pow(AdS_L,6) + 81*pow(AdS_L,4)*pow(ief_bh_r0,2)),0.6666666666666666))/
-        (pow(6,0.6666666666666666)*pow(9*pow(AdS_L,2)*ief_bh_r0 + 
-        sqrt(12*pow(AdS_L,6) + 81*pow(AdS_L,4)*pow(ief_bh_r0,2)),0.3333333333333333));
+     rh=-pow(AdS_L,2)
+         /(pow(3,(1.0/3.0)))
+         /(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+         +(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+         /(pow(3,(2.0/3.0)));
      mh=ief_bh_r0/2;
-     rhoh=(sqrt(1+rh*rh)-1)/rh;
+     rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
      ex_r[0][0]=ex_r[0][1]=rhoh*(1-ex_rbuf[0]);
      if (my_rank==0) printf("\nBH initial data\n"
                             "r0/L=%lf, rh/L=%lf, mass M = r0/2 = rh*(1+rh^2/L^2)/2 = %lf\n"
@@ -1651,6 +1651,8 @@ void AdS4D_pre_tstep(int L)
 
    int is,ie,js,je;
 
+   real rh,mh,rhoh;
+
    ct=PAMR_get_time(L);
 
    Lf=PAMR_get_max_lev(PAMR_AMRH);
@@ -1826,6 +1828,22 @@ void AdS4D_pre_tstep(int L)
      remove_redundant_AH();
      PAMR_excision_on("chr",&AdS4D_fill_ex_mask,AMRD_ex,1);
    }
+
+     // displays initial black hole radius and excision radius
+     if (my_rank==0)
+     {
+        if (ief_bh_r0!=0) 
+        {
+         rh=-pow(AdS_L,2)
+            /(pow(3,(1.0/3.0)))
+            /(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+            +(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+            /(pow(3,(2.0/3.0)));
+         mh=ief_bh_r0/2;
+         rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
+           printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf, so we excise, AT ALL TIME STEPS, points with compactified radius rhoh*(1-ex_rbuf)=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
+        }
+     }
 
    return;
 }

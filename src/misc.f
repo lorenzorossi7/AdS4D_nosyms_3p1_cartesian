@@ -23,70 +23,314 @@ c-----------------------------------------------------------------------
         save first
         data first/.true./
 
+        logical thirdordforback
+        data thirdordforback/.true./
+
         dx=x(2)-x(1)
 
-        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-           if (i.le.(Nx-3)
-     &         .and.((chr(i+1,j).ne.ex
-     &         .and.chr(i+2,j).ne.ex
-     &         .and.chr(i+3,j).ne.ex))) then
-             f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
-           else if (i.le.(Nx-2)
-     &              .and.((chr(i+1,j).ne.ex
-     &              .and.chr(i+2,j).ne.ex))) then
-              f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-           else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
-              f_x=(-f(i,j)+f(i+1,j))/dx
-!              write(*,*) 'df1_int_x: warning ... i=1 first order'
-!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int_x: error in chr stencil (A)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              f_x=0
-              return
-           end if
-        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
-           if (i.ge.4
-     &         .and.((chr(i-1,j).ne.ex
-     &         .and.chr(i-2,j).ne.ex
-     &         .and.chr(i-3,j).ne.ex))) then
-             f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
-           else if (i.ge.3
-     &              .and.((chr(i-1,j).ne.ex
-     &              .and.chr(i-2,j).ne.ex))) then
-              f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
-           else if (i.ge.2.and.chr(i-1,j).ne.ex) then
-              f_x=(f(i,j)-f(i-1,j))/dx
-!              write(*,*) 'df1_int: warning ... i=Nx first order'
-!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int: error in chr stencil (B)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              f_x=0
-              return
-           end if
-        else
-           if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
-              f_x=(f(i+1,j)-f(i-1,j))/2/dx
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int: error in chr stencil (C)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              f_x=0
-              return
-           end if
+!!!!!!!!!!!!MYVERSION
+        if (i.eq.1) then
+               if ((thirdordforback)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
+     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+               else if ((chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex)) then
+                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               else if (chr(i+1,j).ne.ex) then
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                 if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (A)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                 end if
+                   f_x=0
+                 return
+               end if
+
+        else if (i.eq.2) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                   f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
+     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               else if (chr(i+1,j).ne.ex) then
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (B)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   f_x=0
+                   return
+               end if
+         else   !this is the case where (i-1,j) is not excised and (i+1,j) is excised 
+                   f_x=(f(i,j)-f(i-1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+
+        else if (i.eq.3) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
+     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               else if (chr(i+1,j).ne.ex) then
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (C)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   f_x=0
+                   return
+               end if
+         else 
+               if (chr(i-2,j).ne.ex) then
+                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               else
+                   f_x=(f(i,j)-f(i-1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+
+        else if ((i.ge.4).and.(i.le.(Nx-3))) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
+     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               else if (chr(i+1,j).ne.ex) then
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (D)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   f_x=0
+                   return
+               end if
+         else
+               if ((thirdordforback)
+     &            .and.(chr(i-3,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)) then
+                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
+     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+               else if (chr(i-2,j).ne.ex) then
+                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               else
+                   f_x=(f(i,j)-f(i-1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+
+        else if (i.eq.(Nx-2)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
+         else if (chr(i+1,j).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
+     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               else if (chr(i-1,j).ne.ex) then
+                   f_x=(f(i,j)-f(i-1,j))/2/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (E)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   f_x=0
+                   return
+               end if
+         else 
+               if (chr(i+2,j).ne.ex) then
+                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               else
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+        else if (i.eq.(Nx-1)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
+         else if (chr(i+1,j).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
+     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               else if (chr(i-1,j).ne.ex) then
+                   f_x=(f(i,j)-f(i-1,j))/2/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (F)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   f_x=0
+                   return
+               end if
+         else
+                   f_x=(-f(i,j)+f(i+1,j))/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+
+
+        else if (i.eq.Nx) then
+               if ((thirdordforback)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
+     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               else if (chr(i-1,j).ne.ex) then
+                   f_x=(f(i,j)-f(i-1,j))/2/dx
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                 if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_x: error in chr stencil (G)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                 end if
+                   f_x=0
+                 return
+               end if
         end if
+!!!!!!!!!!!!!!!!!
+
+
+!!!!!!!!OLD VERSION!!!!!!!!!!!!!!!
+!        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
+!           if (i.le.(Nx-3)
+!     &         .and.((chr(i+1,j).ne.ex
+!     &         .and.chr(i+2,j).ne.ex
+!     &         .and.chr(i+3,j).ne.ex))) then
+!             f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
+!           else if (i.le.(Nx-2)
+!     &              .and.((chr(i+1,j).ne.ex
+!     &              .and.chr(i+2,j).ne.ex))) then
+!              f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+!           else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
+!              f_x=(-f(i,j)+f(i+1,j))/dx
+!!              write(*,*) 'df1_int_x: warning ... i=1 first order'
+!!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int_x: error in chr stencil (A)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_x=0
+!              return
+!           end if
+!        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!           if (i.ge.4
+!     &         .and.((chr(i-1,j).ne.ex
+!     &         .and.chr(i-2,j).ne.ex
+!     &         .and.chr(i-3,j).ne.ex))) then
+!             f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
+!           else if (i.ge.3
+!     &              .and.((chr(i-1,j).ne.ex
+!     &              .and.chr(i-2,j).ne.ex))) then
+!              f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+!           else if (i.ge.2.and.chr(i-1,j).ne.ex) then
+!              f_x=(f(i,j)-f(i-1,j))/dx
+!!              write(*,*) 'df1_int: warning ... i=Nx first order'
+!!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int: error in chr stencil (B)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_x=0
+!              return
+!           end if
+!        else
+!           if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
+!              f_x=(f(i+1,j)-f(i-1,j))/2/dx
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int: error in chr stencil (C)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_x=0
+!              return
+!           end if
+!        end if
+!!!!!!!!!!!!!!!!!!!!!!
 
         return
         end
@@ -101,70 +345,311 @@ c-----------------------------------------------------------------------
         save first
         data first/.true./
 
+        logical thirdordforback
+        data thirdordforback/.true./
+
         !--------------------------------------------------------------
 
         dy=y(2)-y(1)
 
-        if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
-           if (j.le.(Ny-3)
-     &         .and.((chr(i,j+1).ne.ex
-     &         .and.chr(i,j+2).ne.ex
-     &         .and.chr(i,j+3).ne.ex))) then
-             f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-           else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
-     &              .and.chr(i,j+2).ne.ex))) then
-              f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-           else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
-              f_y=(-f(i,j)+f(i,j+1))/dy
-!              write(*,*) 'df1_int_y: warning ... j=1 first order'
-!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int_y: error in chr stencil (D)'
-                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                 write(*,*) '    (first error only)'
-              end if
-              f_y=0
-              return
-           end if
-        else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
-           if (j.ge.4
-     &         .and.((chr(i,j-1).ne.ex
-     &         .and.chr(i,j-2).ne.ex
-     &         .and.chr(i,j-3).ne.ex))) then
-             f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-           else if (j.ge.3.and.((chr(i,j-1).ne.ex
-     &              .and.chr(i,j-2).ne.ex))) then
-              f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
-           else if (j.ge.2.and.chr(i,j-1).ne.ex) then
-              f_y=(f(i,j)-f(i,j-1))/dy
-!              write(*,*) 'df1_int_y: warning ... j=Ny first order'
-!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int_y: error in chr stencil (E)'
-                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                 write(*,*) '    (first error only)'
-              end if
-              f_y=0
-              return
-           end if
-        else
-           if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
-              f_y=(f(i,j+1)-f(i,j-1))/2/dy
-           else
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df1_int_y: error in chr stencil (F)'
-                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                 write(*,*) '    (first error only)'
-              end if
-              f_y=0
-              return
-           end if
+!!!!!!!MYVERSION!!!!!!!!!!!!
+
+        if (j.eq.1) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
+     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+               else if ((chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex)) then
+                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               else if (chr(i,j+1).ne.ex) then
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                 if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (A)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                 end if
+                   f_y=0
+                 return
+               end if
+
+        else if (j.eq.2) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
+         else if (chr(i,j-1).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   f_y=(-(11.0d0/6.0d0)*f(i,j)+(3.0d0)*f(i,j+1)
+     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               else if (chr(i,j+1).ne.ex) then
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (B)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                end if
+                   f_y=0
+                   return
+               end if
+         else
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+
+        else if (j.eq.3) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
+         else if (chr(i,j-1).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
+     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               else if (chr(i+1,j).ne.ex) then
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (C)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                end if
+                   f_y=0
+                   return
+               end if
+         else
+               if (chr(i,j-2).ne.ex) then
+                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               else
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+        else if ((j.ge.4).and.(j.le.(Ny-3))) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
+         else if (chr(i,j-1).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
+     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               else if (chr(i,j+1).ne.ex) then
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (D)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                end if
+                   f_y=0
+                   return
+               end if
+         else
+               if ((thirdordforback)
+     &            .and.(chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)) then
+                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
+     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+               else if (chr(i,j-2).ne.ex) then
+                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               else
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+        else if (j.eq.(Ny-2)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
+         else if (chr(i,j+1).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
+     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               else if (chr(i,j-1).ne.ex) then
+                   f_y=(f(i,j)-f(i,j-1))/2/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (E)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                end if
+                   f_y=0
+                   return
+               end if
+         else
+               if (chr(i,j+2).ne.ex) then
+                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               else
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+
+        else if (j.eq.(Ny-1)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
+         else if (chr(i,j+1).eq.ex) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
+     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               else if (chr(i,j-1).ne.ex) then
+                   f_y=(f(i,j)-f(i,j-1))/2/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (F)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                end if
+                   f_y=0
+                   return
+               end if
+         else
+                   f_y=(-f(i,j)+f(i,j+1))/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+
+        else if (j.eq.Ny) then
+               if ((thirdordforback)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
+     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+               else if ((chr(i,j-1).ne.ex
+     &                 .and.chr(i,j-2).ne.ex)) then
+                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               else if (chr(i,j-1).ne.ex) then
+                   f_y=(f(i,j)-f(i,j-1))/2/dy
+!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                 if (first) then
+                     first=.false.
+                     write(*,*) 'df1_int_y: error in chr stencil (G)'
+                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    (first error only)'
+                 end if
+                   f_y=0
+                 return
+               end if
         end if
+!!!!!!!!!!!!!!!!!
+
+!!!!!!!!OLD VERSION!!!!!!!!!!!!!!!!!!
+!        if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+!           if (j.le.(Ny-3)
+!     &         .and.((chr(i,j+1).ne.ex
+!     &         .and.chr(i,j+2).ne.ex
+!     &         .and.chr(i,j+3).ne.ex))) then
+!             f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
+!           else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
+!     &              .and.chr(i,j+2).ne.ex))) then
+!              f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+!           else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
+!              f_y=(-f(i,j)+f(i,j+1))/dy
+!!              write(*,*) 'df1_int_y: warning ... j=1 first order'
+!!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int_y: error in chr stencil (D)'
+!                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_y=0
+!              return
+!           end if
+!        else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+!           if (j.ge.4
+!     &         .and.((chr(i,j-1).ne.ex
+!     &         .and.chr(i,j-2).ne.ex
+!     &         .and.chr(i,j-3).ne.ex))) then
+!             f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
+!           else if (j.ge.3.and.((chr(i,j-1).ne.ex
+!     &              .and.chr(i,j-2).ne.ex))) then
+!              f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+!           else if (j.ge.2.and.chr(i,j-1).ne.ex) then
+!              f_y=(f(i,j)-f(i,j-1))/dy
+!!              write(*,*) 'df1_int_y: warning ... j=Ny first order'
+!!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int_y: error in chr stencil (E)'
+!                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_y=0
+!              return
+!           end if
+!        else
+!           if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
+!              f_y=(f(i,j+1)-f(i,j-1))/2/dy
+!           else
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df1_int_y: error in chr stencil (F)'
+!                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                 write(*,*) '    (first error only)'
+!              end if
+!              f_y=0
+!              return
+!           end if
+!        end if
+!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         return
         end
@@ -285,145 +770,712 @@ c----------------------------------------------------------------------
         dx=x(2)-x(1)
         dy=y(2)-y(1)
 
+!!!!!!MYVERSION!!!!!!!!!
+
         !i
 
-        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-           if (i.ge.(Nx-1).or.chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df2_int: error in chr (A)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              return
-           end if
+        if (i.eq.1) then
+               if ((.not.extrap)
+     &            .and.chr(i+1,j).ne.ex
+     &            .and.chr(i+2,j).ne.ex
+     &            .and.chr(i+3,j).ne.ex
+     &            .and.chr(i+4,j).ne.ex) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
+     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
+     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if (chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex
+     &                 .and.chr(i+3,j).ne.ex) then
+                   f_xx=(2*f(i,j)-5*f(i+1,j)+
+     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if (chr(i+1,j).ne.ex
+     &                  .and.chr(i+2,j).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else
+                 if (first) then
+                   first=.false.
+                   write(*,*) 'df2_int: error in chr stencil (A)'
+                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    (first error only)'
+                 end if
+                   return
+               end if
 
-           if (i.eq.(Nx-2).or.chr(i+3,j).eq.ex) then
-              ! write(*,*) 'df2_int: warning ... first order i=1'
-              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-              f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx 
-           else if ((.not.extrap).and.i.lt.(Nx-3)
-     &               .and.chr(i+4,j).ne.ex) then
-              f_xx=(3*f(i,j)-9*f(i+1,j)+
-     &             10*f(i+2,j)-5*f(i+3,j)+
-     &             f(i+4,j))/dx/dx
-           else
-              f_xx=(2*f(i,j)-5*f(i+1,j)+
-     &              4*f(i+2,j)-f(i+3,j))/dx/dx
-           end if
+        else if (i.eq.2) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)
+     &            .and.(chr(i+4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
+     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
+     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if (chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex
+     &                 .and.chr(i+3,j).ne.ex) then
+                   f_xx=(2*f(i,j)-5*f(i+1,j)+
+     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if (chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (B)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         end if
 
-           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-           call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
-           f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
-           if (i.le.2.or.
-     &        chr(i-1,j).eq.ex.or.chr(i-2,j).eq.ex) then
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df2_int: error in chr (B)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              return
-           end if
+        else if (i.eq.3) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)
+     &            .and.(chr(i+4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
+     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
+     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)
+     &                 .and.(chr(i+3,j).ne.ex)) then
+                   f_xx=(2*f(i,j)-5*f(i+1,j)+
+     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (C)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i-1,j) is not excised and (i+1,j) is excised
+               if (chr(i-2,j).ne.ex) then
+                   f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               end if
+         end if
 
-           if (i.eq.3.or.chr(i-3,j).eq.ex) then
-              ! write(*,*) 'df2_int: warning ... first order i=Nx'
-              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-              f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx 
-           else if ((.not.extrap).and.i.gt.4.and.chr(i-4,j).ne.ex) then
-              f_xx=(3*f(i,j)-9*f(i-1,j)+
-     &              10*f(i-2,j)-5*f(i-3,j)+
-     &              f(i-4,j))/dx/dx
-           else
-              f_xx=(2*f(i,j)-5*f(i-1,j)+
-     &              4*f(i-2,j)-f(i-3,j))/dx/dx
-           end if
+        else if ((i.ge.4).and.(i.le.(Nx-3))) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)
+     &            .and.(chr(i+4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
+     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
+     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)
+     &                 .and.(chr(i+3,j).ne.ex)) then
+                   f_xx=(2*f(i,j)-5*f(i+1,j)+
+     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (D)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else
+               if ((chr(i-3,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)) then
+                   f_xx=(2*f(i,j)-5*f(i-1,j)
+     &                   +4*f(i-2,j)-f(i-3,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if (chr(i-2,j).ne.ex) then
+                   f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               end if
+         end if
 
-           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-           call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
-           f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-        else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
+        else if (i.eq.(Nx-2)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   f_xx=(f(i-1,j)-2*f(i,j)+f(i+1,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+         else if (chr(i+1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)
+     &            .and.(chr(i-4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
+     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
+     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)
+     &                 .and.(chr(i-3,j).ne.ex)) then
+                   f_xx=(2*f(i,j)-5*f(i-1,j)+
+     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (E)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i+1,j) is not excised and (i-1,j) is excised
+               if (chr(i+2,j).ne.ex) then
+                   f_xx=(f(i,j)-2*f(i+1,j)+f(i+2,j))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+               end if
+         end if
 
-           f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx 
+        else if (i.eq.(Nx-1)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+         else if (chr(i+1,j).eq.ex) then
+               if (.not.extrap
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)
+     &            .and.(chr(i-4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
+     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
+     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if (chr(i-1,j).ne.ex
+     &                 .and.chr(i-2,j).ne.ex
+     &                 .and.chr(i-3,j).ne.ex) then
+                   f_xx=(2*f(i,j)-5*f(i-1,j)+
+     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if (chr(i-1,j).ne.ex
+     &                 .and.chr(i-2,j).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (F)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         end if
 
-           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-           f_xy=(f_y_ip1-f_y_im1)/2/dx
-        else
-           if (first) then
-              first=.false.
-              write(*,*) 'df2_int: error in chr (C)'
-              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-              write(*,*) '    (first error only)'
-           end if
-           return
+        else if (i.eq.Nx) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)
+     &            .and.(chr(i-4,j).ne.ex)) then
+                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
+     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
+     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if (chr(i-1,j).ne.ex
+     &                 .and.chr(i-2,j).ne.ex
+     &                 .and.chr(i-3,j).ne.ex) then
+                   f_xx=(2*f(i,j)-5*f(i-1,j)+
+     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else if (chr(i-1,j).ne.ex
+     &                  .and.chr(i-2,j).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+               else
+                 if (first) then
+                   first=.false.
+                   write(*,*) 'df2_int: error in chr stencil (G)'
+                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    (first error only)'
+                 end if
+                   return
+               end if
         end if
+
 
         !j
 
-        if (j.eq.1.or.(chr(i,j-1).eq.ex)) then
-           if (j.ge.(Ny-1).or.chr(i,j+1).eq.ex.or.chr(i,j+2).eq.ex) then
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df2_int: error in chr (D)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    (first error only)'
-              end if
-              return
-           end if
+        if (j.eq.1) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)
+     &            .and.(chr(i,j+4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
+     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
+     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+               else if (chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex
+     &                 .and.chr(i,j+3).ne.ex) then
+                   f_yy=(2*f(i,j)-5*f(i,j+1)+
+     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
+               else if (chr(i,j+1).ne.ex
+     &                  .and.chr(i,j+2).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_xx=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+               else
+                 if (first) then
+                   first=.false.
+                   write(*,*) 'df2_int: error in chr stencil (H)'
+                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    (first error only)'
+                 end if
+                   return
+               end if
 
-           if (j.eq.(Ny-2).or.chr(i,j+3).eq.ex) then
-              !write(*,*) 'df2_int: warning ... first order j=1'
-              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-              f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy 
-           else if ((.not.extrap).and.j.lt.(Ny-3).and.
-     &               chr(i,j+4).ne.ex) then
-              f_yy=(3*f(i,j)-9*f(i,j+1)+
-     &              10*f(i,j+2)-5*f(i,j+3)+
-     &              f(i,j+4))/dy/dy
-           else
-              f_yy=(2*f(i,j)-5*f(i,j+1)+
-     &              4*f(i,j+2)-f(i,j+3))/dy/dy
-           end if
+        else if (j.eq.2) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
+         else if (chr(i,j-1).eq.ex) then
+               if (.not.extrap
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)
+     &            .and.(chr(i,j+4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
+     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
+     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+               else if (chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex
+     &                 .and.chr(i,j+3).ne.ex) then
+                   f_yy=(2*f(i,j)-5*f(i,j+1)+
+     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
+               else if (chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (I)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         end if
 
-        else if (j.eq.Ny.or.(chr(i,j+1).eq.ex)) then
-           if (j.le.2.or.chr(i,j-1).eq.ex.or.chr(i,j-2).eq.ex) then
-              if (first) then
-                 first=.false.
-                 write(*,*) 'df2_int: error in chr (E)'
-                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                 write(*,*) '    name=',name
-                 write(*,*) '    (first error only)'
-              end if
-              return
-           end if
+        else if (j.eq.3) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
+         else if (chr(i,j-1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)
+     &            .and.(chr(i,j+4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
+     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
+     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)
+     &                 .and.(chr(i,j+3).ne.ex)) then
+                   f_yy=(2*f(i,j)-5*f(i,j+1)+
+     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (J)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i,j-1) is not excised and (i,j+1) is excised
+               if (chr(i,j-2).ne.ex) then
+                   f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy
+               end if
+         end if
 
-           if (j.eq.3.or.chr(i,j-3).eq.ex) then
-              !write(*,*) 'df2_int: warning ... first order j=Ny'
-              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-              f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy 
-           else if ((.not.extrap).and.j.gt.4.and.chr(i,j-4).ne.ex) then
-              f_yy=(3*f(i,j)-9*f(i,j-1)+
-     &              10*f(i,j-2)-5*f(i,j-3)+
-     &              f(i,j-4))/dy/dy
-           else
-              f_yy=(2*f(i,j)-5*f(i,j-1)+
-     &              4*f(i,j-2)-f(i,j-3))/dy/dy
-           end if
+        else if ((j.ge.4).and.(j.le.(Ny-3))) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
+         else if (chr(i,j-1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)
+     &            .and.(chr(i,j+4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
+     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
+     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)
+     &                 .and.(chr(i,j+3).ne.ex)) then
+                   f_yy=(2*f(i,j)-5*f(i,j+1)+
+     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (K)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else
+               if ((chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)) then
+                   f_yy=(2*f(i,j)-5*f(i,j-1)
+     &                   +4*f(i,j-2)-f(i,j-3))/dy/dy
+               else if (chr(i,j-2).ne.ex) then
+                   f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy
+               end if
+         end if
 
-        else if (chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex) then
-            f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy 
+        else if (j.eq.(Ny-2)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   f_yy=(f(i,j-1)-2*f(i,j)+f(i,j+1))/dy/dy
+         else if (chr(i,j+1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
+     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
+     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)
+     &                 .and.(chr(i,j-3).ne.ex)) then
+                   f_yy=(2*f(i,j)-5*f(i,j-1)+
+     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (L)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i,j+1) is not excised and (i,j-1) is excised
+               if (chr(i,j+2).ne.ex) then
+                   f_yy=(f(i,j)-2*f(i,j+1)+f(i,j+2))/dy/dy
+               end if
+         end if
 
-        else
-            if (first) then
-               first=.false.
-               write(*,*) 'df2_int: error in chr (F)'
-               write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-               write(*,*) '    (first error only)'
-            end if
-            return
+        else if (j.eq.(Ny-1)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
+         else if (chr(i,j+1).eq.ex) then
+               if (.not.extrap
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
+     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
+     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+               else if (chr(i,j-1).ne.ex
+     &                 .and.chr(i,j-2).ne.ex
+     &                 .and.chr(i,j-3).ne.ex) then
+                   f_yy=(2*f(i,j)-5*f(i,j-1)+
+     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
+               else if (chr(i,j-1).ne.ex
+     &                 .and.chr(i,j-2).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (M)'
+                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         end if
+
+        else if (j.eq.Ny) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-4).ne.ex)) then
+                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
+     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
+     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+               else if (chr(i,j-1).ne.ex
+     &                 .and.chr(i,j-2).ne.ex
+     &                 .and.chr(i,j-3).ne.ex) then
+                   f_yy=(2*f(i,j)-5*f(i,j-1)+
+     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
+               else if (chr(i,j-1).ne.ex
+     &                  .and.chr(i,j-2).ne.ex) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+               else
+                 if (first) then
+                   first=.false.
+                   write(*,*) 'df2_int: error in chr stencil (N)'
+                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    (first error only)'
+                 end if
+                   return
+               end if
         end if
+!!!!!!!!!!!!!!!
+
+!!!!!!!!!!OLDVERSION!!!!!!!!!!!!!!!!
+!        !i
+!        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
+!           if (i.ge.(Nx-1).or.chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df2_int: error in chr (A)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              return
+!           end if
+!           if (i.eq.(Nx-2).or.chr(i+3,j).eq.ex) then
+!              ! write(*,*) 'df2_int: warning ... first order i=1'
+!              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!              f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx 
+!           else if ((.not.extrap).and.i.lt.(Nx-3)
+!     &               .and.chr(i+4,j).ne.ex) then
+!              f_xx=(3*f(i,j)-9*f(i+1,j)+
+!     &             10*f(i+2,j)-5*f(i+3,j)+
+!     &             f(i+4,j))/dx/dx
+!           else
+!              f_xx=(2*f(i,j)-5*f(i+1,j)+
+!     &              4*f(i+2,j)-f(i+3,j))/dx/dx
+!           end if
+!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+!           call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+!           f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+!        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!           if (i.le.2.or.
+!     &        chr(i-1,j).eq.ex.or.chr(i-2,j).eq.ex) then
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df2_int: error in chr (B)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              return
+!           end if
+!           if (i.eq.3.or.chr(i-3,j).eq.ex) then
+!              ! write(*,*) 'df2_int: warning ... first order i=Nx'
+!              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!              f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx 
+!           else if ((.not.extrap).and.i.gt.4.and.chr(i-4,j).ne.ex) then
+!              f_xx=(3*f(i,j)-9*f(i-1,j)+
+!     &              10*f(i-2,j)-5*f(i-3,j)+
+!     &              f(i-4,j))/dx/dx
+!           else
+!              f_xx=(2*f(i,j)-5*f(i-1,j)+
+!     &              4*f(i-2,j)-f(i-3,j))/dx/dx
+!           end if
+!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+!           call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+!           f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+!        else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
+!           f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx 
+!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
+!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+!           f_xy=(f_y_ip1-f_y_im1)/2/dx
+!        else
+!           if (first) then
+!              first=.false.
+!              write(*,*) 'df2_int: error in chr (C)'
+!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!              write(*,*) '    (first error only)'
+!           end if
+!           return
+!        end if
+!        !j
+!        if (j.eq.1.or.(chr(i,j-1).eq.ex)) then
+!           if (j.ge.(Ny-1).or.chr(i,j+1).eq.ex.or.chr(i,j+2).eq.ex) then
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df2_int: error in chr (D)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    (first error only)'
+!              end if
+!              return
+!           end if
+!           if (j.eq.(Ny-2).or.chr(i,j+3).eq.ex) then
+!              !write(*,*) 'df2_int: warning ... first order j=1'
+!              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!              f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy 
+!           else if ((.not.extrap).and.j.lt.(Ny-3).and.
+!     &               chr(i,j+4).ne.ex) then
+!              f_yy=(3*f(i,j)-9*f(i,j+1)+
+!     &              10*f(i,j+2)-5*f(i,j+3)+
+!     &              f(i,j+4))/dy/dy
+!           else
+!              f_yy=(2*f(i,j)-5*f(i,j+1)+
+!     &              4*f(i,j+2)-f(i,j+3))/dy/dy
+!           end if
+!        else if (j.eq.Ny.or.(chr(i,j+1).eq.ex)) then
+!           if (j.le.2.or.chr(i,j-1).eq.ex.or.chr(i,j-2).eq.ex) then
+!              if (first) then
+!                 first=.false.
+!                 write(*,*) 'df2_int: error in chr (E)'
+!                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                 write(*,*) '    name=',name
+!                 write(*,*) '    (first error only)'
+!              end if
+!              return
+!           end if
+!           if (j.eq.3.or.chr(i,j-3).eq.ex) then
+!              !write(*,*) 'df2_int: warning ... first order j=Ny'
+!              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!              f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy 
+!           else if ((.not.extrap).and.j.gt.4.and.chr(i,j-4).ne.ex) then
+!              f_yy=(3*f(i,j)-9*f(i,j-1)+
+!     &              10*f(i,j-2)-5*f(i,j-3)+
+!     &              f(i,j-4))/dy/dy
+!           else
+!              f_yy=(2*f(i,j)-5*f(i,j-1)+
+!     &              4*f(i,j-2)-f(i,j-3))/dy/dy
+!           end if
+!        else if (chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex) then
+!            f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy 
+!        else
+!            if (first) then
+!               first=.false.
+!               write(*,*) 'df2_int: error in chr (F)'
+!               write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!               write(*,*) '    (first error only)'
+!            end if
+!            return
+!        end if
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
         if (ltrace) then
            write(*,*) 'df2_int for ',name
@@ -1373,6 +2425,19 @@ c----------------------------------------------------------------------
 
         real*8 Hb_t0,Hb_x0,Hb_y0
 
+!!!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!!!
+        real*8 testf1(Nx,Ny),testf2(Nx,Ny),testf3(Nx,Ny)
+        real*8 testf1_t,testf1_x,testf1_y
+        real*8 testf2_t,testf2_x,testf2_y
+        real*8 testf3_t,testf3_x,testf3_y
+        real*8 testf1_tt,testf1_tx,testf1_ty
+        real*8 testf1_xx,testf1_xy,testf1_yy
+        real*8 testf2_tt,testf2_tx,testf2_ty
+        real*8 testf2_xx,testf2_xy,testf2_yy
+        real*8 testf3_tt,testf3_tx,testf3_ty
+        real*8 testf3_xx,testf3_xy,testf3_yy
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -1692,6 +2757,61 @@ c----------------------------------------------------------------------
      &       phi1_y,phi1_tt,phi1_tx,phi1_ty,phi1_xx,
      &       phi1_xy,phi1_yy,x,y,dt,i,j,
      &       chr,ex,Nx,Ny,'phi1')
+
+!!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!
+!        do a=1,Nx
+!         do b=1,Ny
+!          testf1(a,b)=x(a)**3+2*x(a)
+!          testf2(a,b)=y(b)**3+2*y(b)
+!          testf3(a,b)=x(a)**3+2*y(b)+x(a)**2*y(b)**5
+!          chr(2,b)=ex
+!          chr(4,b)=ex
+!          chr(7,b)=ex
+!          chr(11,b)=ex
+!          chr(a,5)=ex
+!          chr(a,7)=ex
+!         end do
+!        end do
+!        
+!        do a=1,Nx
+!         do b=1,Ny
+!          if (chr(a,b).ne.ex) then
+!        call df1_int(testf1,testf1,testf1,testf1_t,testf1_x,
+!     &       testf1_y,x,y,dt,a,b,
+!     &       chr,ex,Nx,Ny,'testf1')
+!        call df1_int(testf2,testf2,testf2,testf2_t,testf2_x,
+!     &       testf2_y,x,y,dt,a,b,
+!     &       chr,ex,Nx,Ny,'testf2')
+!        call df1_int(testf3,testf3,testf3,testf3_t,testf3_x,
+!     &       testf3_y,x,y,dt,a,b,
+!     &       chr,ex,Nx,Ny,'testf3')
+!        call df2_int(testf1,testf1,testf1,testf1_t,testf1_x,
+!     &       testf1_y,testf1_tt,testf1_tx,testf1_ty,
+!     &       testf1_xx,testf1_xy,testf1_yy,
+!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf1')
+!        call df2_int(testf2,testf2,testf2,testf2_t,testf2_x,
+!     &       testf2_y,testf2_tt,testf2_tx,testf2_ty,
+!     &       testf2_xx,testf2_xy,testf2_yy,
+!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf2')
+!        call df2_int(testf3,testf3,testf3,testf3_t,testf3_x,
+!     &       testf3_y,testf3_tt,testf3_tx,testf3_ty,
+!     &       testf3_xx,testf3_xy,testf3_yy,
+!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf3')
+!
+!      write(*,*) 'a,b,x(a),y(b),testf3(a,b)='
+!     &           ,a,b,x(a),y(b),testf3(a,b)
+!
+!      write(*,*) 'testf3_t,testf3_x,testf3_y='
+!     &            ,testf3_t,testf3_x,testf3_y
+!      write(*,*) 'testf3_tt,testf3_tx,testf2_ty='
+!     &            ,testf3_tt,testf3_tx,testf2_ty
+!      write(*,*) 'testf3_xx,testf3_xy,testf3_yy='
+!     &            ,testf3_xx,testf3_xy,testf3_yy
+!         end if
+!        end do
+!       end do
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
         ! give values to the metric
         g0_ll(1,1)=g0_tt_ads0+gb_tt0
