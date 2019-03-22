@@ -23,19 +23,18 @@ c-----------------------------------------------------------------------
         save first
         data first/.true./
 
-        logical thirdordforback
-        data thirdordforback/.true./
+        logical extrap
+        data extrap/.true./
 
         dx=x(2)-x(1)
 
 !!!!!!!!!!!!MYVERSION
         if (i.eq.1) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i+1,j).ne.ex)
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)) then
-                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
-     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
                else if ((chr(i+1,j).ne.ex
      &                 .and.chr(i+2,j).ne.ex)) then
                    f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
@@ -58,12 +57,11 @@ c-----------------------------------------------------------------------
          if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
                    f_x=(f(i+1,j)-f(i-1,j))/2/dx
          else if (chr(i-1,j).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i+1,j).ne.ex)
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)) then
-                   f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
-     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
                else if ((chr(i+1,j).ne.ex)
      &                 .and.(chr(i+2,j).ne.ex)) then
                    f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
@@ -91,12 +89,11 @@ c-----------------------------------------------------------------------
          if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
                    f_x=(f(i+1,j)-f(i-1,j))/2/dx
          else if (chr(i-1,j).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i+1,j).ne.ex)
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)) then
-                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
-     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
                else if ((chr(i+1,j).ne.ex)
      &                 .and.(chr(i+2,j).ne.ex)) then
                    f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
@@ -129,12 +126,11 @@ c-----------------------------------------------------------------------
          if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
                    f_x=(f(i+1,j)-f(i-1,j))/2/dx
          else if (chr(i-1,j).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i+1,j).ne.ex)
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)) then
-                    f_x=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i+1,j)
-     &                -(3.0d0/2.0d0)*f(i+2,j)+(1.0d0/3.0d0)*f(i+3,j))/dx
+                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
                else if ((chr(i+1,j).ne.ex)
      &                 .and.(chr(i+2,j).ne.ex)) then
                    f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
@@ -153,11 +149,10 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i-3,j).ne.ex)
      &            .and.(chr(i-2,j).ne.ex)) then
-                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
-     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
                else if (chr(i-2,j).ne.ex) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
                else
@@ -172,12 +167,11 @@ c-----------------------------------------------------------------------
          if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
                    f_x=(f(i+1,j)-f(i-1,j))/2/dx
          else if (chr(i+1,j).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i-1,j).ne.ex)
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)) then
-                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
-     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
                else if ((chr(i-1,j).ne.ex)
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
@@ -209,12 +203,11 @@ c-----------------------------------------------------------------------
          if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
                    f_x=(f(i+1,j)-f(i-1,j))/2/dx
          else if (chr(i+1,j).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i-1,j).ne.ex)
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)) then
-                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
-     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
                else if ((chr(i-1,j).ne.ex)
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
@@ -240,12 +233,11 @@ c-----------------------------------------------------------------------
 
 
         else if (i.eq.Nx) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i-1,j).ne.ex)
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)) then
-                    f_x=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i-1,j)
-     &                +(3.0d0/2.0d0)*f(i-2,j)-(1.0d0/3.0d0)*f(i-3,j))/dx
+                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
                else if ((chr(i-1,j).ne.ex)
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
@@ -345,8 +337,8 @@ c-----------------------------------------------------------------------
         save first
         data first/.true./
 
-        logical thirdordforback
-        data thirdordforback/.true./
+        logical extrap
+        data extrap/.true./
 
         !--------------------------------------------------------------
 
@@ -355,12 +347,11 @@ c-----------------------------------------------------------------------
 !!!!!!!MYVERSION!!!!!!!!!!!!
 
         if (j.eq.1) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j+1).ne.ex)
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
-     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
                else if ((chr(i,j+1).ne.ex
      &                 .and.chr(i,j+2).ne.ex)) then
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
@@ -383,12 +374,11 @@ c-----------------------------------------------------------------------
          if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
                    f_y=(f(i,j+1)-f(i,j-1))/2/dy
          else if (chr(i,j-1).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j+1).ne.ex)
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-(11.0d0/6.0d0)*f(i,j)+(3.0d0)*f(i,j+1)
-     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)) then
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
@@ -416,12 +406,11 @@ c-----------------------------------------------------------------------
          if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
                    f_y=(f(i,j+1)-f(i,j-1))/2/dy
          else if (chr(i,j-1).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j+1).ne.ex)
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
-     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)) then
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
@@ -453,12 +442,11 @@ c-----------------------------------------------------------------------
          if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
                    f_y=(f(i,j+1)-f(i,j-1))/2/dy
          else if (chr(i,j-1).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j+1).ne.ex)
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-(11.0d0/6.0d0)*f(i,j)+3.0d0*f(i,j+1)
-     &                -(3.0d0/2.0d0)*f(i,j+2)+(1.0d0/3.0d0)*f(i,j+3))/dy
+                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)) then
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
@@ -477,11 +465,10 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j-3).ne.ex)
      &            .and.(chr(i,j-2).ne.ex)) then
-                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
-     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
                else if (chr(i,j-2).ne.ex) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else
@@ -495,12 +482,11 @@ c-----------------------------------------------------------------------
          if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
                    f_y=(f(i,j+1)-f(i,j-1))/2/dy
          else if (chr(i,j+1).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j-1).ne.ex)
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
-     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
                else if ((chr(i,j-1).ne.ex)
      &                 .and.(chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
@@ -532,12 +518,11 @@ c-----------------------------------------------------------------------
          if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
                    f_y=(f(i,j+1)-f(i,j-1))/2/dy
          else if (chr(i,j+1).eq.ex) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j-1).ne.ex)
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
-     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
                else if ((chr(i,j-1).ne.ex)
      &                 .and.(chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
@@ -562,12 +547,11 @@ c-----------------------------------------------------------------------
          end if
 
         else if (j.eq.Ny) then
-               if ((thirdordforback)
+               if ((.not.extrap)
      &            .and.(chr(i,j-1).ne.ex)
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=((11.0d0/6.0d0)*f(i,j)-3.0d0*f(i,j-1)
-     &                +(3.0d0/2.0d0)*f(i,j-2)-(1.0d0/3.0d0)*f(i,j-3))/dy
+                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
                else if ((chr(i,j-1).ne.ex
      &                 .and.chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
@@ -780,9 +764,9 @@ c----------------------------------------------------------------------
      &            .and.chr(i+2,j).ne.ex
      &            .and.chr(i+3,j).ne.ex
      &            .and.chr(i+4,j).ne.ex) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
-     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
-     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i+1,j)+
+     &                  10*f(i+2,j)-5*f(i+3,j)+
+     &                  f(i+4,j))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
@@ -824,9 +808,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)
      &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
-     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
-     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i+1,j)+
+     &                  10*f(i+2,j)-5*f(i+3,j)+
+     &                  f(i+4,j))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
@@ -869,9 +853,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)
      &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
-     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
-     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i+1,j)+
+     &                  10*f(i+2,j)-5*f(i+3,j)+
+     &                  f(i+4,j))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
@@ -921,9 +905,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i+2,j).ne.ex)
      &            .and.(chr(i+3,j).ne.ex)
      &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i+1,j)
-     &                 +(19.0d0/2.0d0)*f(i+2,j)-(14.0d0/3.0d0)*f(i+3,j)
-     &                 +(11.0d0/12.0d0)*f(i+4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i+1,j)+
+     &                  10*f(i+2,j)-5*f(i+3,j)+
+     &                  f(i+4,j))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
@@ -980,9 +964,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)
      &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
-     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
-     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i-1,j)+
+     &                  10*f(i-2,j)-5*f(i-3,j)+
+     &                  f(i-4,j))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
@@ -1027,14 +1011,14 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
          else if (chr(i+1,j).eq.ex) then
-               if (.not.extrap
+               if ((.not.extrap)
      &            .and.(chr(i-1,j).ne.ex)
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)
      &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
-     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
-     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i-1,j)+
+     &                  10*f(i-2,j)-5*f(i-3,j)+
+     &                  f(i-4,j))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
@@ -1071,9 +1055,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i-2,j).ne.ex)
      &            .and.(chr(i-3,j).ne.ex)
      &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i-1,j)
-     &                 +(19.0d0/2.0d0)*f(i-2,j)-(14.0d0/3.0d0)*f(i-3,j)
-     &                 +(11.0d0/12.0d0)*f(i-4,j))/dx/dx
+                   f_xx=(3*f(i,j)-9*f(i-1,j)+
+     &                  10*f(i-2,j)-5*f(i-3,j)+
+     &                  f(i-4,j))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
                    call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
@@ -1113,9 +1097,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)
      &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
-     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
-     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j+1)+
+     &                  10*f(i,j+2)-5*f(i,j+3)+
+     &                  f(i,j+4))/dy/dy
                else if (chr(i,j+1).ne.ex
      &                 .and.chr(i,j+2).ne.ex
      &                 .and.chr(i,j+3).ne.ex) then
@@ -1140,14 +1124,14 @@ c----------------------------------------------------------------------
          if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
                    f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
          else if (chr(i,j-1).eq.ex) then
-               if (.not.extrap
+               if ((.not.extrap)
      &            .and.(chr(i,j+1).ne.ex)
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)
      &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
-     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
-     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j+1)+
+     &                  10*f(i,j+2)-5*f(i,j+3)+
+     &                  f(i,j+4))/dy/dy
                else if (chr(i,j+1).ne.ex
      &                 .and.chr(i,j+2).ne.ex
      &                 .and.chr(i,j+3).ne.ex) then
@@ -1178,9 +1162,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)
      &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
-     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
-     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j+1)+
+     &                  10*f(i,j+2)-5*f(i,j+3)+
+     &                  f(i,j+4))/dy/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)
      &                 .and.(chr(i,j+3).ne.ex)) then
@@ -1215,9 +1199,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j+2).ne.ex)
      &            .and.(chr(i,j+3).ne.ex)
      &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j+1)
-     &                 +(19.0d0/2.0d0)*f(i,j+2)-(14.0d0/3.0d0)*f(i,j+3)
-     &                 +(11.0d0/12.0d0)*f(i,j+4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j+1)+
+     &                  10*f(i,j+2)-5*f(i,j+3)+
+     &                  f(i,j+4))/dy/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)
      &                 .and.(chr(i,j+3).ne.ex)) then
@@ -1256,9 +1240,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)
      &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
-     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
-     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j-1)+
+     &                  10*f(i,j-2)-5*f(i,j-3)+
+     &                  f(i,j-4))/dy/dy
                else if ((chr(i,j-1).ne.ex)
      &                 .and.(chr(i,j-2).ne.ex)
      &                 .and.(chr(i,j-3).ne.ex)) then
@@ -1293,9 +1277,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)
      &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
-     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
-     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j-1)+
+     &                  10*f(i,j-2)-5*f(i,j-3)+
+     &                  f(i,j-4))/dy/dy
                else if (chr(i,j-1).ne.ex
      &                 .and.chr(i,j-2).ne.ex
      &                 .and.chr(i,j-3).ne.ex) then
@@ -1323,9 +1307,9 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j-2).ne.ex)
      &            .and.(chr(i,j-3).ne.ex)
      &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=((35.0d0/12.0d0)*f(i,j)-(26.0d0/3.0d0)*f(i,j-1)
-     &                 +(19.0d0/2.0d0)*f(i,j-2)-(14.0d0/3.0d0)*f(i,j-3)
-     &                 +(11.0d0/12.0d0)*f(i,j-4))/dy/dy
+                   f_yy=(3*f(i,j)-9*f(i,j-1)+
+     &                  10*f(i,j-2)-5*f(i,j-3)+
+     &                  f(i,j-4))/dy/dy
                else if (chr(i,j-1).ne.ex
      &                 .and.chr(i,j-2).ne.ex
      &                 .and.chr(i,j-3).ne.ex) then
