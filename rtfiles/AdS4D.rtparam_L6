@@ -20,6 +20,7 @@ stype := 1
 ief_bh_r0 := 3.0
 
 #AH-finder#
+no_find_apph := 1
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
@@ -180,7 +181,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 320000
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -220,7 +221,7 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_2p1horpen_L6_"
 
-save_ivec := 1-*/1
+save_ivec := 1-*/3200
 
 #-----------------------------------------------------
 

@@ -78,6 +78,7 @@ int diss_kmax,diss_eps_k_cutoff_n,diss_bdy_k,diss_all_past_k,diss_all;
 real ex_rbuf_a[MAX_BHS];
 
 // AH parameters
+int no_find_apph;
 int AH_Nchi[MAX_BHS],AH_Nphi[MAX_BHS],AH_Lmin[MAX_BHS],AH_Lmax[MAX_BHS],AH_find_best_fit[MAX_BHS];
 int AH_max_iter[MAX_BHS],AH_freq[MAX_BHS],AH_freq_aft[MAX_BHS],AH_rsteps[MAX_BHS],AH_maxinc[MAX_BHS];
 real AH_tol[MAX_BHS],AH_tol_aft[MAX_BHS],AH_r0[MAX_BHS],AH_lambda[MAX_BHS],AH_lambda_min[MAX_BHS];
@@ -887,6 +888,8 @@ void AdS4D_var_post_init(char *pfile)
 
    ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
 
+   no_find_apph=0; AMRD_int_param(pfile,"no_find_apph",&no_find_apph,1);
+
    // set fraction, 1-ex_rbuf, of AH radius to be excised
    for (j=0; j<MAX_BHS; j++)
    {
@@ -1671,6 +1674,9 @@ void AdS4D_pre_tstep(int L)
    }
 
    // search for AHs at t>0
+
+  if (!no_find_apph)
+  {
    do_repop=do_reinit_ex=got_an_AH=0;
 
    for (l=0; l<MAX_BHS; l++)
@@ -1819,6 +1825,7 @@ void AdS4D_pre_tstep(int L)
          AH_count[l]++;
       }
    }
+  }
 
    // repopulate if needed
    int repop_n=1;
