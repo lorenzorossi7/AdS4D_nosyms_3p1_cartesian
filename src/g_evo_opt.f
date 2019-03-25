@@ -61,7 +61,7 @@ c----------------------------------------------------------------------
         real*8 chr2(Nx,Ny)
 
         integer a,b,c,d,e
-        integer rb,i,j
+        integer rb,i,j,k,m
         integer is,ie,js,je,is_a_nan
 
         real*8 dx,dy
@@ -132,6 +132,8 @@ c----------------------------------------------------------------------
 
         logical ltrace,is_nan,dump,first_nan
         logical first_evolved_pt
+        logical extrap
+        data extrap/.true./
         parameter (ltrace=.false.)
         data first_nan/.true./
 
@@ -510,6 +512,44 @@ c----------------------------------------------------------------------
               !(REGION) interior not one-point-away-from-ads-bdy points; evolve 
               if (chr(i,j).ne.ex .and. chr2(i,j).ne.ex) then
 
+!!!!!!!!!!!!!!!!TO TEST efe(a,b)!!!!!!!!!!!!
+!               do k=1,Nx
+!                do m=1,Ny
+!                 gb_tt_np1(k,m)=x(k)+y(m)**2
+!                 gb_tt_n(k,m)=x(k)+y(m)**2
+!                 gb_tt_nm1(k,m)=x(k)+y(m)**2
+!                 gb_tx_np1(k,m)=x(k)+y(m)**2
+!                 gb_tx_n(k,m)=x(k)+y(m)**2
+!                 gb_tx_nm1(k,m)=x(k)+y(m)**2
+!                 gb_ty_np1(k,m)=x(k)+y(m)**2
+!                 gb_ty_n(k,m)=x(k)+y(m)**2
+!                 gb_ty_nm1(k,m)=x(k)+y(m)**2
+!                 gb_xx_np1(k,m)=x(k)+y(m)**2
+!                 gb_xx_n(k,m)=x(k)+y(m)**2
+!                 gb_xx_nm1(k,m)=x(k)+y(m)**2
+!                 gb_xy_np1(k,m)=x(k)+y(m)**2
+!                 gb_xy_n(k,m)=x(k)+y(m)**2
+!                 gb_xy_nm1(k,m)=x(k)+y(m)**2
+!                 gb_yy_np1(k,m)=x(k)+y(m)**2
+!                 gb_yy_n(k,m)=x(k)+y(m)**2
+!                 gb_yy_nm1(k,m)=x(k)+y(m)**2
+!                 psi_np1(k,m)=x(k)+y(m)**2
+!                 psi_n(k,m)=x(k)+y(m)**2
+!                 psi_nm1(k,m)=x(k)+y(m)**2
+!
+!                 Hb_t_np1(k,m)=x(k)**3+y(m)**4
+!                 Hb_t_n(k,m)=x(k)**3+y(m)**4
+!                 Hb_t_nm1(k,m)=x(k)**3+y(m)**4
+!                 Hb_x_np1(k,m)=x(k)**3+y(m)**4
+!                 Hb_x_n(k,m)=x(k)**3+y(m)**4
+!                 Hb_x_nm1(k,m)=x(k)**3+y(m)**4
+!                 Hb_y_np1(k,m)=x(k)**3+y(m)**4
+!                 Hb_y_n(k,m)=x(k)**3+y(m)**4
+!                 Hb_y_nm1(k,m)=x(k)**3+y(m)**4
+!               end do
+!              end do
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
               ! computes tensors at point i,j
               call tensor_init(
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -532,6 +572,7 @@ c----------------------------------------------------------------------
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
      &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
+
 
                 do a=1,4
                   do b=1,4
@@ -892,11 +933,11 @@ c----------------------------------------------------------------------
      &                                            gads_ll_x(a,4,3))+
      &                            h0_uu_x(4,4,b)* gads_ll_x(a,4,4) 
      &                              )
-     &
+
                     term4(a,b)=-0.5d0*A_l_x(a,b)                  
-     &
+
                     term5(a,b)=-0.5d0*A_l_x(b,a)           
-     &
+
                     term6(a,b)=     (           
      &                            Hads_l(1)*gammahh(1,a,b)+      
      &                            Hads_l(2)*gammahh(2,a,b)+
@@ -933,7 +974,7 @@ c----------------------------------------------------------------------
      &                            A_l(3)*gammahg(3,a,b)  +
      &                            A_l(4)*gammahg(4,a,b)  
      &                              ) 
-     &                             
+                             
                     term7(a,b)=    -(
      &                            gammahh(1,1,b)*gammahh(1,1,a)+
      &                            gammahh(1,2,b)*gammahh(2,1,a)+
@@ -1191,13 +1232,25 @@ c----------------------------------------------------------------------
      &                            gammahg(4,4,b)*gammahg(4,4,a)
      &                              )
                     term8(a,b)=-lambda4*h0_ll(a,b)
-     &
+
                     efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
      &                      -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/2)
 
                   end do
                 end do
+
+
+!!!!!!!!!!!!!!!!TO TEST efe(a,b)!!!!!!!!!!!!
+!                do a=1,4
+!                 do b=a,4
+!                  write(*,*) 'DEBUG from g_evo_opt'
+!                  write(*,*) 'i,j,x(i),y(j)=',i,j,x(i),y(j)
+!                  write(*,*) 'a,b,efe(a,b)=',a,b,efe(a,b)
+!
+!                 end do
+!                end do
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 !--------------------------------------------------------------------------
                 ! phi1_res = phi1,ab g^ab + phi1,b g^ab,a + phi1,c g^cb gamma^a_ab
@@ -1308,7 +1361,8 @@ c----------------------------------------------------------------------
                 ddgb_J=1/dt/dt
 
                 if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-                   if (i.le.(Nx-3)
+                   if ((.not.extrap)
+     &                 .and.(i.le.(Nx-3))
      &                 .and.((chr(i+1,j).ne.ex
      &                 .and.chr(i+2,j).ne.ex
      &                 .and.chr(i+3,j).ne.ex))) then
@@ -1326,7 +1380,8 @@ c----------------------------------------------------------------------
                       ddgb_J_tx=0
                    end if
                 else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
-                   if (i.ge.4
+                   if ((.not.extrap)
+     &                 .and.(i.ge.4)
      &                 .and.((chr(i-1,j).ne.ex
      &                 .and.chr(i-2,j).ne.ex
      &                 .and.chr(i-3,j).ne.ex))) then
@@ -1355,7 +1410,8 @@ c----------------------------------------------------------------------
                 end if
 
                 if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
-                   if (j.le.(Ny-3)
+                   if ((.not.extrap)
+     &                 .and.(j.le.(Ny-3))
      &                 .and.((chr(i,j+1).ne.ex
      &                 .and.chr(i,j+2).ne.ex
      &                 .and.chr(i,j+3).ne.ex))) then
@@ -1372,7 +1428,8 @@ c----------------------------------------------------------------------
                       ddgb_J_ty=0
                    end if
                 else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
-                   if (j.ge.4
+                   if ((.not.extrap)
+     &                 .and.(j.ge.4)
      &                 .and.((chr(i,j-1).ne.ex
      &                 .and.chr(i,j-2).ne.ex
      &                 .and.chr(i,j-3).ne.ex))) then
@@ -1472,7 +1529,7 @@ c----------------------------------------------------------------------
      &                             cuuuu(1,4,4,1)*dlll(4,1,4))
      &                                )
 
-                do b=2,4
+                do b=2,3
                   efe_J(1,b)=  -0.5d0*(
      &                            g0_uu(1,1)*ddgb_J
      &                            +2*g0_uu(1,2)*ddgb_J_tx
@@ -1496,7 +1553,24 @@ c----------------------------------------------------------------------
      &                             g0_uu(4,1)*g0_uu(1,b)*g0_ll_x(b,4,1)+
      &                             g0_uu(4,1)*g0_uu(2,b)*g0_ll_x(b,4,2)+
      &                             g0_uu(4,1)*g0_uu(3,b)*g0_ll_x(b,4,3)+
-     &                             g0_uu(4,1)*g0_uu(4,b)*g0_ll_x(b,4,4))
+     &                             g0_uu(4,1)*g0_uu(4,b)*g0_ll_x(b,4,4)+
+     &
+     &                             g0_uu(1,b)*g0_uu(1,1)*g0_ll_x(b,1,1)+
+     &                             g0_uu(1,b)*g0_uu(2,1)*g0_ll_x(b,1,2)+
+     &                             g0_uu(1,b)*g0_uu(3,1)*g0_ll_x(b,1,3)+
+     &                             g0_uu(1,b)*g0_uu(4,1)*g0_ll_x(b,1,4)+
+     &                             g0_uu(2,b)*g0_uu(1,1)*g0_ll_x(b,2,1)+
+     &                             g0_uu(2,b)*g0_uu(2,1)*g0_ll_x(b,2,2)+
+     &                             g0_uu(2,b)*g0_uu(3,1)*g0_ll_x(b,2,3)+
+     &                             g0_uu(2,b)*g0_uu(4,1)*g0_ll_x(b,2,4)+
+     &                             g0_uu(3,b)*g0_uu(1,1)*g0_ll_x(b,3,1)+
+     &                             g0_uu(3,b)*g0_uu(2,1)*g0_ll_x(b,3,2)+
+     &                             g0_uu(3,b)*g0_uu(3,1)*g0_ll_x(b,3,3)+
+     &                             g0_uu(3,b)*g0_uu(4,1)*g0_ll_x(b,3,4)+
+     &                             g0_uu(4,b)*g0_uu(1,1)*g0_ll_x(b,4,1)+
+     &                             g0_uu(4,b)*g0_uu(2,1)*g0_ll_x(b,4,2)+
+     &                             g0_uu(4,b)*g0_uu(3,1)*g0_ll_x(b,4,3)+
+     &                             g0_uu(4,b)*g0_uu(4,1)*g0_ll_x(b,4,4))
      &                            +dgb_J*
      &                            (g0_uu_x(1,1,1))
      &                                )
@@ -1526,6 +1600,8 @@ c----------------------------------------------------------------------
      &                             cuuuu(1,4,4,b)*dlll(4,b,4))
      &                                )
                 end do
+
+                   efe_J(1,4)=0
 
                 do a=2,3
                   do b=a,3
@@ -1570,7 +1646,7 @@ c----------------------------------------------------------------------
      &                             cuuuu(4,a,1,1)*dlll(4,a,1)+
      &                             cuuuu(4,a,1,2)*dlll(4,a,2)+
      &                             cuuuu(4,a,1,3)*dlll(4,a,3)+
-     &                             cuuuu(4,a,1,4)*dlll(4,a,4)+
+     &                             cuuuu(4,a,1,4)*dlll(4,a,4)-
      &                             cuuuu(1,1,a,1)*dlll(1,a,1)-
      &                             cuuuu(1,1,a,2)*dlll(1,a,2)-
      &                             cuuuu(1,1,a,3)*dlll(1,a,3)-
@@ -1603,7 +1679,7 @@ c----------------------------------------------------------------------
      &                             cuuuu(1,4,1,b)*dlll(1,b,4)+
      &                             cuuuu(1,4,2,b)*dlll(2,b,4)+
      &                             cuuuu(1,4,3,b)*dlll(3,b,4)+
-     &                             cuuuu(1,4,4,b)*dlll(4,b,4)+
+     &                             cuuuu(1,4,4,b)*dlll(4,b,4)-
      &                             cuuuu(b,1,1,1)*dlll(1,b,1)-
      &                             cuuuu(b,1,2,1)*dlll(2,b,1)-
      &                             cuuuu(b,1,3,1)*dlll(3,b,1)-
@@ -1669,7 +1745,7 @@ c----------------------------------------------------------------------
      &                             cuuuu(4,4,1,1)*dlll(4,4,1)+
      &                             cuuuu(4,4,1,2)*dlll(4,4,2)+
      &                             cuuuu(4,4,1,3)*dlll(4,4,3)+
-     &                             cuuuu(4,4,1,4)*dlll(4,4,4)+
+     &                             cuuuu(4,4,1,4)*dlll(4,4,4)-
      &                             cuuuu(1,1,4,1)*dlll(1,4,1)-
      &                             cuuuu(1,1,4,2)*dlll(1,4,2)-
      &                             cuuuu(1,1,4,3)*dlll(1,4,3)-
@@ -1702,7 +1778,7 @@ c----------------------------------------------------------------------
      &                             cuuuu(1,4,1,4)*dlll(1,4,4)+
      &                             cuuuu(1,4,2,4)*dlll(2,4,4)+
      &                             cuuuu(1,4,3,4)*dlll(3,4,4)+
-     &                             cuuuu(1,4,4,4)*dlll(4,4,4)+
+     &                             cuuuu(1,4,4,4)*dlll(4,4,4)-
      &                             cuuuu(4,1,1,1)*dlll(1,4,1)-
      &                             cuuuu(4,1,2,1)*dlll(2,4,1)-
      &                             cuuuu(4,1,3,1)*dlll(3,4,1)-
@@ -1812,7 +1888,7 @@ c----------------------------------------------------------------------
      &               n_l(2)*g0_uu(1,2)*dc_J
      &              +n_l(3)*g0_uu(1,3)*dc_J
      &              -(1+rho_cd)*g0_ll(2,2)*
-     &                    (-n_u(1)*(0.5d0*g0_uu(2,3)*dc_J)
+     &                    (-n_u(1)*(g0_uu(2,3)*dc_J)
      &                     +n_u(2)*(g0_uu(1,3)*dc_J)
      &                     +n_u(3)*(g0_uu(1,2)*dc_J))
      &              )
@@ -1826,7 +1902,7 @@ c----------------------------------------------------------------------
                 cd_J_ll(4,4)=-kappa_cd*
      &              (
      &              -(1+rho_cd)*g0_ll(4,4)*n_u(1)*
-     &                    (0.5d0*g0_uu(4,4)*dc_J*y0**2)
+     &                    (-0.5d0*g0_uu(4,4)*dc_J*y0**2)
      &              )
 
                 if (kappa_cd.ne.0) then

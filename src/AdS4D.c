@@ -151,7 +151,7 @@ real *g_norms;
 
 real *x,*y,*z;
 int shape[2],ghost_width[4],Nx,Ny,Nz,phys_bdy[4],size,g_rank;
-real base_bbox[4],bbox[4],dx,dy,dz,dt,dx_Lc;
+real base_bbox[4],bbox[4],dx,dy,dz,dt,dx_Lc,dy_Lc;
 int g_L;
 
 int cl_res_gfn;
@@ -405,6 +405,7 @@ void ldptr_bbox(void)
       PAMR_get_global_bbox(base_bbox);
       if (PAMR_get_max_lev(PAMR_AMRH)>1) PAMR_get_dxdt(2,dx0,&dt); else PAMR_get_dxdt(1,dx0,&dt);
       dx_Lc=dx0[0];
+      dy_Lc=dx0[1];
    }
 
    PAMR_get_g_rank(&g_rank);
@@ -1602,9 +1603,12 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                {
                  xp=(x-ex_xc[l][0]);
                  yp=(y-ex_xc[l][1]);
-                 ex_r_xp=(ex_r[l][0]*(1-ex_rbuf[l]));
-                 ex_r_yp=(ex_r[l][1]*(1-ex_rbuf[l]));
-                 if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp))<1) mask[ind]=excised;
+                 ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
+                 ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
+                 if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp))<1) 
+                 {
+                  mask[ind]=excised;
+                 }
                }
             }
          }
@@ -1841,7 +1845,8 @@ void AdS4D_pre_tstep(int L)
             /(pow(3,(2.0/3.0)));
          mh=ief_bh_r0/2;
          rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
-           printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf, so we excise, AT ALL TIME STEPS, points with compactified radius rhoh*(1-ex_rbuf)=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
+         ex_r[0][0]=ex_r[0][1]=rhoh*(1-ex_rbuf[0]);
+         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
         }
      }
 
