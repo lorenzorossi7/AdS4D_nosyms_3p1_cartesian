@@ -17,7 +17,7 @@ rhod := 0.8
 stype := 1
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 3.0
+ief_bh_r0 := 0.6
 
 #AH-finder#
 no_find_apph := 1
@@ -181,7 +181,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 40000
+steps := 4000
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -210,8 +210,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 4
-save_1_vars := [ "iresxx" "iresyy" "irespsi" "iresall" ]
+num_save_1_vars := 7
+save_1_vars := [ "iresxx" "iresyy" "irespsi" "iresall" "Hb_t" "Hb_x" "Hb_y" ]
 
 num_save_2_vars := 11
 save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_xx" "gb_xy" "gb_yy" "psi" "Hb_t" "Hb_x" "Hb_y" ]
@@ -221,7 +221,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_2p1horpen_L3_"
 
-save_ivec := 1-*/400
+save_ivec := 1-*/4
 
 #-----------------------------------------------------
-

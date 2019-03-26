@@ -2007,10 +2007,58 @@ c----------------------------------------------------------------------
                   write(*,*) 'dt,dx,dy=',dt,dx,dy
                   write(*,*) 'x0,y0,rho0=',x0,y0,rho0
 
+
                   write(*,*) ' at tn:'
-                  write(*,*) ' g0u_tt/x/y:',g0u_tt0,g0u_tx0,g0u_ty0
-                  write(*,*) ' g0u_xx/y:',g0u_xx0,g0u_xy0
-                  write(*,*) ' g0u_yy:',g0u_yy0
+                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i,j),
+     &                   gb_tt_n(i,j),gb_tt_nm1(i,j)
+                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i,j),
+     &                   gb_tx_n(i,j),gb_tx_nm1(i,j)
+                  write(*,*) ' gb_ty np1,n,nm1:',gb_ty_np1(i,j),
+     &                   gb_ty_n(i,j),gb_ty_nm1(i,j)
+                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j),
+     &                   gb_xx_n(i,j),gb_xx_nm1(i,j)
+                  write(*,*) ' gb_xy np1,n,nm1:',gb_xy_np1(i,j),
+     &                   gb_xy_n(i,j),gb_xy_nm1(i,j)
+                  write(*,*) ' gb_yy np1,n,nm1:',gb_yy_np1(i,j),
+     &                   gb_yy_n(i,j),gb_yy_nm1(i,j)
+                  write(*,*) ' psi np1,n,nm1:',psi_np1(i,j),
+     &                   psi_n(i,j),psi_nm1(i,j)
+
+                  write(*,*) ' gads_tt :',gads_ll(1,1)
+                  write(*,*) ' gads_tx :',gads_ll(1,2)
+                  write(*,*) ' gads_ty :',gads_ll(1,3)
+                  write(*,*) ' gads_xx :',gads_ll(2,2)
+                  write(*,*) ' gads_xy :',gads_ll(2,3)
+                  write(*,*) ' gads_yy :',gads_ll(3,3)
+                  write(*,*) ' gads_psi:',gads_ll(4,4)
+                  write(*,*) ' h0_tt :',h0_ll(1,1)
+                  write(*,*) ' h0_tx :',h0_ll(1,2)
+                  write(*,*) ' h0_ty :',h0_ll(1,3)
+                  write(*,*) ' h0_xx :',h0_ll(2,2)
+                  write(*,*) ' h0_xy :',h0_ll(2,3)
+                  write(*,*) ' h0_yy :',h0_ll(3,3)
+                  write(*,*) ' h0_psi:',h0_ll(4,4)
+                  write(*,*) ' g0_tt :',g0_ll(1,1)
+                  write(*,*) ' g0_tx :',g0_ll(1,2)
+                  write(*,*) ' g0_ty :',g0_ll(1,3)
+                  write(*,*) ' g0_xx :',g0_ll(2,2)
+                  write(*,*) ' g0_xy :',g0_ll(2,3)
+                  write(*,*) ' g0_yy :',g0_ll(3,3)
+                  write(*,*) ' g0_psi:',g0_ll(4,4)
+                  write(*,*) ' g0u_tt :',g0_uu(1,1)
+                  write(*,*) ' g0u_tx :',g0_uu(1,2)
+                  write(*,*) ' g0u_ty :',g0_uu(1,3)
+                  write(*,*) ' g0u_xx :',g0_uu(2,2)
+                  write(*,*) ' g0u_xy :',g0_uu(2,3)
+                  write(*,*) ' g0u_yy :',g0_uu(3,3)
+                  write(*,*) ' g0u_psi:',g0_uu(4,4)
+                  write(*,*) ' cd_tt:',cd_ll(1,1)
+                  write(*,*) ' cd_tx:',cd_ll(1,2)
+                  write(*,*) ' cd_ty:',cd_ll(1,3)
+                  write(*,*) ' cd_xx:',cd_ll(2,2)
+                  write(*,*) ' cd_xy:',cd_ll(2,3)
+                  write(*,*) ' cd_yy:',cd_ll(3,3)
+                  write(*,*) ' cd_psi:',cd_ll(4,4)
                   write(*,*) ' phi1:',phi1_n(i,j)
                   write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j),
      &                     phi1_n(i,j),phi1_nm1(i,j)
