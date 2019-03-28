@@ -1389,14 +1389,14 @@ real AdS4D_evo_residual(void)
 
    check_nan_(&l2norm,&is_nan);
 
-//   if (is_nan)
-//   {
-//      printf("\nl2norm_phi1=%lf, l2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, g_norms[phi1_n_gfn-1]=%lf\n",
-//              l2norm_phi1,l2norm_gb,l2norm_hb_t,l2norm_hb_i,g_norms[phi1_n_gfn-1]);
-//      printf("[Nx,Ny]=[%i,%i],L=%i\n",Nx,Ny,g_L);
-//      AMRD_stop("l2norm is nan ... stopping","");
-//      l2norm=0;
-//   }
+   if (is_nan)
+   {
+      printf("\nl2norm_phi1=%lf, l2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, g_norms[phi1_n_gfn-1]=%lf\n",
+              l2norm_phi1,l2norm_gb,l2norm_hb_t,l2norm_hb_i,g_norms[phi1_n_gfn-1]);
+      printf("[Nx,Ny]=[%i,%i],L=%i\n",Nx,Ny,g_L);
+      AMRD_stop("l2norm is nan ... stopping","");
+      l2norm=0;
+   }
 
    return l2norm;
 }

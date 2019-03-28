@@ -210,8 +210,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 7
-save_1_vars := [ "iresxx" "iresyy" "irespsi" "iresall" "Hb_t" "Hb_x" "Hb_y" ]
+num_save_1_vars := 8
+save_1_vars := [ "iresxx" "iresyy" "irespsi" "iresall" "gb_res" "Hb_t" "Hb_x" "Hb_y" ]
 
 num_save_2_vars := 11
 save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_xx" "gb_xy" "gb_yy" "psi" "Hb_t" "Hb_x" "Hb_y" ]
