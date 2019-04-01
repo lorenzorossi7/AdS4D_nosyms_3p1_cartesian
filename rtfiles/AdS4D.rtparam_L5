@@ -20,12 +20,11 @@ stype := 1
 ief_bh_r0 := 0.6
 
 #AH-finder#
-no_find_apph := 1
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
 delta_ex_rbuf := 0.0
-AH_max_iter := 1600000
+AH_max_iter := 0
 AH_lambda := 0.0000001
 AH_tol := 1e-2
 AH_r0 := 0.10
