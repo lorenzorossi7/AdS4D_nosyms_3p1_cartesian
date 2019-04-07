@@ -176,7 +176,7 @@ c-----------------------------------------------------------------------
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
                else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/2/dx
+                   f_x=(f(i,j)-f(i-1,j))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -212,7 +212,7 @@ c-----------------------------------------------------------------------
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
                else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/2/dx
+                   f_x=(f(i,j)-f(i-1,j))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -242,7 +242,7 @@ c-----------------------------------------------------------------------
      &                 .and.(chr(i-2,j).ne.ex)) then
                    f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
                else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/2/dx
+                   f_x=(f(i,j)-f(i-1,j))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -357,8 +357,8 @@ c-----------------------------------------------------------------------
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
                else if (chr(i,j+1).ne.ex) then
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                  if (first) then
                      first=.false.
@@ -384,8 +384,8 @@ c-----------------------------------------------------------------------
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
                else if (chr(i,j+1).ne.ex) then
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                 if (first) then
                      first=.false.
@@ -398,8 +398,8 @@ c-----------------------------------------------------------------------
                end if
          else
                    f_y=(f(i,j)-f(i,j-1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
          end if
 
         else if (j.eq.3) then
@@ -416,8 +416,8 @@ c-----------------------------------------------------------------------
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
                else if (chr(i+1,j).ne.ex) then
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                 if (first) then
                      first=.false.
@@ -433,8 +433,8 @@ c-----------------------------------------------------------------------
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else
                    f_y=(f(i,j)-f(i,j-1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
@@ -452,8 +452,8 @@ c-----------------------------------------------------------------------
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
                else if (chr(i,j+1).ne.ex) then
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                 if (first) then
                      first=.false.
@@ -473,8 +473,8 @@ c-----------------------------------------------------------------------
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else
                    f_y=(f(i,j)-f(i,j-1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
@@ -491,9 +491,9 @@ c-----------------------------------------------------------------------
      &                 .and.(chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/2/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                 if (first) then
                      first=.false.
@@ -509,8 +509,8 @@ c-----------------------------------------------------------------------
                    f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
                else
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
@@ -527,9 +527,9 @@ c-----------------------------------------------------------------------
      &                 .and.(chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/2/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                 if (first) then
                      first=.false.
@@ -542,8 +542,8 @@ c-----------------------------------------------------------------------
                end if
          else
                    f_y=(-f(i,j)+f(i,j+1))/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
          end if
 
         else if (j.eq.Ny) then
@@ -556,9 +556,9 @@ c-----------------------------------------------------------------------
      &                 .and.chr(i,j-2).ne.ex)) then
                    f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
                else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/2/dy
-!                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   f_y=(f(i,j)-f(i,j-1))/dy
+!                  write(*,*) 'df1_int_y: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
                  if (first) then
                      first=.false.
@@ -1107,7 +1107,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j+2)-f(i,j+3))/dy/dy
                else if (chr(i,j+1).ne.ex
      &                  .and.chr(i,j+2).ne.ex) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_xx=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
                else
@@ -1139,7 +1139,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j+2)-f(i,j+3))/dy/dy
                else if (chr(i,j+1).ne.ex
      &                 .and.chr(i,j+2).ne.ex) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
                else
@@ -1172,7 +1172,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j+2)-f(i,j+3))/dy/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
                else
@@ -1209,7 +1209,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j+2)-f(i,j+3))/dy/dy
                else if ((chr(i,j+1).ne.ex)
      &                 .and.(chr(i,j+2).ne.ex)) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
                else
@@ -1250,7 +1250,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j-2)-f(i,j-3))/dy/dy
                else if ((chr(i,j-1).ne.ex)
      &                 .and.(chr(i,j-2).ne.ex)) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
                else
@@ -1287,7 +1287,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j-2)-f(i,j-3))/dy/dy
                else if (chr(i,j-1).ne.ex
      &                 .and.chr(i,j-2).ne.ex) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
                else
@@ -1317,7 +1317,7 @@ c----------------------------------------------------------------------
      &                   4*f(i,j-2)-f(i,j-3))/dy/dy
                else if (chr(i,j-1).ne.ex
      &                  .and.chr(i,j-2).ne.ex) then
-              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                    f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
                else

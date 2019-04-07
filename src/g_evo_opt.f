@@ -1360,101 +1360,468 @@ c----------------------------------------------------------------------
                 dgb_J=1/2/dt
                 ddgb_J=1/dt/dt
 
-                if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-                   if ((.not.extrap)
-     &                 .and.(i.le.(Nx-3))
-     &                 .and.((chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex
-     &                 .and.chr(i+3,j).ne.ex))) then
-                      ddgb_J_tx=-1/dt/dx
-                   else if (i.le.(Nx-2)
-     &                      .and.((chr(i+1,j).ne.ex
-     &                      .and.chr(i+2,j).ne.ex))) then
-                      ddgb_J_tx=-3/4/dt/dx
-                   else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
-                      ddgb_J_tx=-1/2/dt/dx
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (A)'
-                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                      write(*,*) '    (first error only)'
-                      ddgb_J_tx=0
-                   end if
-                else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
-                   if ((.not.extrap)
-     &                 .and.(i.ge.4)
-     &                 .and.((chr(i-1,j).ne.ex
-     &                 .and.chr(i-2,j).ne.ex
-     &                 .and.chr(i-3,j).ne.ex))) then
-                      ddgb_J_tx=1/dt/dx
-                   else if (i.ge.3
-     &                      .and.((chr(i-1,j).ne.ex
-     &                      .and.chr(i-2,j).ne.ex))) then
-                      ddgb_J_tx=3/4/dt/dx
-                   else if (i.ge.2.and.chr(i-1,j).ne.ex) then
-                      ddgb_J_tx=1/2/dt/dx
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (B)'
-                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                      write(*,*) '    (first error only)'
-                      ddgb_J_tx=0
-                   end if
-                else
-                   if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
-                      ddgb_J_tx=0
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (C)'
-                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
-                      write(*,*) '    (first error only)'
-                      ddgb_J_tx=0
-                   end if
-                end if
+!!!!!!!!MY VERSION!!!!!!!
 
-                if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
-                   if ((.not.extrap)
-     &                 .and.(j.le.(Ny-3))
-     &                 .and.((chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex
-     &                 .and.chr(i,j+3).ne.ex))) then
-                      ddgb_J_ty=-1/dt/dy
-                   else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
-     &                      .and.chr(i,j+2).ne.ex))) then
-                      ddgb_J_ty=-3/4/dt/dy              
-                   else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
-                      ddgb_J_ty=-1/2/dt/dy
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (D)'
-                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                      write(*,*) '    (first error only)'
-                      ddgb_J_ty=0
-                   end if
-                else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
-                   if ((.not.extrap)
-     &                 .and.(j.ge.4)
-     &                 .and.((chr(i,j-1).ne.ex
-     &                 .and.chr(i,j-2).ne.ex
-     &                 .and.chr(i,j-3).ne.ex))) then
-                      ddgb_J_ty=1/dt/dy
-                   else if (j.ge.3.and.((chr(i,j-1).ne.ex
-     &                      .and.chr(i,j-2).ne.ex))) then
-                      ddgb_J_ty=3/4/dt/dy
-                   else if (j.ge.2.and.chr(i,j-1).ne.ex) then
-                      ddgb_J_ty=1/2/dt/dy
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (E)'
-                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                      write(*,*) '    (first error only)'
-                      ddgb_J_ty=0
-                   end if
-                else
-                   if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
-                      ddgb_J_ty=0
-                   else
-                      write(*,*) 'g_evo_opt: error in chr stencil (F)'
-                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                      write(*,*) '    (first error only)'
-                      ddgb_J_ty=0
-                   end if
-                end if
+!i
+        if (i.eq.1) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                   ddgb_J_tx=-1/dt/dx
+               else if ((chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex)) then
+                   ddgb_J_tx=-3/4/dt/dx
+               else if (chr(i+1,j).ne.ex) then
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+        else if (i.eq.2) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   ddgb_J_tx=0
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                   ddgb_J_tx=-1/dt/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   ddgb_J_tx=-3/4/dt/dx
+               else if (chr(i+1,j).ne.ex) then
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+         else   !this is the case where (i-1,j) is not excised and (i+1,j) is excised 
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+        else if (i.eq.3) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   ddgb_J_tx=0
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                   ddgb_J_tx=-1/dt/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   ddgb_J_tx=-3/4/dt/dx
+               else if (chr(i+1,j).ne.ex) then
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+         else 
+               if (chr(i-2,j).ne.ex) then
+                   ddgb_J_tx=3/4/dt/dx
+               else
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+        else if ((i.ge.4).and.(i.le.(Nx-3))) then
+         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+                   ddgb_J_tx=0
+         else if (chr(i-1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i+1,j).ne.ex)
+     &            .and.(chr(i+2,j).ne.ex)
+     &            .and.(chr(i+3,j).ne.ex)) then
+                   ddgb_J_tx=-1/dt/dx
+               else if ((chr(i+1,j).ne.ex)
+     &                 .and.(chr(i+2,j).ne.ex)) then
+                   ddgb_J_tx=-3/4/dt/dx
+               else if (chr(i+1,j).ne.ex) then
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+         else
+               if ((.not.extrap)
+     &            .and.(chr(i-3,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)) then
+                   ddgb_J_tx=1/dt/dx
+               else if (chr(i-2,j).ne.ex) then
+                   ddgb_J_tx=3/4/dt/dx
+               else
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+        else if (i.eq.(Nx-2)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   ddgb_J_tx=0
+         else if (chr(i+1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                   ddgb_J_tx=1/dt/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   ddgb_J_tx=3/4/dt/dx
+               else if (chr(i-1,j).ne.ex) then
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+         else 
+               if (chr(i+2,j).ne.ex) then
+                   ddgb_J_tx=-3/4/dt/dx
+               else
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               end if
+         end if
+        else if (i.eq.(Nx-1)) then
+         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+                   ddgb_J_tx=0
+         else if (chr(i+1,j).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                   ddgb_J_tx=1/dt/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   ddgb_J_tx=3/4/dt/dx
+               else if (chr(i-1,j).ne.ex) then
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+         else
+                   ddgb_J_tx=-1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+         end if
+        else if (i.eq.Nx) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j).ne.ex)
+     &            .and.(chr(i-2,j).ne.ex)
+     &            .and.(chr(i-3,j).ne.ex)) then
+                   ddgb_J_tx=1/dt/dx
+               else if ((chr(i-1,j).ne.ex)
+     &                 .and.(chr(i-2,j).ne.ex)) then
+                   ddgb_J_tx=3/4/dt/dx
+               else if (chr(i-1,j).ne.ex) then
+                   ddgb_J_tx=1/2/dt/dx
+!                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+               else
+                   ddgb_J_tx=0
+                   return
+               end if
+        end if
+
+
+
+!j
+        if (j.eq.1) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   ddgb_J_ty=-1/dt/dy
+               else if ((chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex)) then
+                   ddgb_J_ty=-3/4/dt/dy
+               else if (chr(i,j+1).ne.ex) then
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+        else if (j.eq.2) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   ddgb_J_ty=0
+         else if (chr(i,j-1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   ddgb_J_ty=-1/dt/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   ddgb_J_ty=-3/4/dt/dy
+               else if (chr(i,j+1).ne.ex) then
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+         else   !this is the case where (i,j-1) is not excised and (i,j+1) is excised 
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+         end if
+        else if (j.eq.3) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   ddgb_J_ty=0
+         else if (chr(i,j-1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   ddgb_J_ty=-1/dt/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   ddgb_J_ty=-3/4/dt/dy
+               else if (chr(i,j+1).ne.ex) then
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+         else 
+               if (chr(i,j-2).ne.ex) then
+                   ddgb_J_ty=3/4/dt/dy
+               else
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               end if
+         end if
+        else if ((j.ge.4).and.(j.le.(Ny-3))) then
+         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+                   ddgb_J_ty=0
+         else if (chr(i,j-1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j+1).ne.ex)
+     &            .and.(chr(i,j+2).ne.ex)
+     &            .and.(chr(i,j+3).ne.ex)) then
+                   ddgb_J_ty=-1/dt/dy
+               else if ((chr(i,j+1).ne.ex)
+     &                 .and.(chr(i,j+2).ne.ex)) then
+                   ddgb_J_ty=-3/4/dt/dy
+               else if (chr(i,j+1).ne.ex) then
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+         else
+               if ((.not.extrap)
+     &            .and.(chr(i,j-3).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)) then
+                   ddgb_J_ty=1/dt/dy
+               else if (chr(i-2,j).ne.ex) then
+                   ddgb_J_ty=3/4/dt/dy
+               else
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               end if
+         end if
+        else if (j.eq.(Ny-2)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   ddgb_J_ty=0
+         else if (chr(i,j+1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   ddgb_J_ty=1/dt/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+                   ddgb_J_ty=3/4/dt/dy
+               else if (chr(i,j-1).ne.ex) then
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+         else 
+               if (chr(i,j+2).ne.ex) then
+                   ddgb_J_ty=-3/4/dt/dy
+               else
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               end if
+         end if
+        else if (j.eq.(Ny-1)) then
+         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+                   ddgb_J_ty=0
+         else if (chr(i,j+1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   ddgb_J_ty=1/dt/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+                   ddgb_J_ty=3/4/dt/dy
+               else if (chr(i,j-1).ne.ex) then
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+         else
+                   ddgb_J_ty=-1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+         end if
+        else if (j.eq.Ny) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1).ne.ex)
+     &            .and.(chr(i,j-2).ne.ex)
+     &            .and.(chr(i,j-3).ne.ex)) then
+                   ddgb_J_ty=1/dt/dy
+               else if ((chr(i,j-1).ne.ex)
+     &                 .and.(chr(i,j-2).ne.ex)) then
+                   ddgb_J_ty=3/4/dt/dy
+               else if (chr(i,j-1).ne.ex) then
+                   ddgb_J_ty=1/2/dt/dy
+!                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
+!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+               else
+                   ddgb_J_ty=0
+                   return
+               end if
+        end if
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+!!!!!OLD VERSION
+!                if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
+!                   if ((.not.extrap)
+!     &                 .and.(i.le.(Nx-3))
+!     &                 .and.((chr(i+1,j).ne.ex
+!     &                 .and.chr(i+2,j).ne.ex
+!     &                 .and.chr(i+3,j).ne.ex))) then
+!                      ddgb_J_tx=-1/dt/dx
+!                   else if (i.le.(Nx-2)
+!     &                      .and.((chr(i+1,j).ne.ex
+!     &                      .and.chr(i+2,j).ne.ex))) then
+!                      ddgb_J_tx=-3/4/dt/dx
+!                   else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
+!                      ddgb_J_tx=-1/2/dt/dx
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (A)'
+!                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_tx=0
+!                   end if
+!                else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!                   if ((.not.extrap)
+!     &                 .and.(i.ge.4)
+!     &                 .and.((chr(i-1,j).ne.ex
+!     &                 .and.chr(i-2,j).ne.ex
+!     &                 .and.chr(i-3,j).ne.ex))) then
+!                      ddgb_J_tx=1/dt/dx
+!                   else if (i.ge.3
+!     &                      .and.((chr(i-1,j).ne.ex
+!     &                      .and.chr(i-2,j).ne.ex))) then
+!                      ddgb_J_tx=3/4/dt/dx
+!                   else if (i.ge.2.and.chr(i-1,j).ne.ex) then
+!                      ddgb_J_tx=1/2/dt/dx
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (B)'
+!                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_tx=0
+!                   end if
+!                else
+!                   if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
+!                      ddgb_J_tx=0
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (C)'
+!                      write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_tx=0
+!                   end if
+!                end if
+!
+!                if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+!                   if ((.not.extrap)
+!     &                 .and.(j.le.(Ny-3))
+!     &                 .and.((chr(i,j+1).ne.ex
+!     &                 .and.chr(i,j+2).ne.ex
+!     &                 .and.chr(i,j+3).ne.ex))) then
+!                      ddgb_J_ty=-1/dt/dy
+!                   else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
+!     &                      .and.chr(i,j+2).ne.ex))) then
+!                      ddgb_J_ty=-3/4/dt/dy              
+!                   else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
+!                      ddgb_J_ty=-1/2/dt/dy
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (D)'
+!                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_ty=0
+!                   end if
+!                else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+!                   if ((.not.extrap)
+!     &                 .and.(j.ge.4)
+!     &                 .and.((chr(i,j-1).ne.ex
+!     &                 .and.chr(i,j-2).ne.ex
+!     &                 .and.chr(i,j-3).ne.ex))) then
+!                      ddgb_J_ty=1/dt/dy
+!                   else if (j.ge.3.and.((chr(i,j-1).ne.ex
+!     &                      .and.chr(i,j-2).ne.ex))) then
+!                      ddgb_J_ty=3/4/dt/dy
+!                   else if (j.ge.2.and.chr(i,j-1).ne.ex) then
+!                      ddgb_J_ty=1/2/dt/dy
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (E)'
+!                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_ty=0
+!                   end if
+!                else
+!                   if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
+!                      ddgb_J_ty=0
+!                   else
+!                      write(*,*) 'g_evo_opt: error in chr stencil (F)'
+!                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                      write(*,*) '    (first error only)'
+!                      ddgb_J_ty=0
+!                   end if
+!                end if
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 efe_J(1,1)=    -0.5d0*(
      &                            g0_uu(1,1)*ddgb_J

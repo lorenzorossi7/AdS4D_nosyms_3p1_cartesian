@@ -250,17 +250,17 @@ c----------------------------------------------------------------------
                 gbxy =gb_xy_np1(i,j)
                 gbyy =gb_yy_np1(i,j)
                 gbpsi=psi_np1(i,j)
-                g0uu11=(-gbxy**2+((4+gbxx*(-1+rho0**2)**2)*
-     &                 (4+gbyy*(-1+rho0**2)**2))/(-1+rho0**2)**4)/
-     &                 (gbty*(-(gbty*gbxx)+gbtx*gbxy-(4*gbty)
-     &                 /(-1+rho0**2)**2)- 
-     &                 gbxy*(-(gbtx*gbty)+ 
-     &                 (gbxy*(gbtt*(-1+rho0**2)**2-(1+rho0**2)**2))/
-     &                 (-1+rho0**2)**2)+ 
-     &                 (gbyy+4/(-1+rho0**2)**2)*
-     &                 (-gbtx**2+((4+gbxx*(-1+rho0**2)**2)*
-     &                 (gbtt*(-1+rho0**2)**2-(1+rho0**2)**2))/
-     &                 (-1+rho0**2)**4))
+                g0uu11=(-gbxy**2+(4+gbxx*(-1+rho0**2)**2)
+     &                  *(4+gbyy*(-1+rho0**2)**2)
+     &                  /(-1+rho0**2)**4)
+     &                /(gbxy*(gbtx*gbty-gbtt*gbxy
+     &                  +gbxy*(1+rho0**2)**2/(-1+rho0**2)**2)
+     &                 +gbty*(gbtx*gbxy
+     &                  -gbty*(4+gbxx*(-1+rho0**2)**2)/(-1+rho0**2)**2)
+     &                 -(1/(-1+rho0**2)**6)*(4+gbyy*(-1+rho0**2)**2)
+     &                  *(gbtx**2*(-1+rho0**2)**4
+     &                   -gbtt*(-1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)
+     &                   +(1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)))
                 alphasq0=-1/g0uu11
                 if (alphasq0.ge.0) then
                   alpha0=sqrt(alphasq0)
@@ -506,17 +506,17 @@ c-----------------------------------------------------------------------
                 gbxy =gb_xy_np1(i,j)
                 gbyy =gb_yy_np1(i,j)
                 gbpsi=psi_np1(i,j)
-                g0uu11=(-gbxy**2+((4+gbxx*(-1+rho0**2)**2)*
-     &                 (4+gbyy*(-1+rho0**2)**2))/(-1+rho0**2)**4)/
-     &                 (gbty*(-(gbty*gbxx)+gbtx*gbxy-(4*gbty)
-     &                 /(-1+rho0**2)**2)-  
-     &                 gbxy*(-(gbtx*gbty)+ 
-     &                 (gbxy*(gbtt*(-1+rho0**2)**2-(1+rho0**2)**2))/
-     &                 (-1+rho0**2)**2)+   
-     &                 (gbyy+4/(-1+rho0**2)**2)*
-     &                 (-gbtx**2+((4+gbxx*(-1+rho0**2)**2)*
-     &                 (gbtt*(-1+rho0**2)**2-(1+rho0**2)**2))/
-     &                 (-1+rho0**2)**4))
+                g0uu11=(-gbxy**2+(4+gbxx*(-1+rho0**2)**2)
+     &                  *(4+gbyy*(-1+rho0**2)**2)
+     &                  /(-1+rho0**2)**4)
+     &                /(gbxy*(gbtx*gbty-gbtt*gbxy
+     &                  +gbxy*(1+rho0**2)**2/(-1+rho0**2)**2)
+     &                 +gbty*(gbtx*gbxy
+     &                  -gbty*(4+gbxx*(-1+rho0**2)**2)/(-1+rho0**2)**2)
+     &                 -(1/(-1+rho0**2)**6)*(4+gbyy*(-1+rho0**2)**2)
+     &                  *(gbtx**2*(-1+rho0**2)**4
+     &                   -gbtt*(-1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)
+     &                   +(1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)))
                 alphasq0=-1/g0uu11
                 if (alphasq0.ge.0) then
                   alpha0=sqrt(alphasq0)
