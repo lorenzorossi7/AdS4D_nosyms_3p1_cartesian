@@ -1,6 +1,6 @@
-#---------- AdS 5D axisymmetric fixed parameter file --------------------------
+#---------- AdS 4D axisymmetric fixed parameter file --------------------------
 
-app_name := ["AdS 5D, axisymmetry with scalar field"]
+app_name := ["AdS 4D, 2+1 Cartesian, axisymmetry "]
 
 #==============================================================================
 
