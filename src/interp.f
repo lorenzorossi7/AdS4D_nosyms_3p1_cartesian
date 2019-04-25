@@ -1,12 +1,12 @@
 c-----------------------------------------------------------------------
 c Sets f at i,j via xy interpolation between interior point and AdS boundary
 c-----------------------------------------------------------------------
-        subroutine interp_from_ads_bdy(f,x,y,L,i,j,chr,ex,Nx,Ny)
+        subroutine interp_from_ads_bdy(f,x,y,z,L,i,j,k,chr,ex,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,i,j
-        real*8 f(Nx,Ny),chr(Nx,Ny),ex,x(Nx),y(Ny),L
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,x(Nx),y(Ny),z(Nz),L
 
-        real*8 dx,dy,rho_bdy,xi
+        real*8 dx,dy,dz,rho_bdy,xi
         real*8 d_to_bdy
         real*8 f_bdy,f_int
 
@@ -22,6 +22,7 @@ c-----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         rho_bdy=1.0d0
         f_bdy=0.0d0        
@@ -38,7 +39,7 @@ c-----------------------------------------------------------------------
                  write(*,*) 'i=Nx'
                  stop
               end if
-              f_int=f(i+1,j)
+              f_int=f(i+1,j,k)
            else
               d_to_bdy=rho_bdy*cos(xi)-x(i)
               if (i.eq.1) then
@@ -46,9 +47,9 @@ c-----------------------------------------------------------------------
                  write(*,*) 'i=1'
                  stop
               end if
-              f_int=f(i-1,j)
+              f_int=f(i-1,j,k)
            end if
-           f(i,j)=(dx*f_bdy+d_to_bdy*f_int)/(dx+d_to_bdy)
+           f(i,j,k)=(dx*f_bdy+d_to_bdy*f_int)/(dx+d_to_bdy)
         else
            xi=acos(x(i)/rho_bdy)
            d_to_bdy=rho_bdy*sin(xi)-y(j)
@@ -57,8 +58,8 @@ c-----------------------------------------------------------------------
                  write(*,*) 'j=1'
               stop
            end if
-           f_int=f(i,j-1)
-           f(i,j)=(dy*f_bdy+d_to_bdy*f_int)/(dy+d_to_bdy)
+           f_int=f(i,j-1,k)
+           f(i,j,k)=(dy*f_bdy+d_to_bdy*f_int)/(dy+d_to_bdy)
         end if
 
         return
@@ -67,25 +68,28 @@ c-----------------------------------------------------------------------
 c----------------------------------------------------------------------
 c Sets f at i,j via rho interpolation between interior point and AdS boundary 
 c----------------------------------------------------------------------
-        subroutine interp_from_ads_bdy_rho(f,x,y,L,i,j,chr,ex,Nx,Ny,
+        subroutine interp_from_ads_bdy_rho(f,x,y,z,L,i,j,k,chr,ex,
+     &         Nx,Ny,Nz,
      &         shift,ghost_width)
         implicit none
-        integer Nx,Ny,i,j,i_shift,j_shift
+        integer Nx,Ny,Nz,i,j,k,i_shift,j_shift
         integer shift
         real*8 rho_shift
-        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_x,x(Nx),y(Ny),L
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_x,x(Nx),y(Ny),z(Nz),L
 
-        real*8 x0,y0,rho0,f_int,f_bdy,rhodist
+        real*8 x0,y0,z0,rho0,f_int,f_bdy,rhodist
         real*8 d_x,d_y
-        real*8 dx,dy,da,xi,q,PI,rhotobdy,rhotoint
+        real*8 dx,dy,dz,da,xi,q,PI,rhotobdy,rhotoint
         parameter (PI=3.141592653589793d0)
 
-        integer ghost_width(4)
+        integer ghost_width(6)
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
         x0=x(i)
         y0=y(j)
+        z0=z(k)
         rho0=sqrt(x0**2+y0**2)
 
         rhotobdy=1.0d0-rho0
@@ -132,39 +136,31 @@ c----------------------------------------------------------------------
           da=d_y*(dx+i_shift*dx)/d_x-j_shift*dy
           rhotoint=sqrt((dx+i_shift*dx)**2+(da+j_shift*dy)**2)
           if (x0.ge.0) then
-            f_int=(da*f(i-1-i_shift,j-1-j_shift)
-     &            +(dy-da)*f(i-1-i_shift,j-j_shift))
+            f_int=(da*f(i-1-i_shift,j-1-j_shift,k)
+     &            +(dy-da)*f(i-1-i_shift,j-j_shift,k))
      &            /dy
           else
-            f_int=(da*f(i+1+i_shift,j-1-j_shift)
-     &            +(dy-da)*f(i+1+i_shift,j-j_shift))
+            f_int=(da*f(i+1+i_shift,j-1-j_shift,k)
+     &            +(dy-da)*f(i+1+i_shift,j-j_shift,k))
      &            /dy
           endif
         else 
           da=d_x*(dy+j_shift*dy)/d_y-i_shift*dx
           rhotoint=sqrt((dy+j_shift*dy)**2+(da+i_shift*dx)**2)
           if (x0.ge.0) then
-            f_int=(da*f(i-1-i_shift,j-1-j_shift)
-     &            +(dx-da)*f(i-i_shift,j-1-j_shift))
+            f_int=(da*f(i-1-i_shift,j-1-j_shift,k)
+     &            +(dx-da)*f(i-i_shift,j-1-j_shift,k))
      &            /dx
           else
-            f_int=(da*f(i+1+i_shift,j-1-j_shift)
-     &            +(dx-da)*f(i+i_shift,j-1-j_shift))
+            f_int=(da*f(i+1+i_shift,j-1-j_shift,k)
+     &            +(dx-da)*f(i+i_shift,j-1-j_shift,k))
      &            /dx
           endif
         end if
-        f(i,j)=(rhotobdy*f_int+rhotoint*f_bdy)/(rhotobdy+rhotoint)
+        f(i,j,k)=(rhotobdy*f_int+rhotoint*f_bdy)/(rhotobdy+rhotoint)
 
         return
         end
-
-
-
-
-
-
-
-
 
 
 c----------------------------------------------------------------------
@@ -180,10 +176,11 @@ c p23(x0) = ( (x3-x0)*y2 + (x0-x2)*y3 ) / (x3 - x2)
 c p13(x0) = ( (x3-x0)*p12(x0) + (x0-x1)*p23(x0) ) / (x3 - x1)
 c where the desired interpolated value is f=p13(x0)
 c----------------------------------------------------------------------
-        subroutine interp_from_ads_bdy_rho_3pt(f,x,y,L,i,j,chr,ex,Nx,Ny,
+        subroutine interp_from_ads_bdy_rho_3pt(f,x,y,z,L,i,j,k,chr,
+     &          ex,Nx,Ny,Nz,
      &         rho_shift,ghost_width)
         implicit none
-        integer Nx,Ny,i,j
+        integer Nx,Ny,Nz,i,j,k
         integer i_shift
 
         real*8 rho_shift
@@ -194,20 +191,22 @@ c----------------------------------------------------------------------
         integer i_shift2,j_shift2
         real*8 rhodist2,da2
 
-        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_x,x(Nx),y(Ny),L
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_x,x(Nx),y(Ny),z(Nz),L
 
-        real*8 x0,y0,rho0,rho0_bdy,f_int1,f_int2,f_bdy
+        real*8 x0,y0,z0,rho0,rho0_bdy,f_int1,f_int2,f_bdy
         real*8 x20,x01,x30,x02,x21,x32,x31,y1,y2,y3,p12,p23
-        real*8 dx,dy,d_x,d_y,xi,q,PI,rho1,rho2,rho_bdy
+        real*8 dx,dy,dz,d_x,d_y,xi,q,PI,rho1,rho2,rho_bdy
         parameter (PI=3.141592653589793d0)
 
-        integer ghost_width(4)
+        integer ghost_width(6)
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
         rho0_bdy=1
         x0=x(i)
         y0=y(j)
+        z0=z(k)
         rho0=sqrt(x0**2+y0**2)
         d_x=rho0_bdy*abs(x0)/rho0-abs(x0)
         d_y=rho0_bdy*y0/rho0-y0
@@ -288,18 +287,18 @@ c----------------------------------------------------------------------
           rho1=sqrt((dx+i_shift1*dx)**2+(da1+j_shift1*dy)**2)
           rho2=sqrt((dx+i_shift2*dx)**2+(da2+j_shift2*dy)**2)
           if (x0.ge.0) then
-            f_int1=(da1*f(i-1-i_shift1,j-1-j_shift1)
-     &            +(dy-da1)*f(i-1-i_shift1,j-j_shift1))
+            f_int1=(da1*f(i-1-i_shift1,j-1-j_shift1,k)
+     &            +(dy-da1)*f(i-1-i_shift1,j-j_shift1,k))
      &            /dy
-            f_int2=(da2*f(i-1-i_shift2,j-1-j_shift2)
-     &            +(dy-da2)*f(i-1-i_shift2,j-j_shift2))
+            f_int2=(da2*f(i-1-i_shift2,j-1-j_shift2,k)
+     &            +(dy-da2)*f(i-1-i_shift2,j-j_shift2,k))
      &            /dy
           else
-            f_int1=(da1*f(i+1+i_shift1,j-1-j_shift1)
-     &            +(dy-da1)*f(i+1+i_shift1,j-j_shift1))
+            f_int1=(da1*f(i+1+i_shift1,j-1-j_shift1,k)
+     &            +(dy-da1)*f(i+1+i_shift1,j-j_shift1,k))
      &            /dy
-            f_int2=(da2*f(i+1+i_shift2,j-1-j_shift2)
-     &            +(dy-da2)*f(i+1+i_shift2,j-j_shift2))
+            f_int2=(da2*f(i+1+i_shift2,j-1-j_shift2,k)
+     &            +(dy-da2)*f(i+1+i_shift2,j-j_shift2,k))
      &            /dy
           endif
         else 
@@ -308,18 +307,18 @@ c----------------------------------------------------------------------
           rho1=sqrt((dy+j_shift1*dy)**2+(da1+i_shift1*dx)**2)
           rho2=sqrt((dy+j_shift2*dy)**2+(da2+i_shift2*dx)**2)
           if (x0.ge.0) then
-            f_int1=(da1*f(i-1-i_shift1,j-1-j_shift1)
-     &            +(dx-da1)*f(i-i_shift1,j-1-j_shift1))
+            f_int1=(da1*f(i-1-i_shift1,j-1-j_shift1,k)
+     &            +(dx-da1)*f(i-i_shift1,j-1-j_shift1,k))
      &            /dx
-            f_int2=(da2*f(i-1-i_shift2,j-1-j_shift2)
-     &            +(dx-da2)*f(i-i_shift2,j-1-j_shift2))
+            f_int2=(da2*f(i-1-i_shift2,j-1-j_shift2,k)
+     &            +(dx-da2)*f(i-i_shift2,j-1-j_shift2,k))
      &            /dx
           else
-            f_int1=(da1*f(i+1+i_shift1,j-1-j_shift1)
-     &            +(dx-da1)*f(i+i_shift1,j-1-j_shift1))
+            f_int1=(da1*f(i+1+i_shift1,j-1-j_shift1,k)
+     &            +(dx-da1)*f(i+i_shift1,j-1-j_shift1,k))
      &            /dx
-            f_int2=(da2*f(i+1+i_shift2,j-1-j_shift2)
-     &            +(dx-da2)*f(i+i_shift2,j-1-j_shift2))
+            f_int2=(da2*f(i+1+i_shift2,j-1-j_shift2,k)
+     &            +(dx-da2)*f(i+i_shift2,j-1-j_shift2,k))
      &            /dx
           endif
         end if
@@ -335,7 +334,7 @@ c----------------------------------------------------------------------
         y3=f_bdy
         p12=(x20*y1+x01*y2)/x21
         p23=(x30*y2+x02*y3)/x32
-        f(i,j)=(x30*p12+x01*p23)/x31
+        f(i,j,k)=(x30*p12+x01*p23)/x31
 
         if (rho1.eq.rho2) then
           write(*,*) '--------------------------------'

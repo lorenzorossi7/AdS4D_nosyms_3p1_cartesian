@@ -15,25 +15,25 @@ c              (_res, _rhs unused)
 
 c-----------------------------------------------------------------------      
         subroutine mg_sup(action,zeta,zeta_rhs,zeta_lop,zeta_res,phi1,
-     &                    L,cmask,phys_bdy,chr,ex,x,y,norm,Nx,Ny)
+     &                    L,cmask,phys_bdy,chr,ex,x,y,z,norm,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,action
+        integer Nx,Ny,Nz,action
         integer phys_bdy(4)
-        real*8 zeta(Nx,Ny),zeta_rhs(Nx,Ny),zeta_lop(Nx,Ny)
-        real*8 zeta_res(Nx,Ny)
-        real*8 phi1(Nx,Ny)
-        real*8 cmask(Nx,Ny),chr(Nx,Ny)
-        real*8 x(Nx),y(Ny),norm,ex,L
+        real*8 zeta(Nx,Ny,Nz),zeta_rhs(Nx,Ny,Nz),zeta_lop(Nx,Ny,Nz)
+        real*8 zeta_res(Nx,Ny,Nz)
+        real*8 phi1(Nx,Ny,Nz)
+        real*8 cmask(Nx,Ny,Nz),chr(Nx,Ny,Nz)
+        real*8 x(Nx),y(Ny),z(Nz),norm,ex,L
         real*8 trhoE_grad,trhoE_ptl
         real*8 zeta_x(4),ddzeta,ddzeta_Jac,grad_zeta_sq
         real*8 phi1_x(4),ddphi1,ddphi1_Jac,grad_phi1_sq
 
-        real*8 phi10(Nx,Ny)
+        real*8 phi10(Nx,Ny,Nz)
 
         integer relax,lop,residual,cdiff_method
         parameter (relax=1,lop=3,residual=2)
-        real*8 csr,snr,x0,y0,rho0,x2,y2,x3,y3,x4,y4
-        real*8 h,dx,dy
+        real*8 csr,snr,x0,y0,z0,rho0,x2,y2,x3,y3,x4,y4
+        real*8 h,dx,dy,dz
 
         real*8 zeta0
         real*8 phi10_0
@@ -45,7 +45,7 @@ c-----------------------------------------------------------------------
 
         real*8 ddzeta_J_xx,ddzeta_J_yy
 
-        integer i,j,pass,sum,ii,jj
+        integer i,j,k,pass,sum,ii,jj
         integer is
 
         logical first,do_red_black,extrap
@@ -55,12 +55,12 @@ c-----------------------------------------------------------------------
         save first
 
         ! initialize fixed-size variables
-        data i,j,pass,sum,ii,jj/0,0,0,0,0,0/
+        data i,j,k,pass,sum,ii,jj/0,0,0,0,0,0,0/
         data is/0/
 
         data csr,snr,x0,y0,rho0/0.0,0.0,0.0,0.0,0.0/
         data x2,y2,x3,y3,x4,y4/0.0,0.0,0.0,0.0,0.0,0.0/
-        data h,dx,dy/0.0,0.0,0.0/
+        data h,dx,dy,dz/0.0,0.0,0.0,0.0/
 
         data zeta0/0.0/
         data phi10_0/0.0/
@@ -79,6 +79,7 @@ c-----------------------------------------------------------------------
 
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
+        dz=(z(2)-z(1))
 
         h=x(2)-x(1)
 
@@ -95,11 +96,15 @@ c-----------------------------------------------------------------------
         ! manually reconstruct phi10=phi1*(1-rho^2)^3 
         do i=1,Nx
           do j=1,Ny
+           do k=1,Nz
             x0=x(i)
             y0=y(j)
+            z0=z(k)
             rho0=sqrt(x0**2+y0**2)
-            if (phi1(i,j).ne.0) phi10(i,j)=phi1(i,j)*(1-rho0**2)**2
-            if (phi1(i,j).eq.0) phi10(i,j)=0
+            if (phi1(i,j,k).ne.0) phi10(i,j,k)=phi1(i,j,k)
+     &                                         *(1-rho0**2)**2
+            if (phi1(i,j,k).eq.0) phi10(i,j,k)=0
+           end do
           end do
         end do
 
@@ -107,8 +112,10 @@ c-----------------------------------------------------------------------
         do pass=0,1
           do i=2,Nx-1
             do j=2,Ny-1
+             do k=2,Nz-1
               x0=x(i)
               y0=y(j)
+              z0=z(k)
               x2=x0*x0
               y2=y0*y0
               x3=x0*x0*x0
@@ -120,21 +127,21 @@ c-----------------------------------------------------------------------
               if (
      &            ((do_red_black.and.mod(i+j+pass,2).eq.0)
      &             .or.(.not.do_red_black.and.pass.eq.0)) 
-     &             .and.(cmask(i,j).eq.1)
-     &             .and.(chr(i,j).ne.ex)      
+     &             .and.(cmask(i,j,k).eq.1)
+     &             .and.(chr(i,j,k).ne.ex)      
      &           ) then
 
                 ! fill in zeta 
-                zeta0=zeta(i,j)
+                zeta0=zeta(i,j,k)
 
                 ! fill in phi10_0
-                phi10_0=phi10(i,j)
+                phi10_0=phi10(i,j,k)
 
                 ! computes initial energy density at i,j, with initial data
                 ! time-symmetric so phi_t=0, and free scalar so V(phi)=0
                 call df_int(phi10,phi1_x,ddphi1,ddphi1_Jac,
      &                      grad_phi1_sq,
-     &                      x,y,i,j,chr,L,ex,Nx,Ny)
+     &                      x,y,z,i,j,k,chr,L,ex,Nx,Ny,Nz)
                 trhoE_grad=grad_phi1_sq/2
                 trhoE_ptl=0
 
@@ -143,14 +150,14 @@ c-----------------------------------------------------------------------
                 ! rhoE_grad=trhoE_grad*zeta^(-2), rhoE_ptl=trhoE_ptl)
                 call df_int(zeta,zeta_x,ddzeta,ddzeta_Jac,
      &                      grad_zeta_sq,
-     &                      x,y,i,j,chr,L,ex,Nx,Ny)
+     &                      x,y,z,i,j,k,chr,L,ex,Nx,Ny,Nz)
                 res=ddzeta
      &              -lambda4*zeta0/4
      &              +(lambda4+8*PI*trhoE_ptl)*(zeta0**5)/4
      &              +8*PI*trhoE_grad*zeta0/4
             
                 ! computes MG residual L.zeta-R
-                rhs=res-zeta_rhs(i,j)
+                rhs=res-zeta_rhs(i,j,k)
 
                 Jac=ddzeta_Jac
      &              -( lambda4/4 )
@@ -159,17 +166,18 @@ c-----------------------------------------------------------------------
 
                 ! performs action
                 if (action.eq.residual) then
-                  zeta_res(i,j)=rhs
+                  zeta_res(i,j,k)=rhs
                 else if (action.eq.lop) then
-                  zeta_lop(i,j)=res
+                  zeta_lop(i,j,k)=res
                 else if (action.eq.relax) then
-                  zeta(i,j)=zeta(i,j)-rhs/Jac
+                  zeta(i,j,k)=zeta(i,j,k)-rhs/Jac
                 end if
 
                 norm=norm+rhs**2
                 sum=sum+1
                 
               end if
+             end do
             end do
           end do
         end do
@@ -177,28 +185,29 @@ c-----------------------------------------------------------------------
         ! (REGION) y=0 axis, solve d/dy(zeta)=0  
         if (phys_bdy(3).ne.0) then
           do i=2,Nx-1
+            do k=2,Nz-1
 
             ! computes normal residual d/dy(zeta)
-            res=zeta(i,1)-(4*zeta(i,2)-zeta(i,3))/3
+            res=zeta(i,1,k)-(4*zeta(i,2,k)-zeta(i,3,k))/3
 
             ! computes MG residual d/dy(zeta)-R
-            rhs=res-zeta_rhs(i,1)
+            rhs=res-zeta_rhs(i,1,k)
 
             ! computes diag. Jacobian of zeta->L.zeta transformation
-            ! by differentiating L.zeta wrt. z(i,1) diag. entries
+            ! by differentiating L.zeta wrt. z(i,1,k) diag. entries
             Jac=1
 
             if (action.eq.residual) then
-              zeta_res(i,1)=rhs
+              zeta_res(i,1,k)=rhs
             else if (action.eq.lop) then
-              zeta_lop(i,1)=res
+              zeta_lop(i,1,k)=res
             else if (action.eq.relax) then
-              zeta(i,1)=zeta(i,1)-rhs/Jac                  
+              zeta(i,1,k)=zeta(i,1,k)-rhs/Jac                  
             end if
 
             norm=norm+rhs**2
             sum=sum+1
-
+           end do
           end do
         end if
 
@@ -216,33 +225,33 @@ c       as AMRD MG_cnst vars
 c-----------------------------------------------------------------------
         subroutine init_ghb(zeta,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,
      &                      gb_yy,psi,Hb_t,Hb_x,Hb_y,L,cmask,phys_bdy,
-     &                      x,y,chr,ex,Nx,Ny,regtype,rhoa,rhob)
+     &                      x,y,z,chr,ex,Nx,Ny,Nz,regtype,rhoa,rhob)
         implicit none
-        integer Nx,Ny
-        real*8 zeta(Nx,Ny)
-        real*8 gb_xx(Nx,Ny),gb_tt(Nx,Ny)
-        real*8 gb_yy(Nx,Ny),gb_tx(Nx,Ny),psi(Nx,Ny)
-        real*8 gb_ty(Nx,Ny),gb_xy(Nx,Ny)
-        real*8 Hb_t(Nx,Ny)
-        real*8 Hb_x(Nx,Ny)
-        real*8 Hb_y(Nx,Ny)
-        real*8 cmask(Nx,Ny),chr(Nx,Ny),ex,L
-        real*8 x(Nx),y(Ny)
+        integer Nx,Ny,Nz
+        real*8 zeta(Nx,Ny,Nz)
+        real*8 gb_xx(Nx,Ny,Nz),gb_tt(Nx,Ny,Nz)
+        real*8 gb_yy(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),psi(Nx,Ny,Nz)
+        real*8 gb_ty(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
+        real*8 Hb_t(Nx,Ny,Nz)
+        real*8 Hb_x(Nx,Ny,Nz)
+        real*8 Hb_y(Nx,Ny,Nz)
+        real*8 cmask(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,L
+        real*8 x(Nx),y(Ny),z(Nz)
         real*8 rhoa,rhob
         integer phys_bdy(4),regtype
 
-        real*8 zeros(Nx,Ny)
+        real*8 zeros(Nx,Ny,Nz)
 
         real*8 zeta0
         
         real*8 PI
         parameter (PI=0.3141592653589793D1)
-        integer i,j
-        real*8 x0,y0
+        integer i,j,k
+        real*8 x0,y0,z0
         real*8 rho0
         real*8 f0
 
-        real*8 tfunction(Nx,Ny)
+        real*8 tfunction(Nx,Ny,Nz)
 
         real*8 f1,trans
 
@@ -257,11 +266,13 @@ c-----------------------------------------------------------------------
         ! psi expression g0_psi=g0_psi_ads+psi*(1-rho0^2)*y0^2
         do i=2,Nx-1
           do j=2,Ny-1
+           do k=2,Nz-1
  
-            zeros(i,j)=0
+            zeros(i,j,k)=0
 
             x0=x(i)
             y0=y(j)
+            z0=z(k)
             rho0=sqrt(x0**2+y0**2)
 
             f0=(1-rho0**2)**2+4*rho0**2/L**2
@@ -286,31 +297,31 @@ c-----------------------------------------------------------------------
      &                 /(1-rho0**2)**2
      &                 *4
 
-            if (chr(i,j).ne.ex) then 
+            if (chr(i,j,k).ne.ex) then 
 
-              zeta0=zeta(i,j)
+              zeta0=zeta(i,j,k)
 
-              gb_tx(i,j)=0
-              gb_ty(i,j)=0
-              gb_xx(i,j)=g0_xx_ads0*(zeta0**4-1)
-              gb_xy(i,j)=g0_xy_ads0*(zeta0**4-1)
-              gb_yy(i,j)=g0_yy_ads0*(zeta0**4-1)
-              psi(i,j)=g0_psi_ads0*(zeta0**4-1)/(y0**2)
+              gb_tx(i,j,k)=0
+              gb_ty(i,j,k)=0
+              gb_xx(i,j,k)=g0_xx_ads0*(zeta0**4-1)
+              gb_xy(i,j,k)=g0_xy_ads0*(zeta0**4-1)
+              gb_yy(i,j,k)=g0_yy_ads0*(zeta0**4-1)
+              psi(i,j,k)=g0_psi_ads0*(zeta0**4-1)/(y0**2)
 
               f1=trans(rho0,rhoa,rhob)
 
               !consistent with target gauge -gbtt+gbxx+gbyy+gbpsi=0
-              gb_tt(i,j)=(gb_xx(i,j)+gb_yy(i,j)+psi(i,j))*f1
+              gb_tt(i,j,k)=(gb_xx(i,j,k)+gb_yy(i,j,k)+psi(i,j,k))*f1
 
             endif
-
+           end do
           end do
         end do
 
         ! y=0 axis regularization
         call axi_reg_g(gb_tt,gb_tx,gb_ty,
      &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,Nx,Ny,regtype)
+     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -321,30 +332,32 @@ c grad_f_sq, the background squared gradient of f;
 c evaluated at point i,j and at the initial time.
 c----------------------------------------------------------------------
         subroutine df_int(f0,f0_x,ddf,ddf_Jac,grad_f_sq,
-     &                    x,y,i,j,chr,L,ex,Nx,Ny)
+     &                    x,y,z,i,j,k,chr,L,ex,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny
-        real*8 chr(Nx,Ny),ex
-        real*8 x(Nx),y(Ny),L
+        integer Nx,Ny,Nz
+        real*8 chr(Nx,Ny,Nz),ex
+        real*8 x(Nx),y(Ny),z(Nz),L
 
-        real*8 f0(Nx,Ny),f0_x(4),f0_xx(4,4),ddf,ddf_Jac,grad_f_sq
+        real*8 f0(Nx,Ny,Nz),f0_x(4),f0_xx(4,4),ddf,ddf_Jac,grad_f_sq
 
         real*8 PI
         parameter (PI=0.3141592653589793D1)
 
-        integer i,j,i1,j1,a,b,c,d
+        integer i,j,k,i1,j1,a,b,c,d
 
-        real*8 dx,dy,dt
-        real*8 x0,y0,rho0
+        real*8 dx,dy,dz,dt
+        real*8 x0,y0,z0,rho0
         real*8 x2,y2,x3,y3,x4,y4
 
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
+        dz=(z(2)-z(1))
         dt=1.0d0 ! only a placeholder for df2_int (no time derivatives needed in MG ID-solver)
 
         ! sets x0,y0,rho0 to values at i,j
         x0=x(i)
         y0=y(j)
+        z0=z(k)
         rho0=sqrt(x0**2+y0**2)
 
         x2=x0*x0
@@ -358,19 +371,19 @@ c----------------------------------------------------------------------
         !(time symmetric initial data for now, so time derivatives vanish, and
         ! S2 symmetric initial data for now, so phi, theta derivatives vanish) 
         f0_x(1)=0
-        f0_x(2)=(f0(i+1,j)-f0(i-1,j))/2/dx!f_x
-        f0_x(3)=(f0(i,j+1)-f0(i,j-1))/2/dy!f_y
+        f0_x(2)=(f0(i+1,j,k)-f0(i-1,j,k))/2/dx!f_x
+        f0_x(3)=(f0(i,j+1,k)-f0(i,j-1,k))/2/dy!f_y
         f0_x(4)=0
 
         f0_xx(1,1)=0
         f0_xx(1,2)=0
         f0_xx(1,3)=0
         f0_xx(1,4)=0
-        f0_xx(2,2)=(f0(i+1,j)-2*f0(i,j)+f0(i-1,j))/dx/dx
-        f0_xx(2,3)=( (f0(i+1,j+1)-f0(i+1,j-1))/2/dy
-     &              -(f0(i-1,j+1)-f0(i-1,j-1))/2/dy )/2/dx
+        f0_xx(2,2)=(f0(i+1,j,k)-2*f0(i,j,k)+f0(i-1,j,k))/dx/dx
+        f0_xx(2,3)=( (f0(i+1,j+1,k)-f0(i+1,j-1,k))/2/dy
+     &              -(f0(i-1,j+1,k)-f0(i-1,j-1,k))/2/dy )/2/dx
         f0_xx(2,4)=0
-        f0_xx(3,3)=(f0(i,j+1)-2*f0(i,j)+f0(i,j-1))/dy/dy 
+        f0_xx(3,3)=(f0(i,j+1,k)-2*f0(i,j,k)+f0(i,j-1,k))/dy/dy 
         f0_xx(3,4)=0
         f0_xx(4,4)=0
 

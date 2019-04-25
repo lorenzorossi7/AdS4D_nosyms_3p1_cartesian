@@ -16,34 +16,40 @@ c----------------------------------------------------------------------
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
-     &                  x,y,dt,chr,L,ex,Nx,Ny,phys_bdy,ghost_width)
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
         implicit none
-        integer Nx,Ny
-        integer i,j
-        integer phys_bdy(4),ghost_width(4)
-        real*8 efe_all_ires(Nx,Ny)
-        real*8 efe_tt_ires(Nx,Ny),efe_tx_ires(Nx,Ny),efe_ty_ires(Nx,Ny)
-        real*8 efe_xx_ires(Nx,Ny),efe_xy_ires(Nx,Ny),efe_yy_ires(Nx,Ny)
-        real*8 efe_psi_ires(Nx,Ny)
-        real*8 chr(Nx,Ny),ex
-        real*8 x(Nx),y(Ny),dt,L
+        integer Nx,Ny,Nz
+        integer i,j,k
+        integer phys_bdy(6),ghost_width(6)
+        real*8 efe_all_ires(Nx,Ny,Nz)
+        real*8 efe_tt_ires(Nx,Ny,Nz),efe_tx_ires(Nx,Ny,Nz)
+        real*8 efe_ty_ires(Nx,Ny,Nz)
+        real*8 efe_xx_ires(Nx,Ny,Nz),efe_xy_ires(Nx,Ny,Nz)
+        real*8 efe_yy_ires(Nx,Ny,Nz)
+        real*8 efe_psi_ires(Nx,Ny,Nz)
+        real*8 chr(Nx,Ny,Nz),ex
+        real*8 x(Nx),y(Ny),z(Nz),dt,L
         real*8 lambda4
-        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
-        real*8 gb_tt_np1(Nx,Ny),gb_tx_np1(Nx,Ny),gb_ty_np1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xy_np1(Nx,Ny),gb_yy_np1(Nx,Ny)
-        real*8 psi_np1(Nx,Ny)
-        real*8 gb_tt_n(Nx,Ny),gb_tx_n(Nx,Ny),gb_ty_n(Nx,Ny)
-        real*8 gb_xx_n(Nx,Ny),gb_xy_n(Nx,Ny),gb_yy_n(Nx,Ny)
-        real*8 psi_n(Nx,Ny)
-        real*8 gb_tt_nm1(Nx,Ny),gb_tx_nm1(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_nm1(Nx,Ny),gb_xy_nm1(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 psi_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xy_np1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz)
+        real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz)
+        real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz)
+        real*8 psi_n(Nx,Ny,Nz)
+        real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_nm1(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_nm1(Nx,Ny,Nz)
+        real*8 psi_nm1(Nx,Ny,Nz)
 
-        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
-        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
-        real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
+        real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
+        real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
+        real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
 
-        integer is,ie,js,je
+        integer is,ie,js,je,ks,ke
 
         integer i1,j1,k1,a,b,c,d,e
         real*8 efe_ires(4,4)
@@ -51,8 +57,8 @@ c----------------------------------------------------------------------
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 dx,dy
-        real*8 x0,y0,rho0        
+        real*8 dx,dy,dz
+        real*8 x0,y0,z0,rho0        
 
         real*8 boxx_u(4),boxx_l(4) 
 
@@ -88,12 +94,13 @@ c----------------------------------------------------------------------
         real*8 g0gamfx(4)
         real*8 nufx,nuxfx(4),gamxfxfx(4)
 
-        real*8 theta(Nx,Ny)
+        real*8 theta(Nx,Ny,Nz)
 
         ! initialize fixed-size variables
+        data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
         data i1,j1,k1,a,b,c,d,e/0,0,0,0,0,0,0,0/
 
-        data dx,dy/0.0,0.0/
+        data dx,dy,dz/0.0,0.0,0.0/
         data x0,y0,rho0/0.0,0.0,0.0/    
 
         data g0_ll,g0_uu/16*0.0,16*0.0/
@@ -127,6 +134,7 @@ c----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
+        dz=(z(2)-z(1))
 
         ! AdS4D cosmological constant
         !(lambda4=-(n-1)(n-2)/2/L^2) for n=4 dimensional AdS)
@@ -137,18 +145,23 @@ c----------------------------------------------------------------------
         ie=Nx-1
         js=2
         je=Ny-1
+        ks=2
+        ke=Nz-1
 
         ! adjust index bounds to compensate for ghost_width
         if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
         if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
         if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
         if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         ! (MAIN LOOP) loop through spacetime points x(i),y(j)
         do i=is,ie
           do j=js,je
+           do k=ks,ke
 
-            if (chr(i,j).ne.ex) then
+            if (chr(i,j,k).ne.ex) then
 
               ! computes tensors at point i,j
               call tensor_init(
@@ -171,7 +184,7 @@ c----------------------------------------------------------------------
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
-     &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &                x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
               ! calculates efe_ires functions at point i,j
               !(efe_ires_ab=G_ab+lambda4*g_ab-8*PI*T_ab)
@@ -181,23 +194,24 @@ c----------------------------------------------------------------------
      &                                          -8*PI*set_ll(a,b)
                 end do
               end do
-              efe_tt_ires(i,j)=efe_ires(1,1) 
-              efe_tx_ires(i,j)=efe_ires(1,2) 
-              efe_ty_ires(i,j)=efe_ires(1,3) 
-              efe_xx_ires(i,j)=efe_ires(2,2)
-              efe_xy_ires(i,j)=efe_ires(2,3)
-              efe_yy_ires(i,j)=efe_ires(3,3)
-              efe_psi_ires(i,j)=efe_ires(4,4)
+              efe_tt_ires(i,j,k)=efe_ires(1,1) 
+              efe_tx_ires(i,j,k)=efe_ires(1,2) 
+              efe_ty_ires(i,j,k)=efe_ires(1,3) 
+              efe_xx_ires(i,j,k)=efe_ires(2,2)
+              efe_xy_ires(i,j,k)=efe_ires(2,3)
+              efe_yy_ires(i,j,k)=efe_ires(3,3)
+              efe_psi_ires(i,j,k)=efe_ires(4,4)
 
               ! calculate efe_all_ires function at point i,j
-              efe_all_ires(i,j)=
-     &        max(abs(efe_tt_ires(i,j)),abs(efe_tx_ires(i,j)),
-     &            abs(efe_ty_ires(i,j)),abs(efe_xx_ires(i,j)),
-     &            abs(efe_xy_ires(i,j)),abs(efe_yy_ires(i,j)),
-     &            abs(efe_psi_ires(i,j)))
+              efe_all_ires(i,j,k)=
+     &        max(abs(efe_tt_ires(i,j,k)),abs(efe_tx_ires(i,j,k)),
+     &            abs(efe_ty_ires(i,j,k)),abs(efe_xx_ires(i,j,k)),
+     &            abs(efe_xy_ires(i,j,k)),abs(efe_yy_ires(i,j,k)),
+     &            abs(efe_psi_ires(i,j,k)))
 
               x0=x(i)
               y0=y(j)
+              z0=z(k)
               rho0=sqrt(x0**2+y0**2)              
 
               ! calculate boxx^c at point i,j
@@ -348,29 +362,29 @@ c----------------------------------------------------------------------
               end do
 
               ! for theta: outward null expansion
-              theta(i,j)=0.0d0
+              theta(i,j,k)=0.0d0
               do c=1,4
                 do d=1,4
-                  theta(i,j)=theta(i,j)
+                  theta(i,j,k)=theta(i,j,k)
      &                   +sig_uu(c,d)*(n_l_x(c,d)+s_l_x(c,d))
                   do e=1,4
-                    theta(i,j)=theta(i,j)
+                    theta(i,j,k)=theta(i,j,k)
      &                   -sig_uu(c,d)*gamma_ull(e,c,d)*(n_l(e)+s_l(e))
                   end do
                 end do
               end do
 
-              efe_tt_ires(i,j)=!Hads_l(1)+A_l(1)-boxx_l(1)
-     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j)**2+
-     &                (-4+(-1+rho0**2)**3*gb_xx_n(i,j))*
-     &                (-4+(-1+rho0**2)**3*gb_yy_n(i,j)))*
-     &                (-4+(-1+rho0**2)**3*psi_n(i,j))**2)!/(-1+rho0**2)**8*y0**4
-              efe_tx_ires(i,j)=g0_ll(1,2)!Hads_l(2)+A_l(2)-boxx_l(2)
-              efe_ty_ires(i,j)=g0_ll(1,3)!Hads_l(3)+A_l(3)-boxx_l(3)
-              efe_xx_ires(i,j)=theta(i,j)
-              efe_xy_ires(i,j)=boxx_l(2)
-              efe_yy_ires(i,j)=-1/g0_uu(1,1)*(1-x(i)**2-y(j)**2)**2
-              efe_psi_ires(i,j)=0
+              efe_tt_ires(i,j,k)=!Hads_l(1)+A_l(1)-boxx_l(1)
+     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j,k)**2+
+     &                (-4+(-1+rho0**2)**3*gb_xx_n(i,j,k))*
+     &                (-4+(-1+rho0**2)**3*gb_yy_n(i,j,k)))*
+     &                (-4+(-1+rho0**2)**3*psi_n(i,j,k))**2)!/(-1+rho0**2)**8*y0**4
+              efe_tx_ires(i,j,k)=g0_ll(1,2)!Hads_l(2)+A_l(2)-boxx_l(2)
+              efe_ty_ires(i,j,k)=g0_ll(1,3)!Hads_l(3)+A_l(3)-boxx_l(3)
+              efe_xx_ires(i,j,k)=theta(i,j,k)
+              efe_xy_ires(i,j,k)=boxx_l(2)
+              efe_yy_ires(i,j,k)=-1/g0_uu(1,1)*(1-x(i)**2-y(j)**2)**2
+              efe_psi_ires(i,j,k)=0
               do a=1,4
                 do b=1,4
                   do c=1,4
@@ -379,7 +393,7 @@ c----------------------------------------------------------------------
                         do j1=1,4
                           do k1=1,4
                             do e=1,4
-                              efe_psi_ires(i,j)=efe_psi_ires(i,j)+
+                              efe_psi_ires(i,j,k)=efe_psi_ires(i,j,k)+
      &                                          g0_ll(a,i1)*
      &                                          g0_uu(b,j1)*
      &                                          g0_uu(c,k1)*
@@ -396,7 +410,7 @@ c----------------------------------------------------------------------
               end do
 
             end if
-
+           end do
           end do
         end do
 

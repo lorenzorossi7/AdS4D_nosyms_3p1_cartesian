@@ -10,10 +10,10 @@ c----------------------------------------------------------------------
 c returns true if a given point is not excised, and can be updated if
 c in the *ghost region* of the grid
 c----------------------------------------------------------------------
-        logical function can_calc_ex(chr,i,j,Nx,Ny,Nz,ex)
+        logical function can_calc_ex(chr,i,j,k,Nx,Ny,Nz,ex)
         implicit none
-        integer i,j,Nx,Ny,Nz
-        real*8 chr(Nx,Ny),ex
+        integer i,j,k,Nx,Ny,Nz
+        real*8 chr(Nx,Ny,Nz),ex
 
         integer i1,j1
 
@@ -24,13 +24,13 @@ c----------------------------------------------------------------------
 
         can_calc_ex=.true.
 
-        if (chr(i,j).ne.ex.and.(i.gt.2.and.i.lt.Nx-1.and.
+        if (chr(i,j,k).ne.ex.and.(i.gt.2.and.i.lt.Nx-1.and.
      &                          j.gt.2.and.j.lt.Ny-1)
      &                         ) return
 
         do i1=max(1,min(Nx-2,i-1)),min(Nx,max(3,i+1))
            do j1=max(1,min(Ny-2,j-1)),min(Ny,max(3,j+1))
-              if (chr(i1,j1).eq.ex) then
+              if (chr(i1,j1,k).eq.ex) then
                  can_calc_ex=.false.
                  return
               end if
@@ -62,27 +62,27 @@ c----------------------------------------------------------------------
         implicit none
         integer Nx,Ny,Nz,is0,ie0,js0,je0,do_ex
         integer is_ex
-        real*8 theta(Nx,Ny),f(Nx,Ny),chr(Nx,Ny),ex
+        real*8 theta(Nx,Ny,Nz),f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
 
-        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
-        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
-        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
 
-        integer i,j,is,ie,js,je
+        integer i,j,k,is,ie,js,je
         integer a,b,c,d,e
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 x0,y0
-        real*8 dx,dy
+        real*8 x0,y0,z0
+        real*8 dx,dy,dz
 
-        real*8 zeros(Nx,Ny)
+        real*8 zeros(Nx,Ny,Nz)
 
         real*8 f_x,f_y,f_xx,f_xy,f_yy
         real*8 tmp1,tmp2,tmp3,tmp4,tmp5
@@ -125,11 +125,11 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
-        data i,j/0,0/
+        data i,j,k/0,0,0/
         data is,ie,js,je/0,0,0,0/
 
-        data x0,y0/0.0,0.0/
-        data dx,dy/0.0,0.0/
+        data x0,y0,z0/0.0,0.0,0.0/
+        data dx,dy,dz/0.0,0.0,0.0/
 
         data f_x,f_y/0.0,0.0/
         data f_xx,f_xy/0.0,0.0/
@@ -181,13 +181,17 @@ c----------------------------------------------------------------------
 
         do i=1,Nx
           do j=1,Ny
-            zeros(i,j)=0
+           do k=1,Nz
+            zeros(i,j,k)=0
+           end do
           end do
         end do
 
         do i=is0,ie0
           do j=js0,je0
-           theta(i,j)=1.0d0
+           do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+           theta(i,j,k)=1.0d0
+           end do
           end do
         end do
 
@@ -205,17 +209,18 @@ c----------------------------------------------------------------------
 
         do i=is,ie
           do j=js,je
+           do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
             if (ltrace) write(*,*) 'i,j:',i,j
 
             any_ex=.false.
 
             if (.not.(do_ex.eq.0.or.
-     &          can_calc_ex(chr,i,j,Nx,Ny,Nz,ex))) then
+     &          can_calc_ex(chr,i,j,k,Nx,Ny,Nz,ex))) then
                 write(*,*) ' can_calc_ex: i,j has excised neighbors,'
                 write(*,*) '              so cannot be updated '
                 write(*,*) ' i,j=',i,j
                 write(*,*) ' x(i),y(j)=',x(i),y(j)
-                write(*,*) ' chr(i,j)=',chr(i,j)
+                write(*,*) ' chr(i,j,k)=',chr(i,j,k)
                 write(*,*) ' Nx,Ny=',Nx,Ny
                 write(*,*) ' dx,dy=',dx,dy
                any_ex=.true.
@@ -223,7 +228,8 @@ c----------------------------------------------------------------------
             else
                x0=x(i)
                y0=y(j)              
-             
+               z0=z(k)
+ 
                ! computes tensors at point i,j 
                call tensor_init(
      &                 gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -245,7 +251,7 @@ c----------------------------------------------------------------------
      &                 riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                 einstein_ll,set_ll,
      &                 phi10_x,phi10_xx,
-     &                 x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &                 x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
             end if
 
@@ -256,7 +262,7 @@ c----------------------------------------------------------------------
      &             tmp1, f_x, f_y, 
      &             tmp2,tmp3,tmp4,
      &             f_xx,f_xy,f_yy,
-     &             x,y,dt,i,j,chr,ex,Nx,Ny,'f')
+     &             x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'f')
  
               ! define unit time-like vector n, normal to t=const
               ! surfaces
@@ -380,13 +386,13 @@ c----------------------------------------------------------------------
               end do
 
               ! for theta: outward null expansion 
-              theta(i,j)=0.0d0
+              theta(i,j,k)=0.0d0
               do c=1,4
                 do d=1,4
-                  theta(i,j)=theta(i,j)
+                  theta(i,j,k)=theta(i,j,k)
      &                   +sig_uu(c,d)*(n_l_x(c,d)+s_l_x(c,d))
                   do e=1,4
-                    theta(i,j)=theta(i,j)
+                    theta(i,j,k)=theta(i,j,k)
      &                   -sig_uu(c,d)*gamma_ull(e,c,d)*(n_l(e)+s_l(e))
                   end do
                 end do
@@ -396,12 +402,12 @@ c----------------------------------------------------------------------
 !              theta(i,j)=theta(i,j)/theta_ads
 
               ! if theta is nan, then set it to the following instead
-              if (.not.(theta(i,j).le.abs(theta(i,j)))) then
-                 theta(i,j)=0.0d0
+              if (.not.(theta(i,j,k).le.abs(theta(i,j,k)))) then
+                 theta(i,j,k)=0.0d0
               end if
  
             end if
-
+           end do
           end do
         end do
 
@@ -410,13 +416,17 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
  
         do j=js,je
-          if (is0.eq.1) theta(1,j)=theta(2,j)
-          if (ie0.eq.Nx) theta(Nx,j)=theta(Nx-1,j)
+         do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+          if (is0.eq.1) theta(1,j,k)=theta(2,j,k)
+          if (ie0.eq.Nx) theta(Nx,j,k)=theta(Nx-1,j,k)
+         end do
         end do
 
         do i=is-1,ie+1
-          if (js0.eq.1) theta(i,1)=theta(i,2)
-          if (je0.eq.Ny) theta(i,Ny)=theta(i,Ny-1)
+         do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+          if (js0.eq.1) theta(i,1,k)=theta(i,2,k)
+          if (je0.eq.Ny) theta(i,Ny,k)=theta(i,Ny-1,k)
+         end do
         end do
 
         return
@@ -739,13 +749,13 @@ c-----------------------------------------------------------------------
         integer axisym
         integer is,ie,js,je,AH_Nchi,AH_Nphi,Nx,Ny,Nz
         real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
-        real*8 x(Nx),y(Ny),z(Nz),f(Nx,Ny)
+        real*8 x(Nx),y(Ny),z(Nz),f(Nx,Ny,Nz)
         
-        integer i,j,i0,j0,is0,ie0,js0,je0
+        integer i,j,k,i0,j0,is0,ie0,js0,je0
         real*8 AH_chi,AH_phi,r,xb,yb,zb,dahchi,dahphi,ft,fp,rtp
         real*8 xb0,yb0,zb0
 
-        real*8 dx,dy
+        real*8 dx,dy,dz
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -754,14 +764,14 @@ c-----------------------------------------------------------------------
         parameter (ltrace=.false.)
 
         ! initialize fixed-size variables
-        data i,j,i0,j0,is0,ie0/0,0,0,0,0,0/
+        data i,j,k,i0,j0,is0,ie0/0,0,0,0,0,0,0/
         data js0,je0/0,0/
 
         data AH_chi,AH_phi,r,xb,yb,zb/0.0,0.0,0.0,0.0,0.0,0.0/
         data dahchi,dahphi,ft,fp,rtp/0.0,0.0,0.0,0.0,0.0/
         data xb0,yb0,zb0/0.0,0.0,0.0/
 
-        data dx,dy/0.0,0.0/ 
+        data dx,dy,dz/0.0,0.0,0.0/ 
         !--------------------------------------------------------------
 
         if (ltrace) then
@@ -771,6 +781,7 @@ c-----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         if (AH_xc(2).lt.dy) then
           dahchi=PI/(AH_Nchi-1)
@@ -795,6 +806,8 @@ c-----------------------------------------------------------------------
            xb=x(i)
            do j=js0,je0
               yb=y(j)
+              do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+                 zb=z(k)
 
                  !xb,yb: cartesian coordinates of some point "not on, but near" AH, wrt origin
                  !AH_xc(1),AH_xc(2): cartesian coordinates of center of AH, wrt origin
@@ -850,7 +863,7 @@ c-----------------------------------------------------------------------
      &                  AH_R(i0+1,j0)*(ft)
                  end if
 
-                 f(i,j)=r-rtp
+                 f(i,j,k)=r-rtp
 
                  if (ltrace) then
                     write(*,*) 'xb,yb=',xb,yb
@@ -860,6 +873,7 @@ c-----------------------------------------------------------------------
                     write(*,*) 'rtp=',rtp
                     write(*,*) '---------------------------'
                  end if
+             end do
            end do
         end do
 
@@ -898,28 +912,28 @@ c-----------------------------------------------------------------------
         implicit none
         integer axisym
         integer Nx,Ny,Nz,i0,j0,AH_Nchi,AH_Nphi,do_ex
-        real*8 theta(Nx,Ny),f(Nx,Ny),AH_xc(2),da,d_ceq,d_cp
+        real*8 theta(Nx,Ny,Nz),f(Nx,Ny,Nz),AH_xc(2),da,d_ceq,d_cp
         real*8 AH_R(AH_Nchi,AH_Nphi),AH_theta(AH_Nchi,AH_Nphi)
-        real*8 chr(Nx,Ny),ex
+        real*8 chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
 
-        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
-        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
-        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
 
         real*8 cosx(Nx),cosy(Ny),cosz(Nz)
         real*8 sinx(Nx),siny(Ny),sinz(Nz)
 
-        integer i,j,i1,j1,is,ie,js,je,is_ex
+        integer i,j,k,i1,j1,k1,is,ie,js,je,ks,ke,is_ex
 
-        real*8 x0,y0
+        real*8 x0,y0,z0
         real*8 PI
         parameter (PI=3.141592653589793d0)
-        real*8 dx,dy,dahchi,dahphi,AH_chi,AH_phi,fx,fy,fz
+        real*8 dx,dy,dz,dahchi,dahphi,AH_chi,AH_phi,fx,fy,fz
         real*8 r_t,r_p,st,sp,ct,cp,r
         real*8 dxb_dt,dyb_dt,dzb_dt
         real*8 dxb_dp,dyb_dp,dzb_dp
@@ -944,12 +958,12 @@ c-----------------------------------------------------------------------
 !        parameter (ltrace=.true.)
 
         ! initialize fixed-size variables 
-        data i,j,i1,j1/0.0,0.0,0.0,0.0/
-        data is,ie,js,je/0.0,0.0,0.0,0.0/
+        data i,j,k,i1,j1,k1/0.0,0.0,0.0,0.0,0.0,0.0/
+        data is,ie,js,je,ks,ke/0.0,0.0,0.0,0.0,0.0,0.0/
         data is_ex/0.0/
 
-        data x0,y0/0.0,0.0/
-        data dx,dy/0.0,0.0/
+        data x0,y0,z0/0.0,0.0,0.0/
+        data dx,dy,dz/0.0,0.0,0.0/
         data dahchi,dahphi/0.0,0.0/
         data AH_chi,AH_phi,fx,fy,fz/0.0,0.0,0.0,0.0,0.0/
         data r_t,r_p,st,sp,ct,cp,r/0.0,0.0,0.0,0.0,0.0,0.0,0.0/
@@ -970,6 +984,7 @@ c-----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         if (AH_xc(2).lt.dy) then
           dahchi=PI/(AH_Nchi-1)
@@ -994,6 +1009,7 @@ c-----------------------------------------------------------------------
         ! extract (i,j) cartesian grid point closest to x0,y0
         i=(x0-x(1))/dx+1
         j=(y0-y(1))/dy+1
+        k=(z0-z(1))/dz+1
 
         ! for bilinear interpolation of theta from 
         ! (i,j),(i+1,j),(i,j+1),(i+1,j+1)
@@ -1050,6 +1066,8 @@ c-----------------------------------------------------------------------
         ie=min(Nx,i+3)
         js=max(1,j-2)
         je=min(Ny,j+3)
+        ks=max(1,k-2)
+        ke=min(Nz,k+3)
 
         call ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,x,y,z,
      &              AH_Nchi,AH_Nphi,Nx,Ny,Nz,axisym)
@@ -1058,11 +1076,14 @@ c-----------------------------------------------------------------------
         ie=i+1
         js=j
         je=j+1
+        ks=k
+        ke=k+1
 
         if (do_ex.ne.0) then
            do i1=is,ie   
               do j1=js,je   
-                 if (chr(i1,j1).eq.ex) then
+               do k1=ks,ke
+                 if (chr(i1,j1,k1).eq.ex) then
                     write(*,*) ' calc_exp0: pt i1,j1 is excised'
                     write(*,*) ' AH_chi,AH_phi=',AH_chi,AH_phi
                     write(*,*) ' x0,y0=',x0,y0
@@ -1070,12 +1091,13 @@ c-----------------------------------------------------------------------
                     write(*,*) ' i,j=',i,j
                     write(*,*) ' i1,j1=',i1,j1
                     write(*,*) ' x(i1),y(j1)=',x(i1),y(j1)
-                    write(*,*) ' chr(i1,j1)=',chr(i1,j1)
+                    write(*,*) ' chr(i1,j1,k1)=',chr(i1,j1,k1)
                     write(*,*) ' Nx,Ny=',Nx,Ny
                     da=-10000
                     AH_theta(i0,j0)=0
                     return
                  end if
+                end do
               end do
            end do
         end if
@@ -1092,10 +1114,10 @@ c-----------------------------------------------------------------------
 
         ! interpolate theta from 
         ! (i,j),(i+1,j),(i,j+1),(i+1,j+1)
-        AH_theta(i0,j0) = (1-fx)*(1-fy)*theta(i,j)+
-     &                 (  fx)*(1-fy)*theta(i+1,j)+
-     &                 (1-fx)*(  fy)*theta(i,j+1)+
-     &                 (  fx)*(  fy)*theta(i+1,j+1)
+        AH_theta(i0,j0) = (1-fx)*(1-fy)*theta(i,j,k)+
+     &                 (  fx)*(1-fy)*theta(i+1,j,k)+
+     &                 (1-fx)*(  fy)*theta(i,j+1,k)+
+     &                 (  fx)*(  fy)*theta(i+1,j+1,k)
 
         !--------------------------------------------------------------
         ! proper area element
@@ -1132,25 +1154,25 @@ c-----------------------------------------------------------------------
      &             /(1-rho0**2)**2
      &             *4
 
-        gb_xx0=((1-fx)*(1-fy)*gb_xx_n(i,j)+
-     &       (  fx)*(1-fy)*gb_xx_n(i+1,j)+
-     &       (1-fx)*(  fy)*gb_xx_n(i,j+1)+
-     &       (  fx)*(  fy)*gb_xx_n(i+1,j+1))
+        gb_xx0=((1-fx)*(1-fy)*gb_xx_n(i,j,k)+
+     &       (  fx)*(1-fy)*gb_xx_n(i+1,j,k)+
+     &       (1-fx)*(  fy)*gb_xx_n(i,j+1,k)+
+     &       (  fx)*(  fy)*gb_xx_n(i+1,j+1,k))
 
-        gb_xy0=((1-fx)*(1-fy)*gb_xy_n(i,j)+
-     &       (  fx)*(1-fy)*gb_xy_n(i+1,j)+
-     &       (1-fx)*(  fy)*gb_xy_n(i,j+1)+
-     &       (  fx)*(  fy)*gb_xy_n(i+1,j+1))
+        gb_xy0=((1-fx)*(1-fy)*gb_xy_n(i,j,k)+
+     &       (  fx)*(1-fy)*gb_xy_n(i+1,j,k)+
+     &       (1-fx)*(  fy)*gb_xy_n(i,j+1,k)+
+     &       (  fx)*(  fy)*gb_xy_n(i+1,j+1,k))
 
-        gb_yy0=((1-fx)*(1-fy)*gb_yy_n(i,j)+
-     &       (  fx)*(1-fy)*gb_yy_n(i+1,j)+
-     &       (1-fx)*(  fy)*gb_yy_n(i,j+1)+
-     &       (  fx)*(  fy)*gb_yy_n(i+1,j+1))
+        gb_yy0=((1-fx)*(1-fy)*gb_yy_n(i,j,k)+
+     &       (  fx)*(1-fy)*gb_yy_n(i+1,j,k)+
+     &       (1-fx)*(  fy)*gb_yy_n(i,j+1,k)+
+     &       (  fx)*(  fy)*gb_yy_n(i+1,j+1,k))
 
-        psi0=((1-fx)*(1-fy)*psi_n(i,j)+
-     &       (  fx)*(1-fy)*psi_n(i+1,j)+
-     &       (1-fx)*(  fy)*psi_n(i,j+1)+
-     &       (  fx)*(  fy)*psi_n(i+1,j+1))
+        psi0=((1-fx)*(1-fy)*psi_n(i,j,k)+
+     &       (  fx)*(1-fy)*psi_n(i+1,j,k)+
+     &       (1-fx)*(  fy)*psi_n(i,j+1,k)+
+     &       (  fx)*(  fy)*psi_n(i+1,j+1,k))
 
         g_xx0   =g0_xx_ads0+gb_xx0
         g_xy0   =g0_xy_ads0+gb_xy0

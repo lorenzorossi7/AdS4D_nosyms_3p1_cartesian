@@ -36,8 +36,8 @@ real kappa_cd,rho_cd;
 //=============================================================================
 
 // gaussians
-real phi1_amp_1,phi1_B_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[2],phi1_ecc_1[2];
-real phi1_amp_2,phi1_B_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[2],phi1_ecc_2[2];
+real phi1_amp_1,phi1_B_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[3],phi1_ecc_1[3];
+real phi1_amp_2,phi1_B_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[3],phi1_ecc_2[3];
 
 // if > 0, initialize with exact BH
 real ief_bh_r0;
@@ -150,8 +150,8 @@ real *Hb_t_0,*Hb_x_0,*Hb_y_0;
 real *g_norms;
 
 real *x,*y,*z;
-int shape[2],ghost_width[4],Nx,Ny,Nz,phys_bdy[4],size,g_rank;
-real base_bbox[4],bbox[4],dx,dy,dz,dt,dx_Lc,dy_Lc;
+int shape[3],ghost_width[6],Nx,Ny,Nz,phys_bdy[6],size,g_rank;
+real base_bbox[6],bbox[6],dx,dy,dz,dt,dx_Lc,dy_Lc,dz_Lc;
 int g_L;
 
 int cl_res_gfn;
@@ -395,7 +395,7 @@ void set_gfns(void)
 //=============================================================================
 void ldptr_bbox(void)
 {
-   real dx0[2];
+   real dx0[3];
    static int first=1;
 
    if (first) 
@@ -406,6 +406,7 @@ void ldptr_bbox(void)
       if (PAMR_get_max_lev(PAMR_AMRH)>1) PAMR_get_dxdt(2,dx0,&dt); else PAMR_get_dxdt(1,dx0,&dt);
       dx_Lc=dx0[0];
       dy_Lc=dx0[1];
+      dz_Lc=dx0[2];
    }
 
    PAMR_get_g_rank(&g_rank);
@@ -416,23 +417,25 @@ void ldptr_bbox(void)
    PAMR_get_dxdt(g_L,dx0,&dt);
    dx=dx0[0];
    dy=dx0[1];
-   dz=dx;
+   dz=dx0[2];
 
    if ((bbox[0]-base_bbox[0])<dx/2) phys_bdy[0]=1; else phys_bdy[0]=0;
    if ((base_bbox[1]-bbox[1])<dx/2) phys_bdy[1]=1; else phys_bdy[1]=0;
    if ((bbox[2]-base_bbox[2])<dy/2) phys_bdy[2]=1; else phys_bdy[2]=0;
    if ((base_bbox[3]-bbox[3])<dy/2) phys_bdy[3]=1; else phys_bdy[3]=0;
+   if ((bbox[4]-base_bbox[4])<dz/2) phys_bdy[4]=1; else phys_bdy[4]=0;
+   if ((base_bbox[5]-bbox[5])<dz/2) phys_bdy[5]=1; else phys_bdy[5]=0;
 
    Nx=shape[0];
    Ny=shape[1];
-   Nz=1;
+   Nz=shape[2];
 
-   size=Nx*Ny;
+   size=Nx*Ny*Nz;
 }
 
 void ldptr(void)
 {
-   real *x0[2],*gfs[PAMR_MAX_GFNS];
+   real *x0[3],*gfs[PAMR_MAX_GFNS];
 
    ldptr_bbox();
 
@@ -440,6 +443,7 @@ void ldptr(void)
 
    x=x0[0];
    y=x0[1]; 
+   z=x0[2];
 
    PAMR_get_g_gfs(gfs);
 
@@ -613,7 +617,7 @@ void ldptr_mg(void)
 
    ldptr();
 
-   dx=x[1]-x[0]; dy=y[1]-y[0];
+   dx=x[1]-x[0]; dy=y[1]-y[0]; dz=z[1]-z[0];
    PAMR_get_lambda(&lambda);
    dt=lambda*dx;
 }
@@ -625,7 +629,7 @@ void const_f(real *f, real c)
 {
    int i;
 
-   for (i=0; i<Nx*Ny; i++) f[i]=c;
+   for (i=0; i<Nx*Ny*Nz; i++) f[i]=c;
 }
 
 void zero_f(real *f)
@@ -637,7 +641,7 @@ void zero_f_ex(real *f, real *chr)
 {
    int i;
 
-   for (i=0; i<Nx*Ny; i++) if (chr[i]==AMRD_ex) f[i]=0;
+   for (i=0; i<Nx*Ny*Nz; i++) if (chr[i]==AMRD_ex) f[i]=0;
 }
 
 real norm_l2(real *f, real *cmask, real *chr)
@@ -646,131 +650,131 @@ real norm_l2(real *f, real *cmask, real *chr)
    real norm=0;
    int sum=0;
 
-   for (i=0; i<Nx*Ny; i++) 
+   for (i=0; i<Nx*Ny*Nz; i++) 
       if (cmask[i]==AMRD_CMASK_ON && (chr[i]!=AMRD_ex)) { sum++; norm+=f[i]*f[i]; }
 
    if (!sum) sum=1;
    return (sqrt(norm/sum));
 }
 
-//=============================================================================
-// the following zeros the AH_max_iter and ex_r (semiaxes of best-fit ellipses) 
-// of engulfed AHs
-//=============================================================================
-void remove_redundant_AH()
-{
-   int i1,i2,is_1in2,is_2in1,intr;
-   real d,min_bhr,bhr;
-   int rem[MAX_BHS];
-
-   for (i1=0; i1<MAX_BHS; i1++) rem[i1]=0;
-
-   for (i1=0; i1<MAX_BHS; i1++)
-   {
-      for (i2=i1+1; i2<MAX_BHS; i2++)
-      {
-         if (ex_r[i1][0]>0 && ex_r[i2][0]>0)
-         {
-            is_inside_(&is_1in2,&intr,ex_r[i1],ex_xc[i1],ex_r[i2],ex_xc[i2],&AMRD_dim);
-            is_inside_(&is_2in1,&intr,ex_r[i2],ex_xc[i2],ex_r[i1],ex_xc[i1],&AMRD_dim);
-
-//(unless this is disabled, AH[4] is removed at first time step)
-            if (is_1in2 || is_2in1)
-            {
-               if (my_rank==0) printf("\n\nremove_redundant_AH: the following two excised regions "
-                  "overlap ... removing the smallest one (is_1in2=%i, is_2in1=%i).\n"
-                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
-                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",is_1in2,is_2in1,
-                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
-                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
-               if (is_2in1) rem[i2]=1; else rem[i1]=1;
-            }
-
-            // special case
-            if (i2==MAX_BHS-1 && rem[i2]==1)
-            { 
-               if (my_rank==0) printf("\nremove_redundant_AH: 'unremoving' the tentative encapsulating BH\n");
-               rem[i2]=0; 
-            }
-            if (i2==MAX_BHS-1 && i1!=MAX_BHS-2 && intr) 
-            {
-               if (my_rank==0) printf("\nremove_redundant_AH: encapsulating BH found, removing intersecting BHs.\n"
-                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
-                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",
-                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
-                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
-               rem[i1]=1;
-            }
-
-            if (is_1in2 && is_2in1 && my_rank==0) printf("WARNING ... both is_1in2 && is_2in1\n");
-         }
-      }
-   }
-
-   for (i1=0; i1<MAX_BHS; i1++) if (rem[i1])
-   {
-       ex_r[i1][0]=0;
-       ex_r[i1][1]=0;
-       AH_max_iter[i1]=0;
-   }
-}
-
-//=============================================================================
-// the following returns 1 if the test ellipsoid does not intersect any
-// existing horizons, *and* is entirely contained within the finest overlapping
-// level
-//=============================================================================
-#define MAX_GRIDS 20
-#define EX_MIN_PTS_IN 4
-int no_AH_intersect(real ex_r0[3],real ex_xc0[3],int inew)
-{
-   int i,i1;
-   real d;
-   real sgh[6*MAX_GRIDS],dx0[3],dt0,bound[6],max_xy;
-   int num,L,Lf,contained,ex0_in_exi,ex0_int_exi,ltrace=1;
-   int exi_in_ex0,exi_int_ex0;
-
-   for (i=0; i<MAX_BHS; i++)
-   {
-      if (ex_r[i][0]>0 && i!=inew)
-      {
-         is_inside_(&ex0_in_exi,&ex0_int_exi,ex_r0,ex_xc0,ex_r[i],ex_xc[i],&AMRD_dim);
-         is_inside_(&exi_in_ex0,&exi_int_ex0,ex_r[i],ex_xc[i],ex_r0,ex_xc0,&AMRD_dim);
-
-         if (ex0_int_exi)
-         {
-            // special case
-            if (inew==MAX_BHS-1)
-            {
-              if (my_rank==0) printf("\nno_AH_intersect: encapsulating BH found, ignoring intersections\n");
-              return 1;
-            }
-            
-            if (my_rank==0) printf("\nno_AH_intersect: new BH intersects existing BH\n"
-                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
-                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
-                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
-                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
-            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
-         }
-
-         if (ex0_in_exi)
-         {
-            if (my_rank==0) printf("no_AH_intersect: WARNING ... new BH is *entirely* contained in existing BH\n"
-                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
-                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
-                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
-                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
-            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
-            return 0;
-         }
-
-         if (ex0_int_exi && !exi_in_ex0) return 0;
-      }
-   }
-
-   return 1;
-}
+////=============================================================================
+//// the following zeros the AH_max_iter and ex_r (semiaxes of best-fit ellipses) 
+//// of engulfed AHs
+////=============================================================================
+//void remove_redundant_AH()
+//{
+//   int i1,i2,is_1in2,is_2in1,intr;
+//   real d,min_bhr,bhr;
+//   int rem[MAX_BHS];
+//
+//   for (i1=0; i1<MAX_BHS; i1++) rem[i1]=0;
+//
+//   for (i1=0; i1<MAX_BHS; i1++)
+//   {
+//      for (i2=i1+1; i2<MAX_BHS; i2++)
+//      {
+//         if (ex_r[i1][0]>0 && ex_r[i2][0]>0)
+//         {
+//            is_inside_(&is_1in2,&intr,ex_r[i1],ex_xc[i1],ex_r[i2],ex_xc[i2],&AMRD_dim);
+//            is_inside_(&is_2in1,&intr,ex_r[i2],ex_xc[i2],ex_r[i1],ex_xc[i1],&AMRD_dim);
+//
+////(unless this is disabled, AH[4] is removed at first time step)
+//            if (is_1in2 || is_2in1)
+//            {
+//               if (my_rank==0) printf("\n\nremove_redundant_AH: the following two excised regions "
+//                  "overlap ... removing the smallest one (is_1in2=%i, is_2in1=%i).\n"
+//                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
+//                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",is_1in2,is_2in1,
+//                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
+//                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
+//               if (is_2in1) rem[i2]=1; else rem[i1]=1;
+//            }
+//
+//            // special case
+//            if (i2==MAX_BHS-1 && rem[i2]==1)
+//            { 
+//               if (my_rank==0) printf("\nremove_redundant_AH: 'unremoving' the tentative encapsulating BH\n");
+//               rem[i2]=0; 
+//            }
+//            if (i2==MAX_BHS-1 && i1!=MAX_BHS-2 && intr) 
+//            {
+//               if (my_rank==0) printf("\nremove_redundant_AH: encapsulating BH found, removing intersecting BHs.\n"
+//                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
+//                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",
+//                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
+//                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
+//               rem[i1]=1;
+//            }
+//
+//            if (is_1in2 && is_2in1 && my_rank==0) printf("WARNING ... both is_1in2 && is_2in1\n");
+//         }
+//      }
+//   }
+//
+//   for (i1=0; i1<MAX_BHS; i1++) if (rem[i1])
+//   {
+//       ex_r[i1][0]=0;
+//       ex_r[i1][1]=0;
+//       AH_max_iter[i1]=0;
+//   }
+//}
+//
+////=============================================================================
+//// the following returns 1 if the test ellipsoid does not intersect any
+//// existing horizons, *and* is entirely contained within the finest overlapping
+//// level
+////=============================================================================
+//#define MAX_GRIDS 20
+//#define EX_MIN_PTS_IN 4
+//int no_AH_intersect(real ex_r0[3],real ex_xc0[3],int inew)
+//{
+//   int i,i1;
+//   real d;
+//   real sgh[6*MAX_GRIDS],dx0[3],dt0,bound[6],max_xy;
+//   int num,L,Lf,contained,ex0_in_exi,ex0_int_exi,ltrace=1;
+//   int exi_in_ex0,exi_int_ex0;
+//
+//   for (i=0; i<MAX_BHS; i++)
+//   {
+//      if (ex_r[i][0]>0 && i!=inew)
+//      {
+//         is_inside_(&ex0_in_exi,&ex0_int_exi,ex_r0,ex_xc0,ex_r[i],ex_xc[i],&AMRD_dim);
+//         is_inside_(&exi_in_ex0,&exi_int_ex0,ex_r[i],ex_xc[i],ex_r0,ex_xc0,&AMRD_dim);
+//
+//         if (ex0_int_exi)
+//         {
+//            // special case
+//            if (inew==MAX_BHS-1)
+//            {
+//              if (my_rank==0) printf("\nno_AH_intersect: encapsulating BH found, ignoring intersections\n");
+//              return 1;
+//            }
+//            
+//            if (my_rank==0) printf("\nno_AH_intersect: new BH intersects existing BH\n"
+//                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
+//                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
+//                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
+//                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
+//            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
+//         }
+//
+//         if (ex0_in_exi)
+//         {
+//            if (my_rank==0) printf("no_AH_intersect: WARNING ... new BH is *entirely* contained in existing BH\n"
+//                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
+//                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
+//                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
+//                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
+//            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
+//            return 0;
+//         }
+//
+//         if (ex0_int_exi && !exi_in_ex0) return 0;
+//      }
+//   }
+//
+//   return 1;
+//}
 
 //=============================================================================
 // Routines required by amrd:
@@ -820,8 +824,8 @@ void AdS4D_var_post_init(char *pfile)
       printf("Reading AdS4D parameters:\n\n");
    }
 
-   phi1_amp_1=phi1_B_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_ecc_1[0]=phi1_ecc_1[1]=0;
-   phi1_amp_2=phi1_B_2=phi1_r0_1=phi1_x0_2[0]=phi1_x0_2[1]=phi1_ecc_2[0]=phi1_ecc_2[1]=0;
+   phi1_amp_1=phi1_B_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_x0_1[2]=phi1_ecc_1[0]=phi1_ecc_1[1]=phi1_ecc_1[2]=0;
+   phi1_amp_2=phi1_B_2=phi1_r0_1=phi1_x0_2[0]=phi1_x0_2[1]=phi1_x0_2[2]=phi1_ecc_2[0]=phi1_ecc_2[1]=phi1_ecc_2[2]=0;
 
    AMRD_real_param(pfile,"phi1_amp_1",&phi1_amp_1,1);
    AMRD_real_param(pfile,"phi1_B_1",&phi1_B_1,1);
@@ -906,139 +910,139 @@ void AdS4D_var_post_init(char *pfile)
    }
 
    // set AH parameters
-   int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
-
-   use_AH_new_smooth=0; AMRD_int_param(pfile,"use_AH_new_smooth",&use_AH_new_smooth,1);
-   use_AH_new=0; AMRD_int_param(pfile,"use_AH_new",&use_AH_new,1);
-
-   for (j=0; j<MAX_BHS; j++)
-   {
-      // because the AH shape is saved, we can't currently change that upon
-      // a restart (unless we haven't yet found one)
-      if (!AMRD_cp_restart || !found_AH[j])
-      {
-         if (AMRD_cp_restart) free(AH_R[j]);
-         if (j==0) { AH_Nchi[j]=17; sprintf(buf,"AH_Nchi"); } 
-         else { AH_Nchi[j]=AH_Nchi[0]; sprintf(buf,"AH_Nchi_%i",j+1); }
-         AMRD_int_param(pfile,buf,&AH_Nchi[j],1);
-
-         AH_Nphi[j]=1;
-
-         if (!( ((AH_Nchi[j]-1)/2)==(AH_Nchi[j]/2) ) ||
-             !( ((AH_Nphi[j]-1)/2)==(AH_Nphi[j]/2) ))
-         { 
-            printf("\n\n\n\n\n WARNING: SMOOTHING AND REGULARIZATION IN AH ROUTINES ASSUME\n"
-                   " AN ODD NUMBER OF POINTS IN AH_Nchi and AH_Nphi\n\n\n\n\n");
-         }
-      }
-
-      if (j==0) { AH_find_best_fit[j]=0; sprintf(buf,"AH_find_best_fit"); }
-      else { AH_find_best_fit[j]=AH_find_best_fit[0]; sprintf(buf,"AH_find_best_fit_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_find_best_fit[j],1);
-
-      if (j==0) { AH_Lmin[j]=2; sprintf(buf,"AH_Lmin"); }
-      else { AH_Lmin[j]=AH_Lmin[0]; sprintf(buf,"AH_Lmin_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_Lmin[j],1);
-
-      if (j==0) { AH_Lmax[j]=100; sprintf(buf,"AH_Lmax"); }
-      else { AH_Lmax[j]=AH_Lmax[0]; sprintf(buf,"AH_Lmax_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_Lmax[j],1);
-
-      if (j==0) { AH_max_iter[j]=0; sprintf(buf,"AH_max_iter"); }
-      else { AH_max_iter[j]=AH_max_iter[0]; sprintf(buf,"AH_max_iter_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_max_iter[j],1);
-
-      if (j==0) { AH_freq[j]=1; sprintf(buf,"AH_freq"); }
-      else { AH_freq[j]=AH_freq[0]; sprintf(buf,"AH_freq_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_freq[j],1);
-
-      if (j==0) { AH_freq_aft[j]=1; sprintf(buf,"AH_freq_aft"); }
-      else { AH_freq_aft[j]=AH_freq_aft[0]; sprintf(buf,"AH_freq_aft_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_freq_aft[j],1);
-
-      if (AMRD_cp_restart)
-      {
-         if (found_AH[j]) freq0[j]=AH_freq_aft[j];
-         else freq0[j]=AH_freq[j];
-      }
-
-      if (j==0) { AH_rsteps[j]=1; sprintf(buf,"AH_rsteps"); }
-      else { AH_rsteps[j]=AH_rsteps[0]; sprintf(buf,"AH_rsteps_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_rsteps[j],1);
-
-      if (j==0) { AH_maxinc[j]=10; sprintf(buf,"AH_maxinc"); }
-      else { AH_maxinc[j]=AH_maxinc[0]; sprintf(buf,"AH_maxinc_%i",j+1); }
-      AMRD_int_param(pfile,buf,&AH_maxinc[j],1);
-
-      if (j==0) { AH_tol[j]=1e-2; sprintf(buf,"AH_tol"); }
-      else { AH_tol[j]=AH_tol[0]; sprintf(buf,"AH_tol_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_tol[j],1);
-
-      AH_tol_aft[j]=AH_tol[j];
-      if (j==0) sprintf(buf,"AH_tol_aft"); else sprintf(buf,"AH_tol_aft_%i",j+1);
-      AMRD_real_param(pfile,buf,&AH_tol_aft[j],1);
-
-      if (j==0) { AH_max_tol_inc[j]=1; sprintf(buf,"AH_max_tol_inc"); }
-      else { AH_max_tol_inc[j]=AH_max_tol_inc[0]; sprintf(buf,"AH_max_tol_inc_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_max_tol_inc[j],1);
-
-      if (j==0) { AH_tol_scale[j]=1; sprintf(buf,"AH_tol_scale"); }
-      else { AH_tol_scale[j]=AH_tol_scale[0]; sprintf(buf,"AH_tol_scale_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_tol_scale[j],1);
-
-      if (j==0) { AH_omt_scale[j]=1.1; sprintf(buf,"AH_omt_scale"); }
-      else { AH_omt_scale[j]=AH_omt_scale[0]; sprintf(buf,"AH_omt_scale_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_omt_scale[j],1);
-
-      if (j==0) { AH_reset_scale[j]=0; sprintf(buf,"AH_reset_scale"); }
-      else { AH_reset_scale[j]=AH_reset_scale[0]; sprintf(buf,"AH_reset_scale_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_reset_scale[j],1);
-
-      if (j==0) { AH_lambda_min[j]=0.1; sprintf(buf,"AH_lambda_min"); }
-      else { AH_lambda_min[j]=AH_lambda_min[0]; sprintf(buf,"AH_lambda_min_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_lambda_min[j],1);
-
-      if (j==0) { AH_lambda[j]=0.1; sprintf(buf,"AH_lambda"); }
-      else { AH_lambda[j]=AH_lambda[0]; sprintf(buf,"AH_lambda_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_lambda[j],1);
-
-      if (j==0) { AH_r0[j]=0.1; sprintf(buf,"AH_r0"); }
-      else { AH_r0[j]=AH_r0[0]; sprintf(buf,"AH_r0_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_r0[j],1);
-
-      if (j==0) { AH_r1[j]=0.2; sprintf(buf,"AH_r1"); }
-      else { AH_r1[j]=AH_r1[0]; sprintf(buf,"AH_r1_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_r1[j],1);
-
-      if (j==0) { AH_tmin[j]=0.0; sprintf(buf,"AH_tmin"); }
-      else { AH_tmin[j]=AH_tmin[0]; sprintf(buf,"AH_tmin_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_tmin[j],1);
-
-      if (!AMRD_cp_restart || !found_AH[j])
-      {
-         AH_xc[j][0]=AH_xc[j][1]=0;
-         if (j==0) sprintf(buf,"AH_xc");
-         else sprintf(buf,"AH_xc_%i",j+1);
-         AMRD_real_param(pfile,buf,AH_xc[j],AMRD_dim);
-      }
-
-      if (j==0) { AH_eps[j]=0.0; sprintf(buf,"AH_eps"); }
-      else { AH_eps[j]=AH_eps[0]; sprintf(buf,"AH_eps_%i",j+1); }
-      AMRD_real_param(pfile,buf,&AH_eps[j],1);
-
-      if (AH_Nchi[j]<5 || (AMRD_dim==3 && AH_Nphi[j]<5)) AMRD_stop("error ... AH_Nchi<5 || AH_Nphi<5 \n","");
-      if (AH_rsteps[j]<1) AMRD_stop("error ... AH_rsteps<1 \n","");
-
-      AH_theta[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      if (!AMRD_cp_restart) AH_R[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_w1[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_w2[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_w3[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_theta_ads[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_own[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
-      AH_lev[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
-
-   }
+//   int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
+//
+//   use_AH_new_smooth=0; AMRD_int_param(pfile,"use_AH_new_smooth",&use_AH_new_smooth,1);
+//   use_AH_new=0; AMRD_int_param(pfile,"use_AH_new",&use_AH_new,1);
+//
+//   for (j=0; j<MAX_BHS; j++)
+//   {
+//      // because the AH shape is saved, we can't currently change that upon
+//      // a restart (unless we haven't yet found one)
+//      if (!AMRD_cp_restart || !found_AH[j])
+//      {
+//         if (AMRD_cp_restart) free(AH_R[j]);
+//         if (j==0) { AH_Nchi[j]=17; sprintf(buf,"AH_Nchi"); } 
+//         else { AH_Nchi[j]=AH_Nchi[0]; sprintf(buf,"AH_Nchi_%i",j+1); }
+//         AMRD_int_param(pfile,buf,&AH_Nchi[j],1);
+//
+//         AH_Nphi[j]=1;
+//
+//         if (!( ((AH_Nchi[j]-1)/2)==(AH_Nchi[j]/2) ) ||
+//             !( ((AH_Nphi[j]-1)/2)==(AH_Nphi[j]/2) ))
+//         { 
+//            printf("\n\n\n\n\n WARNING: SMOOTHING AND REGULARIZATION IN AH ROUTINES ASSUME\n"
+//                   " AN ODD NUMBER OF POINTS IN AH_Nchi and AH_Nphi\n\n\n\n\n");
+//         }
+//      }
+//
+//      if (j==0) { AH_find_best_fit[j]=0; sprintf(buf,"AH_find_best_fit"); }
+//      else { AH_find_best_fit[j]=AH_find_best_fit[0]; sprintf(buf,"AH_find_best_fit_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_find_best_fit[j],1);
+//
+//      if (j==0) { AH_Lmin[j]=2; sprintf(buf,"AH_Lmin"); }
+//      else { AH_Lmin[j]=AH_Lmin[0]; sprintf(buf,"AH_Lmin_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_Lmin[j],1);
+//
+//      if (j==0) { AH_Lmax[j]=100; sprintf(buf,"AH_Lmax"); }
+//      else { AH_Lmax[j]=AH_Lmax[0]; sprintf(buf,"AH_Lmax_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_Lmax[j],1);
+//
+//      if (j==0) { AH_max_iter[j]=0; sprintf(buf,"AH_max_iter"); }
+//      else { AH_max_iter[j]=AH_max_iter[0]; sprintf(buf,"AH_max_iter_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_max_iter[j],1);
+//
+//      if (j==0) { AH_freq[j]=1; sprintf(buf,"AH_freq"); }
+//      else { AH_freq[j]=AH_freq[0]; sprintf(buf,"AH_freq_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_freq[j],1);
+//
+//      if (j==0) { AH_freq_aft[j]=1; sprintf(buf,"AH_freq_aft"); }
+//      else { AH_freq_aft[j]=AH_freq_aft[0]; sprintf(buf,"AH_freq_aft_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_freq_aft[j],1);
+//
+//      if (AMRD_cp_restart)
+//      {
+//         if (found_AH[j]) freq0[j]=AH_freq_aft[j];
+//         else freq0[j]=AH_freq[j];
+//      }
+//
+//      if (j==0) { AH_rsteps[j]=1; sprintf(buf,"AH_rsteps"); }
+//      else { AH_rsteps[j]=AH_rsteps[0]; sprintf(buf,"AH_rsteps_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_rsteps[j],1);
+//
+//      if (j==0) { AH_maxinc[j]=10; sprintf(buf,"AH_maxinc"); }
+//      else { AH_maxinc[j]=AH_maxinc[0]; sprintf(buf,"AH_maxinc_%i",j+1); }
+//      AMRD_int_param(pfile,buf,&AH_maxinc[j],1);
+//
+//      if (j==0) { AH_tol[j]=1e-2; sprintf(buf,"AH_tol"); }
+//      else { AH_tol[j]=AH_tol[0]; sprintf(buf,"AH_tol_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_tol[j],1);
+//
+//      AH_tol_aft[j]=AH_tol[j];
+//      if (j==0) sprintf(buf,"AH_tol_aft"); else sprintf(buf,"AH_tol_aft_%i",j+1);
+//      AMRD_real_param(pfile,buf,&AH_tol_aft[j],1);
+//
+//      if (j==0) { AH_max_tol_inc[j]=1; sprintf(buf,"AH_max_tol_inc"); }
+//      else { AH_max_tol_inc[j]=AH_max_tol_inc[0]; sprintf(buf,"AH_max_tol_inc_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_max_tol_inc[j],1);
+//
+//      if (j==0) { AH_tol_scale[j]=1; sprintf(buf,"AH_tol_scale"); }
+//      else { AH_tol_scale[j]=AH_tol_scale[0]; sprintf(buf,"AH_tol_scale_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_tol_scale[j],1);
+//
+//      if (j==0) { AH_omt_scale[j]=1.1; sprintf(buf,"AH_omt_scale"); }
+//      else { AH_omt_scale[j]=AH_omt_scale[0]; sprintf(buf,"AH_omt_scale_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_omt_scale[j],1);
+//
+//      if (j==0) { AH_reset_scale[j]=0; sprintf(buf,"AH_reset_scale"); }
+//      else { AH_reset_scale[j]=AH_reset_scale[0]; sprintf(buf,"AH_reset_scale_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_reset_scale[j],1);
+//
+//      if (j==0) { AH_lambda_min[j]=0.1; sprintf(buf,"AH_lambda_min"); }
+//      else { AH_lambda_min[j]=AH_lambda_min[0]; sprintf(buf,"AH_lambda_min_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_lambda_min[j],1);
+//
+//      if (j==0) { AH_lambda[j]=0.1; sprintf(buf,"AH_lambda"); }
+//      else { AH_lambda[j]=AH_lambda[0]; sprintf(buf,"AH_lambda_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_lambda[j],1);
+//
+//      if (j==0) { AH_r0[j]=0.1; sprintf(buf,"AH_r0"); }
+//      else { AH_r0[j]=AH_r0[0]; sprintf(buf,"AH_r0_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_r0[j],1);
+//
+//      if (j==0) { AH_r1[j]=0.2; sprintf(buf,"AH_r1"); }
+//      else { AH_r1[j]=AH_r1[0]; sprintf(buf,"AH_r1_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_r1[j],1);
+//
+//      if (j==0) { AH_tmin[j]=0.0; sprintf(buf,"AH_tmin"); }
+//      else { AH_tmin[j]=AH_tmin[0]; sprintf(buf,"AH_tmin_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_tmin[j],1);
+//
+//      if (!AMRD_cp_restart || !found_AH[j])
+//      {
+//         AH_xc[j][0]=AH_xc[j][1]=0;
+//         if (j==0) sprintf(buf,"AH_xc");
+//         else sprintf(buf,"AH_xc_%i",j+1);
+//         AMRD_real_param(pfile,buf,AH_xc[j],AMRD_dim);
+//      }
+//
+//      if (j==0) { AH_eps[j]=0.0; sprintf(buf,"AH_eps"); }
+//      else { AH_eps[j]=AH_eps[0]; sprintf(buf,"AH_eps_%i",j+1); }
+//      AMRD_real_param(pfile,buf,&AH_eps[j],1);
+//
+//      if (AH_Nchi[j]<5 || (AMRD_dim==3 && AH_Nphi[j]<5)) AMRD_stop("error ... AH_Nchi<5 || AH_Nphi<5 \n","");
+//      if (AH_rsteps[j]<1) AMRD_stop("error ... AH_rsteps<1 \n","");
+//
+//      AH_theta[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      if (!AMRD_cp_restart) AH_R[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_w1[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_w2[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_w3[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_theta_ads[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_own[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
+//      AH_lev[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
+//
+//   }
 
    ex_max_repop=0; AMRD_int_param(pfile,"ex_max_repop",&ex_max_repop,1);
    ex_repop_buf=1; AMRD_int_param(pfile,"ex_repop_buf",&ex_repop_buf,1);
@@ -1090,7 +1094,7 @@ void AdS4D_AMRH_var_clear(void)
    zero_f(phi1_n); 
 
    init_ghb_ads_(gb_tt_n,gb_tx_n,gb_ty_n,gb_xx_n,gb_xy_n,gb_yy_n,psi_n,
-                 Hb_t_n,Hb_x_n,Hb_y_n,&AdS_L,x,y,chr,&AMRD_ex,&Nx,&Ny,&regtype);
+                 Hb_t_n,Hb_x_n,Hb_y_n,&AdS_L,x,y,z,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
 
    return;
 }
@@ -1110,10 +1114,10 @@ void AdS4D_free_data(void)
    zero_f(phi1_t_n); // holds initial time derivatives for ID
 
    gauss2d_(phi1_n,&phi1_amp_1,&phi1_B_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_x0_1[1],
-            &phi1_ecc_1[0],&phi1_ecc_1[1],&AdS_L,x,y,&Nx,&Ny,&rhoc,&rhod,&stype);
+            &phi1_ecc_1[0],&phi1_ecc_1[1],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
 
    gauss2d_(w1,&phi1_amp_2,&phi1_B_2,&phi1_r0_2,&phi1_delta_2,&phi1_x0_2[0],&phi1_x0_2[1],
-            &phi1_ecc_2[0],&phi1_ecc_2[1],&AdS_L,x,y,&Nx,&Ny,&rhoc,&rhod,&stype);
+            &phi1_ecc_2[0],&phi1_ecc_2[1],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
 
    for (i=0; i<size; i++) phi1_n[i]+=w1[i]; 
 
@@ -1148,7 +1152,7 @@ void AdS4D_elliptic_vars_t0_init(void)
 //=============================================================================
 void AdS4D_t0_cnst_data(void)
 {
-   int i,j,ind;
+   int i,j,k,ind;
 
    ldptr_mg();
 
@@ -1158,14 +1162,14 @@ void AdS4D_t0_cnst_data(void)
      init_ghbdot_(gb_tt_n,gb_tx_n,gb_ty_n,gb_xx_n,gb_xy_n,gb_yy_n,psi_n,
                   gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,gb_xx_t_n,gb_xy_t_n,gb_yy_t_n,psi_t_n,
                   Hb_t_n,Hb_x_n,Hb_y_n,Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
-                  &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny,&regtype);
+                  &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
    }
 
    // initialize gbars
    if ((background || skip_constraints) && ief_bh_r0==0)
    {
      init_ghb_ads_(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
-                   Hb_t,Hb_x,Hb_y,&AdS_L,x,y,chr_mg,&AMRD_ex,&Nx,&Ny,&regtype);
+                   Hb_t,Hb_x,Hb_y,&AdS_L,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
    }
    else if (background || skip_constraints)
    {
@@ -1174,7 +1178,7 @@ void AdS4D_t0_cnst_data(void)
        init_ads4d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
                       gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,gb_xx_t_n,gb_xy_t_n,gb_yy_t_n,psi_t_n,
                       Hb_t,Hb_x,Hb_y,Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
-                      phys_bdy,x,y,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&regtype);
+                      phys_bdy,x,y,z,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
      }
    }
    else
@@ -1182,7 +1186,7 @@ void AdS4D_t0_cnst_data(void)
      init_ghb_(zeta,
                gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
                Hb_t,Hb_x,Hb_y,
-               &AdS_L,mask_mg,phys_bdy,x,y,chr_mg,&AMRD_ex,&Nx,&Ny,&regtype,&rhoa,&rhob);
+               &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);
    }
 
    // initialize hbars and nm1, np1 time levels
@@ -1197,7 +1201,7 @@ void AdS4D_t0_cnst_data(void)
               gb_yy_np1,gb_yy_n,gb_yy_nm1,
               psi_np1,psi_n,psi_nm1,
               Hb_t_n,Hb_x_n,Hb_y_n,
-              &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny,&regtype);
+              &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
 
      init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
                gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
@@ -1210,7 +1214,7 @@ void AdS4D_t0_cnst_data(void)
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
                phi1_np1,phi1_n,phi1_nm1,phi1_t_n,tfunction,
-               &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny,&regtype);
+               &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
 
    }
 
@@ -1230,11 +1234,14 @@ void AdS4D_t0_cnst_data(void)
    {
       for (j=0; j<Ny; j++)
       {
-         ind=i+j*Nx;
+       for (k=0; k<Nz; k++)
+       {
+         ind=i+Nx*(j+Ny*k);
          test1[ind]=zeta[ind];
          test2[ind]=zeta_lop[ind];
          test3[ind]=zeta_rhs[ind];
          test4[ind]=zeta_res[ind];
+       }
       } 
    }
   
@@ -1250,11 +1257,11 @@ void AdS4D_pre_io_calc(void)
 {
    ldptr();
 
-   int i,j,ind;
+   int i,j,k,ind;
    int j_shift;
    real ct,rho;
 
-   dx=x[1]-x[0]; dy=y[1]-y[0];
+   dx=x[1]-x[0]; dy=y[1]-y[0]; dz=z[1]-z[0];
    ct=PAMR_get_time(g_L);
 
    if (regtype==6) j_shift=3;
@@ -1285,7 +1292,7 @@ void AdS4D_pre_io_calc(void)
          Hb_x_n,Hb_x_nm1,Hb_x_np1,
          Hb_y_n,Hb_y_nm1,Hb_y_np1,
          phi1_n,phi1_nm1,phi1_np1,
-         x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
+         x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
       }
       else
       {
@@ -1306,7 +1313,7 @@ void AdS4D_pre_io_calc(void)
          Hb_x_np1,Hb_x_n,Hb_x_nm1,
          Hb_y_np1,Hb_y_n,Hb_y_nm1,
          phi1_np1,phi1_n,phi1_nm1,
-         x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
+         x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
       }
 
       // fill in independent residual evaluator test functions
@@ -1314,7 +1321,9 @@ void AdS4D_pre_io_calc(void)
       {
          for (j=0; j<Ny; j++)
          {
-            ind=i+j*Nx;
+          for (k=0; k<Nz; k++)
+          {
+            ind=i+Nx*(j+Ny*k);
             rho=sqrt(x[i]*x[i]+y[j]*y[j]);
 
             // excise rho=1-1.5*dx pts (pure AdS diverges at rho=1, so cannot use these pts in difference stencils) 
@@ -1340,6 +1349,7 @@ void AdS4D_pre_io_calc(void)
               iresyy[ind]=efe_yy_ires[ind];
               irespsi[ind]=efe_psi_ires[ind];
             }
+          }
          } 
       }
 
@@ -1369,10 +1379,10 @@ real AdS4D_evo_residual(void)
 
    if (LIN_ZERO_BND) 
    {
-      lin_zero_bnd_res_(phi1_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
-      lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
-      lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
-      lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
+      lin_zero_bnd_res_(phi1_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny,&Nz);
+      lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny,&Nz);
+      lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny,&Nz);
+      lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny,&Nz);
    }
 
    l2norm_phi1=norm_l2(phi1_res,mask,chr);
@@ -1398,90 +1408,90 @@ real AdS4D_evo_residual(void)
    return l2norm;
 }
 
-//=============================================================================
-//---lower frequency KO dissipation filter, called from AdS4D_evolve()
-//   after pointers set up
-//=============================================================================
-void apply_diss_eps_k(void)
-{
-   int pbt_even[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_EVEN,PAMR_UNKNOWN};
-   int pbt_unknown[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_UNKNOWN};
-   int pbt_odd[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_ODD,PAMR_UNKNOWN};
-   int even=PAMR_EVEN,odd=PAMR_ODD,i,j,ind,Nz;
-
-   // define eps as an array, and dissipate each dimension one at a time 
-   int do_ex=-1,ind_sweeps=1;
-
-   real rho;
-   dx=x[1]-x[0]; dy=y[1]-y[0];
-
-   // using w2 for eps array, with new diss_eps_y_cutoff flag (off for diss_eps_y_cutoff=1) 
-   for (i=0; i<Nx; i++)
-      for (j=0; j<Ny; j++)
-      {
-         ind=i+j*Nx;
-         rho=sqrt(x[i]*x[i]+y[j]*y[j]);
-         if (rho>=1 || y[j]>diss_eps_y_cutoff) 
-         {
-           w2[ind]=0; 
-         }
-         else 
-         {
-           w2[ind]=pow(rho,diss_eps_k_cutoff_n)*diss_eps_k;
-         }
-      } 
-
-   // only 2D Kreiss-Oliger dissipation
-   Nz=1;
-
-   // define effective excision mask w3 for dmdiss3d
-   for (i=0; i<Nx; i++)
-   {
-      for (j=0; j<Ny; j++)
-      {
-         ind=i+j*Nx;
-         rho=sqrt(x[i]*x[i]+y[j]*y[j]);
-         w3[ind]=0;
-         if (1-rho<i_shift*dx+dx/2) w3[ind]=AMRD_ex;
-      }
-   }
-
-   // use effective excision mask w3 instead of excision mask chr with new diss_all flag
-   if (diss_all==1)
-   {
-   dmdiss3d_ex_gen_(gb_tt_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(gb_tx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(gb_ty_n,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(gb_xx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(gb_xy_n,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(gb_yy_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(psi_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(Hb_t_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(Hb_x_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(Hb_y_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   dmdiss3d_ex_gen_(phi1_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   }
-   else {
-   dmdiss3d_ex_gen_(gb_xx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   }
-
-   if (diss_all_past_k)
-   {
-      dmdiss3d_ex_gen_(gb_tt_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(gb_tx_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(gb_ty_nm1,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(gb_xx_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(gb_xy_nm1,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(gb_yy_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(psi_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(Hb_t_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(Hb_x_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(Hb_y_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-      dmdiss3d_ex_gen_(phi1_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-   }
-
-   return;
-}
+////=============================================================================
+////---lower frequency KO dissipation filter, called from AdS4D_evolve()
+////   after pointers set up
+////=============================================================================
+//void apply_diss_eps_k(void)
+//{
+//   int pbt_even[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_EVEN,PAMR_UNKNOWN};
+//   int pbt_unknown[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_UNKNOWN};
+//   int pbt_odd[4]={PAMR_UNKNOWN,PAMR_UNKNOWN,PAMR_ODD,PAMR_UNKNOWN};
+//   int even=PAMR_EVEN,odd=PAMR_ODD,i,j,ind,Nz;
+//
+//   // define eps as an array, and dissipate each dimension one at a time 
+//   int do_ex=-1,ind_sweeps=1;
+//
+//   real rho;
+//   dx=x[1]-x[0]; dy=y[1]-y[0];
+//
+//   // using w2 for eps array, with new diss_eps_y_cutoff flag (off for diss_eps_y_cutoff=1) 
+//   for (i=0; i<Nx; i++)
+//      for (j=0; j<Ny; j++)
+//      {
+//         ind=i+j*Nx;
+//         rho=sqrt(x[i]*x[i]+y[j]*y[j]);
+//         if (rho>=1 || y[j]>diss_eps_y_cutoff) 
+//         {
+//           w2[ind]=0; 
+//         }
+//         else 
+//         {
+//           w2[ind]=pow(rho,diss_eps_k_cutoff_n)*diss_eps_k;
+//         }
+//      } 
+//
+//   // only 2D Kreiss-Oliger dissipation
+//   Nz=1;
+//
+//   // define effective excision mask w3 for dmdiss3d
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//         ind=i+j*Nx;
+//         rho=sqrt(x[i]*x[i]+y[j]*y[j]);
+//         w3[ind]=0;
+//         if (1-rho<i_shift*dx+dx/2) w3[ind]=AMRD_ex;
+//      }
+//   }
+//
+//   // use effective excision mask w3 instead of excision mask chr with new diss_all flag
+//   if (diss_all==1)
+//   {
+//   dmdiss3d_ex_gen_(gb_tt_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_tx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_ty_n,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_xx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_xy_n,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_yy_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(psi_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(Hb_t_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(Hb_x_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(Hb_y_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(phi1_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   }
+//   else {
+//   dmdiss3d_ex_gen_(gb_xx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   }
+//
+//   if (diss_all_past_k)
+//   {
+//      dmdiss3d_ex_gen_(gb_tt_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_tx_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_ty_nm1,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_xx_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_xy_nm1,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_yy_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(psi_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(Hb_t_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(Hb_x_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(Hb_y_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(phi1_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   }
+//
+//   return;
+//}
 
 //=============================================================================
 // Performs 1 iteration of the evolution equations 
@@ -1504,7 +1514,7 @@ void AdS4D_evolve(int iter)
    zero_f(hb_i_res);
 
    // when kmax nonzero, apply extra dissipation
-   if (diss_kmax>=1 && diss_eps_k>0 && iter==1) apply_diss_eps_k();
+//   if (diss_kmax>=1 && diss_eps_k>0 && iter==1) apply_diss_eps_k();
 
    if (!background)
    {
@@ -1520,8 +1530,8 @@ void AdS4D_evolve(int iter)
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
                 phi1_np1,phi1_n,phi1_nm1,
-                &AdS_L,x,y,&dt,chr,&AMRD_ex,
-                phys_bdy,ghost_width,&Nx,&Ny,
+                &AdS_L,x,y,z,&dt,chr,&AMRD_ex,
+                phys_bdy,ghost_width,&Nx,&Ny,&Nz,
                 Hb_t_0,Hb_x_0,Hb_y_0,
                 &gauge_t,&ct,&rho1_t,&rho2_t,&rho3_t,&rho4_t,&xi1_t,&xi2_t,
                 &c1_t,&c2_t,&c3_t,&cbulk_t);
@@ -1538,8 +1548,8 @@ void AdS4D_evolve(int iter)
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
                 phi1_np1,phi1_n,phi1_nm1,
-                &AdS_L,x,y,&dt,chr,&AMRD_ex,
-                phys_bdy,ghost_width,&Nx,&Ny,
+                &AdS_L,x,y,z,&dt,chr,&AMRD_ex,
+                phys_bdy,ghost_width,&Nx,&Ny,&Nz,
                 Hb_t_0,Hb_x_0,Hb_y_0,
                 &gauge_i,&ct,&rho1_i,&rho2_i,&rho3_i,&rho4_i,&xi1_i,&xi2_i,
                 &c1_i,&c2_i,&c3_i,&cbulk_i);
@@ -1556,8 +1566,8 @@ void AdS4D_evolve(int iter)
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
                 phi1_np1,phi1_n,phi1_nm1,
-                &AdS_L,x,y,&dt,chr,&AMRD_ex,
-                phys_bdy,ghost_width,&Nx,&Ny,
+                &AdS_L,x,y,z,&dt,chr,&AMRD_ex,
+                phys_bdy,ghost_width,&Nx,&Ny,&Nz,
                 &background,&kappa_cd,&rho_cd,
                 &interptype,&i_shift,&regtype,
                 &diss_kmax,tfunction);
@@ -1573,20 +1583,24 @@ void AdS4D_evolve(int iter)
 //=============================================================================
 void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excised)
 {
-   int i,j,ind,l;
-   real x,y,dx,dy,rho,xp,yp,ex_r_xp,ex_r_yp,r;
+   int i,j,k,ind,l;
+   real x,y,z,dx,dy,dz,rho,xp,yp,zp,ex_r_xp,ex_r_yp,ex_r_zp,r;
 
    dx=(bbox[1]-bbox[0])/(shape[0]-1);
    dy=(bbox[3]-bbox[2])/(shape[1]-1);
+   dz=(bbox[5]-bbox[4])/(shape[2]-1);
 
    for (i=0; i<shape[0]; i++)
    {
       x=bbox[0]+i*dx;
       for (j=0; j<shape[1]; j++)
       {
-         y=bbox[2]+j*dy;
+       y=bbox[2]+j*dy;
+       for (k=0; k<shape[2]; k++)
+       {
+         z=bbox[4]+k*dz;
          rho=sqrt(x*x+y*y);
-         ind=i+j*shape[0];
+         ind=i+shape[0]*(j+shape[1]*k);
 
          if (rho>=(1-dx_Lc/2)) 
          {
@@ -1603,8 +1617,10 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                {
                  xp=(x-ex_xc[l][0]);
                  yp=(y-ex_xc[l][1]);
+                 zp=xp;
                  ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
                  ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
+                 ex_r_zp=ex_r_xp;
                  if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp))<1) 
                  {
                   mask[ind]=excised;
@@ -1612,6 +1628,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                }
             }
          }
+       }
       }
    }
 }
@@ -1670,161 +1687,161 @@ void AdS4D_pre_tstep(int L)
       pre_tstep_global_first=0;
    }
 
-   // search for AHs at t>0
-  int ah_finder_is_off=1;
-  for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
+//   // search for AHs at t>0
+//  int ah_finder_is_off=1;
+//  for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
+//
+//  if (!ah_finder_is_off)
+//  {
+//   do_repop=do_reinit_ex=got_an_AH=0;
+//
+//   for (l=0; l<MAX_BHS; l++)
+//   {
+//      real prev_AH_R[AH_Nchi[l]*AH_Nphi[l]];
+//      real prev_AH_xc[2];
+//      for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {prev_AH_R[i]=AH_R[l][i];} 
+//      for (i=0; i<2; i++) {prev_AH_xc[i]=AH_xc[l][i];}
+//      c_AH=l;
+//      if (AH_max_iter[l]>0 && L==AH_Lmin[l] && ct>=AH_tmin[l])
+//      {
+//         if (AH_count[l]<0) { AH[l]=1; if (AMRD_state==AMRD_STATE_EVOLVE) M=J=0;}
+//         else if (!(AH_count[l] % freq0[l]) && !(c_AH==3 && ct==0)) // for fourth BH, do not search at t=0
+//         {
+//            omt=0; // over-max-tolerance
+//            AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0); // AH finder
+//
+//            if (AH[l]) { freq0[l]=AH_freq_aft[l]; found_AH[l]=1; got_an_AH=1; AH_tol[l]=AH_tol_aft[l]; found_count_AH[l]++; } // if this time found AH
+//
+//            // if previously found but failed now
+//            if (found_AH[l] && !AH[l]) 
+//            {
+//               if (AH_reset_scale[l]>0)
+//               {
+//                  // expand old initial-guess surface
+//                  if (my_rank==0 && AMRD_evo_trace>=1)
+//                     printf("t=%lf ... lost AH[%i] ...\n" 
+//                            "expanding old initial-guess surface by a factor %lf\n",ct,l+1,AH_reset_scale[l]);
+//                  for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l];
+//
+//                  if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
+//                  { 
+//                     // shrink old initial-guess surface
+//                     if (my_rank==0 && AMRD_evo_trace>=1) printf("... still can't find one (min_resid=%lf)\n"
+//                         "... shrinking old initial-guess surface by a factor %lf\n",AH_min_resid1,1/AH_reset_scale[l]);
+//                     for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
+//
+//                     if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
+//                     {
+//
+//                        // increase AH_tol to force an AH to be found, starting with shrunken initial-guess surface
+//                        if (AH_min_resid2<AH_min_resid1 && AH_min_resid2<AH_min_resid0) 
+//                        {
+//                           if (my_rank==0 && AMRD_evo_trace>=1)
+//                              printf("starting from shrunken initial-guess surface\n");
+//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
+//                           if (my_rank==0 && AMRD_evo_trace>=1) 
+//                              printf("and temporarily increasing tolerance to %lf; will then use the resulting surface\n"
+//                              ,AH_min_resid2*AH_omt_scale[l]);
+//                           omt=1;
+//                           tol_save=AH_tol[l];
+//                           AH_tol[l]=AH_min_resid2*AH_omt_scale[l];
+//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
+//                           {
+//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+//                           }
+//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+//                           AH_tol[l]=tol_save;
+//                        }
+//
+//                        // increase AH_tol to force an AH to be found, starting with expanded initial-guess surface
+//                        else if (AH_min_resid1<AH_min_resid0) 
+//                        {  
+//                           if (my_rank==0 && AMRD_evo_trace>=1)
+//                              printf("starting from expanded initial-guess surface\n");
+//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l]; 
+//                           if (my_rank==0 && AMRD_evo_trace>=1) 
+//                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid1*AH_omt_scale[l]);
+//                           omt=1;
+//                           tol_save=AH_tol[l];
+//                           AH_tol[l]=AH_min_resid1*AH_omt_scale[l];
+//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
+//                           {
+//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+//                           }
+//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+//                           AH_tol[l]=tol_save;
+//                        }
+//
+//                        // increase AH_tol to force an AH to be found, starting with old initial-guess surface
+//                        else 
+//                        {
+//                           if (my_rank==0 && AMRD_evo_trace>=1)
+//                              printf("starting from old initial-guess surface\n");
+//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]; 
+//                           if (my_rank==0 && AMRD_evo_trace>=1) 
+//                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid0*AH_omt_scale[l]);
+//                           omt=1;
+//                           tol_save=AH_tol[l];
+//                           AH_tol[l]=AH_min_resid0*AH_omt_scale[l];
+//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0)))
+//                           {
+//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+//                           }
+//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+//                           AH_tol[l]=tol_save;
+//                        }
+//
+//                     }                 
+//                  }
+//               }
+//            }
 
-  if (!ah_finder_is_off)
-  {
-   do_repop=do_reinit_ex=got_an_AH=0;
-
-   for (l=0; l<MAX_BHS; l++)
-   {
-      real prev_AH_R[AH_Nchi[l]*AH_Nphi[l]];
-      real prev_AH_xc[2];
-      for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {prev_AH_R[i]=AH_R[l][i];} 
-      for (i=0; i<2; i++) {prev_AH_xc[i]=AH_xc[l][i];}
-      c_AH=l;
-      if (AH_max_iter[l]>0 && L==AH_Lmin[l] && ct>=AH_tmin[l])
-      {
-         if (AH_count[l]<0) { AH[l]=1; if (AMRD_state==AMRD_STATE_EVOLVE) M=J=0;}
-         else if (!(AH_count[l] % freq0[l]) && !(c_AH==3 && ct==0)) // for fourth BH, do not search at t=0
-         {
-            omt=0; // over-max-tolerance
-            AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0); // AH finder
-
-            if (AH[l]) { freq0[l]=AH_freq_aft[l]; found_AH[l]=1; got_an_AH=1; AH_tol[l]=AH_tol_aft[l]; found_count_AH[l]++; } // if this time found AH
-
-            // if previously found but failed now
-            if (found_AH[l] && !AH[l]) 
-            {
-               if (AH_reset_scale[l]>0)
-               {
-                  // expand old initial-guess surface
-                  if (my_rank==0 && AMRD_evo_trace>=1)
-                     printf("t=%lf ... lost AH[%i] ...\n" 
-                            "expanding old initial-guess surface by a factor %lf\n",ct,l+1,AH_reset_scale[l]);
-                  for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l];
-
-                  if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
-                  { 
-                     // shrink old initial-guess surface
-                     if (my_rank==0 && AMRD_evo_trace>=1) printf("... still can't find one (min_resid=%lf)\n"
-                         "... shrinking old initial-guess surface by a factor %lf\n",AH_min_resid1,1/AH_reset_scale[l]);
-                     for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
-
-                     if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
-                     {
-
-                        // increase AH_tol to force an AH to be found, starting with shrunken initial-guess surface
-                        if (AH_min_resid2<AH_min_resid1 && AH_min_resid2<AH_min_resid0) 
-                        {
-                           if (my_rank==0 && AMRD_evo_trace>=1)
-                              printf("starting from shrunken initial-guess surface\n");
-                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
-                           if (my_rank==0 && AMRD_evo_trace>=1) 
-                              printf("and temporarily increasing tolerance to %lf; will then use the resulting surface\n"
-                              ,AH_min_resid2*AH_omt_scale[l]);
-                           omt=1;
-                           tol_save=AH_tol[l];
-                           AH_tol[l]=AH_min_resid2*AH_omt_scale[l];
-                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
-                           {
-                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-                           }
-                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-                           AH_tol[l]=tol_save;
-                        }
-
-                        // increase AH_tol to force an AH to be found, starting with expanded initial-guess surface
-                        else if (AH_min_resid1<AH_min_resid0) 
-                        {  
-                           if (my_rank==0 && AMRD_evo_trace>=1)
-                              printf("starting from expanded initial-guess surface\n");
-                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l]; 
-                           if (my_rank==0 && AMRD_evo_trace>=1) 
-                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid1*AH_omt_scale[l]);
-                           omt=1;
-                           tol_save=AH_tol[l];
-                           AH_tol[l]=AH_min_resid1*AH_omt_scale[l];
-                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
-                           {
-                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-                           }
-                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-                           AH_tol[l]=tol_save;
-                        }
-
-                        // increase AH_tol to force an AH to be found, starting with old initial-guess surface
-                        else 
-                        {
-                           if (my_rank==0 && AMRD_evo_trace>=1)
-                              printf("starting from old initial-guess surface\n");
-                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]; 
-                           if (my_rank==0 && AMRD_evo_trace>=1) 
-                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid0*AH_omt_scale[l]);
-                           omt=1;
-                           tol_save=AH_tol[l];
-                           AH_tol[l]=AH_min_resid0*AH_omt_scale[l];
-                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0)))
-                           {
-                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-                           }
-                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-                           AH_tol[l]=tol_save;
-                        }
-
-                     }                 
-                  }
-               }
-            }
-
-            // if still not found
-            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[l][i]=prev_AH_R[i];}
-
-            // if never found AH
-            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=AH_r0[l];
-
-            // save AH grid functions if this time found AH
-            if (AH[l]) 
-            {
-               AH_shape[0]=AH_Nchi[l];
-               AH_bbox[0]=0;
-               if (AH_xc[l][1]<dy) {AH_bbox[1]=M_PI;} else {AH_bbox[1]=2*M_PI;}
-               int rank=1;
-               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
-               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
-               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
-               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
-            }
-
-            // fill in excision parameters 
-            // ( ex_xc0[0],ex_xc0[1] are filled with coordinate center for excision
-            //   and ex_r0[0],ex_r0[1] are filled with principle axis radii for excision )
-            if (found_AH[l] && AH[l] && AMRD_do_ex)
-            {
-               fill_ex_params_(AH_R[l],AH_xc[l],ex_r0,ex_xc0,&AH_Nchi[l],&AH_Nphi[l],&dx,&dy,&axisym);
-
-               if (no_AH_intersect(ex_r0,ex_xc0,l))
-               {
-                 do_reinit_ex=1;
-                 do_repop=1;
-                 // saves local ex_r0,ex_xc0 to global ex_r, ex_xc
-                 ex_r[l][0]=ex_r0[0]; //excision ellipse x-semiaxis
-                 ex_r[l][1]=ex_r0[1]; //excision ellipse y-semiaxis
-                 ex_xc[l][0]=ex_xc0[0]; //excision ellipse x-coordinate center
-                 ex_xc[l][1]=ex_xc0[1]; //excision ellipse y-coordinate center 
-               }
-            }
-
-         }
-         AH_count[l]++;
-      }
-   }
-  }
+//            // if still not found
+//            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[l][i]=prev_AH_R[i];}
+//
+//            // if never found AH
+//            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=AH_r0[l];
+//
+//            // save AH grid functions if this time found AH
+//            if (AH[l]) 
+//            {
+//               AH_shape[0]=AH_Nchi[l];
+//               AH_bbox[0]=0;
+//               if (AH_xc[l][1]<dy) {AH_bbox[1]=M_PI;} else {AH_bbox[1]=2*M_PI;}
+//               int rank=1;
+//               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
+//               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
+//               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
+//               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
+//            }
+//
+//            // fill in excision parameters 
+//            // ( ex_xc0[0],ex_xc0[1] are filled with coordinate center for excision
+//            //   and ex_r0[0],ex_r0[1] are filled with principle axis radii for excision )
+//            if (found_AH[l] && AH[l] && AMRD_do_ex)
+//            {
+//               fill_ex_params_(AH_R[l],AH_xc[l],ex_r0,ex_xc0,&AH_Nchi[l],&AH_Nphi[l],&dx,&dy,&axisym);
+//
+//               if (no_AH_intersect(ex_r0,ex_xc0,l))
+//               {
+//                 do_reinit_ex=1;
+//                 do_repop=1;
+//                 // saves local ex_r0,ex_xc0 to global ex_r, ex_xc
+//                 ex_r[l][0]=ex_r0[0]; //excision ellipse x-semiaxis
+//                 ex_r[l][1]=ex_r0[1]; //excision ellipse y-semiaxis
+//                 ex_xc[l][0]=ex_xc0[0]; //excision ellipse x-coordinate center
+//                 ex_xc[l][1]=ex_xc0[1]; //excision ellipse y-coordinate center 
+//               }
+//            }
+//
+//         }
+//         AH_count[l]++;
+//      }
+//   }
+//  }
 
    // repopulate if needed
    int repop_n=1;
@@ -1835,7 +1852,7 @@ void AdS4D_pre_tstep(int L)
    // re-initialize mask function
    if (do_reinit_ex)
    {
-     remove_redundant_AH();
+//     remove_redundant_AH();
      PAMR_excision_on("chr",&AdS4D_fill_ex_mask,AMRD_ex,1);
    }
 
@@ -1909,7 +1926,7 @@ real AdS4D_MG_residual(void)
    // solves for zeta conformal factor at t=0; residual 
    mg_sup_(&action,zeta,zeta_rhs,zeta_lop,zeta_res,phi1,
            &AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex, 
-           x,y,&norm,&Nx,&Ny);
+           x,y,z,&norm,&Nx,&Ny,&Nz);
 
    return norm;
 }
@@ -1935,7 +1952,7 @@ real AdS4D_MG_relax(void)
    // solves for zeta conformal factor at t=0; relaxation 
    mg_sup_(&action,zeta,zeta_rhs,zeta_lop,zeta_res,phi1,
            &AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,
-           x,y,&norm,&Nx,&Ny);
+           x,y,z,&norm,&Nx,&Ny,&Nz);
 
    return norm;
 }
@@ -1961,7 +1978,7 @@ void AdS4D_L_op(void)
    // solves for zeta conformal factor at t=0; elliptic operator
    mg_sup_(&action,zeta,zeta_rhs,zeta_lop,zeta_res,phi1,
            &AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,
-           x,y,&norm,&Nx,&Ny);
+           x,y,z,&norm,&Nx,&Ny,&Nz);
 
    return;
 }
@@ -1984,7 +2001,7 @@ void AdS4D_post_regrid(void)
    ldptr();
 
    init_ghb_ads_(gb_tt_n,gb_tx_n,gb_ty_n,gb_xx_n,gb_xy_n,gb_yy_n,psi_n,
-                 Hb_t_n,Hb_x_n,Hb_y_n,&AdS_L,x,y,chr,&AMRD_ex,&Nx,&Ny,&regtype);
+                 Hb_t_n,Hb_x_n,Hb_y_n,&AdS_L,x,y,z,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
 
    for (i=0; i<size; i++)
    {

@@ -10,10 +10,10 @@ c only "method 4" copied over here from gh3d ... if that's
 c good enough simplifies routines a bit. Also,
 c can easily add back y derivatives.
 c-----------------------------------------------------------------------
-        subroutine df1_int_x(f,f_x,x,y,i,j,chr,ex,Nx,Ny)
+        subroutine df1_int_x(f,f_x,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,i,j
-        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_x,x(Nx),y(Ny)
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_x,x(Nx),y(Ny),z(Nz)
 
         real*8 dx
 
@@ -31,15 +31,16 @@ c-----------------------------------------------------------------------
 !!!!!!!!!!!!MYVERSION
         if (i.eq.1) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
-                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
-               else if ((chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex)) then
-                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-               else if (chr(i+1,j).ne.ex) then
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
+                   f_x=(-4*f(i,j,k)+7*f(i+1,j,k)
+     &                  -4*f(i+2,j,k)+f(i+3,j,k))/2/dx
+               else if ((chr(i+1,j,k).ne.ex
+     &                 .and.chr(i+2,j,k).ne.ex)) then
+                   f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
+               else if (chr(i+1,j,k).ne.ex) then
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -54,19 +55,20 @@ c-----------------------------------------------------------------------
                end if
 
         else if (i.eq.2) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
-                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
-                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-               else if (chr(i+1,j).ne.ex) then
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
+                   f_x=(-4*f(i,j,k)+7*f(i+1,j,k)
+     &                  -4*f(i+2,j,k)+f(i+3,j,k))/2/dx
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
+                   f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
+               else if (chr(i+1,j,k).ne.ex) then
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -79,26 +81,27 @@ c-----------------------------------------------------------------------
                    f_x=0
                    return
                end if
-         else   !this is the case where (i-1,j) is not excised and (i+1,j) is excised 
-                   f_x=(f(i,j)-f(i-1,j))/dx
+         else   !this is the case where (i-1,j,k) is not excised and (i+1,j,k) is excised 
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
          end if
 
         else if (i.eq.3) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
-                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
-                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-               else if (chr(i+1,j).ne.ex) then
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
+                   f_x=(-4*f(i,j,k)+7*f(i+1,j,k)
+     &                  -4*f(i+2,j,k)+f(i+3,j,k))/2/dx
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
+                   f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
+               else if (chr(i+1,j,k).ne.ex) then
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -112,10 +115,10 @@ c-----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i-2,j).ne.ex) then
-                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+               if (chr(i-2,j,k).ne.ex) then
+                   f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
                else
-                   f_x=(f(i,j)-f(i-1,j))/dx
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                end if
@@ -123,19 +126,20 @@ c-----------------------------------------------------------------------
 
 
         else if ((i.ge.4).and.(i.le.(Nx-3))) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
-                   f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
-                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-               else if (chr(i+1,j).ne.ex) then
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
+                   f_x=(-4*f(i,j,k)+7*f(i+1,j,k)
+     &                  -4*f(i+2,j,k)+f(i+3,j,k))/2/dx
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
+                   f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
+               else if (chr(i+1,j,k).ne.ex) then
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -150,13 +154,14 @@ c-----------------------------------------------------------------------
                end if
          else
                if ((.not.extrap)
-     &            .and.(chr(i-3,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)) then
-                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
-               else if (chr(i-2,j).ne.ex) then
-                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)) then
+                   f_x=(4*f(i,j,k)-7*f(i-1,j,k)
+     &                  +4*f(i-2,j,k)-f(i-3,j,k))/2/dx
+               else if (chr(i-2,j,k).ne.ex) then
+                   f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
                else
-                   f_x=(f(i,j)-f(i-1,j))/dx
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                end if
@@ -164,19 +169,20 @@ c-----------------------------------------------------------------------
 
 
         else if (i.eq.(Nx-2)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
-                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
-         else if (chr(i+1,j).eq.ex) then
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+                   f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
-                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
-                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
-               else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/dx
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
+                   f_x=(4*f(i,j,k)-7*f(i-1,j,k)
+     &                  +4*f(i-2,j,k)-f(i-3,j,k))/2/dx
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
+                   f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
+               else if (chr(i-1,j,k).ne.ex) then
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -190,29 +196,30 @@ c-----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i+2,j).ne.ex) then
-                   f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
+               if (chr(i+2,j,k).ne.ex) then
+                   f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
                else
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                end if
          end if
 
         else if (i.eq.(Nx-1)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
-                   f_x=(f(i+1,j)-f(i-1,j))/2/dx
-         else if (chr(i+1,j).eq.ex) then
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+                   f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
-                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
-                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
-               else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/dx
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
+                   f_x=(4*f(i,j,k)-7*f(i-1,j,k)
+     &                  +4*f(i-2,j,k)-f(i-3,j,k))/2/dx
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
+                   f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
+               else if (chr(i-1,j,k).ne.ex) then
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -226,7 +233,7 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-                   f_x=(-f(i,j)+f(i+1,j))/dx
+                   f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
          end if
@@ -234,15 +241,16 @@ c-----------------------------------------------------------------------
 
         else if (i.eq.Nx) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
-                   f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
-                   f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
-               else if (chr(i-1,j).ne.ex) then
-                   f_x=(f(i,j)-f(i-1,j))/dx
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
+                   f_x=(4*f(i,j,k)-7*f(i-1,j,k)
+     &                  +4*f(i-2,j,k)-f(i-3,j,k))/2/dx
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
+                   f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
+               else if (chr(i-1,j,k).ne.ex) then
+                   f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                else
@@ -260,18 +268,18 @@ c-----------------------------------------------------------------------
 
 
 !!!!!!!!OLD VERSION!!!!!!!!!!!!!!!
-!        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
+!        if (i.eq.1.or.(chr(i-1,j,k).eq.ex)) then
 !           if (i.le.(Nx-3)
-!     &         .and.((chr(i+1,j).ne.ex
-!     &         .and.chr(i+2,j).ne.ex
-!     &         .and.chr(i+3,j).ne.ex))) then
-!             f_x=(-4*f(i,j)+7*f(i+1,j)-4*f(i+2,j)+f(i+3,j))/2/dx
+!     &         .and.((chr(i+1,j,k).ne.ex
+!     &         .and.chr(i+2,j,k).ne.ex
+!     &         .and.chr(i+3,j,k).ne.ex))) then
+!             f_x=(-4*f(i,j,k)+7*f(i+1,j,k)-4*f(i+2,j,k)+f(i+3,j,k))/2/dx
 !           else if (i.le.(Nx-2)
-!     &              .and.((chr(i+1,j).ne.ex
-!     &              .and.chr(i+2,j).ne.ex))) then
-!              f_x=(-3*f(i,j)+4*f(i+1,j)-f(i+2,j))/2/dx
-!           else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
-!              f_x=(-f(i,j)+f(i+1,j))/dx
+!     &              .and.((chr(i+1,j,k).ne.ex
+!     &              .and.chr(i+2,j,k).ne.ex))) then
+!              f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
+!           else if (i.le.(Nx-1).and.chr(i+1,j,k).ne.ex) then
+!              f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !!              write(*,*) 'df1_int_x: warning ... i=1 first order'
 !!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
 !           else
@@ -284,18 +292,18 @@ c-----------------------------------------------------------------------
 !              f_x=0
 !              return
 !           end if
-!        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!        else if (i.eq.Nx.or.(chr(i+1,j,k).eq.ex)) then
 !           if (i.ge.4
-!     &         .and.((chr(i-1,j).ne.ex
-!     &         .and.chr(i-2,j).ne.ex
-!     &         .and.chr(i-3,j).ne.ex))) then
-!             f_x=(4*f(i,j)-7*f(i-1,j)+4*f(i-2,j)-f(i-3,j))/2/dx
+!     &         .and.((chr(i-1,j,k).ne.ex
+!     &         .and.chr(i-2,j,k).ne.ex
+!     &         .and.chr(i-3,j,k).ne.ex))) then
+!             f_x=(4*f(i,j,k)-7*f(i-1,j,k)+4*f(i-2,j,k)-f(i-3,j,k))/2/dx
 !           else if (i.ge.3
-!     &              .and.((chr(i-1,j).ne.ex
-!     &              .and.chr(i-2,j).ne.ex))) then
-!              f_x=(3*f(i,j)-4*f(i-1,j)+f(i-2,j))/2/dx
-!           else if (i.ge.2.and.chr(i-1,j).ne.ex) then
-!              f_x=(f(i,j)-f(i-1,j))/dx
+!     &              .and.((chr(i-1,j,k).ne.ex
+!     &              .and.chr(i-2,j,k).ne.ex))) then
+!              f_x=(3*f(i,j,k)-4*f(i-1,j,k)+f(i-2,j,k))/2/dx
+!           else if (i.ge.2.and.chr(i-1,j,k).ne.ex) then
+!              f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !!              write(*,*) 'df1_int: warning ... i=Nx first order'
 !!              write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
 !           else
@@ -309,8 +317,8 @@ c-----------------------------------------------------------------------
 !              return
 !           end if
 !        else
-!           if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
-!              f_x=(f(i+1,j)-f(i-1,j))/2/dx
+!           if ((chr(i+1,j,k).ne.ex.and.chr(i-1,j,k).ne.ex)) then
+!              f_x=(f(i+1,j,k)-f(i-1,j,k))/2/dx
 !           else
 !              if (first) then
 !                 first=.false.
@@ -327,10 +335,10 @@ c-----------------------------------------------------------------------
         return
         end
 !----------------------------------------------------------------------
-        subroutine df1_int_y(f,f_y,x,y,i,j,chr,ex,Nx,Ny)
+        subroutine df1_int_y(f,f_y,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,i,j
-        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_y,x(Nx),y(Ny)
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_y,x(Nx),y(Ny),z(Nz)
 
         real*8 dy
         logical first
@@ -348,15 +356,16 @@ c-----------------------------------------------------------------------
 
         if (j.eq.1) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-               else if ((chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex)) then
-                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-               else if (chr(i,j+1).ne.ex) then
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
+                   f_y=(-4*f(i,j,k)+7*f(i,j+1,k)
+     &                  -4*f(i,j+2,k)+f(i,j+3,k))/2/dy
+               else if ((chr(i,j+1,k).ne.ex
+     &                 .and.chr(i,j+2,k).ne.ex)) then
+                   f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
+               else if (chr(i,j+1,k).ne.ex) then
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -371,19 +380,20 @@ c-----------------------------------------------------------------------
                end if
 
         else if (j.eq.2) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
-                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-               else if (chr(i,j+1).ne.ex) then
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
+                   f_y=(-4*f(i,j,k)+7*f(i,j+1,k)
+     &                  -4*f(i,j+2,k)+f(i,j+3,k))/2/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
+                   f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
+               else if (chr(i,j+1,k).ne.ex) then
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -397,25 +407,26 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-                   f_y=(f(i,j)-f(i,j-1))/dy
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
          end if
 
         else if (j.eq.3) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
-                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-               else if (chr(i+1,j).ne.ex) then
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
+                   f_y=(-4*f(i,j,k)+7*f(i,j+1,k)
+     &                  -4*f(i,j+2,k)+f(i,j+3,k))/2/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
+                   f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
+               else if (chr(i+1,j,k).ne.ex) then
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -429,29 +440,30 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-               if (chr(i,j-2).ne.ex) then
-                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+               if (chr(i,j-2,k).ne.ex) then
+                   f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
                else
-                   f_y=(f(i,j)-f(i,j-1))/dy
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
         else if ((j.ge.4).and.(j.le.(Ny-3))) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
-                   f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
-                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-               else if (chr(i,j+1).ne.ex) then
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
+                   f_y=(-4*f(i,j,k)+7*f(i,j+1,k)
+     &                  -4*f(i,j+2,k)+f(i,j+3,k))/2/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
+                   f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
+               else if (chr(i,j+1,k).ne.ex) then
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -466,32 +478,34 @@ c-----------------------------------------------------------------------
                end if
          else
                if ((.not.extrap)
-     &            .and.(chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)) then
-                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-               else if (chr(i,j-2).ne.ex) then
-                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)) then
+                   f_y=(4*f(i,j,k)-7*f(i,j-1,k)
+     &                  +4*f(i,j-2,k)-f(i,j-3,k))/2/dy
+               else if (chr(i,j-2,k).ne.ex) then
+                   f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
                else
-                   f_y=(f(i,j)-f(i,j-1))/dy
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
         else if (j.eq.(Ny-2)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
-                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
-         else if (chr(i,j+1).eq.ex) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+                   f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
+         else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
-                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
-               else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/dy
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
+                   f_y=(4*f(i,j,k)-7*f(i,j-1,k)
+     &                  +4*f(i,j-2,k)-f(i,j-3,k))/2/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
+                   f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
+               else if (chr(i,j-1,k).ne.ex) then
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -505,29 +519,30 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-               if (chr(i,j+2).ne.ex) then
-                   f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
+               if (chr(i,j+2,k).ne.ex) then
+                   f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
                else
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                end if
          end if
 
         else if (j.eq.(Ny-1)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
-                   f_y=(f(i,j+1)-f(i,j-1))/2/dy
-         else if (chr(i,j+1).eq.ex) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+                   f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
+         else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
-                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
-               else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/dy
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
+                   f_y=(4*f(i,j,k)-7*f(i,j-1,k)
+     &                  +4*f(i,j-2,k)-f(i,j-3,k))/2/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
+                   f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
+               else if (chr(i,j-1,k).ne.ex) then
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -541,22 +556,23 @@ c-----------------------------------------------------------------------
                    return
                end if
          else
-                   f_y=(-f(i,j)+f(i,j+1))/dy
+                   f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
          end if
 
         else if (j.eq.Ny) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
-                   f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-               else if ((chr(i,j-1).ne.ex
-     &                 .and.chr(i,j-2).ne.ex)) then
-                   f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
-               else if (chr(i,j-1).ne.ex) then
-                   f_y=(f(i,j)-f(i,j-1))/dy
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
+                   f_y=(4*f(i,j,k)-7*f(i,j-1,k)
+     &                  +4*f(i,j-2,k)-f(i,j-3,k))/2/dy
+               else if ((chr(i,j-1,k).ne.ex
+     &                 .and.chr(i,j-2,k).ne.ex)) then
+                   f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
+               else if (chr(i,j-1,k).ne.ex) then
+                   f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
                else
@@ -573,17 +589,17 @@ c-----------------------------------------------------------------------
 !!!!!!!!!!!!!!!!!
 
 !!!!!!!!OLD VERSION!!!!!!!!!!!!!!!!!!
-!        if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+!        if ((j.eq.1).or.(chr(i,j-1,k).eq.ex)) then
 !           if (j.le.(Ny-3)
-!     &         .and.((chr(i,j+1).ne.ex
-!     &         .and.chr(i,j+2).ne.ex
-!     &         .and.chr(i,j+3).ne.ex))) then
-!             f_y=(-4*f(i,j)+7*f(i,j+1)-4*f(i,j+2)+f(i,j+3))/2/dy
-!           else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
-!     &              .and.chr(i,j+2).ne.ex))) then
-!              f_y=(-3*f(i,j)+4*f(i,j+1)-f(i,j+2))/2/dy
-!           else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
-!              f_y=(-f(i,j)+f(i,j+1))/dy
+!     &         .and.((chr(i,j+1,k).ne.ex
+!     &         .and.chr(i,j+2,k).ne.ex
+!     &         .and.chr(i,j+3,k).ne.ex))) then
+!             f_y=(-4*f(i,j,k)+7*f(i,j+1,k)-4*f(i,j+2,k)+f(i,j+3,k))/2/dy
+!           else if (j.le.(Ny-2).and.((chr(i,j+1,k).ne.ex
+!     &              .and.chr(i,j+2,k).ne.ex))) then
+!              f_y=(-3*f(i,j,k)+4*f(i,j+1,k)-f(i,j+2,k))/2/dy
+!           else if (j.le.(Ny-1).and.chr(i,j+1,k).ne.ex) then
+!              f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !!              write(*,*) 'df1_int_y: warning ... j=1 first order'
 !!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
 !           else
@@ -596,17 +612,17 @@ c-----------------------------------------------------------------------
 !              f_y=0
 !              return
 !           end if
-!        else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+!        else if ((j.eq.Ny).or.(chr(i,j+1,k).eq.ex)) then
 !           if (j.ge.4
-!     &         .and.((chr(i,j-1).ne.ex
-!     &         .and.chr(i,j-2).ne.ex
-!     &         .and.chr(i,j-3).ne.ex))) then
-!             f_y=(4*f(i,j)-7*f(i,j-1)+4*f(i,j-2)-f(i,j-3))/2/dy
-!           else if (j.ge.3.and.((chr(i,j-1).ne.ex
-!     &              .and.chr(i,j-2).ne.ex))) then
-!              f_y=(3*f(i,j)-4*f(i,j-1)+f(i,j-2))/2/dy
-!           else if (j.ge.2.and.chr(i,j-1).ne.ex) then
-!              f_y=(f(i,j)-f(i,j-1))/dy
+!     &         .and.((chr(i,j-1,k).ne.ex
+!     &         .and.chr(i,j-2,k).ne.ex
+!     &         .and.chr(i,j-3,k).ne.ex))) then
+!             f_y=(4*f(i,j,k)-7*f(i,j-1,k)+4*f(i,j-2,k)-f(i,j-3,k))/2/dy
+!           else if (j.ge.3.and.((chr(i,j-1,k).ne.ex
+!     &              .and.chr(i,j-2,k).ne.ex))) then
+!              f_y=(3*f(i,j,k)-4*f(i,j-1,k)+f(i,j-2,k))/2/dy
+!           else if (j.ge.2.and.chr(i,j-1,k).ne.ex) then
+!              f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !!              write(*,*) 'df1_int_y: warning ... j=Ny first order'
 !!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
 !           else
@@ -620,8 +636,8 @@ c-----------------------------------------------------------------------
 !              return
 !           end if
 !        else
-!           if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
-!              f_y=(f(i,j+1)-f(i,j-1))/2/dy
+!           if ((chr(i,j+1,k).ne.ex.and.chr(i,j-1,k).ne.ex)) then
+!              f_y=(f(i,j+1,k)-f(i,j-1,k))/2/dy
 !           else
 !              if (first) then
 !                 first=.false.
@@ -643,11 +659,11 @@ c the following computes all first derivatives of f,
 c at a point i,j, at time level n.
 c----------------------------------------------------------------------
         subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,f_y,
-     &                     x,y,dt,i,j,chr,ex,Nx,Ny,name)
+     &                     x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
         implicit none
-        integer Nx,Ny,i,j
-        real*8 f_np1(Nx,Ny),f_n(Nx,Ny),f_nm1(Nx,Ny)
-        real*8 f_t,f_x,f_y,x(Nx),y(Ny),dt,ex,chr(Nx,Ny)
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f_np1(Nx,Ny,Nz),f_n(Nx,Ny,Nz),f_nm1(Nx,Ny,Nz)
+        real*8 f_t,f_x,f_y,x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
         character*(*) name
 
         logical first
@@ -659,15 +675,15 @@ c----------------------------------------------------------------------
 
         !--------------------------------------------------------------
 
-        if (chr(i,j).eq.ex) then
+        if (chr(i,j,k).eq.ex) then
           write(*,*) 'df1_int: error ... point excised'
           stop
         end if
 
-        f_t=(f_np1(i,j)-f_nm1(i,j))/2/dt
+        f_t=(f_np1(i,j,k)-f_nm1(i,j,k))/2/dt
   
-        call df1_int_x(f_n,f_x,x,y,i,j,chr,ex,Nx,Ny)
-        call df1_int_y(f_n,f_y,x,y,i,j,chr,ex,Nx,Ny)
+        call df1_int_x(f_n,f_x,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        call df1_int_y(f_n,f_y,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
         if (ltrace) then
            write(*,*) 'df1_int for ',name
@@ -698,15 +714,15 @@ c with f_n in the include stuff
 c----------------------------------------------------------------------
         subroutine df2_int(f_np1,f,f_nm1,f_t,f_x,f_y,
      &                     f_tt,f_tx,f_ty,f_xx,f_xy,
-     &                     f_yy,x,y,dt,i,j,chr,ex,Nx,Ny,name)
+     &                     f_yy,x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
         implicit none
-        integer Nx,Ny,i,j
-        real*8 f_np1(Nx,Ny),f(Nx,Ny),f_nm1(Nx,Ny)
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f_np1(Nx,Ny,Nz),f(Nx,Ny,Nz),f_nm1(Nx,Ny,Nz)
         real*8 f_t,f_x,f_y,f_tt,f_tx,f_ty,f_xx,f_xy
-        real*8 f_yy,x(Nx),y(Ny),dt,ex,chr(Nx,Ny)
+        real*8 f_yy,x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
         character*(*) name
 
-        real*8 dx,dy
+        real*8 dx,dy,dz
 
         logical first,extrap
         save first
@@ -728,31 +744,32 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
        
         call df1_int(f_np1,f,f_nm1,f_t,f_x,f_y,
-     &               x,y,dt,i,j,chr,ex,Nx,Ny,name)
+     &               x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
 
-        f_tt=(f_np1(i,j)-2*f(i,j)+f_nm1(i,j))/dt/dt 
+        f_tt=(f_np1(i,j,k)-2*f(i,j,k)+f_nm1(i,j,k))/dt/dt 
 
         f_xx=0
         f_xy=0
         f_yy=0
 
-        if (chr(i,j).eq.ex) then
+        if (chr(i,j,k).eq.ex) then
          write(*,*) 'df2_int: error ... point excised'
          stop
         end if
 
-        call df1_int_x(f_np1,f_x_np1,x,y,i,j,chr,ex,Nx,Ny)
-        call df1_int_x(f_nm1,f_x_nm1,x,y,i,j,chr,ex,Nx,Ny)
+        call df1_int_x(f_np1,f_x_np1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        call df1_int_x(f_nm1,f_x_nm1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
         f_tx=(f_x_np1-f_x_nm1)/2/dt
 
-        call df1_int_y(f_np1,f_y_np1,x,y,i,j,chr,ex,Nx,Ny)
-        call df1_int_y(f_nm1,f_y_nm1,x,y,i,j,chr,ex,Nx,Ny)
+        call df1_int_y(f_np1,f_y_np1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        call df1_int_y(f_nm1,f_y_nm1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
         f_ty=(f_y_np1-f_y_nm1)/2/dt
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
 !!!!!!MYVERSION!!!!!!!!!
 
@@ -760,31 +777,37 @@ c----------------------------------------------------------------------
 
         if (i.eq.1) then
                if ((.not.extrap)
-     &            .and.chr(i+1,j).ne.ex
-     &            .and.chr(i+2,j).ne.ex
-     &            .and.chr(i+3,j).ne.ex
-     &            .and.chr(i+4,j).ne.ex) then
-                   f_xx=(3*f(i,j)-9*f(i+1,j)+
-     &                  10*f(i+2,j)-5*f(i+3,j)+
-     &                  f(i+4,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+     &            .and.chr(i+1,j,k).ne.ex
+     &            .and.chr(i+2,j,k).ne.ex
+     &            .and.chr(i+3,j,k).ne.ex
+     &            .and.chr(i+4,j,k).ne.ex) then
+                   f_xx=(3*f(i,j,k)-9*f(i+1,j,k)+
+     &                  10*f(i+2,j,k)-5*f(i+3,j,k)+
+     &                  f(i+4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if (chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex
-     &                 .and.chr(i+3,j).ne.ex) then
-                   f_xx=(2*f(i,j)-5*f(i+1,j)+
-     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+               else if (chr(i+1,j,k).ne.ex
+     &                 .and.chr(i+2,j,k).ne.ex
+     &                 .and.chr(i+3,j,k).ne.ex) then
+                   f_xx=(2*f(i,j,k)-5*f(i+1,j,k)+
+     &                   4*f(i+2,j,k)-f(i+3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if (chr(i+1,j).ne.ex
-     &                  .and.chr(i+2,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex
+     &                  .and.chr(i+2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
                else
                  if (first) then
@@ -797,38 +820,46 @@ c----------------------------------------------------------------------
                end if
 
         else if (i.eq.2) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)
-     &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i+1,j)+
-     &                  10*f(i+2,j)-5*f(i+3,j)+
-     &                  f(i+4,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)
+     &            .and.(chr(i+4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i+1,j,k)+
+     &                  10*f(i+2,j,k)-5*f(i+3,j,k)+
+     &                  f(i+4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if (chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex
-     &                 .and.chr(i+3,j).ne.ex) then
-                   f_xx=(2*f(i,j)-5*f(i+1,j)+
-     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+               else if (chr(i+1,j,k).ne.ex
+     &                 .and.chr(i+2,j,k).ne.ex
+     &                 .and.chr(i+3,j,k).ne.ex) then
+                   f_xx=(2*f(i,j,k)-5*f(i+1,j,k)+
+     &                   4*f(i+2,j,k)-f(i+3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if (chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex
+     &                 .and.chr(i+2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
                else
                 if (first) then
@@ -842,38 +873,46 @@ c----------------------------------------------------------------------
          end if
 
         else if (i.eq.3) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)
-     &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i+1,j)+
-     &                  10*f(i+2,j)-5*f(i+3,j)+
-     &                  f(i+4,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)
+     &            .and.(chr(i+4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i+1,j,k)+
+     &                  10*f(i+2,j,k)-5*f(i+3,j,k)+
+     &                  f(i+4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)
-     &                 .and.(chr(i+3,j).ne.ex)) then
-                   f_xx=(2*f(i,j)-5*f(i+1,j)+
-     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)
+     &                 .and.(chr(i+3,j,k).ne.ex)) then
+                   f_xx=(2*f(i,j,k)-5*f(i+1,j,k)+
+     &                   4*f(i+2,j,k)-f(i+3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
                else
                 if (first) then
@@ -884,48 +923,58 @@ c----------------------------------------------------------------------
                 end if
                    return
                end if
-         else  !this is the case where (i-1,j) is not excised and (i+1,j) is excised
-               if (chr(i-2,j).ne.ex) then
-                   f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+         else  !this is the case where (i-1,j,k) is not excised and (i+1,j,k) is excised
+               if (chr(i-2,j,k).ne.ex) then
+                   f_xx=(f(i,j,k)-2*f(i-1,j,k)+f(i-2,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
                end if
          end if
 
         else if ((i.ge.4).and.(i.le.(Nx-3))) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
-                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
+                   f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)
-     &            .and.(chr(i+4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i+1,j)+
-     &                  10*f(i+2,j)-5*f(i+3,j)+
-     &                  f(i+4,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)
+     &            .and.(chr(i+4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i+1,j,k)+
+     &                  10*f(i+2,j,k)-5*f(i+3,j,k)+
+     &                  f(i+4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)
-     &                 .and.(chr(i+3,j).ne.ex)) then
-                   f_xx=(2*f(i,j)-5*f(i+1,j)+
-     &                   4*f(i+2,j)-f(i+3,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)
+     &                 .and.(chr(i+3,j,k).ne.ex)) then
+                   f_xx=(2*f(i,j,k)-5*f(i+1,j,k)+
+     &                   4*f(i+2,j,k)-f(i+3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
                else
                 if (first) then
@@ -937,54 +986,66 @@ c----------------------------------------------------------------------
                    return
                end if
          else
-               if ((chr(i-3,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)) then
-                   f_xx=(2*f(i,j)-5*f(i-1,j)
-     &                   +4*f(i-2,j)-f(i-3,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+               if ((chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)) then
+                   f_xx=(2*f(i,j,k)-5*f(i-1,j,k)
+     &                   +4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if (chr(i-2,j).ne.ex) then
-                   f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+               else if (chr(i-2,j,k).ne.ex) then
+                   f_xx=(f(i,j,k)-2*f(i-1,j,k)+f(i-2,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
                end if
          end if
 
         else if (i.eq.(Nx-2)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
-                   f_xx=(f(i-1,j)-2*f(i,j)+f(i+1,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+                   f_xx=(f(i-1,j,k)-2*f(i,j,k)+f(i+1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
-         else if (chr(i+1,j).eq.ex) then
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)
-     &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i-1,j)+
-     &                  10*f(i-2,j)-5*f(i-3,j)+
-     &                  f(i-4,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i-1,j,k)+
+     &                  10*f(i-2,j,k)-5*f(i-3,j,k)+
+     &                  f(i-4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)
-     &                 .and.(chr(i-3,j).ne.ex)) then
-                   f_xx=(2*f(i,j)-5*f(i-1,j)+
-     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)
+     &                 .and.(chr(i-3,j,k).ne.ex)) then
+                   f_xx=(2*f(i,j,k)-5*f(i-1,j,k)+
+     &                   4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
                else
                 if (first) then
@@ -995,48 +1056,58 @@ c----------------------------------------------------------------------
                 end if
                    return
                end if
-         else  !this is the case where (i+1,j) is not excised and (i-1,j) is excised
-               if (chr(i+2,j).ne.ex) then
-                   f_xx=(f(i,j)-2*f(i+1,j)+f(i+2,j))/dx/dx
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+         else  !this is the case where (i+1,j,k) is not excised and (i-1,j,k) is excised
+               if (chr(i+2,j,k).ne.ex) then
+                   f_xx=(f(i,j,k)-2*f(i+1,j,k)+f(i+2,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
                end if
          end if
 
         else if (i.eq.(Nx-1)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
-                   f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+                   f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
-         else if (chr(i+1,j).eq.ex) then
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)
-     &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i-1,j)+
-     &                  10*f(i-2,j)-5*f(i-3,j)+
-     &                  f(i-4,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i-1,j,k)+
+     &                  10*f(i-2,j,k)-5*f(i-3,j,k)+
+     &                  f(i-4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if (chr(i-1,j).ne.ex
-     &                 .and.chr(i-2,j).ne.ex
-     &                 .and.chr(i-3,j).ne.ex) then
-                   f_xx=(2*f(i,j)-5*f(i-1,j)+
-     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+               else if (chr(i-1,j,k).ne.ex
+     &                 .and.chr(i-2,j,k).ne.ex
+     &                 .and.chr(i-3,j,k).ne.ex) then
+                   f_xx=(2*f(i,j,k)-5*f(i-1,j,k)+
+     &                   4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if (chr(i-1,j).ne.ex
-     &                 .and.chr(i-2,j).ne.ex) then
+               else if (chr(i-1,j,k).ne.ex
+     &                 .and.chr(i-2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
                else
                 if (first) then
@@ -1051,31 +1122,37 @@ c----------------------------------------------------------------------
 
         else if (i.eq.Nx) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)
-     &            .and.(chr(i-4,j).ne.ex)) then
-                   f_xx=(3*f(i,j)-9*f(i-1,j)+
-     &                  10*f(i-2,j)-5*f(i-3,j)+
-     &                  f(i-4,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i-1,j,k)+
+     &                  10*f(i-2,j,k)-5*f(i-3,j,k)+
+     &                  f(i-4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if (chr(i-1,j).ne.ex
-     &                 .and.chr(i-2,j).ne.ex
-     &                 .and.chr(i-3,j).ne.ex) then
-                   f_xx=(2*f(i,j)-5*f(i-1,j)+
-     &                   4*f(i-2,j)-f(i-3,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+               else if (chr(i-1,j,k).ne.ex
+     &                 .and.chr(i-2,j,k).ne.ex
+     &                 .and.chr(i-3,j,k).ne.ex) then
+                   f_xx=(2*f(i,j,k)-5*f(i-1,j,k)+
+     &                   4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-               else if (chr(i-1,j).ne.ex
-     &                  .and.chr(i-2,j).ne.ex) then
+               else if (chr(i-1,j,k).ne.ex
+     &                  .and.chr(i-2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i-2,j)-2*f(i-1,j)+f(i,j))/dx/dx
-                   call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-                   call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+                   f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
                else
                  if (first) then
@@ -1093,23 +1170,23 @@ c----------------------------------------------------------------------
 
         if (j.eq.1) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)
-     &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j+1)+
-     &                  10*f(i,j+2)-5*f(i,j+3)+
-     &                  f(i,j+4))/dy/dy
-               else if (chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex
-     &                 .and.chr(i,j+3).ne.ex) then
-                   f_yy=(2*f(i,j)-5*f(i,j+1)+
-     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
-               else if (chr(i,j+1).ne.ex
-     &                  .and.chr(i,j+2).ne.ex) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)
+     &            .and.(chr(i,j+4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
+     &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
+     &                  f(i,j+4,k))/dy/dy
+               else if (chr(i,j+1,k).ne.ex
+     &                 .and.chr(i,j+2,k).ne.ex
+     &                 .and.chr(i,j+3,k).ne.ex) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
+     &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+               else if (chr(i,j+1,k).ne.ex
+     &                  .and.chr(i,j+2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+                   f_xx=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
                else
                  if (first) then
                    first=.false.
@@ -1121,27 +1198,27 @@ c----------------------------------------------------------------------
                end if
 
         else if (j.eq.2) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)
-     &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j+1)+
-     &                  10*f(i,j+2)-5*f(i,j+3)+
-     &                  f(i,j+4))/dy/dy
-               else if (chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex
-     &                 .and.chr(i,j+3).ne.ex) then
-                   f_yy=(2*f(i,j)-5*f(i,j+1)+
-     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
-               else if (chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)
+     &            .and.(chr(i,j+4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
+     &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
+     &                  f(i,j+4,k))/dy/dy
+               else if (chr(i,j+1,k).ne.ex
+     &                 .and.chr(i,j+2,k).ne.ex
+     &                 .and.chr(i,j+3,k).ne.ex) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
+     &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+               else if (chr(i,j+1,k).ne.ex
+     &                 .and.chr(i,j+2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
                else
                 if (first) then
                      first=.false.
@@ -1154,27 +1231,27 @@ c----------------------------------------------------------------------
          end if
 
         else if (j.eq.3) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)
-     &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j+1)+
-     &                  10*f(i,j+2)-5*f(i,j+3)+
-     &                  f(i,j+4))/dy/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)
-     &                 .and.(chr(i,j+3).ne.ex)) then
-                   f_yy=(2*f(i,j)-5*f(i,j+1)+
-     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)
+     &            .and.(chr(i,j+4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
+     &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
+     &                  f(i,j+4,k))/dy/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)
+     &                 .and.(chr(i,j+3,k).ne.ex)) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
+     &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
                else
                 if (first) then
                      first=.false.
@@ -1184,34 +1261,34 @@ c----------------------------------------------------------------------
                 end if
                    return
                end if
-         else  !this is the case where (i,j-1) is not excised and (i,j+1) is excised
-               if (chr(i,j-2).ne.ex) then
-                   f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy
+         else  !this is the case where (i,j-1,k) is not excised and (i,j+1,k) is excised
+               if (chr(i,j-2,k).ne.ex) then
+                   f_yy=(f(i,j,k)-2*f(i,j-1,k)+f(i,j-2,k))/dy/dy
                end if
          end if
 
         else if ((j.ge.4).and.(j.le.(Ny-3))) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
-                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
-         else if (chr(i,j-1).eq.ex) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
+                   f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)
-     &            .and.(chr(i,j+4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j+1)+
-     &                  10*f(i,j+2)-5*f(i,j+3)+
-     &                  f(i,j+4))/dy/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)
-     &                 .and.(chr(i,j+3).ne.ex)) then
-                   f_yy=(2*f(i,j)-5*f(i,j+1)+
-     &                   4*f(i,j+2)-f(i,j+3))/dy/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)
+     &            .and.(chr(i,j+4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
+     &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
+     &                  f(i,j+4,k))/dy/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)
+     &                 .and.(chr(i,j+3,k).ne.ex)) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
+     &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
                else
                 if (first) then
                      first=.false.
@@ -1222,37 +1299,37 @@ c----------------------------------------------------------------------
                    return
                end if
          else
-               if ((chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)) then
-                   f_yy=(2*f(i,j)-5*f(i,j-1)
-     &                   +4*f(i,j-2)-f(i,j-3))/dy/dy
-               else if (chr(i,j-2).ne.ex) then
-                   f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy
+               if ((chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j-1,k)
+     &                   +4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+               else if (chr(i,j-2,k).ne.ex) then
+                   f_yy=(f(i,j,k)-2*f(i,j-1,k)+f(i,j-2,k))/dy/dy
                end if
          end if
 
         else if (j.eq.(Ny-2)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
-                   f_yy=(f(i,j-1)-2*f(i,j)+f(i,j+1))/dy/dy
-         else if (chr(i,j+1).eq.ex) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+                   f_yy=(f(i,j-1,k)-2*f(i,j,k)+f(i,j+1,k))/dy/dy
+         else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j-1)+
-     &                  10*f(i,j-2)-5*f(i,j-3)+
-     &                  f(i,j-4))/dy/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)
-     &                 .and.(chr(i,j-3).ne.ex)) then
-                   f_yy=(2*f(i,j)-5*f(i,j-1)+
-     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
+     &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
+     &                  f(i,j-4,k))/dy/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)
+     &                 .and.(chr(i,j-3,k).ne.ex)) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
+     &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
                else
                 if (first) then
                      first=.false.
@@ -1262,34 +1339,34 @@ c----------------------------------------------------------------------
                 end if
                    return
                end if
-         else  !this is the case where (i,j+1) is not excised and (i,j-1) is excised
-               if (chr(i,j+2).ne.ex) then
-                   f_yy=(f(i,j)-2*f(i,j+1)+f(i,j+2))/dy/dy
+         else  !this is the case where (i,j+1,k) is not excised and (i,j-1,k) is excised
+               if (chr(i,j+2,k).ne.ex) then
+                   f_yy=(f(i,j,k)-2*f(i,j+1,k)+f(i,j+2,k))/dy/dy
                end if
          end if
 
         else if (j.eq.(Ny-1)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
-                   f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy
-         else if (chr(i,j+1).eq.ex) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+                   f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+         else if (chr(i,j+1,k).eq.ex) then
                if (.not.extrap
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j-1)+
-     &                  10*f(i,j-2)-5*f(i,j-3)+
-     &                  f(i,j-4))/dy/dy
-               else if (chr(i,j-1).ne.ex
-     &                 .and.chr(i,j-2).ne.ex
-     &                 .and.chr(i,j-3).ne.ex) then
-                   f_yy=(2*f(i,j)-5*f(i,j-1)+
-     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
-               else if (chr(i,j-1).ne.ex
-     &                 .and.chr(i,j-2).ne.ex) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
+     &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
+     &                  f(i,j-4,k))/dy/dy
+               else if (chr(i,j-1,k).ne.ex
+     &                 .and.chr(i,j-2,k).ne.ex
+     &                 .and.chr(i,j-3,k).ne.ex) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
+     &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+               else if (chr(i,j-1,k).ne.ex
+     &                 .and.chr(i,j-2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
                else
                 if (first) then
                      first=.false.
@@ -1303,23 +1380,23 @@ c----------------------------------------------------------------------
 
         else if (j.eq.Ny) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-4).ne.ex)) then
-                   f_yy=(3*f(i,j)-9*f(i,j-1)+
-     &                  10*f(i,j-2)-5*f(i,j-3)+
-     &                  f(i,j-4))/dy/dy
-               else if (chr(i,j-1).ne.ex
-     &                 .and.chr(i,j-2).ne.ex
-     &                 .and.chr(i,j-3).ne.ex) then
-                   f_yy=(2*f(i,j)-5*f(i,j-1)+
-     &                   4*f(i,j-2)-f(i,j-3))/dy/dy
-               else if (chr(i,j-1).ne.ex
-     &                  .and.chr(i,j-2).ne.ex) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
+     &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
+     &                  f(i,j-4,k))/dy/dy
+               else if (chr(i,j-1,k).ne.ex
+     &                 .and.chr(i,j-2,k).ne.ex
+     &                 .and.chr(i,j-3,k).ne.ex) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
+     &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+               else if (chr(i,j-1,k).ne.ex
+     &                  .and.chr(i,j-2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_yy=(f(i,j-2)-2*f(i,j-1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
                else
                  if (first) then
                    first=.false.
@@ -1334,8 +1411,8 @@ c----------------------------------------------------------------------
 
 !!!!!!!!!!OLDVERSION!!!!!!!!!!!!!!!!
 !        !i
-!        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-!           if (i.ge.(Nx-1).or.chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
+!        if (i.eq.1.or.(chr(i-1,j,k).eq.ex)) then
+!           if (i.ge.(Nx-1).or.chr(i+1,j,k).eq.ex.or.chr(i+2,j,k).eq.ex) then
 !              if (first) then
 !                 first=.false.
 !                 write(*,*) 'df2_int: error in chr (A)'
@@ -1344,25 +1421,25 @@ c----------------------------------------------------------------------
 !              end if
 !              return
 !           end if
-!           if (i.eq.(Nx-2).or.chr(i+3,j).eq.ex) then
+!           if (i.eq.(Nx-2).or.chr(i+3,j,k).eq.ex) then
 !              ! write(*,*) 'df2_int: warning ... first order i=1'
 !              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-!              f_xx=(f(i+2,j)-2*f(i+1,j)+f(i,j))/dx/dx 
+!              f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx 
 !           else if ((.not.extrap).and.i.lt.(Nx-3)
-!     &               .and.chr(i+4,j).ne.ex) then
-!              f_xx=(3*f(i,j)-9*f(i+1,j)+
-!     &             10*f(i+2,j)-5*f(i+3,j)+
-!     &             f(i+4,j))/dx/dx
+!     &               .and.chr(i+4,j,k).ne.ex) then
+!              f_xx=(3*f(i,j,k)-9*f(i+1,j,k)+
+!     &             10*f(i+2,j,k)-5*f(i+3,j,k)+
+!     &             f(i+4,j,k))/dx/dx
 !           else
-!              f_xx=(2*f(i,j)-5*f(i+1,j)+
-!     &              4*f(i+2,j)-f(i+3,j))/dx/dx
+!              f_xx=(2*f(i,j,k)-5*f(i+1,j,k)+
+!     &              4*f(i+2,j,k)-f(i+3,j,k))/dx/dx
 !           end if
-!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
-!           call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny)
+!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny,Nz)
+!           call df1_int_y(f,f_y_ip2,x,y,i+2,j,chr,ex,Nx,Ny,Nz)
 !           f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
-!        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!        else if (i.eq.Nx.or.(chr(i+1,j,k).eq.ex)) then
 !           if (i.le.2.or.
-!     &        chr(i-1,j).eq.ex.or.chr(i-2,j).eq.ex) then
+!     &        chr(i-1,j,k).eq.ex.or.chr(i-2,j,k).eq.ex) then
 !              if (first) then
 !                 first=.false.
 !                 write(*,*) 'df2_int: error in chr (B)'
@@ -1371,25 +1448,25 @@ c----------------------------------------------------------------------
 !              end if
 !              return
 !           end if
-!           if (i.eq.3.or.chr(i-3,j).eq.ex) then
+!           if (i.eq.3.or.chr(i-3,j,k).eq.ex) then
 !              ! write(*,*) 'df2_int: warning ... first order i=Nx'
 !              ! write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-!              f_xx=(f(i,j)-2*f(i-1,j)+f(i-2,j))/dx/dx 
-!           else if ((.not.extrap).and.i.gt.4.and.chr(i-4,j).ne.ex) then
-!              f_xx=(3*f(i,j)-9*f(i-1,j)+
-!     &              10*f(i-2,j)-5*f(i-3,j)+
-!     &              f(i-4,j))/dx/dx
+!              f_xx=(f(i,j,k)-2*f(i-1,j,k)+f(i-2,j,k))/dx/dx 
+!           else if ((.not.extrap).and.i.gt.4.and.chr(i-4,j,k).ne.ex) then
+!              f_xx=(3*f(i,j,k)-9*f(i-1,j,k)+
+!     &              10*f(i-2,j,k)-5*f(i-3,j,k)+
+!     &              f(i-4,j,k))/dx/dx
 !           else
-!              f_xx=(2*f(i,j)-5*f(i-1,j)+
-!     &              4*f(i-2,j)-f(i-3,j))/dx/dx
+!              f_xx=(2*f(i,j,k)-5*f(i-1,j,k)+
+!     &              4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
 !           end if
-!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-!           call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny)
+!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny,Nz)
+!           call df1_int_y(f,f_y_im2,x,y,i-2,j,chr,ex,Nx,Ny,Nz)
 !           f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
-!        else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
-!           f_xx=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx 
-!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny)
-!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny)
+!        else if (chr(i+1,j,k).ne.ex.and.chr(i-1,j,k).ne.ex) then
+!           f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx 
+!           call df1_int_y(f,f_y_im1,x,y,i-1,j,chr,ex,Nx,Ny,Nz)
+!           call df1_int_y(f,f_y_ip1,x,y,i+1,j,chr,ex,Nx,Ny,Nz)
 !           f_xy=(f_y_ip1-f_y_im1)/2/dx
 !        else
 !           if (first) then
@@ -1401,8 +1478,8 @@ c----------------------------------------------------------------------
 !           return
 !        end if
 !        !j
-!        if (j.eq.1.or.(chr(i,j-1).eq.ex)) then
-!           if (j.ge.(Ny-1).or.chr(i,j+1).eq.ex.or.chr(i,j+2).eq.ex) then
+!        if (j.eq.1.or.(chr(i,j-1,k).eq.ex)) then
+!           if (j.ge.(Ny-1).or.chr(i,j+1,k).eq.ex.or.chr(i,j+2,k).eq.ex) then
 !              if (first) then
 !                 first=.false.
 !                 write(*,*) 'df2_int: error in chr (D)'
@@ -1411,21 +1488,21 @@ c----------------------------------------------------------------------
 !              end if
 !              return
 !           end if
-!           if (j.eq.(Ny-2).or.chr(i,j+3).eq.ex) then
+!           if (j.eq.(Ny-2).or.chr(i,j+3,k).eq.ex) then
 !              !write(*,*) 'df2_int: warning ... first order j=1'
 !              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-!              f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy 
+!              f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy 
 !           else if ((.not.extrap).and.j.lt.(Ny-3).and.
-!     &               chr(i,j+4).ne.ex) then
-!              f_yy=(3*f(i,j)-9*f(i,j+1)+
-!     &              10*f(i,j+2)-5*f(i,j+3)+
-!     &              f(i,j+4))/dy/dy
+!     &               chr(i,j+4,k).ne.ex) then
+!              f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
+!     &              10*f(i,j+2,k)-5*f(i,j+3,k)+
+!     &              f(i,j+4,k))/dy/dy
 !           else
-!              f_yy=(2*f(i,j)-5*f(i,j+1)+
-!     &              4*f(i,j+2)-f(i,j+3))/dy/dy
+!              f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
+!     &              4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
 !           end if
-!        else if (j.eq.Ny.or.(chr(i,j+1).eq.ex)) then
-!           if (j.le.2.or.chr(i,j-1).eq.ex.or.chr(i,j-2).eq.ex) then
+!        else if (j.eq.Ny.or.(chr(i,j+1,k).eq.ex)) then
+!           if (j.le.2.or.chr(i,j-1,k).eq.ex.or.chr(i,j-2,k).eq.ex) then
 !              if (first) then
 !                 first=.false.
 !                 write(*,*) 'df2_int: error in chr (E)'
@@ -1435,20 +1512,20 @@ c----------------------------------------------------------------------
 !              end if
 !              return
 !           end if
-!           if (j.eq.3.or.chr(i,j-3).eq.ex) then
+!           if (j.eq.3.or.chr(i,j-3,k).eq.ex) then
 !              !write(*,*) 'df2_int: warning ... first order j=Ny'
 !              !write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-!              f_yy=(f(i,j)-2*f(i,j-1)+f(i,j-2))/dy/dy 
-!           else if ((.not.extrap).and.j.gt.4.and.chr(i,j-4).ne.ex) then
-!              f_yy=(3*f(i,j)-9*f(i,j-1)+
-!     &              10*f(i,j-2)-5*f(i,j-3)+
-!     &              f(i,j-4))/dy/dy
+!              f_yy=(f(i,j,k)-2*f(i,j-1,k)+f(i,j-2,k))/dy/dy 
+!           else if ((.not.extrap).and.j.gt.4.and.chr(i,j-4,k).ne.ex) then
+!              f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
+!     &              10*f(i,j-2,k)-5*f(i,j-3,k)+
+!     &              f(i,j-4,k))/dy/dy
 !           else
-!              f_yy=(2*f(i,j)-5*f(i,j-1)+
-!     &              4*f(i,j-2)-f(i,j-3))/dy/dy
+!              f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
+!     &              4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
 !           end if
-!        else if (chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex) then
-!            f_yy=(f(i,j+1)-2*f(i,j)+f(i,j-1))/dy/dy 
+!        else if (chr(i,j+1,k).ne.ex.and.chr(i,j-1,k).ne.ex) then
+!            f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy 
 !        else
 !            if (first) then
 !               first=.false.
@@ -1480,48 +1557,50 @@ c the AdS metric has been factored into the maple already
 c----------------------------------------------------------------------
         subroutine init_ghb_ads(gb_tt,gb_tx,gb_ty,gb_xx,
      &                      gb_xy,gb_yy,psi,Hb_t,Hb_x,Hb_y,
-     &                      L,x,y,chr,ex,Nx,Ny,regtype)
+     &                      L,x,y,z,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
-        integer Nx,Ny
+        integer Nx,Ny,Nz
         integer regtype
-        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_ty(Nx,Ny)
-        real*8 gb_xx(Nx,Ny),gb_xy(Nx,Ny),gb_yy(Nx,Ny)
-        real*8 psi(Nx,Ny),tfunction(Nx,Ny),Hb_t(Nx,Ny)
-        real*8 Hb_x(Nx,Ny),Hb_y(Nx,Ny)
-        real*8 chr(Nx,Ny),ex,L,x(Nx),y(Ny)
+        real*8 gb_tt(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),gb_ty(Nx,Ny,Nz)
+        real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz),gb_yy(Nx,Ny,Nz)
+        real*8 psi(Nx,Ny,Nz),tfunction(Nx,Ny,Nz),Hb_t(Nx,Ny,Nz)
+        real*8 Hb_x(Nx,Ny,Nz),Hb_y(Nx,Ny,Nz)
+        real*8 chr(Nx,Ny,Nz),ex,L,x(Nx),y(Ny),z(Nz)
 
-        integer i,j
+        integer i,j,k
 
         logical ltrace
         parameter (ltrace=.false.)
  
         ! initialize fixed-size variables
-        data i,j/0,0/
+        data i,j,k/0,0,0/
   
         !--------------------------------------------------------------
  
         do i=1,Nx
            do j=1,Ny
-              gb_tt(i,j)=0
-              gb_tx(i,j)=0
-              gb_ty(i,j)=0
-              gb_xx(i,j)=0
-              gb_xy(i,j)=0
-              gb_yy(i,j)=0
+            do k=1,Nz
+              gb_tt(i,j,k)=0
+              gb_tx(i,j,k)=0
+              gb_ty(i,j,k)=0
+              gb_xx(i,j,k)=0
+              gb_xy(i,j,k)=0
+              gb_yy(i,j,k)=0
 
-              Hb_t(i,j)=0
-              Hb_x(i,j)=0
-              Hb_y(i,j)=0
+              Hb_t(i,j,k)=0
+              Hb_x(i,j,k)=0
+              Hb_y(i,j,k)=0
 
-              psi(i,j)=0
+              psi(i,j,k)=0
+            end do
            end do
         end do
 
         call axi_reg_g(gb_tt,gb_tx,gb_ty,
      &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,Nx,Ny,regtype)
+     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
-        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,Nx,Ny,regtype)
+        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -1535,16 +1614,17 @@ c   = A , r < r0
 c
 c where r = sqrt ( (1-ex^2)*(x)^2 + (1-ey^2)*(y)^2 )
 c----------------------------------------------------------------------
-        subroutine gauss2d(f,A,B,r0,delta,xu0,yu0,ex,ey,L,x,y,Nx,Ny,
+        subroutine gauss2d(f,A,B,r0,delta,xu0,yu0,ex,ey,
+     &                     L,x,y,z,Nx,Ny,Nz,
      &                     rhoc,rhod,stype)
         implicit none
-        integer Nx,Ny
-        real*8 f(Nx,Ny),x(Nx),y(Ny)
+        integer Nx,Ny,Nz
+        real*8 f(Nx,Ny,Nz),x(Nx),y(Ny),z(Nz)
         real*8 A,B,r0,delta,ex,ey,xu0,yu0,L
 
-        integer i,j
+        integer i,j,k
         integer stype
-        real*8 r,x0,y0,rho0,chi0,csr,xb,yb
+        real*8 r,x0,y0,z0,rho0,chi0,csr,xb,yb
 
         real*8 rhoc,rhod
         real*8 f1,trans
@@ -1553,17 +1633,19 @@ c----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0)
 
         ! initialize fixed-size variables
-        data i,j/0,0/
-        data r,x0,y0,rho0,csr,xb,yb/0.0,0.0,0.0,0.0,0.0,0.0,0.0/
+        data i,j,k/0,0,0/
+        data r,x0,y0,z0,rho0,csr,xb,yb/0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0/
   
         !--------------------------------------------------------------
  
 
         do i=1,Nx
            do j=1,Ny
-              f(i,j)=0
+            do k=1,Nz
+              f(i,j,k)=0
               x0=x(i)
               y0=y(j)
+              z0=z(k)
               rho0=sqrt(x0**2+y0**2)
               chi0=atan2(y0,x0)
               if (chi0.lt.0) chi0=chi0+2*PI
@@ -1587,14 +1669,14 @@ c----------------------------------------------------------------------
                  ! so x=r/(1+r)=2rho/(1+rho*(2-rho))
 
                  if (rho0.ge.1) then
-                    f(i,j)=0
+                    f(i,j,k)=0
                  else if (2*r/(1+r*(2-r)).gt.r0) then
-                    f(i,j)=
+                    f(i,j,k)=
      &              A*exp(-((2*r/(1+r*(2-r))-r0)/delta)**2)
      &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
      &             +B*cos(chi0)*4*f1*(1-f1)
                  else
-                    f(i,j)=
+                    f(i,j,k)=
      &              A
      &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
      &             +B*cos(chi0)*4*f1*(1-f1)
@@ -1603,13 +1685,13 @@ c----------------------------------------------------------------------
               else if (stype.eq.1) then
 
                  if (rho0.ge.1) then
-                    f(i,j)=0
+                    f(i,j,k)=0
                  else if (rho0.gt.r0) then
-                    f(i,j)=
+                    f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  else
-                    f(i,j)=
+                    f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  end if
@@ -1617,19 +1699,19 @@ c----------------------------------------------------------------------
               else if (stype.eq.2) then !annulus ID
 
                  if (rho0.ge.1) then
-                    f(i,j)=0
+                    f(i,j,k)=0
                  else if (rho0.gt.r0) then
-                    f(i,j)=
+                    f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  else
-                    f(i,j)=
+                    f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  end if
 
               end if
-
+            end do
            end do
         end do
 
@@ -1648,27 +1730,29 @@ c
 c and profile is multiplied by (1-rho^2)^3 for correct asymptotics
 c----------------------------------------------------------------------
         subroutine approx_qb(phi_r,phi_i,phi_r_dot,phi_i_dot,amp,xu0,
-     &                       delta,omega,v0,L,x,y,Nx,Ny)
+     &                       delta,omega,v0,L,x,y,z,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny
-        real*8 phi_r(Nx,Ny),phi_i(Nx,Ny)
-        real*8 phi_r_dot(Nx,Ny),phi_i_dot(Nx,Ny)
-        real*8 x(Nx),y(Ny),L,v0(2)
+        integer Nx,Ny,Nz
+        real*8 phi_r(Nx,Ny,Nz),phi_i(Nx,Ny,Nz)
+        real*8 phi_r_dot(Nx,Ny,Nz),phi_i_dot(Nx,Ny,Nz)
+        real*8 x(Nx),y(Ny),z(Nz),L,v0(2)
         real*8 amp,omega,delta,xu0(2)
 
-        integer i,j
-        real*8 r,x0,y0,rho0,xb,yb
+        integer i,j,k
+        real*8 r,x0,y0,z0,rho0,xb,yb
 
         ! initialize fixed-size variables
-        data i,j/0,0/
-        data r,x0,y0,rho0,xb,yb/0.0,0.0,0.0,0.0,0.0,0.0/
+        data i,j,k/0,0,0/
+        data r,x0,y0,z0,rho0,xb,yb/0.0,0.0,0.0,0.0,0.0,0.0,0.0/
   
         !--------------------------------------------------------------
  
         do i=1,Nx
            do j=1,Ny
+            do k=1,Nz
               x0=x(i)
               y0=y(j)
+              z0=z(k)
               rho0=sqrt(x0**2+y0**2)
 
               xb=x0-xu0(1)
@@ -1676,17 +1760,17 @@ c----------------------------------------------------------------------
               r=sqrt(xb**2+yb**2)
 
               if (rho0.ge.1) then
-                 phi_r(i,j)=0
-                 phi_i(i,j)=0
-                 phi_r_dot(i,j)=0
-                 phi_i_dot(i,j)=0
+                 phi_r(i,j,k)=0
+                 phi_i(i,j,k)=0
+                 phi_r_dot(i,j,k)=0
+                 phi_i_dot(i,j,k)=0
               else
-                 phi_r(i,j)=amp*exp(-(r/delta)**2)*(1-rho0**2)**2
-                 phi_i(i,j)=0
-                 phi_r_dot(i,j)=0
-                 phi_i_dot(i,j)=omega*phi_r(i,j)
+                 phi_r(i,j,k)=amp*exp(-(r/delta)**2)*(1-rho0**2)**2
+                 phi_i(i,j,k)=0
+                 phi_r_dot(i,j,k)=0
+                 phi_i_dot(i,j,k)=omega*phi_r(i,j,k)
               end if
-
+           end do
           end do
         end do
 
@@ -1696,10 +1780,10 @@ c----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c for variables with lin_zero_bnd ... zeros residual there
 c-----------------------------------------------------------------------
-        subroutine lin_zero_bnd_res(f,phys_bdy,all,Nx,Ny)
+        subroutine lin_zero_bnd_res(f,phys_bdy,all,Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,all
-        real*8 f(Nx,Ny)
+        integer Nx,Ny,Nz,all
+        real*8 f(Nx,Ny,Nz)
         integer phys_bdy(4)
 
         integer i,j,k,is,ie,js,je
@@ -1711,25 +1795,33 @@ c-----------------------------------------------------------------------
  
         if (phys_bdy(1).eq.1.or.all.eq.1) then
            do j=2,Ny-1
-              f(2,j)=0
+            do k=2,Nz-1
+              f(2,j,k)=0
+            end do
            end do
         end if
 
         if (phys_bdy(2).eq.1.or.all.eq.1) then
            do j=2,Ny-1
-              f(Nx-1,j)=0
+            do k=2,Nz-1
+              f(Nx-1,j,k)=0
+            end do
            end do
         end if
 
         if (phys_bdy(3).eq.1.or.all.eq.1) then
            do i=3,Nx-2
-              f(i,2)=0
+             do k=2,Nz-1
+              f(i,2,k)=0
+             end do
            end do
         end if
 
         if (phys_bdy(4).eq.1.or.all.eq.1) then
            do i=3,Nx-2
-              f(i,Ny-1)=0
+            do k=2,Nz-1
+              f(i,Ny-1,k)=0
+            end do
            end do
         end if
 
@@ -2039,45 +2131,45 @@ c----------------------------------------------------------------------
      &                         gb_tt_t,gb_tx_t,gb_ty_t,gb_xx_t,gb_xy_t,
      &                         gb_yy_t,psi_t,
      &                         Hb_t,Hb_x,Hb_y,
-     &                         Hb_t_t,Hb_x_t,Hb_y_t,
-     &                         phys_bdy,x,y,dt,chr,ex,Nx,Ny,regtype)
+     &                         Hb_t_t,Hb_x_t,Hb_y_t,phys_bdy,
+     &                         x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
 
-        integer Nx,Ny
+        integer Nx,Ny,Nz
         integer regtype
         integer phys_bdy(6)
         real*8 r0
         real*8 dt,ex,L
-        real*8 chr(Nx,Ny)
-        real*8 Hb_t(Nx,Ny),Hb_x(Nx,Ny)
-        real*8 Hb_y(Nx,Ny)
-        real*8 Hb_t_t(Nx,Ny),Hb_x_t(Nx,Ny)
-        real*8 Hb_y_t(Nx,Ny)
-        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny)
-        real*8 gb_ty(Nx,Ny)
-        real*8 gb_xx(Nx,Ny),gb_xy(Nx,Ny)
-        real*8 gb_yy(Nx,Ny),psi(Nx,Ny)
-        real*8 gb_tt_t(Nx,Ny),gb_tx_t(Nx,Ny)
-        real*8 gb_ty_t(Nx,Ny),psi_t(Nx,Ny)
-        real*8 gb_xx_t(Nx,Ny),gb_xy_t(Nx,Ny)
-        real*8 gb_yy_t(Nx,Ny)
-        real*8 x(Nx),y(Ny)
+        real*8 chr(Nx,Ny,Nz)
+        real*8 Hb_t(Nx,Ny,Nz),Hb_x(Nx,Ny,Nz)
+        real*8 Hb_y(Nx,Ny,Nz)
+        real*8 Hb_t_t(Nx,Ny,Nz),Hb_x_t(Nx,Ny,Nz)
+        real*8 Hb_y_t(Nx,Ny,Nz)
+        real*8 gb_tt(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz)
+        real*8 gb_ty(Nx,Ny,Nz)
+        real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
+        real*8 gb_yy(Nx,Ny,Nz),psi(Nx,Ny,Nz)
+        real*8 gb_tt_t(Nx,Ny,Nz),gb_tx_t(Nx,Ny,Nz)
+        real*8 gb_ty_t(Nx,Ny,Nz),psi_t(Nx,Ny,Nz)
+        real*8 gb_xx_t(Nx,Ny,Nz),gb_xy_t(Nx,Ny,Nz)
+        real*8 gb_yy_t(Nx,Ny,Nz)
+        real*8 x(Nx),y(Ny),z(Nz)
 
         integer n
         parameter (n=3)
 
-        integer i,j
+        integer i,j,k
 
         real*8 rho0,f1,f0,cF0,C0,A0,B0,D0
-        real*8 x0,y0
+        real*8 x0,y0,z0
         real*8 r_h,rho_h
         real*8 small
         parameter (small=1d-10)
 
-        real*8 tfunction(Nx,Ny)
+        real*8 tfunction(Nx,Ny,Nz)
 
         ! initialize fixed-size variables
-        data i,j/0,0/
+        data i,j,k/0,0,0/
 
         data rho0,f1,f0,cF0/0.0,0.0,0.0,0.0/
         data C0,A0,B0,D0/0.0,0.0,0.0,0.0/
@@ -2103,47 +2195,51 @@ c----------------------------------------------------------------------
         ! initialize metric 
         do i=1,Nx
            do j=1,Ny
-              gb_tt_t(i,j)=0
-              gb_tx_t(i,j)=0
-              gb_ty_t(i,j)=0
-              gb_xx_t(i,j)=0
-              gb_xy_t(i,j)=0
-              gb_yy_t(i,j)=0
-              psi_t(i,j)=0
-              Hb_t_t(i,j)=0
-              Hb_x_t(i,j)=0
-              Hb_y_t(i,j)=0
-              if (chr(i,j).eq.ex) then
-                 gb_tt(i,j)=0
-                 gb_tx(i,j)=0
-                 gb_ty(i,j)=0
-                 gb_xx(i,j)=0
-                 gb_xy(i,j)=0
-                 gb_yy(i,j)=0
-                 psi(i,j)=0
-                 Hb_t(i,j)=0
-                 Hb_x(i,j)=0
-                 Hb_y(i,j)=0
+            do k=1,Nz
+              gb_tt_t(i,j,k)=0
+              gb_tx_t(i,j,k)=0
+              gb_ty_t(i,j,k)=0
+              gb_xx_t(i,j,k)=0
+              gb_xy_t(i,j,k)=0
+              gb_yy_t(i,j,k)=0
+              psi_t(i,j,k)=0
+              Hb_t_t(i,j,k)=0
+              Hb_x_t(i,j,k)=0
+              Hb_y_t(i,j,k)=0
+              if (chr(i,j,k).eq.ex) then
+                 gb_tt(i,j,k)=0
+                 gb_tx(i,j,k)=0
+                 gb_ty(i,j,k)=0
+                 gb_xx(i,j,k)=0
+                 gb_xy(i,j,k)=0
+                 gb_yy(i,j,k)=0
+                 psi(i,j,k)=0
+                 Hb_t(i,j,k)=0
+                 Hb_x(i,j,k)=0
+                 Hb_y(i,j,k)=0
               else
                  x0=x(i)
                  y0=y(j)
+                 z0=z(k)
                  rho0=sqrt(x0**2+y0**2)
 
                  ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
                  
-                 gb_tt(i,j)=(r0/2)*(1/rho0-rho0)
+                 gb_tt(i,j,k)=(r0/2)*(1/rho0-rho0)
 
-                 gb_tx(i,j)=2*x0*(1+rho0**2)*((1-rho_h)/(1-rho0))**(-n)
+                 gb_tx(i,j,k)=2*x0*(1+rho0**2)
+     &                      *((1-rho_h)/(1-rho0))**(-n)
      &                      /rho0/(1-rho0**2)**2
-                 gb_ty(i,j)=2*y0*(1+rho0**2)*((1-rho_h)/(1-rho0))**(-n)
+                 gb_ty(i,j,k)=2*y0*(1+rho0**2)
+     &                      *((1-rho_h)/(1-rho0))**(-n)
      &                      /rho0/(1-rho0**2)**2
-                 gb_xx(i,j)=4*x0**2*(1+rho0**2)**2
+                 gb_xx(i,j,k)=4*x0**2*(1+rho0**2)**2
      &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
      &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
      &                      /(4*rho0**3+L**2*(1-rho0**2)**2
      &                       *(rho0+(r0/2)*(-1+rho0**2))))
      &                      /rho0**2/(1-rho0**2)**2
-                 gb_xy(i,j)=4*L**2*x0*y0*(1+rho0**2)**2
+                 gb_xy(i,j,k)=4*L**2*x0*y0*(1+rho0**2)**2
      &                      *(-4*rho0**3+L**2*(1-rho0**2)**2
      &                      *(-rho0-(r0/2)*(-1+rho0**2)
      &                      *((1-rho_h)/(1-rho0))**(2*n)))
@@ -2153,7 +2249,7 @@ c----------------------------------------------------------------------
      &                      /(4*rho0**3+L**2*(1-rho0**2)**2
      &                       *(rho0+(r0/2)*(-1+rho0**2)))
 
-                 gb_yy(i,j)=4*y0**2*(1+rho0**2)**2
+                 gb_yy(i,j,k)=4*y0**2*(1+rho0**2)**2
      &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
      &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
      &                      /(4*rho0**3+L**2*(1-rho0**2)**2
@@ -2162,21 +2258,22 @@ c----------------------------------------------------------------------
 
 !                 ! (Schw coordinates)!
 !                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!
-!                 gb_tt(i,j)=0
-!                 gb_xx(i,j)=0
-!                 gb_xy(i,j)=0
-!                 gb_yy(i,j)=0
+!                 gb_tt(i,j,k)=0
+!                 gb_xx(i,j,k)=0
+!                 gb_xy(i,j,k)=0
+!                 gb_yy(i,j,k)=0
 
               end if
+            end do
            end do
         end do
 
         ! y=0 axis regularization
         call axi_reg_g(gb_tt,gb_tx,gb_ty,
      &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,Nx,Ny,regtype)
+     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
-        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,Nx,Ny,regtype)
+        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -2293,30 +2390,30 @@ c----------------------------------------------------------------------
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                  einstein_ll,set_ll,
      &                  phi10_x,phi10_xx,
-     &                  x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
         implicit none
 
-        integer Nx,Ny
+        integer Nx,Ny,Nz
         integer i,j,k
 
-        real*8 chr(Nx,Ny),ex
-        real*8 x(Nx),y(Ny),dt,L
+        real*8 chr(Nx,Ny,Nz),ex
+        real*8 x(Nx),y(Ny),z(Nz),dt,L
 
-        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
-        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
-        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
-        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
-        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
-        real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
-        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
+        real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
+        real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
 
         integer a,b,c,d,e,f,g,h
-        real*8 dx,dy
-        real*8 x0,y0
+        real*8 dx,dy,dz
+        real*8 x0,y0,z0
         real*8 rho0
         real*8 f0
 
@@ -2410,7 +2507,7 @@ c----------------------------------------------------------------------
         real*8 Hb_t0,Hb_x0,Hb_y0
 
 !!!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!!!
-        real*8 testf1(Nx,Ny),testf2(Nx,Ny),testf3(Nx,Ny)
+        real*8 testf1(Nx,Ny,Nz),testf2(Nx,Ny,Nz),testf3(Nx,Ny,Nz)
         real*8 testf1_t,testf1_x,testf1_y
         real*8 testf2_t,testf2_x,testf2_y
         real*8 testf3_t,testf3_x,testf3_y
@@ -2426,9 +2523,11 @@ c----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
+        dz=(z(2)-z(1))
 
         x0=x(i)
         y0=y(j)
+        z0=z(k)
         rho0=sqrt(x0**2+y0**2)
        
         f0=(1-rho0**2)**2+4*rho0**2/L**2
@@ -2460,21 +2559,21 @@ c----------------------------------------------------------------------
         g0u_psi_ads0=1/g0_psi_ads0
 
         ! set gbar values
-        gb_tt0=gb_tt_n(i,j)
-        gb_tx0=gb_tx_n(i,j)
-        gb_ty0=gb_ty_n(i,j)
-        gb_xx0=gb_xx_n(i,j)
-        gb_xy0=gb_xy_n(i,j)
-        gb_yy0=gb_yy_n(i,j)
-        psi0=psi_n(i,j)
+        gb_tt0=gb_tt_n(i,j,k)
+        gb_tx0=gb_tx_n(i,j,k)
+        gb_ty0=gb_ty_n(i,j,k)
+        gb_xx0=gb_xx_n(i,j,k)
+        gb_xy0=gb_xy_n(i,j,k)
+        gb_yy0=gb_yy_n(i,j,k)
+        psi0=psi_n(i,j,k)
 
         ! set hbar values
-        Hb_t0=Hb_t_n(i,j)
-        Hb_x0=Hb_x_n(i,j)
-        Hb_y0=Hb_y_n(i,j)
+        Hb_t0=Hb_t_n(i,j,k)
+        Hb_x0=Hb_x_n(i,j,k)
+        Hb_y0=Hb_y_n(i,j,k)
 
         ! set phi1 value
-        phi10=phi1_n(i,j)
+        phi10=phi1_n(i,j,k)
 
         ! ASSUMES L=1
         g0_tt_ads_x  =(8*x0*(1 + rho0**2))/(L**2*(-1 + rho0**2)**3)
@@ -2700,47 +2799,47 @@ c----------------------------------------------------------------------
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t,
      &       gb_tt_x,gb_tt_y,gb_tt_tt,gb_tt_tx,gb_tt_ty,
      &       gb_tt_xx,gb_tt_xy,gb_tt_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_tt')
         call df2_int(gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t,
      &       gb_tx_x,gb_tx_y,gb_tx_tt,gb_tx_tx,gb_tx_ty,
      &       gb_tx_xx,gb_tx_xy,gb_tx_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_tx')
         call df2_int(gb_ty_np1,gb_ty_n,gb_ty_nm1,gb_ty_t,
      &       gb_ty_x,gb_ty_y,gb_ty_tt,gb_ty_tx,gb_ty_ty,
      &       gb_ty_xx,gb_ty_xy,gb_ty_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_ty')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t,
      &       gb_xx_x,gb_xx_y,gb_xx_tt,gb_xx_tx,gb_xx_ty,
      &       gb_xx_xx,gb_xx_xy,gb_xx_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_xx')
         call df2_int(gb_xy_np1,gb_xy_n,gb_xy_nm1,gb_xy_t,
      &       gb_xy_x,gb_xy_y,gb_xy_tt,gb_xy_tx,gb_xy_ty,
      &       gb_xy_xx,gb_xy_xy,gb_xy_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_xy')
         call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t,
      &       gb_yy_x,gb_yy_y,gb_yy_tt,gb_yy_tx,gb_yy_ty,
      &       gb_yy_xx,gb_yy_xy,gb_yy_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,"gb_yy")
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_yy')
         call df2_int(psi_np1,psi_n,psi_nm1,psi_t,psi_x,
      &       psi_y,psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy,
-     &       x,y,dt,i,j,chr,ex,Nx,Ny,"psi")
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'psi')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t,Hb_t_x,
-     &       Hb_t_y,x,y,dt,i,j,
-     &       chr,ex,Nx,Ny,'Hb_t')
+     &       Hb_t_y,x,y,z,dt,i,j,k,
+     &       chr,ex,Nx,Ny,Nz,'Hb_t')
         call df1_int(Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t,Hb_x_x,
-     &       Hb_x_y,x,y,dt,i,j,
-     &       chr,ex,Nx,Ny,'Hb_x')
+     &       Hb_x_y,x,y,z,dt,i,j,k,
+     &       chr,ex,Nx,Ny,Nz,'Hb_x')
         call df1_int(Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t,Hb_y_x,
-     &       Hb_y_y,x,y,dt,i,j,
-     &       chr,ex,Nx,Ny,'Hb_y')
+     &       Hb_y_y,x,y,z,dt,i,j,k,
+     &       chr,ex,Nx,Ny,Nz,'Hb_y')
 
         ! calculate phi1 derivatives
         call df2_int(phi1_np1,phi1_n,phi1_nm1,phi1_t,phi1_x,
      &       phi1_y,phi1_tt,phi1_tx,phi1_ty,phi1_xx,
-     &       phi1_xy,phi1_yy,x,y,dt,i,j,
-     &       chr,ex,Nx,Ny,'phi1')
+     &       phi1_xy,phi1_yy,x,y,z,dt,i,j,k,
+     &       chr,ex,Nx,Ny,Nz,'phi1')
 
 !!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!
 !        do a=1,Nx

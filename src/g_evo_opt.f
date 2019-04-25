@@ -20,14 +20,14 @@ c----------------------------------------------------------------------
      &                       Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                       Hb_y_np1,Hb_y_n,Hb_y_nm1,
      &                       phi1_np1,phi1_n,phi1_nm1,
-     &                       L,x,y,dt,chr,ex,
-     &                       phys_bdy,ghost_width,Nx,Ny,
+     &                       L,x,y,z,dt,chr,ex,
+     &                       phys_bdy,ghost_width,Nx,Ny,Nz,
      &                       background,kappa_cd,rho_cd,
      &                       interptype,i_shift,regtype,
      &                       diss_kmax,tfunction)
         implicit none
-        integer Nx,Ny
-        integer phys_bdy(4),ghost_width(4)
+        integer Nx,Ny,Nz
+        integer phys_bdy(6),ghost_width(6)
         integer background
         integer interptype
         integer regtype
@@ -35,37 +35,37 @@ c----------------------------------------------------------------------
         integer diss_kmax
         integer max_ghost_width
         real*8 kappa_cd,rho_cd
-        real*8 gb_res(Nx,Ny),kg_res(Nx,Ny),cl_res(Nx,Ny)
-        real*8 gb_tt_np1(Nx,Ny),gb_tx_np1(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xy_np1(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),psi_np1(Nx,Ny)
-        real*8 gb_tt_n(Nx,Ny),gb_tx_n(Nx,Ny)
-        real*8 gb_ty_n(Nx,Ny)
-        real*8 gb_xx_n(Nx,Ny),gb_xy_n(Nx,Ny)
-        real*8 gb_yy_n(Nx,Ny),psi_n(Nx,Ny)
-        real*8 gb_tt_nm1(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_nm1(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_yy_nm1(Nx,Ny),psi_nm1(Nx,Ny)
-        real*8 Hb_t_n(Nx,Ny),Hb_x_n(Nx,Ny)
-        real*8 Hb_y_n(Nx,Ny),Hb_z_n(Nx,Ny)
-        real*8 Hb_t_np1(Nx,Ny),Hb_x_np1(Nx,Ny)
-        real*8 Hb_y_np1(Nx,Ny),Hb_z_np1(Nx,Ny)
-        real*8 Hb_t_nm1(Nx,Ny),Hb_x_nm1(Nx,Ny)
-        real*8 Hb_y_nm1(Nx,Ny),Hb_z_nm1(Nx,Ny)
-        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
-        real*8 tfunction(Nx,Ny)
+        real*8 gb_res(Nx,Ny,Nz),kg_res(Nx,Ny,Nz),cl_res(Nx,Ny,Nz)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xy_np1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),psi_np1(Nx,Ny,Nz)
+        real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz)
+        real*8 gb_ty_n(Nx,Ny,Nz)
+        real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz)
+        real*8 gb_yy_n(Nx,Ny,Nz),psi_n(Nx,Ny,Nz)
+        real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_nm1(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_nm1(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 Hb_t_n(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz)
+        real*8 Hb_y_n(Nx,Ny,Nz),Hb_z_n(Nx,Ny,Nz)
+        real*8 Hb_t_np1(Nx,Ny,Nz),Hb_x_np1(Nx,Ny,Nz)
+        real*8 Hb_y_np1(Nx,Ny,Nz),Hb_z_np1(Nx,Ny,Nz)
+        real*8 Hb_t_nm1(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
+        real*8 Hb_y_nm1(Nx,Ny,Nz),Hb_z_nm1(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 tfunction(Nx,Ny,Nz)
         real*8 L
-        real*8 x(Nx),y(Ny),dt,chr(Nx,Ny),ex
-        real*8 chr2(Nx,Ny)
+        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+        real*8 chr2(Nx,Ny,Nz)
 
         integer a,b,c,d,e
         integer rb,i,j,k,m
-        integer is,ie,js,je,is_a_nan
+        integer is,ie,js,je,ks,ke,is_a_nan
 
-        real*8 dx,dy
-        real*8 x0,y0,rho0
+        real*8 dx,dy,dz
+        real*8 x0,y0,z0,rho0
 
         real*8 phi1_res,phi1_J
 
@@ -304,12 +304,12 @@ c----------------------------------------------------------------------
 
 
 
-        data rb,i,j/0,0,0/
+        data rb,i,j,k/0,0,0,0/
         data i2,j2/0,0/
-        data is,ie,js,je,is_a_nan/0,0,0,0,0/
+        data is,ie,js,je,ks,ke,is_a_nan/0,0,0,0,0,0,0/
         data a,b,c,d,e/0,0,0,0,0/
 
-        data dx,dy/0.0,0.0/
+        data dx,dy,dz/0.0,0.0,0.0/
 
         data g0_tt_t, g0_tt_x, g0_tt_y, g0_tt_tt/0.0,0.0,0.0,0.0/
         data g0_tt_xx,g0_tt_yy,g0_tt_tx,g0_tt_ty/0.0,0.0,0.0,0.0/
@@ -349,7 +349,7 @@ c----------------------------------------------------------------------
 
         data H0_t0,H0_x0,H0_y0/0.0,0.0,0.0/
 
-        data x0,y0,rho0/0.0,0.0,0.0/
+        data x0,y0,z0,rho0/0.0,0.0,0.0,0.0/
 
         data C_t,C_x,C_y/0.0,0.0,0.0/
         data C_t_tt_J,C_t_tx_J,C_t_ty_J,C_t_xx_J/0.0,0.0,0.0,0.0/
@@ -394,6 +394,7 @@ c----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         if (abs((y(2)-y(1))/dx-1).gt.1.0d-8) then
            write(*,*) 'error ... g_evo_opt not updated for dx!=dy!=dz'
@@ -409,6 +410,8 @@ c----------------------------------------------------------------------
         ie=Nx-1
         js=2
         je=Ny-1
+        ks=2
+        ke=Nz-1
 
         !(nearest-to-axis points are not evolved, according to regtype choice) 
         if (regtype.eq.7 .or. regtype.eq.6) then
@@ -424,10 +427,13 @@ c----------------------------------------------------------------------
         if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
         if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
         if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         ! check kmax value against ghost_width
         max_ghost_width=max(ghost_width(1),ghost_width(2),
-     &                      ghost_width(3),ghost_width(4))
+     &                      ghost_width(3),ghost_width(4),
+     &                      ghost_width(5),ghost_width(6))
         if (max_ghost_width.lt.2*diss_kmax) then
           write(*,*) 'WARNING ... ghost_width < 2*diss_kmax'
           write(*,*) 'max{ghost_width}=',max_ghost_width
@@ -438,64 +444,72 @@ c----------------------------------------------------------------------
         ! zero all outer boundary points
         if (phys_bdy(1).eq.1) then 
           do j=1,Ny
-            gb_tt_np1(1,j) = 0
-            gb_tx_np1(1,j) = 0
-            gb_ty_np1(1,j) = 0
-            gb_xx_np1(1,j) = 0
-            gb_xy_np1(1,j) = 0
-            gb_yy_np1(1,j) = 0
-            psi_np1(1,j) = 0
-            phi1_np1(1,j) = 0
+           do k=1,Nz
+            gb_tt_np1(1,j,k) = 0
+            gb_tx_np1(1,j,k) = 0
+            gb_ty_np1(1,j,k) = 0
+            gb_xx_np1(1,j,k) = 0
+            gb_xy_np1(1,j,k) = 0
+            gb_yy_np1(1,j,k) = 0
+            psi_np1(1,j,k) = 0
+            phi1_np1(1,j,k) = 0
+           end do
           end do
         end if
         if (phys_bdy(2).eq.1) then 
           do j=1,Ny
-            gb_tt_np1(Nx,j) = 0
-            gb_tx_np1(Nx,j) = 0
-            gb_ty_np1(Nx,j) = 0
-            gb_xx_np1(Nx,j) = 0
-            gb_xy_np1(Nx,j) = 0
-            gb_yy_np1(Nx,j) = 0
-            psi_np1(Nx,j) = 0
-            phi1_np1(Nx,j) = 0
+           do k=1,Nz
+            gb_tt_np1(Nx,j,k) = 0
+            gb_tx_np1(Nx,j,k) = 0
+            gb_ty_np1(Nx,j,k) = 0
+            gb_xx_np1(Nx,j,k) = 0
+            gb_xy_np1(Nx,j,k) = 0
+            gb_yy_np1(Nx,j,k) = 0
+            psi_np1(Nx,j,k) = 0
+            phi1_np1(Nx,j,k) = 0
+           end do
           end do
         end if
         if (phys_bdy(4).eq.1) then 
           do i=1,Nx
-            gb_tt_np1(i,Ny) = 0
-            gb_tx_np1(i,Ny) = 0
-            gb_ty_np1(i,Ny) = 0
-            gb_xx_np1(i,Ny) = 0
-            gb_xy_np1(i,Ny) = 0
-            gb_yy_np1(i,Ny) = 0
-            psi_np1(i,Ny) = 0
-            phi1_np1(i,Ny) = 0
+           do k=1,Nz
+            gb_tt_np1(i,Ny,k) = 0
+            gb_tx_np1(i,Ny,k) = 0
+            gb_ty_np1(i,Ny,k) = 0
+            gb_xx_np1(i,Ny,k) = 0
+            gb_xy_np1(i,Ny,k) = 0
+            gb_yy_np1(i,Ny,k) = 0
+            psi_np1(i,Ny,k) = 0
+            phi1_np1(i,Ny,k) = 0
+           end do
           end do
         end if
 
         ! define chr2
         do i=is,ie
           do j=js,je
-            if (chr(i,j).ne.ex.and.
+           do k=ks,ke
+            if (chr(i,j,k).ne.ex.and.
      &          sqrt(x(i)**2+y(j)**2).ge.1.0d0-3*dx/2.and.
-     &          (chr(i-1,j).eq.ex.or.chr(i+1,j).eq.ex.or.
-     &           chr(i,j-1).eq.ex.or.chr(i,j+1).eq.ex)) then
-              chr2(i,j)=ex
+     &          (chr(i-1,j,k).eq.ex.or.chr(i+1,j,k).eq.ex.or.
+     &           chr(i,j-1,k).eq.ex.or.chr(i,j+1,k).eq.ex)) then
+              chr2(i,j,k)=ex
             else 
-              chr2(i,j)=ex-1
+              chr2(i,j,k)=ex-1
             end if
+           end do
           end do
         end do
 
         !(MAIN LOOP) red-black loop through spacetime points x(i),y(j)  
         do rb=1,2
-
+         do k=ks,ke
           do j=js,je
             do i=is+mod(j+rb,2),ie,2
               x0=x(i)
               y0=y(j)
+              z0=z(k)
               rho0=sqrt(x0**2+y0**2)
-
               dump=.false.
 
               if (ltrace) write(*,*) 'i,j:',i,j
@@ -503,14 +517,14 @@ c----------------------------------------------------------------------
               first_evolved_pt=.false.
 
               ! define first_evolved_pt
-              if (chr(i,j).ne.ex.and.chr2(i,j).ne.ex.and.
-     &            (chr2(i-1,j).eq.ex.or.chr2(i+1,j).eq.ex.or.
-     &             chr2(i,j-1).eq.ex.or.chr2(i,j+1).eq.ex)) then
+              if (chr(i,j,k).ne.ex.and.chr2(i,j,k).ne.ex.and.
+     &            (chr2(i-1,j,k).eq.ex.or.chr2(i+1,j,k).eq.ex.or.
+     &             chr2(i,j-1,k).eq.ex.or.chr2(i,j+1,k).eq.ex)) then
                 first_evolved_pt=.true.
               end if
 
               !(REGION) interior not one-point-away-from-ads-bdy points; evolve 
-              if (chr(i,j).ne.ex .and. chr2(i,j).ne.ex) then
+              if (chr(i,j,k).ne.ex .and. chr2(i,j,k).ne.ex) then
 
 !!!!!!!!!!!!!!!!TO TEST efe(a,b)!!!!!!!!!!!!
 !               do k=1,Nx
@@ -571,7 +585,7 @@ c----------------------------------------------------------------------
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
-     &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &                x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
 
                 do a=1,4
@@ -1365,14 +1379,14 @@ c----------------------------------------------------------------------
 !i
         if (i.eq.1) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
                    ddgb_J_tx=-1/dt/dx
-               else if ((chr(i+1,j).ne.ex
-     &                 .and.chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex
+     &                 .and.chr(i+2,j,k).ne.ex)) then
                    ddgb_J_tx=-3/4/dt/dx
-               else if (chr(i+1,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex) then
                    ddgb_J_tx=-1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1381,18 +1395,18 @@ c----------------------------------------------------------------------
                    return
                end if
         else if (i.eq.2) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
                    ddgb_J_tx=0
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
                    ddgb_J_tx=-1/dt/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
                    ddgb_J_tx=-3/4/dt/dx
-               else if (chr(i+1,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex) then
                    ddgb_J_tx=-1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1400,24 +1414,24 @@ c----------------------------------------------------------------------
                    ddgb_J_tx=0
                    return
                end if
-         else   !this is the case where (i-1,j) is not excised and (i+1,j) is excised 
+         else   !this is the case where (i-1,j,k) is not excised and (i+1,j,k) is excised 
                    ddgb_J_tx=1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
          end if
         else if (i.eq.3) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
                    ddgb_J_tx=0
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
                    ddgb_J_tx=-1/dt/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
                    ddgb_J_tx=-3/4/dt/dx
-               else if (chr(i+1,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex) then
                    ddgb_J_tx=-1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1426,7 +1440,7 @@ c----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i-2,j).ne.ex) then
+               if (chr(i-2,j,k).ne.ex) then
                    ddgb_J_tx=3/4/dt/dx
                else
                    ddgb_J_tx=1/2/dt/dx
@@ -1435,18 +1449,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if ((i.ge.4).and.(i.le.(Nx-3))) then
-         if ((chr(i-1,j).ne.ex).and.(chr(i+1,j).ne.ex)) then
+         if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
                    ddgb_J_tx=0
-         else if (chr(i-1,j).eq.ex) then
+         else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i+1,j).ne.ex)
-     &            .and.(chr(i+2,j).ne.ex)
-     &            .and.(chr(i+3,j).ne.ex)) then
+     &            .and.(chr(i+1,j,k).ne.ex)
+     &            .and.(chr(i+2,j,k).ne.ex)
+     &            .and.(chr(i+3,j,k).ne.ex)) then
                    ddgb_J_tx=-1/dt/dx
-               else if ((chr(i+1,j).ne.ex)
-     &                 .and.(chr(i+2,j).ne.ex)) then
+               else if ((chr(i+1,j,k).ne.ex)
+     &                 .and.(chr(i+2,j,k).ne.ex)) then
                    ddgb_J_tx=-3/4/dt/dx
-               else if (chr(i+1,j).ne.ex) then
+               else if (chr(i+1,j,k).ne.ex) then
                    ddgb_J_tx=-1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1456,10 +1470,10 @@ c----------------------------------------------------------------------
                end if
          else
                if ((.not.extrap)
-     &            .and.(chr(i-3,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)) then
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)) then
                    ddgb_J_tx=1/dt/dx
-               else if (chr(i-2,j).ne.ex) then
+               else if (chr(i-2,j,k).ne.ex) then
                    ddgb_J_tx=3/4/dt/dx
                else
                    ddgb_J_tx=1/2/dt/dx
@@ -1468,18 +1482,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if (i.eq.(Nx-2)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
                    ddgb_J_tx=0
-         else if (chr(i+1,j).eq.ex) then
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
                    ddgb_J_tx=1/dt/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
                    ddgb_J_tx=3/4/dt/dx
-               else if (chr(i-1,j).ne.ex) then
+               else if (chr(i-1,j,k).ne.ex) then
                    ddgb_J_tx=1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1488,7 +1502,7 @@ c----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i+2,j).ne.ex) then
+               if (chr(i+2,j,k).ne.ex) then
                    ddgb_J_tx=-3/4/dt/dx
                else
                    ddgb_J_tx=-1/2/dt/dx
@@ -1497,18 +1511,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if (i.eq.(Nx-1)) then
-         if ((chr(i+1,j).ne.ex).and.(chr(i-1,j).ne.ex)) then
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
                    ddgb_J_tx=0
-         else if (chr(i+1,j).eq.ex) then
+         else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
                    ddgb_J_tx=1/dt/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
                    ddgb_J_tx=3/4/dt/dx
-               else if (chr(i-1,j).ne.ex) then
+               else if (chr(i-1,j,k).ne.ex) then
                    ddgb_J_tx=1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1523,14 +1537,14 @@ c----------------------------------------------------------------------
          end if
         else if (i.eq.Nx) then
                if ((.not.extrap)
-     &            .and.(chr(i-1,j).ne.ex)
-     &            .and.(chr(i-2,j).ne.ex)
-     &            .and.(chr(i-3,j).ne.ex)) then
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)) then
                    ddgb_J_tx=1/dt/dx
-               else if ((chr(i-1,j).ne.ex)
-     &                 .and.(chr(i-2,j).ne.ex)) then
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
                    ddgb_J_tx=3/4/dt/dx
-               else if (chr(i-1,j).ne.ex) then
+               else if (chr(i-1,j,k).ne.ex) then
                    ddgb_J_tx=1/2/dt/dx
 !                  write(*,*) 'g_evo_opt: warning ... i=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
@@ -1545,14 +1559,14 @@ c----------------------------------------------------------------------
 !j
         if (j.eq.1) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
                    ddgb_J_ty=-1/dt/dy
-               else if ((chr(i,j+1).ne.ex
-     &                 .and.chr(i,j+2).ne.ex)) then
+               else if ((chr(i,j+1,k).ne.ex
+     &                 .and.chr(i,j+2,k).ne.ex)) then
                    ddgb_J_ty=-3/4/dt/dy
-               else if (chr(i,j+1).ne.ex) then
+               else if (chr(i,j+1,k).ne.ex) then
                    ddgb_J_ty=-1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1561,18 +1575,18 @@ c----------------------------------------------------------------------
                    return
                end if
         else if (j.eq.2) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    ddgb_J_ty=0
-         else if (chr(i,j-1).eq.ex) then
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
                    ddgb_J_ty=-1/dt/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
                    ddgb_J_ty=-3/4/dt/dy
-               else if (chr(i,j+1).ne.ex) then
+               else if (chr(i,j+1,k).ne.ex) then
                    ddgb_J_ty=-1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1580,24 +1594,24 @@ c----------------------------------------------------------------------
                    ddgb_J_ty=0
                    return
                end if
-         else   !this is the case where (i,j-1) is not excised and (i,j+1) is excised 
+         else   !this is the case where (i,j-1,k) is not excised and (i,j+1,k) is excised 
                    ddgb_J_ty=1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
          end if
         else if (j.eq.3) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    ddgb_J_ty=0
-         else if (chr(i,j-1).eq.ex) then
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
                    ddgb_J_ty=-1/dt/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
                    ddgb_J_ty=-3/4/dt/dy
-               else if (chr(i,j+1).ne.ex) then
+               else if (chr(i,j+1,k).ne.ex) then
                    ddgb_J_ty=-1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1606,7 +1620,7 @@ c----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i,j-2).ne.ex) then
+               if (chr(i,j-2,k).ne.ex) then
                    ddgb_J_ty=3/4/dt/dy
                else
                    ddgb_J_ty=1/2/dt/dy
@@ -1615,18 +1629,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if ((j.ge.4).and.(j.le.(Ny-3))) then
-         if ((chr(i,j-1).ne.ex).and.(chr(i,j+1).ne.ex)) then
+         if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    ddgb_J_ty=0
-         else if (chr(i,j-1).eq.ex) then
+         else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j+1).ne.ex)
-     &            .and.(chr(i,j+2).ne.ex)
-     &            .and.(chr(i,j+3).ne.ex)) then
+     &            .and.(chr(i,j+1,k).ne.ex)
+     &            .and.(chr(i,j+2,k).ne.ex)
+     &            .and.(chr(i,j+3,k).ne.ex)) then
                    ddgb_J_ty=-1/dt/dy
-               else if ((chr(i,j+1).ne.ex)
-     &                 .and.(chr(i,j+2).ne.ex)) then
+               else if ((chr(i,j+1,k).ne.ex)
+     &                 .and.(chr(i,j+2,k).ne.ex)) then
                    ddgb_J_ty=-3/4/dt/dy
-               else if (chr(i,j+1).ne.ex) then
+               else if (chr(i,j+1,k).ne.ex) then
                    ddgb_J_ty=-1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1636,10 +1650,10 @@ c----------------------------------------------------------------------
                end if
          else
                if ((.not.extrap)
-     &            .and.(chr(i,j-3).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)) then
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)) then
                    ddgb_J_ty=1/dt/dy
-               else if (chr(i-2,j).ne.ex) then
+               else if (chr(i,j-2,k).ne.ex) then
                    ddgb_J_ty=3/4/dt/dy
                else
                    ddgb_J_ty=1/2/dt/dy
@@ -1648,18 +1662,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if (j.eq.(Ny-2)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
                    ddgb_J_ty=0
-         else if (chr(i,j+1).eq.ex) then
+         else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
                    ddgb_J_ty=1/dt/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
                    ddgb_J_ty=3/4/dt/dy
-               else if (chr(i,j-1).ne.ex) then
+               else if (chr(i,j-1,k).ne.ex) then
                    ddgb_J_ty=1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1668,7 +1682,7 @@ c----------------------------------------------------------------------
                    return
                end if
          else 
-               if (chr(i,j+2).ne.ex) then
+               if (chr(i,j+2,k).ne.ex) then
                    ddgb_J_ty=-3/4/dt/dy
                else
                    ddgb_J_ty=-1/2/dt/dy
@@ -1677,18 +1691,18 @@ c----------------------------------------------------------------------
                end if
          end if
         else if (j.eq.(Ny-1)) then
-         if ((chr(i,j+1).ne.ex).and.(chr(i,j-1).ne.ex)) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
                    ddgb_J_ty=0
-         else if (chr(i,j+1).eq.ex) then
+         else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
                    ddgb_J_ty=1/dt/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
                    ddgb_J_ty=3/4/dt/dy
-               else if (chr(i,j-1).ne.ex) then
+               else if (chr(i,j-1,k).ne.ex) then
                    ddgb_J_ty=1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1703,14 +1717,14 @@ c----------------------------------------------------------------------
          end if
         else if (j.eq.Ny) then
                if ((.not.extrap)
-     &            .and.(chr(i,j-1).ne.ex)
-     &            .and.(chr(i,j-2).ne.ex)
-     &            .and.(chr(i,j-3).ne.ex)) then
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)) then
                    ddgb_J_ty=1/dt/dy
-               else if ((chr(i,j-1).ne.ex)
-     &                 .and.(chr(i,j-2).ne.ex)) then
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
                    ddgb_J_ty=3/4/dt/dy
-               else if (chr(i,j-1).ne.ex) then
+               else if (chr(i,j-1,k).ne.ex) then
                    ddgb_J_ty=1/2/dt/dy
 !                  write(*,*) 'g_evo_opt: warning ... j=1 first order'
 !                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
@@ -1726,18 +1740,18 @@ c----------------------------------------------------------------------
 
 
 !!!!!OLD VERSION
-!                if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
+!                if (i.eq.1.or.(chr(i-1,j,k).eq.ex)) then
 !                   if ((.not.extrap)
 !     &                 .and.(i.le.(Nx-3))
-!     &                 .and.((chr(i+1,j).ne.ex
-!     &                 .and.chr(i+2,j).ne.ex
-!     &                 .and.chr(i+3,j).ne.ex))) then
+!     &                 .and.((chr(i+1,j,k).ne.ex
+!     &                 .and.chr(i+2,j,k).ne.ex
+!     &                 .and.chr(i+3,j,k).ne.ex))) then
 !                      ddgb_J_tx=-1/dt/dx
 !                   else if (i.le.(Nx-2)
-!     &                      .and.((chr(i+1,j).ne.ex
-!     &                      .and.chr(i+2,j).ne.ex))) then
+!     &                      .and.((chr(i+1,j,k).ne.ex
+!     &                      .and.chr(i+2,j,k).ne.ex))) then
 !                      ddgb_J_tx=-3/4/dt/dx
-!                   else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
+!                   else if (i.le.(Nx-1).and.chr(i+1,j,k).ne.ex) then
 !                      ddgb_J_tx=-1/2/dt/dx
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (A)'
@@ -1745,18 +1759,18 @@ c----------------------------------------------------------------------
 !                      write(*,*) '    (first error only)'
 !                      ddgb_J_tx=0
 !                   end if
-!                else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
+!                else if (i.eq.Nx.or.(chr(i+1,j,k).eq.ex)) then
 !                   if ((.not.extrap)
 !     &                 .and.(i.ge.4)
-!     &                 .and.((chr(i-1,j).ne.ex
-!     &                 .and.chr(i-2,j).ne.ex
-!     &                 .and.chr(i-3,j).ne.ex))) then
+!     &                 .and.((chr(i-1,j,k).ne.ex
+!     &                 .and.chr(i-2,j,k).ne.ex
+!     &                 .and.chr(i-3,j,k).ne.ex))) then
 !                      ddgb_J_tx=1/dt/dx
 !                   else if (i.ge.3
-!     &                      .and.((chr(i-1,j).ne.ex
-!     &                      .and.chr(i-2,j).ne.ex))) then
+!     &                      .and.((chr(i-1,j,k).ne.ex
+!     &                      .and.chr(i-2,j,k).ne.ex))) then
 !                      ddgb_J_tx=3/4/dt/dx
-!                   else if (i.ge.2.and.chr(i-1,j).ne.ex) then
+!                   else if (i.ge.2.and.chr(i-1,j,k).ne.ex) then
 !                      ddgb_J_tx=1/2/dt/dx
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (B)'
@@ -1765,7 +1779,7 @@ c----------------------------------------------------------------------
 !                      ddgb_J_tx=0
 !                   end if
 !                else
-!                   if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
+!                   if ((chr(i+1,j,k).ne.ex.and.chr(i-1,j,k).ne.ex)) then
 !                      ddgb_J_tx=0
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (C)'
@@ -1775,17 +1789,17 @@ c----------------------------------------------------------------------
 !                   end if
 !                end if
 !
-!                if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+!                if ((j.eq.1).or.(chr(i,j-1,k).eq.ex)) then
 !                   if ((.not.extrap)
 !     &                 .and.(j.le.(Ny-3))
-!     &                 .and.((chr(i,j+1).ne.ex
-!     &                 .and.chr(i,j+2).ne.ex
-!     &                 .and.chr(i,j+3).ne.ex))) then
+!     &                 .and.((chr(i,j+1,k).ne.ex
+!     &                 .and.chr(i,j+2,k).ne.ex
+!     &                 .and.chr(i,j+3,k).ne.ex))) then
 !                      ddgb_J_ty=-1/dt/dy
-!                   else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
-!     &                      .and.chr(i,j+2).ne.ex))) then
+!                   else if (j.le.(Ny-2).and.((chr(i,j+1,k).ne.ex
+!     &                      .and.chr(i,j+2,k).ne.ex))) then
 !                      ddgb_J_ty=-3/4/dt/dy              
-!                   else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
+!                   else if (j.le.(Ny-1).and.chr(i,j+1,k).ne.ex) then
 !                      ddgb_J_ty=-1/2/dt/dy
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (D)'
@@ -1793,17 +1807,17 @@ c----------------------------------------------------------------------
 !                      write(*,*) '    (first error only)'
 !                      ddgb_J_ty=0
 !                   end if
-!                else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+!                else if ((j.eq.Ny).or.(chr(i,j+1,k).eq.ex)) then
 !                   if ((.not.extrap)
 !     &                 .and.(j.ge.4)
-!     &                 .and.((chr(i,j-1).ne.ex
-!     &                 .and.chr(i,j-2).ne.ex
-!     &                 .and.chr(i,j-3).ne.ex))) then
+!     &                 .and.((chr(i,j-1,k).ne.ex
+!     &                 .and.chr(i,j-2,k).ne.ex
+!     &                 .and.chr(i,j-3,k).ne.ex))) then
 !                      ddgb_J_ty=1/dt/dy
-!                   else if (j.ge.3.and.((chr(i,j-1).ne.ex
-!     &                      .and.chr(i,j-2).ne.ex))) then
+!                   else if (j.ge.3.and.((chr(i,j-1,k).ne.ex
+!     &                      .and.chr(i,j-2,k).ne.ex))) then
 !                      ddgb_J_ty=3/4/dt/dy
-!                   else if (j.ge.2.and.chr(i,j-1).ne.ex) then
+!                   else if (j.ge.2.and.chr(i,j-1,k).ne.ex) then
 !                      ddgb_J_ty=1/2/dt/dy
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (E)'
@@ -1812,7 +1826,7 @@ c----------------------------------------------------------------------
 !                      ddgb_J_ty=0
 !                   end if
 !                else
-!                   if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
+!                   if ((chr(i,j+1,k).ne.ex.and.chr(i,j-1,k).ne.ex)) then
 !                      ddgb_J_ty=0
 !                   else
 !                      write(*,*) 'g_evo_opt: error in chr stencil (F)'
@@ -2295,49 +2309,55 @@ c----------------------------------------------------------------------
      &              efe_J(1,1).eq.0) then
                     dump=.true.
                   else
-                    gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
+                    gb_tt_np1(i,j,k)=gb_tt_np1(i,j,k)
+     &                               -efe(1,1)/efe_J(1,1)
                   end if
  
                   if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
      &              efe_J(1,2).eq.0) then
                     dump=.true.
                   else
-                    gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
+                    gb_tx_np1(i,j,k)=gb_tx_np1(i,j,k)
+     &                               -efe(1,2)/efe_J(1,2)
                   end if
 
                   if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
      &              efe_J(1,3).eq.0) then
                     dump=.true.
                   else
-                    gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
+                    gb_ty_np1(i,j,k)=gb_ty_np1(i,j,k)
+     &                               -efe(1,3)/efe_J(1,3)
                   end if
 
                   if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
      &             efe_J(2,2).eq.0) then
                     dump=.true.
                   else
-                    gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
+                    gb_xx_np1(i,j,k)=gb_xx_np1(i,j,k)
+     &                               -efe(2,2)/efe_J(2,2)
                   end if
 
                   if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
      &              efe_J(2,3).eq.0) then
                     dump=.true.
                   else
-                    gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
+                    gb_xy_np1(i,j,k)=gb_xy_np1(i,j,k)
+     &                               -efe(2,3)/efe_J(2,3)
                   end if
 
                   if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
      &              efe_J(3,3).eq.0) then
                     dump=.true.
                   else
-                    gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
+                    gb_yy_np1(i,j,k)=gb_yy_np1(i,j,k)
+     &                               -efe(3,3)/efe_J(3,3)
                   end if
 
                   if (is_nan(efe(4,4)).or.is_nan(efe_J(4,4)).or.
      &              efe_J(4,4).eq.0) then
                     dump=.true.
                   else
-                    psi_np1(i,j)=psi_np1(i,j)-efe(4,4)/efe_J(4,4)
+                    psi_np1(i,j,k)=psi_np1(i,j,k)-efe(4,4)/efe_J(4,4)
                   end if
                 end if
 
@@ -2345,10 +2365,10 @@ c----------------------------------------------------------------------
                 if (is_nan(phi1_res).or.is_nan(phi1_J)) then
                   dump=.true.
                 else
-                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J
+                  phi1_np1(i,j,k)=phi1_np1(i,j,k)-phi1_res/phi1_J
                 end if
 
-                gb_res(i,j) = 
+                gb_res(i,j,k) = 
      &            max(abs(efe(1,1)/efe_J(1,1)),
      &                abs(efe(1,2)/efe_J(1,2)),
      &                abs(efe(1,3)/efe_J(1,3)),
@@ -2356,10 +2376,10 @@ c----------------------------------------------------------------------
      &                abs(efe(2,3)/efe_J(2,3)),
      &                abs(efe(3,3)/efe_J(3,3)),
      &                abs(efe(4,4)/efe_J(4,4)))
-                kg_res(i,j)=abs(phi1_res/phi1_J)
+                kg_res(i,j,k)=abs(phi1_res/phi1_J)
 
                 ! save pointwise max of constraint violation
-                cl_res(i,j)=
+                cl_res(i,j,k)=
      &            max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)),
      &                abs(c_l(4)))
 
@@ -2376,20 +2396,20 @@ c----------------------------------------------------------------------
 
 
                   write(*,*) ' at tn:'
-                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i,j),
-     &                   gb_tt_n(i,j),gb_tt_nm1(i,j)
-                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i,j),
-     &                   gb_tx_n(i,j),gb_tx_nm1(i,j)
-                  write(*,*) ' gb_ty np1,n,nm1:',gb_ty_np1(i,j),
-     &                   gb_ty_n(i,j),gb_ty_nm1(i,j)
-                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j),
-     &                   gb_xx_n(i,j),gb_xx_nm1(i,j)
-                  write(*,*) ' gb_xy np1,n,nm1:',gb_xy_np1(i,j),
-     &                   gb_xy_n(i,j),gb_xy_nm1(i,j)
-                  write(*,*) ' gb_yy np1,n,nm1:',gb_yy_np1(i,j),
-     &                   gb_yy_n(i,j),gb_yy_nm1(i,j)
-                  write(*,*) ' psi np1,n,nm1:',psi_np1(i,j),
-     &                   psi_n(i,j),psi_nm1(i,j)
+                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i,j,k),
+     &                   gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i,j,k),
+     &                   gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
+                  write(*,*) ' gb_ty np1,n,nm1:',gb_ty_np1(i,j,k),
+     &                   gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j,k),
+     &                   gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
+                  write(*,*) ' gb_xy np1,n,nm1:',gb_xy_np1(i,j,k),
+     &                   gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+                  write(*,*) ' gb_yy np1,n,nm1:',gb_yy_np1(i,j,k),
+     &                   gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+                  write(*,*) ' psi np1,n,nm1:',psi_np1(i,j,k),
+     &                   psi_n(i,j,k),psi_nm1(i,j,k)
 
                   write(*,*) ' gads_tt :',gads_ll(1,1)
                   write(*,*) ' gads_tx :',gads_ll(1,2)
@@ -2426,9 +2446,9 @@ c----------------------------------------------------------------------
                   write(*,*) ' cd_xy:',cd_ll(2,3)
                   write(*,*) ' cd_yy:',cd_ll(3,3)
                   write(*,*) ' cd_psi:',cd_ll(4,4)
-                  write(*,*) ' phi1:',phi1_n(i,j)
-                  write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j),
-     &                     phi1_n(i,j),phi1_nm1(i,j)
+                  write(*,*) ' phi1:',phi1_n(i,j,k)
+                  write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j,k),
+     &                     phi1_n(i,j,k),phi1_nm1(i,j,k)
                   write(*,*) ' res J:'
                   write(*,*) ' tt:',efe(1,1),efe_J(1,1)
                   write(*,*) ' tx:',efe(1,2),efe_J(1,2)
@@ -2441,56 +2461,56 @@ c----------------------------------------------------------------------
                 end if
 
               ! (REGION) next-to-ads-bdy points; set by linear interpolation
-              else if (chr2(i,j).eq.ex) then
-                call interp_from_ads_bdy(gb_tx_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(gb_ty_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(gb_xx_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(gb_xy_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(gb_yy_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(psi_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(Hb_t_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(Hb_x_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(Hb_y_np1,x,y,L,i,j,chr,ex,
-     &                 Nx,Ny)
-                call interp_from_ads_bdy(phi1_np1,x,y,L,i,j,
-     &                    chr,ex,Nx,Ny)
-                gb_tt_np1(i,j)=gb_xx_np1(i,j)+gb_yy_np1(i,j)
-     &                        +2*psi_np1(i,j)
+              else if (chr2(i,j,k).eq.ex) then
+                call interp_from_ads_bdy(gb_tx_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_ty_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_xx_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_xy_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_yy_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(psi_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(Hb_t_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(Hb_x_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(Hb_y_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(phi1_np1,x,y,z,L,i,j,k,
+     &                    chr,ex,Nx,Ny,Nz)
+                gb_tt_np1(i,j,k)=gb_xx_np1(i,j,k)+gb_yy_np1(i,j,k)
+     &                        +2*psi_np1(i,j,k)
 
               ! (REGION) non-interior points; set to zero in prior to applying bcs 
               else 
-                gb_tt_np1(i,j) = 0
-                gb_tx_np1(i,j) = 0
-                gb_ty_np1(i,j) = 0
-                gb_xx_np1(i,j) = 0
-                gb_xy_np1(i,j) = 0
-                gb_yy_np1(i,j) = 0
-                psi_np1(i,j) = 0 
-                phi1_np1(i,j) = 0 
-                gb_res(i,j) = 0
+                gb_tt_np1(i,j,k) = 0
+                gb_tx_np1(i,j,k) = 0
+                gb_ty_np1(i,j,k) = 0
+                gb_xx_np1(i,j,k) = 0
+                gb_xy_np1(i,j,k) = 0
+                gb_yy_np1(i,j,k) = 0
+                psi_np1(i,j,k) = 0 
+                phi1_np1(i,j,k) = 0 
+                gb_res(i,j,k) = 0
 
               endif ! (near start of main loop)
 
             end do
           end do
-
+         end do
         end do
 
         ! (REGION) y=0 axis; impose Neumann bcs by 2-pt regularization 
         call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,gb_xx_np1,
      &                 gb_xy_np1,gb_yy_np1,psi_np1,tfunction,chr,ex,
-     &                 L,x,y,Nx,Ny,regtype)
+     &                 L,x,y,z,Nx,Ny,Nz,regtype)
         call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,
-     &                  chr,ex,L,x,y,Nx,Ny,regtype)
-        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,Nx,Ny,regtype)
+     &                  chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end

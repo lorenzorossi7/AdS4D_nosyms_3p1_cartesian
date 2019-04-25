@@ -1,4 +1,4 @@
-dim := 2
+dim := 3
 
 refsym := 0
 
@@ -8,8 +8,8 @@ refsym := 0
 phi1_amp_1 := 0.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
-phi1_x0_1 := [0.0 0.0]
-phi1_ecc_1 := [0 0]
+phi1_x0_1 := [0.0 0.0 0.0]
+phi1_ecc_1 := [0 0 0]
 phi1_B_1 := 0.00
 
 rhoc := 0.4
@@ -29,7 +29,7 @@ AH_lambda := 0.0000001
 AH_tol := 1e-2
 AH_r0 := 0.10
 AH_r1 := 0.20
-AH_xc :=[+0.125 0.0]
+AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 17
 AH_freq := 1
 AH_freq_aft := 1
@@ -40,7 +40,7 @@ AH_lambda_2 := 0.0000001
 AH_tol_2 := 1e-2
 AH_r0_2 := 0.10
 AH_r1_2 := 0.20
-AH_xc_2 :=[-0.125 0.0]
+AH_xc_2 :=[0.0 0.0 0.0]
 AH_Nchi_2 := 17
 AH_freq_2 := 1
 AH_freq_aft_2 := 1
@@ -90,16 +90,16 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [8193 4097]
+base_shape := [8193 4097 8193]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
 rho_tm := 2
 
-min_width := [9 9]
-min_mg_cwidth := [5 5]
+min_width := [9 9 9]
+min_mg_cwidth := [5 5 5]
 gdm_no_overlap := 1
-ghost_width := [4 4]
+ghost_width := [4 4 4]
 TRE_max := 1.0e-5
 num_TRE_vars := 1
 TRE_vars := [ "phi1" ]
@@ -218,7 +218,7 @@ save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_xx" "gb_xy" "gb_yy" "psi" "H
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_2p1horpen_gauge3_L7_"
+save_tag := "AdS4D_2p1in3Dhorpen_gauge3_L7_"
 
 save_ivec := 1-*/640
 

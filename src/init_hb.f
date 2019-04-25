@@ -9,26 +9,26 @@ c----------------------------------------------------------------------
      &                     gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                     psi_np1,psi_n,psi_nm1,
      &                     Hb_t_n,Hb_x_n,Hb_y_n,
-     &                     L,phys_bdy,x,y,dt,chr,ex,Nx,Ny,regtype)
+     &                     L,phys_bdy,x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
-        integer Nx,Ny
+        integer Nx,Ny,Nz
         integer phys_bdy(4)
         integer regtype
         real*8 dt,ex,L
-        real*8 chr(Nx,Ny)
-        real*8 Hb_t_n(Nx,Ny),Hb_x_n(Nx,Ny),Hb_y_n(Nx,Ny)
-        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
-        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
-        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
-        real*8 x(Nx),y(Ny)
+        real*8 chr(Nx,Ny,Nz)
+        real*8 Hb_t_n(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 x(Nx),y(Ny),z(Nz)
 
-        integer i,j,is,ie,js,je,a,b,c,d
-        real*8 dx,dy
-        real*8 x0,y0
+        integer i,j,k,is,ie,js,je,ks,ke,a,b,c,d
+        real*8 dx,dy,dz
+        real*8 x0,y0,z0
         real*8 rho0
 
         real*8 PI
@@ -39,7 +39,7 @@ c----------------------------------------------------------------------
 
         real*8 boxx_u(4),boxx_l(4)
 
-        real*8 zeros(Nx,Ny)
+        real*8 zeros(Nx,Ny,Nz)
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
@@ -61,6 +61,7 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
+        data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
         data boxx_u,boxx_l/4*0.0,4*0.0/
 
         data g0_ll,g0_uu/16*0.0,16*0.0/
@@ -92,20 +93,25 @@ c----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         do i=1,Nx
          do j=1,Ny
-           Hb_t_n(i,j)=0
-           Hb_x_n(i,j)=0
-           Hb_y_n(i,j)=0
-           zeros(i,j)=0
+          do k=1,Nz
+           Hb_t_n(i,j,k)=0
+           Hb_x_n(i,j,k)=0
+           Hb_y_n(i,j,k)=0
+           zeros(i,j,k)=0
+          end do
          end do
         end do
 
         is=2
         js=2
+        ks=2
         ie=Nx-1
         je=Ny-1
+        ke=Nz-1
 !        if (phys_bdy(1).eq.1) is=2
 !        if (phys_bdy(3).eq.1) js=2
 !        if (phys_bdy(2).eq.1) ie=Nx-1
@@ -113,9 +119,11 @@ c----------------------------------------------------------------------
 
         do i=is,ie
           do j=js,je
-            if (chr(i,j).ne.ex) then
+           do k=ks,ke
+            if (chr(i,j,k).ne.ex) then
             x0=x(i)
             y0=y(j)
+            z0=z(k)
             rho0=sqrt(x0**2+y0**2)
 
             ! computes tensors at point i,j
@@ -139,7 +147,7 @@ c----------------------------------------------------------------------
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
      &              einstein_ll,set_ll,
      &              phi10_x,phi10_xx,
-     &              x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &              x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
               ! calculate boxx^c at point i,j
               ! (boxx^c = -g^ab gamma^c_ab)
@@ -167,11 +175,12 @@ c----------------------------------------------------------------------
 
               ! here have \box{x}_a = Hads_a + e_a*H0_a, where
               ! e_t=(1-rho0^2), e_x=(1-rho0^2), e_y=(1-rho0^2)
-              Hb_t_n(i,j)=(boxx_l(1)-Hads_l(1))/(1-rho0**2)
-              Hb_x_n(i,j)=(boxx_l(2)-Hads_l(2))/(1-rho0**2)
-              Hb_y_n(i,j)=(boxx_l(3)-Hads_l(3))/(1-rho0**2)
+              Hb_t_n(i,j,k)=(boxx_l(1)-Hads_l(1))/(1-rho0**2)
+              Hb_x_n(i,j,k)=(boxx_l(2)-Hads_l(2))/(1-rho0**2)
+              Hb_y_n(i,j,k)=(boxx_l(3)-Hads_l(3))/(1-rho0**2)
 
             end if
+           end do
           end do
         end do
 
@@ -219,7 +228,8 @@ c----------------------------------------------------------------------
 !           end if
 !        end if
 
-        call axi_reg_Hb(Hb_t_n,Hb_x_n,Hb_y_n,chr,ex,L,x,y,Nx,Ny,regtype)
+        call axi_reg_Hb(Hb_t_n,Hb_x_n,Hb_y_n,chr,ex,
+     &                  L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end

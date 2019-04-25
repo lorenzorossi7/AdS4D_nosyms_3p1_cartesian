@@ -17,39 +17,39 @@ c----------------------------------------------------------------------
      &                      Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
      &                      Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
      &                      phi1_np1,phi1_n,phi1_nm1,phi1_t_n,tfunction,
-     &                      L,phys_bdy,x,y,dt,chr,ex,Nx,Ny,regtype)
+     &                      L,phys_bdy,x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
-        integer Nx,Ny
+        integer Nx,Ny,Nz
         integer phys_bdy(4)
         integer regtype
         real*8 dt,ex,L
-        real*8 chr(Nx,Ny)
-        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
-        real*8 gb_tt_t_n(Nx,Ny)
-        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
-        real*8 gb_tx_t_n(Nx,Ny)
-        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
-        real*8 gb_ty_t_n(Nx,Ny)
-        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
-        real*8 gb_xx_t_n(Nx,Ny)
-        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
-        real*8 gb_xy_t_n(Nx,Ny)
-        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
-        real*8 gb_yy_t_n(Nx,Ny)
-        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
-        real*8 psi_t_n(Nx,Ny)
-        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
-        real*8 Hb_t_t_n(Nx,Ny)
-        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
-        real*8 Hb_x_t_n(Nx,Ny)
-        real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
-        real*8 Hb_y_t_n(Nx,Ny)
-        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
-        real*8 phi1_t_n(Nx,Ny)
+        real*8 chr(Nx,Ny,Nz)
+        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+        real*8 gb_tt_t_n(Nx,Ny,Nz)
+        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+        real*8 gb_tx_t_n(Nx,Ny,Nz)
+        real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_ty_t_n(Nx,Ny,Nz)
+        real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_xx_t_n(Nx,Ny,Nz)
+        real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xy_t_n(Nx,Ny,Nz)
+        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 gb_yy_t_n(Nx,Ny,Nz)
+        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 psi_t_n(Nx,Ny,Nz)
+        real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
+        real*8 Hb_t_t_n(Nx,Ny,Nz)
+        real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
+        real*8 Hb_x_t_n(Nx,Ny,Nz)
+        real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 Hb_y_t_n(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 phi1_t_n(Nx,Ny,Nz)
 
-        real*8 tfunction(Nx,Ny)
+        real*8 tfunction(Nx,Ny,Nz)
 
-        real*8 x(Nx),y(Ny)
+        real*8 x(Nx),y(Ny),z(Nz)
 
         real*8 lambda4
         real*8 tr_set
@@ -83,9 +83,9 @@ c----------------------------------------------------------------------
 
         integer a,b,c,d
 
-        integer i,j,is,ie,js,je
-        real*8 dx,dy
-        real*8 x0,y0
+        integer i,j,k,is,ie,js,je,ks,ke
+        real*8 dx,dy,dz
+        real*8 x0,y0,z0
         real*8 rho0
 
         real*8 dV1_dphi10 ! EVENTUALLY NEED THIS AS AN INPUT ARGUMENT
@@ -116,6 +116,7 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
         ! initialize fixed-size variables
         !--------------------------------------------------------------
+        data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
         data gammagg,gammahh/64*0.0,64*0.0/
         data gammagh,gammahg/64*0.0,64*0.0/
 
@@ -152,6 +153,7 @@ c----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         ! AdS4D cosmological constant
         !(lambda4=-(n-1)(n-2)/2/L^2) for n=4 dimensional AdS)
@@ -159,8 +161,10 @@ c----------------------------------------------------------------------
 
         is=2
         js=2
+        ks=2
         ie=Nx-1
         je=Ny-1
+        ke=Nz-1
 !        if (phys_bdy(1).eq.1) is=2
 !        if (phys_bdy(3).eq.1) js=2
 !        if (phys_bdy(2).eq.1) ie=Nx-1
@@ -168,11 +172,13 @@ c----------------------------------------------------------------------
 
         do i=is,ie
           do j=js,je
+           do k=ks,ke
             x0=x(i)
             y0=y(j)
+            z0=z(k)
             rho0=sqrt(x0**2+y0**2)
 
-            if (chr(i,j).ne.ex) then
+            if (chr(i,j,k).ne.ex) then
 
               !-----------------------------------------------------------
               ! some other initializion, which needs to be done before
@@ -200,7 +206,7 @@ c----------------------------------------------------------------------
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
-     &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
+     &                x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
               ! auxiliary objects
               do a=1,4
@@ -251,30 +257,30 @@ c----------------------------------------------------------------------
               ! gb_ii_t_n,Hb_i_t_n,phi1_t_n are set in init_ghbdot.f
 
               ! need this in h0_ll_tt,phi10_tt calculations
-              phi10_x(1)    =phi1_t_n(i,j)*(1-rho0**2)**2
-              h0_ll_x(1,1,1)=gb_tt_t_n(i,j)
-              h0_ll_x(1,2,1)=gb_tx_t_n(i,j)
-              h0_ll_x(1,3,1)=gb_ty_t_n(i,j)
-              h0_ll_x(2,2,1)=gb_xx_t_n(i,j)
-              h0_ll_x(2,3,1)=gb_xy_t_n(i,j)
-              h0_ll_x(3,3,1)=gb_yy_t_n(i,j)
-              h0_ll_x(4,4,1)=psi_t_n(i,j)*y0**2
-              A_l_x(1,1)    =Hb_t_t_n(i,j)*(1-rho0**2)
-              A_l_x(2,1)    =Hb_x_t_n(i,j)*(1-rho0**2)
-              A_l_x(3,1)    =Hb_y_t_n(i,j)*(1-rho0**2)
+              phi10_x(1)    =phi1_t_n(i,j,k)*(1-rho0**2)**2
+              h0_ll_x(1,1,1)=gb_tt_t_n(i,j,k)
+              h0_ll_x(1,2,1)=gb_tx_t_n(i,j,k)
+              h0_ll_x(1,3,1)=gb_ty_t_n(i,j,k)
+              h0_ll_x(2,2,1)=gb_xx_t_n(i,j,k)
+              h0_ll_x(2,3,1)=gb_xy_t_n(i,j,k)
+              h0_ll_x(3,3,1)=gb_yy_t_n(i,j,k)
+              h0_ll_x(4,4,1)=psi_t_n(i,j,k)*y0**2
+              A_l_x(1,1)    =Hb_t_t_n(i,j,k)*(1-rho0**2)
+              A_l_x(2,1)    =Hb_x_t_n(i,j,k)*(1-rho0**2)
+              A_l_x(3,1)    =Hb_y_t_n(i,j,k)*(1-rho0**2)
 
               ! need this in gb_ii_nm1/np1,Hb_i_nm1/np1,phi1_nm1/np1 updates
-              phi1_t0 =phi1_t_n(i,j)*(1-rho0**2)**2 
-              gb_tt_t0=gb_tt_t_n(i,j)
-              gb_tx_t0=gb_tx_t_n(i,j)
-              gb_ty_t0=gb_ty_t_n(i,j)
-              gb_xx_t0=gb_xx_t_n(i,j)
-              gb_xy_t0=gb_xy_t_n(i,j)
-              gb_yy_t0=gb_yy_t_n(i,j)
-              psi_t0  =psi_t_n(i,j)*y0**2
-              Hb_t_t0 =Hb_t_t_n(i,j)*(1-rho0**2)
-              Hb_x_t0 =Hb_x_t_n(i,j)*(1-rho0**2)
-              Hb_y_t0 =Hb_y_t_n(i,j)*(1-rho0**2)
+              phi1_t0 =phi1_t_n(i,j,k)*(1-rho0**2)**2 
+              gb_tt_t0=gb_tt_t_n(i,j,k)
+              gb_tx_t0=gb_tx_t_n(i,j,k)
+              gb_ty_t0=gb_ty_t_n(i,j,k)
+              gb_xx_t0=gb_xx_t_n(i,j,k)
+              gb_xy_t0=gb_xy_t_n(i,j,k)
+              gb_yy_t0=gb_yy_t_n(i,j,k)
+              psi_t0  =psi_t_n(i,j,k)*y0**2
+              Hb_t_t0 =Hb_t_t_n(i,j,k)*(1-rho0**2)
+              Hb_x_t0 =Hb_x_t_n(i,j,k)*(1-rho0**2)
+              Hb_y_t0 =Hb_y_t_n(i,j,k)*(1-rho0**2)
                        
               ! 0 = efe_ab
               do a=1,4
@@ -812,65 +818,65 @@ c----------------------------------------------------------------------
               phi1_tt0 =phi10_tt/(1-rho0**2)**2
 
               ! initialize past time level by O(h^3) expansion
-              gb_tt_nm1(i,j)=gb_tt_n(i,j) - gb_tt_t0*dt
+              gb_tt_nm1(i,j,k)=gb_tt_n(i,j,k) - gb_tt_t0*dt
      &                         + gb_tt_tt0*dt**2/2
-              gb_tx_nm1(i,j)=gb_tx_n(i,j) - gb_tx_t0*dt
+              gb_tx_nm1(i,j,k)=gb_tx_n(i,j,k) - gb_tx_t0*dt
      &                         + gb_tx_tt0*dt**2/2
-              gb_ty_nm1(i,j)=gb_ty_n(i,j) - gb_ty_t0*dt
+              gb_ty_nm1(i,j,k)=gb_ty_n(i,j,k) - gb_ty_t0*dt
      &                         + gb_ty_tt0*dt**2/2
-              gb_xx_nm1(i,j)=gb_xx_n(i,j) - gb_xx_t0*dt
+              gb_xx_nm1(i,j,k)=gb_xx_n(i,j,k) - gb_xx_t0*dt
      &                         + gb_xx_tt0*dt**2/2
-              gb_xy_nm1(i,j)=gb_xy_n(i,j) - gb_xy_t0*dt
+              gb_xy_nm1(i,j,k)=gb_xy_n(i,j,k) - gb_xy_t0*dt
      &                         + gb_xy_tt0*dt**2/2
-              gb_yy_nm1(i,j)=gb_yy_n(i,j) - gb_yy_t0*dt
+              gb_yy_nm1(i,j,k)=gb_yy_n(i,j,k) - gb_yy_t0*dt
      &                         + gb_yy_tt0*dt**2/2
-              psi_nm1(i,j)=psi_n(i,j) - psi_t0*dt
+              psi_nm1(i,j,k)=psi_n(i,j,k) - psi_t0*dt
      &                         + psi_tt0*dt**2/2
-              phi1_nm1(i,j)=phi1_n(i,j) - phi1_t0*dt
+              phi1_nm1(i,j,k)=phi1_n(i,j,k) - phi1_t0*dt
      &                         + phi1_tt0*dt**2/2
               
-              Hb_t_nm1(i,j)=Hb_t_n(i,j)-Hb_t_t0*dt
-              Hb_x_nm1(i,j)=Hb_x_n(i,j)-Hb_x_t0*dt
-              Hb_y_nm1(i,j)=Hb_y_n(i,j)-Hb_y_t0*dt
+              Hb_t_nm1(i,j,k)=Hb_t_n(i,j,k)-Hb_t_t0*dt
+              Hb_x_nm1(i,j,k)=Hb_x_n(i,j,k)-Hb_x_t0*dt
+              Hb_y_nm1(i,j,k)=Hb_y_n(i,j,k)-Hb_y_t0*dt
 
               ! initialize future time level by O(h^3) expansion
-              gb_tt_np1(i,j)=gb_tt_n(i,j) + gb_tt_t0*dt
+              gb_tt_np1(i,j,k)=gb_tt_n(i,j,k) + gb_tt_t0*dt
      &                         + gb_tt_tt0*dt**2/2
-              gb_tx_np1(i,j)=gb_tx_n(i,j) + gb_tx_t0*dt
+              gb_tx_np1(i,j,k)=gb_tx_n(i,j,k) + gb_tx_t0*dt
      &                         + gb_tx_tt0*dt**2/2
-              gb_ty_np1(i,j)=gb_ty_n(i,j) + gb_ty_t0*dt
+              gb_ty_np1(i,j,k)=gb_ty_n(i,j,k) + gb_ty_t0*dt
      &                         + gb_ty_tt0*dt**2/2
-              gb_xx_np1(i,j)=gb_xx_n(i,j) + gb_xx_t0*dt
+              gb_xx_np1(i,j,k)=gb_xx_n(i,j,k) + gb_xx_t0*dt
      &                         + gb_xx_tt0*dt**2/2
-              gb_xy_np1(i,j)=gb_xy_n(i,j) + gb_xy_t0*dt
+              gb_xy_np1(i,j,k)=gb_xy_n(i,j,k) + gb_xy_t0*dt
      &                         + gb_xy_tt0*dt**2/2
-              gb_yy_np1(i,j)=gb_yy_n(i,j) + gb_yy_t0*dt
+              gb_yy_np1(i,j,k)=gb_yy_n(i,j,k) + gb_yy_t0*dt
      &                         + gb_yy_tt0*dt**2/2
-              psi_np1(i,j)=psi_n(i,j) + psi_t0*dt
+              psi_np1(i,j,k)=psi_n(i,j,k) + psi_t0*dt
      &                         + psi_tt0*dt**2/2
-              phi1_np1(i,j)=phi1_n(i,j) + phi1_t0*dt
+              phi1_np1(i,j,k)=phi1_n(i,j,k) + phi1_t0*dt
      &                         + phi1_tt0*dt**2/2
 
-              Hb_t_np1(i,j)=Hb_t_n(i,j)+Hb_t_t0*dt
-              Hb_x_np1(i,j)=Hb_x_n(i,j)+Hb_x_t0*dt
-              Hb_y_np1(i,j)=Hb_y_n(i,j)+Hb_y_t0*dt
+              Hb_t_np1(i,j,k)=Hb_t_n(i,j,k)+Hb_t_t0*dt
+              Hb_x_np1(i,j,k)=Hb_x_n(i,j,k)+Hb_x_t0*dt
+              Hb_y_np1(i,j,k)=Hb_y_n(i,j,k)+Hb_y_t0*dt
 
               ! diagnostic
-              tfunction(i,j)=gb_tt_tt0
+              tfunction(i,j,k)=gb_tt_tt0
 
             end if
-
+           end do
           end do
         end do
 
-        call axi_reg_phi(phi1_nm1,chr,ex,L,x,y,Nx,Ny,regtype)
-        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,Nx,Ny,regtype)
+        call axi_reg_phi(phi1_nm1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
         call axi_reg_g(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,
      &                 gb_xx_nm1,gb_xy_nm1,gb_yy_nm1,psi_nm1,
-     &                 tfunction,chr,ex,L,x,y,Nx,Ny,regtype)
+     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
         call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,
      &                 gb_xx_np1,gb_xy_np1,gb_yy_np1,psi_np1,
-     &                 tfunction,chr,ex,L,x,y,Nx,Ny,regtype)
+     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
