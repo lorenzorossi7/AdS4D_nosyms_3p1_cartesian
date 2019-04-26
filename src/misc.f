@@ -1784,7 +1784,7 @@ c-----------------------------------------------------------------------
         implicit none
         integer Nx,Ny,Nz,all
         real*8 f(Nx,Ny,Nz)
-        integer phys_bdy(4)
+        integer phys_bdy(6)
 
         integer i,j,k,is,ie,js,je
 

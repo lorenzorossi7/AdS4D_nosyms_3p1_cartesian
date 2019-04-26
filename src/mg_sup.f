@@ -18,7 +18,7 @@ c-----------------------------------------------------------------------
      &                    L,cmask,phys_bdy,chr,ex,x,y,z,norm,Nx,Ny,Nz)
         implicit none
         integer Nx,Ny,Nz,action
-        integer phys_bdy(4)
+        integer phys_bdy(6)
         real*8 zeta(Nx,Ny,Nz),zeta_rhs(Nx,Ny,Nz),zeta_lop(Nx,Ny,Nz)
         real*8 zeta_res(Nx,Ny,Nz)
         real*8 phi1(Nx,Ny,Nz)
@@ -238,7 +238,7 @@ c-----------------------------------------------------------------------
         real*8 cmask(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,L
         real*8 x(Nx),y(Ny),z(Nz)
         real*8 rhoa,rhob
-        integer phys_bdy(4),regtype
+        integer phys_bdy(6),regtype
 
         real*8 zeros(Nx,Ny,Nz)
 

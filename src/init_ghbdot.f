@@ -14,7 +14,7 @@ c----------------------------------------------------------------------
         implicit none
         integer Nx,Ny,Nz
         integer regtype
-        integer phys_bdy(4)
+        integer phys_bdy(6)
         real*8 dt,ex,L
         real*8 chr(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz)

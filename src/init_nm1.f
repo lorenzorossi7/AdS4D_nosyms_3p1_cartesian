@@ -20,7 +20,7 @@ c----------------------------------------------------------------------
      &                      L,phys_bdy,x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
         integer Nx,Ny,Nz
-        integer phys_bdy(4)
+        integer phys_bdy(6)
         integer regtype
         real*8 dt,ex,L
         real*8 chr(Nx,Ny,Nz)
