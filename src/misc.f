@@ -1555,16 +1555,27 @@ c----------------------------------------------------------------------
 c Background AdS values ... with these new variables
 c the AdS metric has been factored into the maple already
 c----------------------------------------------------------------------
-        subroutine init_ghb_ads(gb_tt,gb_tx,gb_ty,gb_xx,
-     &                      gb_xy,gb_yy,psi,Hb_t,Hb_x,Hb_y,
+        subroutine init_ghb_ads(gb_tt,gb_tx,gb_ty,
+     &                      gb_tz,
+     &                      gb_xx,gb_xy,
+     &                      gb_xz,
+     &                      gb_yy,
+     &                      gb_yz,
+     &                      psi,Hb_t,Hb_x,Hb_y,
+     &                      Hb_z,
      &                      L,x,y,z,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
         integer Nx,Ny,Nz
         integer regtype
         real*8 gb_tt(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),gb_ty(Nx,Ny,Nz)
-        real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz),gb_yy(Nx,Ny,Nz)
+        real*8 gb_tz(Nx,Ny,Nz)
+        real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
+        real*8 gb_xz(Nx,Ny,Nz)
+        real*8 gb_yy(Nx,Ny,Nz)
+        real*8 gb_yz(Nx,Ny,Nz)
         real*8 psi(Nx,Ny,Nz),tfunction(Nx,Ny,Nz),Hb_t(Nx,Ny,Nz)
         real*8 Hb_x(Nx,Ny,Nz),Hb_y(Nx,Ny,Nz)
+        real*8 Hb_z(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex,L,x(Nx),y(Ny),z(Nz)
 
         integer i,j,k
@@ -1786,10 +1797,10 @@ c-----------------------------------------------------------------------
         real*8 f(Nx,Ny,Nz)
         integer phys_bdy(6)
 
-        integer i,j,k,is,ie,js,je
+        integer i,j,k,is,ie,js,je,ks,ke
 
         ! initialize fixed-size variables
-        data i,j,k,is,ie,js,je/0,0,0,0,0,0,0/
+        data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
   
         !--------------------------------------------------------------
  
@@ -2126,12 +2137,23 @@ c----------------------------------------------------------------------
 c initializes the metric to an exact black hole solution
 c with radius parameter r0=2*BHmass
 c----------------------------------------------------------------------
-        subroutine init_ads4d_bh(r0,L,gb_tt,gb_tx,gb_ty,gb_xx,
-     &                         gb_xy,gb_yy,psi,
-     &                         gb_tt_t,gb_tx_t,gb_ty_t,gb_xx_t,gb_xy_t,
-     &                         gb_yy_t,psi_t,
-     &                         Hb_t,Hb_x,Hb_y,
-     &                         Hb_t_t,Hb_x_t,Hb_y_t,phys_bdy,
+        subroutine init_ads4d_bh(r0,L,gb_tt,gb_tx,gb_ty,
+     &                         gb_tz,
+     &                         gb_xx,gb_xy,
+     &                         gb_xz,
+     &                         gb_yy,
+     &                         gb_yz,
+     &                         psi,gb_tt_t,gb_tx_t,gb_ty_t,
+     &                         gb_tz_t,
+     &                         gb_xx_t,gb_xy_t,
+     &                         gb_xz_t,
+     &                         gb_yy_t,
+     &                         gb_yz_t,
+     &                         psi_t,Hb_t,Hb_x,Hb_y,
+     &                         Hb_z,
+     &                         Hb_t_t,Hb_x_t,Hb_y_t,
+     &                         Hb_z_t,
+     &                         phys_bdy,
      &                         x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
 
@@ -2143,16 +2165,24 @@ c----------------------------------------------------------------------
         real*8 chr(Nx,Ny,Nz)
         real*8 Hb_t(Nx,Ny,Nz),Hb_x(Nx,Ny,Nz)
         real*8 Hb_y(Nx,Ny,Nz)
+        real*8 Hb_z(Nx,Ny,Nz)
         real*8 Hb_t_t(Nx,Ny,Nz),Hb_x_t(Nx,Ny,Nz)
         real*8 Hb_y_t(Nx,Ny,Nz)
+        real*8 Hb_z_t(Nx,Ny,Nz)
         real*8 gb_tt(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz)
         real*8 gb_ty(Nx,Ny,Nz)
+        real*8 gb_tz(Nx,Ny,Nz)
         real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
+        real*8 gb_xz(Nx,Ny,Nz)
         real*8 gb_yy(Nx,Ny,Nz),psi(Nx,Ny,Nz)
+        real*8 gb_yz(Nx,Ny,Nz)
         real*8 gb_tt_t(Nx,Ny,Nz),gb_tx_t(Nx,Ny,Nz)
         real*8 gb_ty_t(Nx,Ny,Nz),psi_t(Nx,Ny,Nz)
+        real*8 gb_tz_t(Nx,Ny,Nz)
         real*8 gb_xx_t(Nx,Ny,Nz),gb_xy_t(Nx,Ny,Nz)
+        real*8 gb_xz_t(Nx,Ny,Nz)
         real*8 gb_yy_t(Nx,Ny,Nz)
+        real*8 gb_yz_t(Nx,Ny,Nz)
         real*8 x(Nx),y(Ny),z(Nz)
 
         integer n
@@ -2173,7 +2203,7 @@ c----------------------------------------------------------------------
 
         data rho0,f1,f0,cF0/0.0,0.0,0.0,0.0/
         data C0,A0,B0,D0/0.0,0.0,0.0,0.0/
-        data x0,y0/0.0,0.0/
+        data x0,y0,z0/0.0,0.0,0.0/
         data r_h,rho_h/0.0,0.0/
 
         !--------------------------------------------------------------
@@ -2374,13 +2404,17 @@ c----------------------------------------------------------------------
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                  gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                  gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                  Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
@@ -2391,6 +2425,7 @@ c----------------------------------------------------------------------
      &                  einstein_ll,set_ll,
      &                  phi10_x,phi10_xx,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
+
         implicit none
 
         integer Nx,Ny,Nz
@@ -2402,13 +2437,17 @@ c----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
         real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz),gb_tz_n(Nx,Ny,Nz),gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
         real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
         real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 Hb_z_np1(Nx,Ny,Nz),Hb_z_n(Nx,Ny,Nz),Hb_z_nm1(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
 
         integer a,b,c,d,e,f,g,h

@@ -12,13 +12,17 @@ c----------------------------------------------------------------------
      &                       gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                       gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                       gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                       gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                       gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                       gb_xy_np1,gb_xy_n,gb_xy_nm1,     
+     &                       gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                       gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                       gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                       psi_np1,psi_n,psi_nm1,
      &                       Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                       Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                       Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                       Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                       phi1_np1,phi1_n,phi1_nm1,
      &                       L,x,y,z,dt,chr,ex,
      &                       phys_bdy,ghost_width,Nx,Ny,Nz,
@@ -38,15 +42,24 @@ c----------------------------------------------------------------------
         real*8 gb_res(Nx,Ny,Nz),kg_res(Nx,Ny,Nz),cl_res(Nx,Ny,Nz)
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz)
         real*8 gb_xx_np1(Nx,Ny,Nz),gb_xy_np1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),psi_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz)
         real*8 gb_ty_n(Nx,Ny,Nz)
+        real*8 gb_tz_n(Nx,Ny,Nz)
         real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz)
+        real*8 gb_xz_n(Nx,Ny,Nz)
+        real*8 gb_yz_n(Nx,Ny,Nz)
         real*8 gb_yy_n(Nx,Ny,Nz),psi_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xx_nm1(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_nm1(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
         real*8 Hb_t_n(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz)
         real*8 Hb_y_n(Nx,Ny,Nz),Hb_z_n(Nx,Ny,Nz)
@@ -89,6 +102,10 @@ c----------------------------------------------------------------------
         real*8 g0_ty_xx,g0_ty_yy,g0_ty_tx,g0_ty_ty
         real*8 g0_ty_xy
 
+        real*8 g0_tz_t, g0_tz_x, g0_tz_y, g0_tz_tt
+        real*8 g0_tz_xx,g0_tz_yy,g0_tz_tx,g0_tz_ty
+        real*8 g0_tz_xy
+
         real*8 g0_xx_t, g0_xx_x, g0_xx_y, g0_xx_tt
         real*8 g0_xx_xx,g0_xx_yy,g0_xx_tx,g0_xx_ty
         real*8 g0_xx_xy
@@ -97,9 +114,17 @@ c----------------------------------------------------------------------
         real*8 g0_xy_xx,g0_xy_yy,g0_xy_tx,g0_xy_ty
         real*8 g0_xy_xy
 
+        real*8 g0_xz_t, g0_xz_x, g0_xz_y, g0_xz_tt
+        real*8 g0_xz_xx,g0_xz_yy,g0_xz_tx,g0_xz_ty
+        real*8 g0_xz_xy
+
         real*8 g0_yy_t, g0_yy_x, g0_yy_y, g0_yy_tt
         real*8 g0_yy_xx,g0_yy_yy,g0_yy_tx,g0_yy_ty
         real*8 g0_yy_xy
+
+        real*8 g0_yz_t, g0_yz_x, g0_yz_y, g0_yz_tt
+        real*8 g0_yz_xx,g0_yz_yy,g0_yz_tx,g0_yz_ty
+        real*8 g0_yz_xy
 
         real*8 g0_psi_t, g0_psi_x, g0_psi_y, g0_psi_tt
         real*8 g0_psi_xx,g0_psi_yy,g0_psi_tx,g0_psi_ty
@@ -108,12 +133,16 @@ c----------------------------------------------------------------------
         real*8 g0u_tt0,g0_tt0
         real*8 g0u_tx0,g0_tx0
         real*8 g0u_ty0,g0_ty0
+        real*8 g0u_tz0,g0_tz0
         real*8 g0u_xx0,g0_xx0
         real*8 g0u_xy0,g0_xy0
+        real*8 g0u_xz0,g0_xz0
         real*8 g0u_yy0,g0_yy0
+        real*8 g0u_yz0,g0_yz0
         real*8 g0_psi0
 
         real*8 H0_t0,H0_x0,H0_y0
+        real*8 H0_z0
 
         real*8 C_t,C_x,C_y
         real*8 C_t_tt_J,C_t_tx_J,C_t_ty_J,C_t_xx_J
@@ -242,6 +271,10 @@ c----------------------------------------------------------------------
         real*8 h0_ty_xx,h0_ty_yy,h0_ty_tx,h0_ty_ty
         real*8 h0_ty_xy
 
+        real*8 h0_tz_t, h0_tz_x, h0_tz_y, h0_tz_tt
+        real*8 h0_tz_xx,h0_tz_yy,h0_tz_tx,h0_tz_ty
+        real*8 h0_tz_xy
+
         real*8 h0_xx_t, h0_xx_x, h0_xx_y, h0_xx_tt
         real*8 h0_xx_xx,h0_xx_yy,h0_xx_tx,h0_xx_ty
         real*8 h0_xx_xy
@@ -250,9 +283,17 @@ c----------------------------------------------------------------------
         real*8 h0_xy_xx,h0_xy_yy,h0_xy_tx,h0_xy_ty
         real*8 h0_xy_xy
 
+        real*8 h0_xz_t, h0_xz_x, h0_xz_y, h0_xz_tt
+        real*8 h0_xz_xx,h0_xz_yy,h0_xz_tx,h0_xz_ty
+        real*8 h0_xz_xy
+
         real*8 h0_yy_t, h0_yy_x, h0_yy_y, h0_yy_tt
         real*8 h0_yy_xx,h0_yy_yy,h0_yy_tx,h0_yy_ty
         real*8 h0_yy_xy
+
+        real*8 h0_yz_t, h0_yz_x, h0_yz_y, h0_yz_tt
+        real*8 h0_yz_xx,h0_yz_yy,h0_yz_tx,h0_yz_ty
+        real*8 h0_yz_xy
 
         real*8 h0_psi_t, h0_psi_x, h0_psi_y, h0_psi_tt
         real*8 h0_psi_xx,h0_psi_yy,h0_psi_tx,h0_psi_ty
@@ -323,6 +364,10 @@ c----------------------------------------------------------------------
         data g0_ty_xx,g0_ty_yy,g0_ty_tx,g0_ty_ty/0.0,0.0,0.0,0.0/
         data g0_ty_xy/0.0/
 
+        data g0_tz_t, g0_tz_x, g0_tz_y, g0_tz_tt/0.0,0.0,0.0,0.0/
+        data g0_tz_xx,g0_tz_yy,g0_tz_tx,g0_tz_ty/0.0,0.0,0.0,0.0/
+        data g0_tz_xy/0.0/
+
         data g0_xx_t, g0_xx_x, g0_xx_y, g0_xx_tt/0.0,0.0,0.0,0.0/
         data g0_xx_xx,g0_xx_yy,g0_xx_tx,g0_xx_ty/0.0,0.0,0.0,0.0/
         data g0_xx_xy/0.0/
@@ -331,9 +376,17 @@ c----------------------------------------------------------------------
         data g0_xy_xx,g0_xy_yy,g0_xy_tx,g0_xy_ty/0.0,0.0,0.0,0.0/
         data g0_xy_xy/0.0/
 
+        data g0_xz_t, g0_xz_x, g0_xz_y, g0_xz_tt/0.0,0.0,0.0,0.0/
+        data g0_xz_xx,g0_xz_yy,g0_xz_tx,g0_xz_ty/0.0,0.0,0.0,0.0/
+        data g0_xz_xy/0.0/
+
         data g0_yy_t, g0_yy_x, g0_yy_y, g0_yy_tt/0.0,0.0,0.0,0.0/
         data g0_yy_xx,g0_yy_yy,g0_yy_tx,g0_yy_ty/0.0,0.0,0.0,0.0/
         data g0_yy_xy/0.0/
+
+        data g0_yz_t, g0_yz_x, g0_yz_y, g0_yz_tt/0.0,0.0,0.0,0.0/
+        data g0_yz_xx,g0_yz_yy,g0_yz_tx,g0_yz_ty/0.0,0.0,0.0,0.0/
+        data g0_yz_xy/0.0/
 
         data g0_psi_t, g0_psi_x, g0_psi_y, g0_psi_tt/0.0,0.0,0.0,0.0/
         data g0_psi_xx,g0_psi_yy,g0_psi_tx,g0_psi_ty/0.0,0.0,0.0,0.0/
@@ -342,12 +395,16 @@ c----------------------------------------------------------------------
         data g0u_tt0,g0_tt0/0.0,0.0/
         data g0u_tx0,g0_tx0/0.0,0.0/
         data g0u_ty0,g0_ty0/0.0,0.0/
+        data g0u_tz0,g0_tz0/0.0,0.0/
         data g0u_xx0,g0_xx0/0.0,0.0/
         data g0u_xy0,g0_xy0/0.0,0.0/
+        data g0u_xz0,g0_xz0/0.0,0.0/
         data g0u_yy0,g0_yy0/0.0,0.0/
+        data g0u_yz0,g0_yz0/0.0,0.0/
         data g0_psi0/0.0/
 
         data H0_t0,H0_x0,H0_y0/0.0,0.0,0.0/
+        data H0_z0/0.0/
 
         data x0,y0,z0,rho0/0.0,0.0,0.0,0.0/
 
@@ -569,13 +626,17 @@ c----------------------------------------------------------------------
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                psi_np1,psi_n,psi_nm1,
      &                Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                phi1_np1,phi1_n,phi1_nm1,
      &                g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
@@ -2462,6 +2523,9 @@ c----------------------------------------------------------------------
 
               ! (REGION) next-to-ads-bdy points; set by linear interpolation
               else if (chr2(i,j,k).eq.ex) then
+!        write (*,*) 'INTERP_FROM_ADS_BDY'
+!        write (*,*) 'i,j,k,x(i),y(j)=',i,j,k,x(i),y(j)
+
                 call interp_from_ads_bdy(gb_tx_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(gb_ty_np1,x,y,z,L,i,j,k,chr,ex,
@@ -2482,6 +2546,16 @@ c----------------------------------------------------------------------
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(phi1_np1,x,y,z,L,i,j,k,
      &                    chr,ex,Nx,Ny,Nz)
+!                 gb_tx_np1(i,j,k)=0
+!                 gb_ty_np1(i,j,k)=0
+!                 gb_xx_np1(i,j,k)=0
+!                 gb_xy_np1(i,j,k)=0
+!                 gb_yy_np1(i,j,k)=0
+!                 psi_np1(i,j,k)=0
+!                 Hb_t_np1(i,j,k)=0
+!                 Hb_x_np1(i,j,k)=0
+!                 Hb_y_np1(i,j,k)=0
+!                 phi1_np1(i,j,k)=0
                 gb_tt_np1(i,j,k)=gb_xx_np1(i,j,k)+gb_yy_np1(i,j,k)
      &                        +2*psi_np1(i,j,k)
 

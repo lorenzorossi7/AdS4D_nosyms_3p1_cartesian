@@ -89,14 +89,18 @@ extern real *phi4_i,*phi4_i_n,*phi4_i_np1,*phi4_i_nm1,*phi4_i_t;
 extern real *gb_tt,*gb_tt_n,*gb_tt_np1,*gb_tt_nm1; 
 extern real *gb_tx,*gb_tx_n,*gb_tx_np1,*gb_tx_nm1; 
 extern real *gb_ty,*gb_ty_n,*gb_ty_np1,*gb_ty_nm1; 
+extern real *gb_tz,*gb_tz_n,*gb_tz_np1,*gb_tz_nm1;
 extern real *gb_xx,*gb_xx_n,*gb_xx_np1,*gb_xx_nm1; 
 extern real *gb_xy,*gb_xy_n,*gb_xy_np1,*gb_xy_nm1; 
+extern real *gb_xz,*gb_xz_n,*gb_xz_np1,*gb_xz_nm1;
 extern real *gb_yy,*gb_yy_n,*gb_yy_np1,*gb_yy_nm1; 
+extern real *gb_yz,*gb_yz_n,*gb_yz_np1,*gb_yz_nm1;
 extern real *psi,*psi_n,*psi_np1,*psi_nm1; 
 
 extern real *Hb_t,*Hb_t_n,*Hb_t_np1,*Hb_t_nm1;
 extern real *Hb_x,*Hb_x_n,*Hb_x_np1,*Hb_x_nm1;
 extern real *Hb_y,*Hb_y_n,*Hb_y_np1,*Hb_y_nm1;
+extern real *Hb_z,*Hb_z_n,*Hb_z_np1,*Hb_z_nm1;
 
 extern real *phi1_t,*phi1_t_n;
 extern real *phi4_r_t,*phi4_r_t_n;
@@ -104,13 +108,17 @@ extern real *phi4_i_t,*phi4_i_t_n;
 extern real *gb_tt_t,*gb_tt_t_n;
 extern real *gb_tx_t,*gb_tx_t_n;
 extern real *gb_ty_t,*gb_ty_t_n;
+extern real *gb_tz_t,*gb_tz_t_n;
 extern real *gb_xx_t,*gb_xx_t_n;
 extern real *gb_xy_t,*gb_xy_t_n;
+extern real *gb_xz_t,*gb_xz_t_n;
 extern real *gb_yy_t,*gb_yy_t_n;
+extern real *gb_yz_t,*gb_yz_t_n;
 extern real *psi_t,*psi_t_n;
 extern real *Hb_t_t,*Hb_t_t_n;
 extern real *Hb_x_t,*Hb_x_t_n;
 extern real *Hb_y_t,*Hb_y_t_n;
+extern real *Hb_z_t,*Hb_z_t_n;
 
 extern real *w1,*mg_w1;
 extern real *w2,*mg_w2;
@@ -118,12 +126,14 @@ extern real *w3,*mg_w3;
 extern real *w4,*mg_w4;
 
 extern real *mask,*mask_mg,*chr,*chr_mg,AMRD_ex;
-extern real *gu_tt,*gu_tx,*gu_ty,*gu_xx,*gu_xy,*gu_yy,*m_g_det;
+extern real *gu_tt,*gu_tx,*gu_ty,*gu_tz,*gu_xx,*gu_xy,*gu_xz,*gu_yy,*gu_yz,*gu_psi,*m_g_det;
 extern real *kg_ires,*alpha,*theta,*f,*K;
 
 extern real *phi1_res,*phi4_res,*gb_res,*gb_ii_res;
 extern real *efe_tt_ires,*efe_tx_ires,*efe_ty_ires;
+extern real *efe_tz_ires;
 extern real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires;
+extern real *efe_xz_ires,*efe_yz_ires;
 extern real *efe_psi_ires;
 extern real *quasiset_tt,*quasiset_tx,*quasiset_ty;
 extern real *quasiset_xx,*quasiset_xy,*quasiset_yy;
@@ -141,9 +151,12 @@ extern real *chrfunction;
 extern real *irestt;
 extern real *irestx;
 extern real *iresty;
+extern real *irestz;
 extern real *iresxx;
 extern real *iresxy;
+extern real *iresxz;
 extern real *iresyy;
+extern real *iresyz;
 extern real *irespsi;
 extern real *qstt;
 extern real *qstx;
@@ -174,14 +187,18 @@ extern int phi4_i_gfn,phi4_i_n_gfn,phi4_i_np1_gfn,phi4_i_nm1_gfn;
 extern int gb_tt_gfn,gb_tt_n_gfn,gb_tt_np1_gfn,gb_tt_nm1_gfn; 
 extern int gb_tx_gfn,gb_tx_n_gfn,gb_tx_np1_gfn,gb_tx_nm1_gfn; 
 extern int gb_ty_gfn,gb_ty_n_gfn,gb_ty_np1_gfn,gb_ty_nm1_gfn; 
+extern int gb_tz_gfn,gb_tz_n_gfn,gb_tz_np1_gfn,gb_tz_nm1_gfn;
 extern int gb_xx_gfn,gb_xx_n_gfn,gb_xx_np1_gfn,gb_xx_nm1_gfn; 
 extern int gb_xy_gfn,gb_xy_n_gfn,gb_xy_np1_gfn,gb_xy_nm1_gfn; 
+extern int gb_xz_gfn,gb_xz_n_gfn,gb_xz_np1_gfn,gb_xz_nm1_gfn;
 extern int gb_yy_gfn,gb_yy_n_gfn,gb_yy_np1_gfn,gb_yy_nm1_gfn; 
+extern int gb_yz_gfn,gb_yz_n_gfn,gb_yz_np1_gfn,gb_yz_nm1_gfn;
 extern int psi_gfn,psi_n_gfn,psi_np1_gfn,psi_nm1_gfn; 
 
 extern int Hb_t_gfn,Hb_t_n_gfn,Hb_t_np1_gfn,Hb_t_nm1_gfn;
 extern int Hb_x_gfn,Hb_x_n_gfn,Hb_x_np1_gfn,Hb_x_nm1_gfn;
 extern int Hb_y_gfn,Hb_y_n_gfn,Hb_y_np1_gfn,Hb_y_nm1_gfn;
+extern int Hb_z_gfn,Hb_z_n_gfn,Hb_z_np1_gfn,Hb_z_nm1_gfn;
 
 extern int mask_gfn,mask_mg_gfn,chr_gfn,chr_mg_gfn;
 extern int kg_ires_gfn,alpha_gfn,theta_gfn;
@@ -189,6 +206,7 @@ extern int kg_ires_gfn,alpha_gfn,theta_gfn;
 extern int phi1_res_gfn,phi4_res_gfn,gb_res_gfn,gb_ii_res_gfn;
 extern int phi4_r_res_gfn,phi4_i_res_gfn;
 extern int efe_tt_ires_gfn,efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn;
+extern int efe_xz_ires_gfn,efe_yz_ires_gfn;
 extern int efe_psi_ires_gfn;
 
 extern int tfunction_gfn;
@@ -196,9 +214,12 @@ extern int chrfunction_gfn;
 extern int irestt_gfn;
 extern int irestx_gfn;
 extern int iresty_gfn;
+extern int irestz_gfn;
 extern int iresxx_gfn;
 extern int iresxy_gfn;
+extern int iresxz_gfn;
 extern int iresyy_gfn;
+extern int iresyz_gfn;
 extern int irespsi_gfn;
 extern int qstt_gfn;
 extern int qstx_gfn;
@@ -238,13 +259,17 @@ void g_evo_opt_(real *gb_res, real *phi1_res, real *cl_res,
                 real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                 real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                 real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+                real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
                 real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
                 real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+                real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
                 real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+                real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
                 real *psi_np1, real *psi_n, real *psi_nm1,
                 real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                 real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                 real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
+                real *Hb_z_np1, real *Hb_z_n, real *Hb_z_nm1,
                 real *phi1_np1, real *phi1_n, real *phi1_nm1,
                 real *AdS_L, real *x, real *y, real *z, real *dt, real *chr, real *ex,
                 int *phys_bdy, int *ghost_width, int *Nx, int *Ny, int *Nz,
@@ -252,36 +277,56 @@ void g_evo_opt_(real *gb_res, real *phi1_res, real *cl_res,
                 int *interptype, int *i_shift, int *regtype,
                 int *diss_kmax, real *tfunction);
 
-void init_ads4d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, 
-                  real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi,
-                  real *gb_tt_t, real *gb_tx_t, real *gb_ty_t, 
-                  real *gb_xx_t, real *gb_xy_t, real *gb_yy_t, real *psi_t,
-                  real *Hb_t, real *Hb_x, real *Hb_y,
+void init_ads4d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, real *gb_ty,
+                  real *gb_tz,
+                  real *gb_xx, real *gb_xy, 
+                  real *gb_xz,
+                  real *gb_yy,
+                  real *gb_yz, 
+                  real *psi, real *gb_tt_t, real *gb_tx_t, real *gb_ty_t, 
+                  real *gb_tz_t,
+                  real *gb_xx_t, real *gb_xy_t, 
+                  real *gb_xz_t, 
+                  real *gb_yy_t,
+                  real *gb_yz_t,
+                  real *psi_t, real *Hb_t, real *Hb_x, real *Hb_y,
+                  real *Hb_z,
                   real *Hb_t_t, real *Hb_x_t, real *Hb_y_t,
+                  real *Hb_z_t,
                   int *phys_bdy, real *x, real *y, real *z, real *dt, real *chr, 
                   real *ex, int *Nx, int *Ny, int *Nz, int *regtype);
 
 void init_ghb_ads_(real *gb_tt, real *gb_tx, real *gb_ty,
-                   real *gb_xx, real *gb_xy, real *gb_yy, real *psi,
-                   real *Hb_t, real *Hb_x, real *Hb_y, real *AdS_L, 
-                   real *x, real *y, real *z, real *chr, real *ex, int *Nx, int *Ny, int *Nz,
+                   real *gb_tz,
+                   real *gb_xx, real *gb_xy, 
+                   real *gb_xz,
+                   real *gb_yy, 
+                   real *gb_yz,
+                   real *psi, real *Hb_t, real *Hb_x, real *Hb_y, 
+                   real *Hb_z, 
+                   real *AdS_L, real *x, real *y, real *z, real *chr, real *ex, int *Nx, int *Ny, int *Nz,
                    int *regtype);
 
 void hb_t_evo_(real *res,
                real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+               real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
                real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+               real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+               real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
+               real *Hb_z_np1, real *Hb_z_n, real *Hb_z_nm1,
                real *phi1_np1, real *phi1_n, real *phi1_nm1,
                real *AdS_L, real *x, real *y, real *z, real *dt, real *chr, real *ex, 
                int *phys_bdy, int *ghost_width, int *Nx, int *Ny, int *Nz, 
                real *Hb_t_0, real *Hb_x_0, real *Hb_y_0,
+               real *Hb_z_0,
                int *gauge, real *t_n, real *rho1_t, real *rho2_t, real *rho3, real *rho4, real *xi1_t, real *xi2_t, 
                real *c1, real *c2, real *c3, real *cbulk);
 
@@ -289,34 +334,47 @@ void hb_i_evo_(real *res,
                real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+               real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
                real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+               real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+               real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
+               real *Hb_z_np1, real *Hb_z_n, real *Hb_z_nm1,
                real *phi1_np1, real *phi1_n, real *phi1_nm1,
                real *AdS_L, real *x, real *y, real *z, real *dt, real *chr, real *ex, 
                int *phys_bdy, int *ghost_width, int *Nx, int *Ny, int *Nz, 
                real *Hb_t_0, real *Hb_x_0, real *Hb_y_0,
+               real *Hb_z_0,
                int *gauge, real *t_n, real *rho1_i, real *rho2_i, real *rho3, real *rho4, real *xi1_i, real *xi2_i, 
                real *c1, real *c2, real *c3, real *cbulk);
 
 void ires_(real *efe_all_ires,
            real *efe_tt_ires, real *efe_tx_ires, real *efe_ty_ires,
-           real *efe_xx_ires, real *efe_xy_ires, real *efe_yy_ires,
+           real *efe_tz_ires,
+           real *efe_xx_ires, real *efe_xy_ires, 
+           real *efe_xz_ires,
+           real *efe_yy_ires,
+           real *efe_yz_ires,
            real *efe_psi_ires,
            real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
            real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
            real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+           real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
            real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
            real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+           real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
            real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+           real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
            real *psi_np1, real *psi_n, real *psi_nm1,
            real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
            real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
            real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
+           real *Hb_z_np1, real *Hb_z_n, real *Hb_z_nm1,
            real *phi1_np1, real *phi1_n, real *phi1_nm1,
            real *x, real *y, real *z, real *dt, real *chr, 
            real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
@@ -332,9 +390,14 @@ void mg_sup_(int *action, real *zeta, real *zeta_rhs, real *zeta_lop, real *zeta
              real *x, real *y, real *z, real *norm, int *Nx, int *Ny, int *Nz);
 
 void init_ghb_(real *zeta,
-               real *gb_tt, real *gb_tx, real *gb_ty, real *gb_xy,
-               real *gb_xx, real *gb_yy, real *psi, 
-               real *Hb_t, real *Hb_x, real *Hb_y, 
+               real *gb_tt, real *gb_tx, real *gb_ty, 
+               real *gb_tz,
+               real *gb_xx, real *gb_xy, 
+               real *gb_xz, 
+               real *gb_yy, 
+               real *gb_yz, 
+               real *psi, real *Hb_t, real *Hb_x, real *Hb_y, 
+               real *Hb_z,
                real *AdS_L, real *cmask, int *phys_bdy, real *x, real *y, real *z, 
                real *chr, real *ex, int *Nx, int *Ny, int *Nz, int *regtype,
                real* rhoa, real* rhob);
@@ -347,13 +410,17 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
 void init_nm1_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1, real *gb_tt_t_n,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1, real *gb_tx_t_n,
                real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1, real *gb_ty_t_n,
+               real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1, real *gb_tz_t_n,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1, real *gb_xx_t_n,
                real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1, real *gb_xy_t_n,
+               real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1, real *gb_xz_t_n,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1, real *gb_yy_t_n,
+               real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1, real *gb_yz_t_n,
                real *psi_np1, real *psi_n, real *psi_nm1, real *psi_t_n,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1, real *Hb_t_t_n,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1, real *Hb_x_t_n,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1, real *Hb_y_t_n,
+               real *Hb_z_np1, real *Hb_z_n, real *Hb_z_nm1, real *Hb_z_t_n,
                real *phi1_np1, real *phi1_n, real *phi1_nm1, real *phi1_t_n, real *tfunction,
                real *AdS_L, int *phys_bdy, real *x, real *y, real *z, real *dt,
                real *chr, real *ex, int *Nx, int *Ny, int *Nz, int *regtype);
@@ -361,20 +428,34 @@ void init_nm1_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1, real *gb_tt_t_n,
 void init_hb_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
               real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
               real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+              real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
               real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
               real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+              real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
               real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+              real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
               real *psi_np1, real *psi_n, real *psi_nm1,
               real *Hb_t_n, real *Hb_x_n, real *Hb_y_n, 
+              real *Hb_z_n,
               real *AdS_L, int *phys_bdy, real *x, real *y, real *z, real *dt, real *chr, real *ex,
               int *Nx, int *Ny, int *Nz, int *regtype);
 
 void init_ghbdot_(real *gb_tt_n, real *gb_tx_n, real *gb_ty_n,
-                  real *gb_xx_n, real *gb_xy_n, real *gb_yy_n, real *psi_n,
-                  real *gb_tt_t_n, real *gb_tx_t_n, real *gb_ty_t_n,
-                  real *gb_xx_t_n, real *gb_xy_t_n, real *gb_yy_t_n, real *psi_t_n,
-                  real *Hb_t_n, real *Hb_x_n, real *Hb_y_n,
+                  real *gb_tz_n,
+                  real *gb_xx_n, real *gb_xy_n, 
+                  real *gb_xz_n, 
+                  real *gb_yy_n, 
+                  real *gb_yz_n,
+                  real *psi_n, real *gb_tt_t_n, real *gb_tx_t_n, real *gb_ty_t_n,
+                  real *gb_tz_t_n,
+                  real *gb_xx_t_n, real *gb_xy_t_n, 
+                  real *gb_xz_t_n, 
+                  real *gb_yy_t_n, 
+                  real *gb_yz_t_n, 
+                  real *psi_t_n, real *Hb_t_n, real *Hb_x_n, real *Hb_y_n,
+                  real *Hb_z_n,
                   real *Hb_t_t_n, real *Hb_x_t_n, real *Hb_y_t_n,
+                  real *Hb_z_t_n,
                   real *AdS_L, int *phys_bdy, real *x, real *y, real *z, real *dt, real *chr, real *ex,
                   int *Nx, int *Ny, int *Nz, int *regtype);
 

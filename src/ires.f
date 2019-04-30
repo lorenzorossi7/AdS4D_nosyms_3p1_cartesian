@@ -3,20 +3,29 @@ c routine for computing independent residuals of the AdS4D system
 c----------------------------------------------------------------------
         subroutine ires(efe_all_ires,
      &                  efe_tt_ires,efe_tx_ires,efe_ty_ires,
-     &                  efe_xx_ires,efe_xy_ires,efe_yy_ires,
+     &                  efe_tz_ires,
+     &                  efe_xx_ires,efe_xy_ires,
+     &                  efe_xz_ires,
+     &                  efe_yy_ires,
+     &                  efe_yz_ires,
      &                  efe_psi_ires,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                  gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                  gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                  Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
         implicit none
         integer Nx,Ny,Nz
         integer i,j,k
@@ -24,8 +33,11 @@ c----------------------------------------------------------------------
         real*8 efe_all_ires(Nx,Ny,Nz)
         real*8 efe_tt_ires(Nx,Ny,Nz),efe_tx_ires(Nx,Ny,Nz)
         real*8 efe_ty_ires(Nx,Ny,Nz)
+        real*8 efe_tz_ires(Nx,Ny,Nz)
         real*8 efe_xx_ires(Nx,Ny,Nz),efe_xy_ires(Nx,Ny,Nz)
+        real*8 efe_xz_ires(Nx,Ny,Nz)
         real*8 efe_yy_ires(Nx,Ny,Nz)
+        real*8 efe_yz_ires(Nx,Ny,Nz)
         real*8 efe_psi_ires(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
@@ -33,21 +45,31 @@ c----------------------------------------------------------------------
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz)
         real*8 gb_xx_np1(Nx,Ny,Nz),gb_xy_np1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz)
+        real*8 gb_tz_n(Nx,Ny,Nz)
         real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz)
+        real*8 gb_xz_n(Nx,Ny,Nz)
+        real*8 gb_yz_n(Nx,Ny,Nz)
         real*8 psi_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xx_nm1(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
         real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 Hb_z_np1(Nx,Ny,Nz),Hb_z_n(Nx,Ny,Nz),Hb_z_nm1(Nx,Ny,Nz)
 
         integer is,ie,js,je,ks,ke
 
@@ -168,13 +190,17 @@ c----------------------------------------------------------------------
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                psi_np1,psi_n,psi_nm1,
      &                Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                phi1_np1,phi1_n,phi1_nm1,
      &                g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,

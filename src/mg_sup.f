@@ -223,18 +223,30 @@ c
 c NOTE: if we ever add gb_xy,gb_xz,gb_yz, must define them
 c       as AMRD MG_cnst vars
 c-----------------------------------------------------------------------
-        subroutine init_ghb(zeta,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,
-     &                      gb_yy,psi,Hb_t,Hb_x,Hb_y,L,cmask,phys_bdy,
+        subroutine init_ghb(zeta,gb_tt,gb_tx,gb_ty,
+     &                      gb_tz,
+     &                      gb_xx,gb_xy,
+     &                      gb_xz,
+     &                      gb_yy,
+     &                      gb_yz,
+     &                      psi,Hb_t,Hb_x,Hb_y,
+     &                      Hb_z,
+     &                      L,cmask,phys_bdy,
      &                      x,y,z,chr,ex,Nx,Ny,Nz,regtype,rhoa,rhob)
         implicit none
         integer Nx,Ny,Nz
         real*8 zeta(Nx,Ny,Nz)
         real*8 gb_xx(Nx,Ny,Nz),gb_tt(Nx,Ny,Nz)
         real*8 gb_yy(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),psi(Nx,Ny,Nz)
-        real*8 gb_ty(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
+        real*8 gb_ty(Nx,Ny,Nz)
+        real*8 gb_tz(Nx,Ny,Nz)
+        real*8 gb_xy(Nx,Ny,Nz)
+        real*8 gb_xz(Nx,Ny,Nz)
+        real*8 gb_yz(Nx,Ny,Nz)
         real*8 Hb_t(Nx,Ny,Nz)
         real*8 Hb_x(Nx,Ny,Nz)
         real*8 Hb_y(Nx,Ny,Nz)
+        real*8 Hb_z(Nx,Ny,Nz)
         real*8 cmask(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,L
         real*8 x(Nx),y(Ny),z(Nz)
         real*8 rhoa,rhob

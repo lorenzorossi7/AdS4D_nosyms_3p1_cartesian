@@ -59,17 +59,22 @@ c----------------------------------------------------------------------
      &                      gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                      gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                      gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                      gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                      gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                      gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                      gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                      gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                      gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                      psi_np1,psi_n,psi_nm1,
      &                      Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                      Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                      Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                      Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                      phi1_np1,phi1_n,phi1_nm1,
      &                      L,x,y,z,dt,chr,ex,
      &                      phys_bdy,ghost_width,Nx,Ny,Nz,
      &                      Hb_t_0,Hb_x_0,Hb_y_0,
+     &                      Hb_z_0,
      &                      gauge,t_n,rho1,rho2,rho3,rho4,xi1,xi2,
      &                      c1,c2,c3,cbulk)
         implicit none
@@ -78,25 +83,40 @@ c----------------------------------------------------------------------
         real*8 c1,c2,c3
         real*8 res(Nx,Ny,Nz),t_n,t_np1
         real*8 Hb_t_0(Nx,Ny,Nz),Hb_x_0(Nx,Ny,Nz),Hb_y_0(Nx,Ny,Nz)
+        real*8 Hb_z_0(Nx,Ny,Nz)
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_x_np1(Nx,Ny,Nz),Hb_y_np1(Nx,Ny,Nz)
+        real*8 Hb_z_np1(Nx,Ny,Nz)
         real*8 Hb_t_n(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz)
+        real*8 Hb_z_n(Nx,Ny,Nz)
         real*8 Hb_t_nm1(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 Hb_z_nm1(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex,L
         real*8 x(Nx),y(Ny),z(Nz),dt,rho1,rho2,rho3,rho4,xi1,xi2,cbulk
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz),gb_xx_np1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz)
         real*8 gb_xy_np1(Nx,Ny,Nz),gb_yy_np1(Nx,Ny,Nz),psi_np1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz)
         real*8 gb_ty_n(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz)
+        real*8 gb_tz_n(Nx,Ny,Nz)
+        real*8 gb_xz_n(Nx,Ny,Nz)
+        real*8 gb_yz_n(Nx,Ny,Nz)
         real*8 gb_yy_n(Nx,Ny,Nz),psi_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xy_nm1(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_nm1(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t0,Hb_x0,Hb_y0
+        real*8 Hb_z0
 
         real*8 F_t_np1,F_x_np1,F_y_np1
+        real*8 F_z_np1
         real*8 G_t_np1,G_x_np1,G_y_np1
 
         real*8 g0uu11,gbtt,gbtx,gbty,gbxx,gbxy,gbyy,gbpsi
@@ -115,9 +135,11 @@ c----------------------------------------------------------------------
         data i,j,k,i1,j1/0,0,0,0,0/
 
         data Hb_t0,Hb_x0,Hb_y0/0.0,0.0,0.0/
+        data Hb_z0/0.0/
         data F_t_np1,F_x_np1,F_y_np1/0.0,0.0,0.0/
+        data F_z_np1/0.0/
         data G_t_np1,G_x_np1,G_y_np1/0.0,0.0,0.0/
-        data x0,y0,rho0/0.0,0.0,0.0/
+        data x0,y0,z0,rho0/0.0,0.0,0.0,0.0/
         data f0,f1,f2,g0,g1,g2/0.0,0.0,0.0,0.0,0.0,0.0/
         data dx,dy,dz/0.0,0.0,0.0/
 
@@ -312,17 +334,22 @@ c-----------------------------------------------------------------------
      &                      gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                      gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                      gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                      gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                      gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                      gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                      gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                      gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                      gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                      psi_np1,psi_n,psi_nm1,
      &                      Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                      Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                      Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &                      Hb_z_np1,Hb_z_n,Hb_z_nm1,
      &                      phi1_np1,phi1_n,phi1_nm1,
      &                      L,x,y,z,dt,chr,ex,
      &                      phys_bdy,ghost_width,Nx,Ny,Nz,
      &                      Hb_t_0,Hb_x_0,Hb_y_0,
+     &                      Hb_z_0,
      &                      gauge,t_n,rho1,rho2,rho3,rho4,xi1,xi2,
      &                      c1,c2,c3,cbulk)
         implicit none
@@ -331,25 +358,40 @@ c-----------------------------------------------------------------------
         real*8 c1,c2,c3
         real*8 res(Nx,Ny,Nz),t_n,t_np1
         real*8 Hb_t_0(Nx,Ny,Nz),Hb_x_0(Nx,Ny,Nz),Hb_y_0(Nx,Ny,Nz)
+        real*8 Hb_z_0(Nx,Ny,Nz)
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_x_np1(Nx,Ny,Nz),Hb_y_np1(Nx,Ny,Nz)
+        real*8 Hb_z_np1(Nx,Ny,Nz)
         real*8 Hb_t_n(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz)
+        real*8 Hb_z_n(Nx,Ny,Nz)
         real*8 Hb_t_nm1(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
+        real*8 Hb_z_nm1(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex,L
         real*8 x(Nx),y(Ny),z(Nz),dt,rho1,rho2,rho3,rho4,xi1,xi2,cbulk
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tx_np1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz),gb_xx_np1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz)
         real*8 gb_xy_np1(Nx,Ny,Nz),gb_yy_np1(Nx,Ny,Nz),psi_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz)
         real*8 gb_ty_n(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz)
+        real*8 gb_tz_n(Nx,Ny,Nz)
+        real*8 gb_xz_n(Nx,Ny,Nz)
+        real*8 gb_yz_n(Nx,Ny,Nz)
         real*8 gb_yy_n(Nx,Ny,Nz),psi_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_nm1(Nx,Ny,Nz)
         real*8 gb_xy_nm1(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t0,Hb_x0,Hb_y0
+        real*8 Hb_z0
 
         real*8 F_t_np1,F_x_np1,F_y_np1
+        real*8 F_z_np1
         real*8 G_t_np1,G_x_np1,G_y_np1
 
         real*8 g0uu11,gbtt,gbtx,gbty,gbxx,gbxy,gbyy,gbpsi
@@ -368,9 +410,11 @@ c-----------------------------------------------------------------------
         data i,j,k,i1,j1/0,0,0,0,0/
 
         data Hb_t0,Hb_x0,Hb_y0/0.0,0.0,0.0/
+        data Hb_z0/0.0/
         data F_t_np1,F_x_np1,F_y_np1/0.0,0.0,0.0/
+        data F_z_np1/0.0/
         data G_t_np1,G_x_np1,G_y_np1/0.0,0.0,0.0/
-        data x0,y0,rho0/0.0,0.0,0.0/
+        data x0,y0,z0,rho0/0.0,0.0,0.0,0.0/
         data f0,f1,f2,g0,g1,g2/0.0,0.0,0.0,0.0,0.0,0.0/
         data dx,dy,dz/0.0,0.0,0.0/
 

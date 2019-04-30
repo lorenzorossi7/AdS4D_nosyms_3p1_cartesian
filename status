@@ -1,5 +1,5 @@
 STATUS OF THIS BRANCH:
-2+1 Cartesian code in 3D grid (we extended the declaration of grid functions to a 3D grid, but nothing should depend on the value of the 3rd coordinate z).
+2+1 Cartesian code in 3D grid (we extended the declaration of grid functions to a 3D grid and included the new grid functions in the calling of all functions, but nothing depends on these functions yet, i.e. they have not been used; nothing should depend on the value of the 3rd coordinate z).
 We implemented Schwarzschild-AdS analytic initial data in horizon penetrating Cartesian coordinates.
 Calculation of AdS quasi-local stress energy tensor and AdS mass should be implemented.
 The code has been tested for analytic Schwarzschild-AdS initial data mainly.
