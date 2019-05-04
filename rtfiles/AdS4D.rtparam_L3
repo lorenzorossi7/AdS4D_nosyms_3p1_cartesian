@@ -218,7 +218,7 @@ save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy"
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_2+1Zgridfcs_gauge3_L4_"
+save_tag := "AdS4D_2p1Zgridfcs_gauge3_L4_"
 
 save_ivec := 1-*/4
 
