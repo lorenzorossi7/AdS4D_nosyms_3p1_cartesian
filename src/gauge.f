@@ -244,8 +244,10 @@ c----------------------------------------------------------------------
                 F_t_np1=
      &                 +gb_tx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_ty_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +gb_tz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
 
                 Hb_t_np1(i,j,k)=F_t_np1+(Hb_t0-F_t_np1)*exp(-g0)
               end if
@@ -434,6 +436,7 @@ c-----------------------------------------------------------------------
             if (chr(i,j,k).eq.ex) then
               Hb_x_np1(i,j,k)=0
               Hb_y_np1(i,j,k)=0
+              Hb_z_np1(i,j,k)=0
             end if
            end do
           end do
@@ -521,6 +524,7 @@ c-----------------------------------------------------------------------
                 rho0=sqrt(x0**2+y0**2)
                 Hb_x0=Hb_x_0(i,j,k)
                 Hb_y0=Hb_y_0(i,j,k)
+                Hb_z0=Hb_z_0(i,j,k)
 
                 f0=trans(rho0,rho1,rho2)
                 f1=trans(rho0,rho3,rho4)
@@ -528,15 +532,26 @@ c-----------------------------------------------------------------------
 
                 F_x_np1=gb_xx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +gb_xz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_xx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_xy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*z0*(1-f1)
                 F_y_np1=gb_yy_np1(i,j,k)*1.5d0*y0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*x0/rho0*f1
+     &                 +gb_yz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_yy_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_xy_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_yz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_z_np1=0 !gb_yz_np1(i,j,k)*1.5d0*y0/rho0*f1
+!     &                 +gb_xz_np1(i,j,k)*1.5d0*x0/rho0*f1
+!     &                 +psi_np1(i,j,k)*1.5d0*z0/rho0*f1
+!     &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
+!     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
+!     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
 
                 Hb_x_np1(i,j,k)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
                 Hb_y_np1(i,j,k)=F_y_np1+(Hb_y0-F_y_np1)*exp(-g0)
+                Hb_z_np1(i,j,k)=F_z_np1+(Hb_z0-F_z_np1)*exp(-g0)
               end if
             end do
            end do

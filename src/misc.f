@@ -42,12 +42,13 @@ c-----------------------------------------------------------------------
                else if (chr(i+1,j,k).ne.ex) then
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (A)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                  end if
                    f_x=0
@@ -70,12 +71,13 @@ c-----------------------------------------------------------------------
                else if (chr(i+1,j,k).ne.ex) then
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (B)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -84,7 +86,7 @@ c-----------------------------------------------------------------------
          else   !this is the case where (i-1,j,k) is not excised and (i+1,j,k) is excised 
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
          end if
 
         else if (i.eq.3) then
@@ -103,12 +105,13 @@ c-----------------------------------------------------------------------
                else if (chr(i+1,j,k).ne.ex) then
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (C)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -120,7 +123,7 @@ c-----------------------------------------------------------------------
                else
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                end if
          end if
 
@@ -141,12 +144,13 @@ c-----------------------------------------------------------------------
                else if (chr(i+1,j,k).ne.ex) then
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (D)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -163,7 +167,7 @@ c-----------------------------------------------------------------------
                else
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                end if
          end if
 
@@ -184,12 +188,13 @@ c-----------------------------------------------------------------------
                else if (chr(i-1,j,k).ne.ex) then
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (E)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -201,7 +206,7 @@ c-----------------------------------------------------------------------
                else
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                end if
          end if
 
@@ -221,12 +226,13 @@ c-----------------------------------------------------------------------
                else if (chr(i-1,j,k).ne.ex) then
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (F)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -235,7 +241,7 @@ c-----------------------------------------------------------------------
          else
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
          end if
 
 
@@ -252,12 +258,13 @@ c-----------------------------------------------------------------------
                else if (chr(i-1,j,k).ne.ex) then
                    f_x=(f(i,j,k)-f(i-1,j,k))/dx
 !                  write(*,*) 'df1_int_x: warning ... i=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                else
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (G)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                  end if
                    f_x=0
@@ -367,12 +374,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j+1,k).ne.ex) then
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (A)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                  end if
                    f_y=0
@@ -395,12 +403,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j+1,k).ne.ex) then
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (B)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -409,7 +418,7 @@ c-----------------------------------------------------------------------
          else
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
          end if
 
         else if (j.eq.3) then
@@ -428,12 +437,13 @@ c-----------------------------------------------------------------------
                else if (chr(i+1,j,k).ne.ex) then
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (C)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -445,7 +455,7 @@ c-----------------------------------------------------------------------
                else
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                end if
          end if
 
@@ -465,12 +475,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j+1,k).ne.ex) then
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (D)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -487,7 +498,7 @@ c-----------------------------------------------------------------------
                else
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                end if
          end if
 
@@ -507,12 +518,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j-1,k).ne.ex) then
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (E)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -524,7 +536,7 @@ c-----------------------------------------------------------------------
                else
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                end if
          end if
 
@@ -544,12 +556,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j-1,k).ne.ex) then
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (F)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -558,7 +571,7 @@ c-----------------------------------------------------------------------
          else
                    f_y=(-f(i,j,k)+f(i,j+1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
          end if
 
         else if (j.eq.Ny) then
@@ -574,12 +587,13 @@ c-----------------------------------------------------------------------
                else if (chr(i,j-1,k).ne.ex) then
                    f_y=(f(i,j,k)-f(i,j-1,k))/dy
 !                  write(*,*) 'df1_int_y: warning ... j=1 first order'
-!                  write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                else
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (G)'
-                     write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
+     &                                                   Nx,Ny,Nz,dy
                      write(*,*) '    (first error only)'
                  end if
                    f_y=0
@@ -654,16 +668,280 @@ c-----------------------------------------------------------------------
         return
         end
 
+!----------------------------------------------------------------------
+        subroutine df1_int_z(f,f_z,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        implicit none
+        integer Nx,Ny,Nz,i,j,k
+        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_z,x(Nx),y(Ny),z(Nz)
+
+        real*8 dz
+        logical first
+        save first
+        data first/.true./
+
+        logical extrap
+        data extrap/.true./
+
+        !--------------------------------------------------------------
+
+        dz=z(2)-z(1)
+
+        f_z=0
+
+
+!        if (k.eq.1) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_z=(-4*f(i,j,k)+7*f(i,j,k+1)
+!     &                  -4*f(i,j,k+2)+f(i,j,k+3))/2/dz
+!               else if ((chr(i,j,k+1).ne.ex
+!     &                 .and.chr(i,j,k+2).ne.ex)) then
+!                   f_z=(-3*f(i,j,k)+4*f(i,j,k+1)-f(i,j,k+2))/2/dz
+!               else if (chr(i,j,k+1).ne.ex) then
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                 if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (A)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                 end if
+!                   f_z=0
+!                 return
+!               end if
+!
+!        else if (k.eq.2) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_z=(f(i,j,k+1)-f(i,j,k-1))/2/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_z=(-4*f(i,j,k)+7*f(i,j,k+1)
+!     &                  -4*f(i,j,k+2)+f(i,j,k+3))/2/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)) then
+!                   f_z=(-3*f(i,j,k)+4*f(i,j,k+1)-f(i,j,k+2))/2/dz
+!               else if (chr(i,j,k+1).ne.ex) then
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (B)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   f_z=0
+!                   return
+!               end if
+!         else
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!         end if
+!
+!        else if (k.eq.3) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_z=(f(i,j,k+1)-f(i,j,k-1))/2/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_z=(-4*f(i,j,k)+7*f(i,j,k+1)
+!     &                  -4*f(i,j,k+2)+f(i,j,k+3))/2/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)) then
+!                   f_z=(-3*f(i,j,k)+4*f(i,j,k+1)-f(i,j,k+2))/2/dz
+!               else if (chr(i+1,j,k).ne.ex) then
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (C)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   f_z=0
+!                   return
+!               end if
+!         else
+!               if (chr(i,j,k-2).ne.ex) then
+!                   f_z=(3*f(i,j,k)-4*f(i,j,k-1)+f(i,j,k-2))/2/dz
+!               else
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               end if
+!         end if
+!
+!        else if ((k.ge.4).and.(k.le.(Nz-3))) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_z=(f(i,j,k+1)-f(i,j,k-1))/2/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_z=(-4*f(i,j,k)+7*f(i,j,k+1)
+!     &                  -4*f(i,j,k+2)+f(i,j,k+3))/2/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)) then
+!                   f_z=(-3*f(i,j,k)+4*f(i,j,k+1)-f(i,j,k+2))/2/dz
+!               else if (chr(i,j,k+1).ne.ex) then
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (D)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   f_z=0
+!                   return
+!               end if
+!         else
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-3).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)) then
+!                   f_z=(4*f(i,j,k)-7*f(i,j,k-1)
+!     &                  +4*f(i,j,k-2)-f(i,j,k-3))/2/dz
+!               else if (chr(i,j,k-2).ne.ex) then
+!                   f_z=(3*f(i,j,k)-4*f(i,j,k-1)+f(i,j,k-2))/2/dz
+!               else
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               end if
+!         end if
+!
+!        else if (k.eq.(Nz-2)) then
+!         if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+!                   f_z=(f(i,j,k+1)-f(i,j,k-1))/2/dz
+!         else if (chr(i,j,k+1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)) then
+!                   f_z=(4*f(i,j,k)-7*f(i,j,k-1)
+!     &                  +4*f(i,j,k-2)-f(i,j,k-3))/2/dz
+!               else if ((chr(i,j,k-1).ne.ex)
+!     &                 .and.(chr(i,j,k-2).ne.ex)) then
+!                   f_z=(3*f(i,j,k)-4*f(i,j,k-1)+f(i,j,k-2))/2/dz
+!               else if (chr(i,j,k-1).ne.ex) then
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (E)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   f_z=0
+!                   return
+!               end if
+!         else
+!               if (chr(i,j,k+2).ne.ex) then
+!                   f_z=(-3*f(i,j,k)+4*f(i,j,k+1)-f(i,j,k+2))/2/dz
+!               else
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               end if
+!         end if
+!
+!        else if (k.eq.(Nz-1)) then
+!         if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+!                   f_z=(f(i,j,k+1)-f(i,j,k-1))/2/dz
+!         else if (chr(i,j,k+1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)) then
+!                   f_z=(4*f(i,j,k)-7*f(i,j,k-1)
+!     &                  +4*f(i,j,k-2)-f(i,j,k-3))/2/dz
+!               else if ((chr(i,j,k-1).ne.ex)
+!     &                 .and.(chr(i,j,k-2).ne.ex)) then
+!                   f_z=(3*f(i,j,k)-4*f(i,j,k-1)+f(i,j,k-2))/2/dz
+!               else if (chr(i,j,k-1).ne.ex) then
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (F)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   f_z=0
+!                   return
+!               end if
+!         else
+!                   f_z=(-f(i,j,k)+f(i,j,k+1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!         end if
+!
+!        else if (k.eq.Nz) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)) then
+!                   f_z=(4*f(i,j,k)-7*f(i,j,k-1)
+!     &                  +4*f(i,j,k-2)-f(i,j,k-3))/2/dz
+!               else if ((chr(i,j,k-1).ne.ex
+!     &                 .and.chr(i,j,k-2).ne.ex)) then
+!                   f_z=(3*f(i,j,k)-4*f(i,j,k-1)+f(i,j,k-2))/2/dz
+!               else if (chr(i,j,k-1).ne.ex) then
+!                   f_z=(f(i,j,k)-f(i,j,k-1))/dz
+!!                  write(*,*) 'df1_int_z: warning ... k=1 first order'
+!!                  write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!               else
+!                 if (first) then
+!                     first=.false.
+!                     write(*,*) 'df1_int_z: error in chr stencil (G)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                 end if
+!                   f_z=0
+!                 return
+!               end if
+!        end if
+
+        return
+        end
+
 c----------------------------------------------------------------------
 c the following computes all first derivatives of f,
 c at a point i,j, at time level n.
 c----------------------------------------------------------------------
-        subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,f_y,
+        subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,f_y,f_z,
      &                     x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
         implicit none
         integer Nx,Ny,Nz,i,j,k
         real*8 f_np1(Nx,Ny,Nz),f_n(Nx,Ny,Nz),f_nm1(Nx,Ny,Nz)
-        real*8 f_t,f_x,f_y,x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
+        real*8 f_t,f_x,f_y,f_z,x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
         character*(*) name
 
         logical first
@@ -684,12 +962,14 @@ c----------------------------------------------------------------------
   
         call df1_int_x(f_n,f_x,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
         call df1_int_y(f_n,f_y,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        call df1_int_z(f_n,f_z,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
         if (ltrace) then
            write(*,*) 'df1_int for ',name
            write(*,*) ' f_t=',f_t
            write(*,*) ' f_x=',f_x
            write(*,*) ' f_y=',f_y
+           write(*,*) ' f_z=',f_z
         end if
 
         return
@@ -713,13 +993,25 @@ c CALLING grid function f_n f here, to avoid conflict
 c with f_n in the include stuff
 c----------------------------------------------------------------------
         subroutine df2_int(f_np1,f,f_nm1,f_t,f_x,f_y,
-     &                     f_tt,f_tx,f_ty,f_xx,f_xy,
-     &                     f_yy,x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
+     &                     f_z,
+     &                     f_tt,f_tx,f_ty,
+     &                     f_tz,
+     &                     f_xx,f_xy,
+     &                     f_xz,
+     &                     f_yy,
+     &                     f_yz,f_zz,
+     &                     x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
         implicit none
         integer Nx,Ny,Nz,i,j,k
         real*8 f_np1(Nx,Ny,Nz),f(Nx,Ny,Nz),f_nm1(Nx,Ny,Nz)
-        real*8 f_t,f_x,f_y,f_tt,f_tx,f_ty,f_xx,f_xy
-        real*8 f_yy,x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
+        real*8 f_t,f_x,f_y,f_z
+        real*8 f_tt,f_tx,f_ty
+        real*8 f_tz
+        real*8 f_xx,f_xy
+        real*8 f_xz
+        real*8 f_yy
+        real*8 f_yz,f_zz
+        real*8 x(Nx),y(Ny),z(Nz),dt,ex,chr(Nx,Ny,Nz)
         character*(*) name
 
         real*8 dx,dy,dz
@@ -733,24 +1025,43 @@ c----------------------------------------------------------------------
         parameter (ltrace=.false.)
 
         real*8 f_x_np1,f_x_nm1,f_y_np1,f_y_nm1
+        real*8 f_z_np1,f_z_nm1
+
         real*8 f_y_ip1,f_y_ip2
+        real*8 f_z_ip1,f_z_ip2
+
         real*8 f_y_im1,f_y_im2
+        real*8 f_z_im1,f_z_im2
+
+        real*8 f_z_jp1,f_z_jp2
+        real*8 f_z_jm1,f_z_jm2
+
+
+
 
         ! initialize fixed-size variables
         data f_x_np1,f_x_nm1,f_y_np1,f_y_nm1/0.0,0.0,0.0,0.0/
+        data f_z_np1,f_z_nm1/0.0,0.0/
         data f_y_ip1,f_y_ip2/0.0,0.0/
+        data f_z_ip1,f_z_ip2/0.0,0.0/
         data f_y_im1,f_y_im2/0.0,0.0/
+        data f_z_im1,f_z_im2/0.0,0.0/
+        data f_z_jp1,f_z_jp2/0.0,0.0/
+        data f_z_jm1,f_z_jm2/0.0,0.0/
 
         !--------------------------------------------------------------
        
-        call df1_int(f_np1,f,f_nm1,f_t,f_x,f_y,
+        call df1_int(f_np1,f,f_nm1,f_t,f_x,f_y,f_z,
      &               x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,name)
 
         f_tt=(f_np1(i,j,k)-2*f(i,j,k)+f_nm1(i,j,k))/dt/dt 
 
         f_xx=0
         f_xy=0
+        f_xz=0
         f_yy=0
+        f_yz=0
+        f_zz=0
 
         if (chr(i,j,k).eq.ex) then
          write(*,*) 'df2_int: error ... point excised'
@@ -766,6 +1077,11 @@ c----------------------------------------------------------------------
         call df1_int_y(f_nm1,f_y_nm1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
         f_ty=(f_y_np1-f_y_nm1)/2/dt
+
+        call df1_int_z(f_np1,f_z_np1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+        call df1_int_z(f_nm1,f_z_nm1,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+
+        f_tz=(f_z_np1-f_z_nm1)/2/dt
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
@@ -789,6 +1105,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if (chr(i+1,j,k).ne.ex
      &                 .and.chr(i+2,j,k).ne.ex
      &                 .and.chr(i+3,j,k).ne.ex) then
@@ -799,21 +1120,31 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if (chr(i+1,j,k).ne.ex
      &                  .and.chr(i+2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else
                  if (first) then
                    first=.false.
                    write(*,*) 'df2_int: error in chr stencil (A)'
-                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                    write(*,*) '    (first error only)'
                  end if
                    return
@@ -827,6 +1158,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
          else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i+1,j,k).ne.ex)
@@ -841,6 +1177,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if (chr(i+1,j,k).ne.ex
      &                 .and.chr(i+2,j,k).ne.ex
      &                 .and.chr(i+3,j,k).ne.ex) then
@@ -851,21 +1192,32 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if (chr(i+1,j,k).ne.ex
      &                 .and.chr(i+2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (B)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -880,6 +1232,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
          else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i+1,j,k).ne.ex)
@@ -894,6 +1251,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if ((chr(i+1,j,k).ne.ex)
      &                 .and.(chr(i+2,j,k).ne.ex)
      &                 .and.(chr(i+3,j,k).ne.ex)) then
@@ -904,21 +1266,32 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if ((chr(i+1,j,k).ne.ex)
      &                 .and.(chr(i+2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (C)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -931,6 +1304,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                end if
          end if
 
@@ -942,6 +1320,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
          else if (chr(i-1,j,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i+1,j,k).ne.ex)
@@ -956,6 +1339,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if ((chr(i+1,j,k).ne.ex)
      &                 .and.(chr(i+2,j,k).ne.ex)
      &                 .and.(chr(i+3,j,k).ne.ex)) then
@@ -966,21 +1354,32 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else if ((chr(i+1,j,k).ne.ex)
      &                 .and.(chr(i+2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i+2,j,k)-2*f(i+1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (D)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -995,6 +1394,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if (chr(i-2,j,k).ne.ex) then
                    f_xx=(f(i,j,k)-2*f(i-1,j,k)+f(i-2,j,k))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,z,
@@ -1002,6 +1406,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                end if
          end if
 
@@ -1013,6 +1422,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
          else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i-1,j,k).ne.ex)
@@ -1027,6 +1441,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if ((chr(i-1,j,k).ne.ex)
      &                 .and.(chr(i-2,j,k).ne.ex)
      &                 .and.(chr(i-3,j,k).ne.ex)) then
@@ -1037,21 +1456,32 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if ((chr(i-1,j,k).ne.ex)
      &                 .and.(chr(i-2,j,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,z,
      &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (E)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1064,6 +1494,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip2,x,y,z,
      &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
                end if
          end if
 
@@ -1075,6 +1510,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_ip1,x,y,z,
      &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
          else if (chr(i+1,j,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i-1,j,k).ne.ex)
@@ -1089,6 +1529,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if (chr(i-1,j,k).ne.ex
      &                 .and.chr(i-2,j,k).ne.ex
      &                 .and.chr(i-3,j,k).ne.ex) then
@@ -1099,21 +1544,32 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if (chr(i-1,j,k).ne.ex
      &                 .and.chr(i-2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,z,
      &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (F)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1134,6 +1590,11 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if (chr(i-1,j,k).ne.ex
      &                 .and.chr(i-2,j,k).ne.ex
      &                 .and.chr(i-3,j,k).ne.ex) then
@@ -1144,21 +1605,31 @@ c----------------------------------------------------------------------
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else if (chr(i-1,j,k).ne.ex
      &                  .and.chr(i-2,j,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order i=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,z,
      &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
                    call df1_int_y(f,f_y_im2,x,y,z,
      &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
                    f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                else
                  if (first) then
                    first=.false.
                    write(*,*) 'df2_int: error in chr stencil (G)'
-                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                    write(*,*) '    (first error only)'
                  end if
                    return
@@ -1177,21 +1648,36 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
      &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
      &                  f(i,j+4,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if (chr(i,j+1,k).ne.ex
      &                 .and.chr(i,j+2,k).ne.ex
      &                 .and.chr(i,j+3,k).ne.ex) then
                    f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
      &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if (chr(i,j+1,k).ne.ex
      &                  .and.chr(i,j+2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
+                   f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else
                  if (first) then
                    first=.false.
                    write(*,*) 'df2_int: error in chr stencil (H)'
-                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                    write(*,*) '    (first error only)'
                  end if
                    return
@@ -1200,6 +1686,11 @@ c----------------------------------------------------------------------
         else if (j.eq.2) then
          if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
          else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i,j+1,k).ne.ex)
@@ -1209,21 +1700,37 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
      &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
      &                  f(i,j+4,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if (chr(i,j+1,k).ne.ex
      &                 .and.chr(i,j+2,k).ne.ex
      &                 .and.chr(i,j+3,k).ne.ex) then
                    f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
      &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if (chr(i,j+1,k).ne.ex
      &                 .and.chr(i,j+2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (I)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1233,6 +1740,11 @@ c----------------------------------------------------------------------
         else if (j.eq.3) then
          if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
          else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i,j+1,k).ne.ex)
@@ -1242,21 +1754,37 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
      &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
      &                  f(i,j+4,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if ((chr(i,j+1,k).ne.ex)
      &                 .and.(chr(i,j+2,k).ne.ex)
      &                 .and.(chr(i,j+3,k).ne.ex)) then
                    f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
      &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if ((chr(i,j+1,k).ne.ex)
      &                 .and.(chr(i,j+2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (J)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1264,12 +1792,22 @@ c----------------------------------------------------------------------
          else  !this is the case where (i,j-1,k) is not excised and (i,j+1,k) is excised
                if (chr(i,j-2,k).ne.ex) then
                    f_yy=(f(i,j,k)-2*f(i,j-1,k)+f(i,j-2,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                end if
          end if
 
         else if ((j.ge.4).and.(j.le.(Ny-3))) then
          if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
          else if (chr(i,j-1,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i,j+1,k).ne.ex)
@@ -1279,21 +1817,37 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j+1,k)+
      &                  10*f(i,j+2,k)-5*f(i,j+3,k)+
      &                  f(i,j+4,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if ((chr(i,j+1,k).ne.ex)
      &                 .and.(chr(i,j+2,k).ne.ex)
      &                 .and.(chr(i,j+3,k).ne.ex)) then
                    f_yy=(2*f(i,j,k)-5*f(i,j+1,k)+
      &                   4*f(i,j+2,k)-f(i,j+3,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else if ((chr(i,j+1,k).ne.ex)
      &                 .and.(chr(i,j+2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j+2,k)-2*f(i,j+1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (K)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1303,14 +1857,29 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j-2,k).ne.ex)) then
                    f_yy=(2*f(i,j,k)-5*f(i,j-1,k)
      &                   +4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if (chr(i,j-2,k).ne.ex) then
                    f_yy=(f(i,j,k)-2*f(i,j-1,k)+f(i,j-2,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                end if
          end if
 
         else if (j.eq.(Ny-2)) then
          if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
                    f_yy=(f(i,j-1,k)-2*f(i,j,k)+f(i,j+1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
          else if (chr(i,j+1,k).eq.ex) then
                if ((.not.extrap)
      &            .and.(chr(i,j-1,k).ne.ex)
@@ -1320,21 +1889,37 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
      &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
      &                  f(i,j-4,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if ((chr(i,j-1,k).ne.ex)
      &                 .and.(chr(i,j-2,k).ne.ex)
      &                 .and.(chr(i,j-3,k).ne.ex)) then
                    f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
      &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if ((chr(i,j-1,k).ne.ex)
      &                 .and.(chr(i,j-2,k).ne.ex)) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (L)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1342,12 +1927,22 @@ c----------------------------------------------------------------------
          else  !this is the case where (i,j+1,k) is not excised and (i,j-1,k) is excised
                if (chr(i,j+2,k).ne.ex) then
                    f_yy=(f(i,j,k)-2*f(i,j+1,k)+f(i,j+2,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
                end if
          end if
 
         else if (j.eq.(Ny-1)) then
          if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
                    f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
          else if (chr(i,j+1,k).eq.ex) then
                if (.not.extrap
      &            .and.(chr(i,j-1,k).ne.ex)
@@ -1357,21 +1952,37 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
      &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
      &                  f(i,j-4,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if (chr(i,j-1,k).ne.ex
      &                 .and.chr(i,j-2,k).ne.ex
      &                 .and.chr(i,j-3,k).ne.ex) then
                    f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
      &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if (chr(i,j-1,k).ne.ex
      &                 .and.chr(i,j-2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (M)'
-                     write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
                      write(*,*) '    (first error only)'
                 end if
                    return
@@ -1387,26 +1998,294 @@ c----------------------------------------------------------------------
                    f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
      &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
      &                  f(i,j-4,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if (chr(i,j-1,k).ne.ex
      &                 .and.chr(i,j-2,k).ne.ex
      &                 .and.chr(i,j-3,k).ne.ex) then
                    f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
      &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else if (chr(i,j-1,k).ne.ex
      &                  .and.chr(i,j-2,k).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
-              !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
                    f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                else
                  if (first) then
                    first=.false.
                    write(*,*) 'df2_int: error in chr stencil (N)'
-                   write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
+                   write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,Nx,Ny,Nz,dx
                    write(*,*) '    (first error only)'
                  end if
                    return
                end if
         end if
+
+
+        !k
+
+        f_zz=0
+
+!        if (k.eq.1) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)
+!     &            .and.(chr(i,j,k+4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k+1)+
+!     &                  10*f(i,j,k+2)-5*f(i,j,k+3)+
+!     &                  f(i,j,k+4))/dz/dz
+!               else if (chr(i,j,k+1).ne.ex
+!     &                 .and.chr(i,j,k+2).ne.ex
+!     &                 .and.chr(i,j,k+3).ne.ex) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k+1)+
+!     &                   4*f(i,j,k+2)-f(i,j,k+3))/dz/dz
+!               else if (chr(i,j,k+1).ne.ex
+!     &                  .and.chr(i,j,k+2).ne.ex) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k+2)-2*f(i,j,k+1)+f(i,j,k))/dz/dz
+!               else
+!                 if (first) then
+!                   first=.false.
+!                   write(*,*) 'df2_int: error in chr stencil (O)'
+!                   write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   write(*,*) '    (first error only)'
+!                 end if
+!                   return
+!               end if
+!
+!        else if (k.eq.2) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_zz=(f(i,j,k+1)-2*f(i,j,k)+f(i,j,k-1))/dz/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)
+!     &            .and.(chr(i,j,k+4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k+1)+
+!     &                  10*f(i,j,k+2)-5*f(i,j,k+3)+
+!     &                  f(i,j,k+4))/dz/dz
+!               else if (chr(i,j,k+1).ne.ex
+!     &                 .and.chr(i,j,k+2).ne.ex
+!     &                 .and.chr(i,j,k+3).ne.ex) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k+1)+
+!     &                   4*f(i,j,k+2)-f(i,j,k+3))/dz/dz
+!               else if (chr(i,j,k+1).ne.ex
+!     &                 .and.chr(i,j,k+2).ne.ex) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k+2)-2*f(i,j,k+1)+f(i,j,k))/dz/dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df2_int: error in chr stencil (P)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   return
+!               end if
+!         end if
+!
+!        else if (k.eq.3) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_zz=(f(i,j,k+1)-2*f(i,j,k)+f(i,j,k-1))/dz/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)
+!     &            .and.(chr(i,j,k+4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k+1)+
+!     &                  10*f(i,j,k+2)-5*f(i,j,k+3)+
+!     &                  f(i,j,k+4))/dz/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)
+!     &                 .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k+1)+
+!     &                   4*f(i,j,k+2)-f(i,j,k+3))/dz/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k+2)-2*f(i,j,k+1)+f(i,j,k))/dz/dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df2_int: error in chr stencil (Q)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   return
+!               end if
+!         else  !this is the case where (i,j,k-1) is not excised and (i,j,k+1) is excised
+!               if (chr(i,j,k-2).ne.ex) then
+!                   f_zz=(f(i,j,k)-2*f(i,j,k-1)+f(i,j,k-2))/dz/dz
+!               end if
+!         end if
+!
+!        else if ((k.ge.4).and.(k.le.(Nz-3))) then
+!         if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
+!                   f_zz=(f(i,j,k+1)-2*f(i,j,k)+f(i,j,k-1))/dz/dz
+!         else if (chr(i,j,k-1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k+1).ne.ex)
+!     &            .and.(chr(i,j,k+2).ne.ex)
+!     &            .and.(chr(i,j,k+3).ne.ex)
+!     &            .and.(chr(i,j,k+4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k+1)+
+!     &                  10*f(i,j,k+2)-5*f(i,j,k+3)+
+!     &                  f(i,j,k+4))/dz/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)
+!     &                 .and.(chr(i,j,k+3).ne.ex)) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k+1)+
+!     &                   4*f(i,j,k+2)-f(i,j,k+3))/dz/dz
+!               else if ((chr(i,j,k+1).ne.ex)
+!     &                 .and.(chr(i,j,k+2).ne.ex)) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k+2)-2*f(i,j,k+1)+f(i,j,k))/dz/dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df2_int: error in chr stencil (R)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   return
+!               end if
+!         else
+!               if ((chr(i,j,k-3).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k-1)
+!     &                   +4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
+!               else if (chr(i,j,k-2).ne.ex) then
+!                   f_zz=(f(i,j,k)-2*f(i,j,k-1)+f(i,j,k-2))/dz/dz
+!               end if
+!         end if
+!
+!        else if (k.eq.(Nz-2)) then
+!         if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+!                   f_zz=(f(i,j,k-1)-2*f(i,j,k)+f(i,j,k+1))/dz/dz
+!         else if (chr(i,j,k+1).eq.ex) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)
+!     &            .and.(chr(i,j,k-4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k-1)+
+!     &                  10*f(i,j,k-2)-5*f(i,j,k-3)+
+!     &                  f(i,j,k-4))/dz/dz
+!               else if ((chr(i,j,k-1).ne.ex)
+!     &                 .and.(chr(i,j,k-2).ne.ex)
+!     &                 .and.(chr(i,j,k-3).ne.ex)) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k-1)+
+!     &                   4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
+!               else if ((chr(i,j,k-1).ne.ex)
+!     &                 .and.(chr(i,j,k-2).ne.ex)) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k-2)-2*f(i,j,k-1)+f(i,j,k))/dz/dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df2_int: error in chr stencil (S)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   return
+!               end if
+!         else  !this is the case where (i,j,k+1) is not excised and (i,j,k-1) is excised
+!               if (chr(i,j,k+2).ne.ex) then
+!                   f_zz=(f(i,j,k)-2*f(i,j,k+1)+f(i,j,k+2))/dz/dz
+!               end if
+!         end if
+!
+!        else if (k.eq.(Nz-1)) then
+!         if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+!                   f_zz=(f(i,j,k+1)-2*f(i,j,k)+f(i,j,k-1))/dz/dz
+!         else if (chr(i,j,k+1).eq.ex) then
+!               if (.not.extrap
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)
+!     &            .and.(chr(i,j,k-4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k-1)+
+!     &                  10*f(i,j,k-2)-5*f(i,j,k-3)+
+!     &                  f(i,j,k-4))/dz/dz
+!               else if (chr(i,j,k-1).ne.ex
+!     &                 .and.chr(i,j,k-2).ne.ex
+!     &                 .and.chr(i,j,k-3).ne.ex) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k-1)+
+!     &                   4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
+!               else if (chr(i,j,k-1).ne.ex
+!     &                 .and.chr(i,j,k-2).ne.ex) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k-2)-2*f(i,j,k-1)+f(i,j,k))/dz/dz
+!               else
+!                if (first) then
+!                     first=.false.
+!                     write(*,*) 'df2_int: error in chr stencil (T)'
+!                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+!     &                                                   Nx,Ny,Nz,dz
+!                     write(*,*) '    (first error only)'
+!                end if
+!                   return
+!               end if
+!         end if
+!
+!        else if (k.eq.Nz) then
+!               if ((.not.extrap)
+!     &            .and.(chr(i,j,k-1).ne.ex)
+!     &            .and.(chr(i,j,k-2).ne.ex)
+!     &            .and.(chr(i,j,k-3).ne.ex)
+!     &            .and.(chr(i,j,k-4).ne.ex)) then
+!                   f_zz=(3*f(i,j,k)-9*f(i,j,k-1)+
+!     &                  10*f(i,j,k-2)-5*f(i,j,k-3)+
+!     &                  f(i,j,k-4))/dz/dz
+!               else if (chr(i,j,k-1).ne.ex
+!     &                 .and.chr(i,j,k-2).ne.ex
+!     &                 .and.chr(i,j,k-3).ne.ex) then
+!                   f_zz=(2*f(i,j,k)-5*f(i,j,k-1)+
+!     &                   4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
+!               else if (chr(i,j,k-1).ne.ex
+!     &                  .and.chr(i,j,k-2).ne.ex) then
+!              !    write(*,*) 'df2_int: warning ... first order k=1'
+!              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   f_zz=(f(i,j,k-2)-2*f(i,j,k-1)+f(i,j,k))/dz/dz
+!               else
+!                 if (first) then
+!                   first=.false.
+!                   write(*,*) 'df2_int: error in chr stencil (U)'
+!                   write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+!                   write(*,*) '    (first error only)'
+!                 end if
+!                   return
+!               end if
+!        end if
+
+
+
 !!!!!!!!!!!!!!!
 
 !!!!!!!!!!OLDVERSION!!!!!!!!!!!!!!!!
@@ -1543,9 +2422,13 @@ c----------------------------------------------------------------------
            write(*,*) ' f_tt=',f_tt
            write(*,*) ' f_tx=',f_tx
            write(*,*) ' f_ty=',f_ty
+           write(*,*) ' f_tz=',f_tz
            write(*,*) ' f_xx=',f_xx
            write(*,*) ' f_xy=',f_xy
+           write(*,*) ' f_xz=',f_xz
            write(*,*) ' f_yy=',f_yy
+           write(*,*) ' f_yz=',f_yz
+           write(*,*) ' f_zz=',f_zz
         end if
 
         return
@@ -1594,15 +2477,18 @@ c----------------------------------------------------------------------
               gb_tt(i,j,k)=0
               gb_tx(i,j,k)=0
               gb_ty(i,j,k)=0
+              gb_tz(i,j,k)=0
               gb_xx(i,j,k)=0
               gb_xy(i,j,k)=0
+              gb_xz(i,j,k)=0
               gb_yy(i,j,k)=0
+              gb_yz(i,j,k)=0
+              psi(i,j,k)=0
 
               Hb_t(i,j,k)=0
               Hb_x(i,j,k)=0
               Hb_y(i,j,k)=0
-
-              psi(i,j,k)=0
+              Hb_z(i,j,k)=0
             end do
            end do
         end do
@@ -1832,6 +2718,22 @@ c-----------------------------------------------------------------------
            do i=3,Nx-2
             do k=2,Nz-1
               f(i,Ny-1,k)=0
+            end do
+           end do
+        end if
+
+        if (phys_bdy(5).eq.1.or.all.eq.1) then
+           do i=3,Nx-2
+            do j=3,Ny-2
+              f(i,j,2)=0
+            end do
+           end do
+        end if
+
+        if (phys_bdy(6).eq.1.or.all.eq.1) then
+           do i=3,Nx-2
+            do j=3,Ny-2
+              f(i,j,Nz-1)=0
             end do
            end do
         end if
@@ -2229,24 +3131,32 @@ c----------------------------------------------------------------------
               gb_tt_t(i,j,k)=0
               gb_tx_t(i,j,k)=0
               gb_ty_t(i,j,k)=0
+              gb_tz_t(i,j,k)=0
               gb_xx_t(i,j,k)=0
               gb_xy_t(i,j,k)=0
+              gb_xz_t(i,j,k)=0
               gb_yy_t(i,j,k)=0
+              gb_yz_t(i,j,k)=0
               psi_t(i,j,k)=0
               Hb_t_t(i,j,k)=0
               Hb_x_t(i,j,k)=0
               Hb_y_t(i,j,k)=0
+              Hb_z_t(i,j,k)=0
               if (chr(i,j,k).eq.ex) then
                  gb_tt(i,j,k)=0
                  gb_tx(i,j,k)=0
                  gb_ty(i,j,k)=0
+                 gb_tz(i,j,k)=0
                  gb_xx(i,j,k)=0
                  gb_xy(i,j,k)=0
+                 gb_xz(i,j,k)=0
                  gb_yy(i,j,k)=0
+                 gb_yz(i,j,k)=0
                  psi(i,j,k)=0
                  Hb_t(i,j,k)=0
                  Hb_x(i,j,k)=0
                  Hb_y(i,j,k)=0
+                 Hb_z(i,j,k)=0
               else
                  x0=x(i)
                  y0=y(j)
@@ -2263,6 +3173,7 @@ c----------------------------------------------------------------------
                  gb_ty(i,j,k)=2*y0*(1+rho0**2)
      &                      *((1-rho_h)/(1-rho0))**(-n)
      &                      /rho0/(1-rho0**2)**2
+                 gb_tz(i,j,k)=0
                  gb_xx(i,j,k)=4*x0**2*(1+rho0**2)**2
      &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
      &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
@@ -2278,13 +3189,15 @@ c----------------------------------------------------------------------
      &                      /(4*rho0**2+L**2*(1-rho0**2)**2)
      &                      /(4*rho0**3+L**2*(1-rho0**2)**2
      &                       *(rho0+(r0/2)*(-1+rho0**2)))
-
+                 gb_xz(i,j,k)=0
                  gb_yy(i,j,k)=4*y0**2*(1+rho0**2)**2
      &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
      &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
      &                      /(4*rho0**3+L**2*(1-rho0**2)**2
      &                       *(rho0+(r0/2)*(-1+rho0**2))))
      &                      /rho0**2/(1-rho0**2)**2
+                 gb_yz(i,j,k)=0
+                 psi(i,j,k)=0
 
 !                 ! (Schw coordinates)!
 !                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!
@@ -2484,78 +3397,217 @@ c----------------------------------------------------------------------
         ! use we drop any _n identifier
         !--------------------------------------------------------------
         real*8 gb_tt_t, gb_tt_x, gb_tt_y
+        real*8 gb_tt_z
         real*8 gb_tt_tt,gb_tt_tx,gb_tt_ty
+        real*8 gb_tt_tz
         real*8 gb_tt_xx,gb_tt_xy
+        real*8 gb_tt_xz
         real*8 gb_tt_yy
+        real*8 gb_tt_yz
+        real*8 gb_tt_zz
+
         real*8 gb_tx_t, gb_tx_x, gb_tx_y
+        real*8 gb_tx_z
         real*8 gb_tx_tt,gb_tx_tx,gb_tx_ty
+        real*8 gb_tx_tz
         real*8 gb_tx_xx,gb_tx_xy
+        real*8 gb_tx_xz
         real*8 gb_tx_yy
+        real*8 gb_tx_yz
+        real*8 gb_tx_zz
+
         real*8 gb_ty_t, gb_ty_x, gb_ty_y
+        real*8 gb_ty_z
         real*8 gb_ty_tt,gb_ty_tx,gb_ty_ty
+        real*8 gb_ty_tz
         real*8 gb_ty_xx,gb_ty_xy
+        real*8 gb_ty_xz
         real*8 gb_ty_yy
+        real*8 gb_ty_yz
+        real*8 gb_ty_zz
+
+        real*8 gb_tz_t, gb_tz_x, gb_tz_y
+        real*8 gb_tz_z
+        real*8 gb_tz_tt,gb_tz_tx,gb_tz_ty
+        real*8 gb_tz_tz
+        real*8 gb_tz_xx,gb_tz_xy
+        real*8 gb_tz_xz
+        real*8 gb_tz_yy
+        real*8 gb_tz_yz
+        real*8 gb_tz_zz
+
         real*8 gb_xx_t, gb_xx_x, gb_xx_y
+        real*8 gb_xx_z
         real*8 gb_xx_tt,gb_xx_tx,gb_xx_ty
+        real*8 gb_xx_tz
         real*8 gb_xx_xx,gb_xx_xy
+        real*8 gb_xx_xz
         real*8 gb_xx_yy
+        real*8 gb_xx_yz
+        real*8 gb_xx_zz
+
         real*8 gb_xy_t, gb_xy_x, gb_xy_y
+        real*8 gb_xy_z
         real*8 gb_xy_tt,gb_xy_tx,gb_xy_ty
+        real*8 gb_xy_tz
         real*8 gb_xy_xx,gb_xy_xy
+        real*8 gb_xy_xz
         real*8 gb_xy_yy
+        real*8 gb_xy_yz
+        real*8 gb_xy_zz
+
+        real*8 gb_xz_t, gb_xz_x, gb_xz_y
+        real*8 gb_xz_z
+        real*8 gb_xz_tt,gb_xz_tx,gb_xz_ty
+        real*8 gb_xz_tz
+        real*8 gb_xz_xx,gb_xz_xy
+        real*8 gb_xz_xz
+        real*8 gb_xz_yy
+        real*8 gb_xz_yz
+        real*8 gb_xz_zz
+
         real*8 gb_yy_t, gb_yy_x, gb_yy_y
+        real*8 gb_yy_z
         real*8 gb_yy_tt,gb_yy_tx,gb_yy_ty
+        real*8 gb_yy_tz
         real*8 gb_yy_xx,gb_yy_xy
+        real*8 gb_yy_xz
         real*8 gb_yy_yy
+        real*8 gb_yy_yz
+        real*8 gb_yy_zz
+
+        real*8 gb_yz_t, gb_yz_x, gb_yz_y
+        real*8 gb_yz_z
+        real*8 gb_yz_tt,gb_yz_tx,gb_yz_ty
+        real*8 gb_yz_tz
+        real*8 gb_yz_xx,gb_yz_xy
+        real*8 gb_yz_xz
+        real*8 gb_yz_yy
+        real*8 gb_yz_yz
+        real*8 gb_yz_zz
+
         real*8 psi_t, psi_x, psi_y
+        real*8 psi_z
         real*8 psi_tt,psi_tx,psi_ty
+        real*8 psi_tz
         real*8 psi_xx,psi_xy
+        real*8 psi_xz
         real*8 psi_yy
+        real*8 psi_yz
+        real*8 psi_zz
+
         real*8 phi1_t, phi1_x, phi1_y
+        real*8 phi1_z
         real*8 phi1_tt,phi1_tx,phi1_ty
+        real*8 phi1_tz
         real*8 phi1_xx,phi1_xy
+        real*8 phi1_xz
         real*8 phi1_yy
+        real*8 phi1_yz
+        real*8 phi1_zz
 
         real*8 gb_tt0,gb_tx0,gb_ty0
+        real*8 gb_tz0
         real*8 gb_xx0,gb_xy0
+        real*8 gb_xz0
         real*8 gb_yy0
+        real*8 gb_yz0
         real*8 psi0
         real*8 phi10
 
         real*8 g0_tt_ads_x,g0_tt_ads_xx,g0_tt_ads_xy
         real*8 g0_tt_ads_y,g0_tt_ads_yy
+        real*8 g0_tt_ads_z
+        real*8 g0_tt_ads_xz
+        real*8 g0_tt_ads_yz
+        real*8 g0_tt_ads_zz
+        real*8 g0_tx_ads_x,g0_tx_ads_xx,g0_tx_ads_xy
+        real*8 g0_tx_ads_y,g0_tx_ads_yy
+        real*8 g0_tx_ads_z
+        real*8 g0_tx_ads_xz
+        real*8 g0_tx_ads_yz
+        real*8 g0_tx_ads_zz
+        real*8 g0_ty_ads_x,g0_ty_ads_xx,g0_ty_ads_xy
+        real*8 g0_ty_ads_y,g0_ty_ads_yy
+        real*8 g0_ty_ads_z
+        real*8 g0_ty_ads_xz
+        real*8 g0_ty_ads_yz
+        real*8 g0_ty_ads_zz
+        real*8 g0_tz_ads_x,g0_tz_ads_xx,g0_tz_ads_xy
+        real*8 g0_tz_ads_y,g0_tz_ads_yy
+        real*8 g0_tz_ads_z
+        real*8 g0_tz_ads_xz
+        real*8 g0_tz_ads_yz
+        real*8 g0_tz_ads_zz
         real*8 g0_xx_ads_x,g0_xx_ads_xx,g0_xx_ads_xy
         real*8 g0_xx_ads_y,g0_xx_ads_yy
+        real*8 g0_xx_ads_z
+        real*8 g0_xx_ads_xz
+        real*8 g0_xx_ads_yz
+        real*8 g0_xx_ads_zz
         real*8 g0_xy_ads_x,g0_xy_ads_xx,g0_xy_ads_xy
         real*8 g0_xy_ads_y,g0_xy_ads_yy
+        real*8 g0_xy_ads_z
+        real*8 g0_xy_ads_xz
+        real*8 g0_xy_ads_yz
+        real*8 g0_xy_ads_zz
+        real*8 g0_xz_ads_x,g0_xz_ads_xx,g0_xz_ads_xy
+        real*8 g0_xz_ads_y,g0_xz_ads_yy
+        real*8 g0_xz_ads_z
+        real*8 g0_xz_ads_xz
+        real*8 g0_xz_ads_yz
+        real*8 g0_xz_ads_zz
         real*8 g0_yy_ads_x,g0_yy_ads_xx,g0_yy_ads_xy
         real*8 g0_yy_ads_y,g0_yy_ads_yy
+        real*8 g0_yy_ads_z
+        real*8 g0_yy_ads_xz
+        real*8 g0_yy_ads_yz
+        real*8 g0_yy_ads_zz
+        real*8 g0_yz_ads_x,g0_yz_ads_xx,g0_yz_ads_xy
+        real*8 g0_yz_ads_y,g0_yz_ads_yy
+        real*8 g0_yz_ads_z
+        real*8 g0_yz_ads_xz
+        real*8 g0_yz_ads_yz
+        real*8 g0_yz_ads_zz
         real*8 g0_psi_ads_x,g0_psi_ads_xx,g0_psi_ads_xy
         real*8 g0_psi_ads_y,g0_psi_ads_yy
+        real*8 g0_psi_ads_z
+        real*8 g0_psi_ads_xz
+        real*8 g0_psi_ads_yz
+        real*8 g0_psi_ads_zz
 
         real*8 g0_tt_ads0,g0_xx_ads0
+        real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
         real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
+        real*8 g0_xz_ads0,g0_yz_ads0
 
         real*8 g0u_tt_ads0,g0u_xx_ads0
+        real*8 g0u_tx_ads0,g0u_ty_ads0,g0u_tz_ads0
         real*8 g0u_xy_ads0,g0u_yy_ads0,g0u_psi_ads0
+        real*8 g0u_xz_ads0,g0u_yz_ads0
 
-        real*8 Hb_t_t,Hb_t_x,Hb_t_y
-        real*8 Hb_x_t,Hb_x_x,Hb_x_y
-        real*8 Hb_y_t,Hb_y_x,Hb_y_y
+        real*8 Hb_t_t,Hb_t_x,Hb_t_y,Hb_t_z
+        real*8 Hb_x_t,Hb_x_x,Hb_x_y,Hb_x_z
+        real*8 Hb_y_t,Hb_y_x,Hb_y_y,Hb_y_z
+        real*8 Hb_z_t,Hb_z_x,Hb_z_y,Hb_z_z
 
         real*8 Hb_t0,Hb_x0,Hb_y0
+        real*8 Hb_z0
 
-!!!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!!!
+!!!!!!!!!!DEBUG DERIVATIVE STENCILS!!!!!!!!!!!
         real*8 testf1(Nx,Ny,Nz),testf2(Nx,Ny,Nz),testf3(Nx,Ny,Nz)
-        real*8 testf1_t,testf1_x,testf1_y
-        real*8 testf2_t,testf2_x,testf2_y
-        real*8 testf3_t,testf3_x,testf3_y
+        real*8 testf1_t,testf1_x,testf1_y,testf1_z
+        real*8 testf2_t,testf2_x,testf2_y,testf2_z
+        real*8 testf3_t,testf3_x,testf3_y,testf3_z
         real*8 testf1_tt,testf1_tx,testf1_ty
         real*8 testf1_xx,testf1_xy,testf1_yy
+        real*8 testf1_tz,testf1_xz,testf1_yz,testf1_zz
         real*8 testf2_tt,testf2_tx,testf2_ty
         real*8 testf2_xx,testf2_xy,testf2_yy
+        real*8 testf2_tz,testf2_xz,testf2_yz,testf2_zz
         real*8 testf3_tt,testf3_tx,testf3_ty
         real*8 testf3_xx,testf3_xy,testf3_yy
+        real*8 testf3_tz,testf3_xz,testf3_yz,testf3_zz
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !----------------------------------------------------------------------
@@ -2574,6 +3626,9 @@ c----------------------------------------------------------------------
         ! set gads values
         g0_tt_ads0 =-f0
      &             /(1-rho0**2)**2
+        g0_tx_ads0 =0
+        g0_ty_ads0 =0
+        g0_tz_ads0 =0
         g0_xx_ads0 =(x0**2*(1+rho0**2)**2/f0+y0**2)
      &             /(1-rho0**2)**2
      &             /rho0**2
@@ -2583,33 +3638,44 @@ c----------------------------------------------------------------------
      &             /rho0**2
      &             *x0*y0
      &             *4
+        g0_xz_ads0 =0
         g0_yy_ads0 =(y0**2*(1+rho0**2)**2/f0+x0**2)
      &             /(1-rho0**2)**2
      &             /rho0**2
      &             *4
+        g0_yz_ads0 =0
         g0_psi_ads0=(y0**2)
      &             /(1-rho0**2)**2
      &             *4
 
         g0u_tt_ads0 =1/g0_tt_ads0
+        g0u_tx_ads0 =0
+        g0u_ty_ads0 =0
+        g0u_tz_ads0 =0
         g0u_xx_ads0 =g0_yy_ads0/(g0_xx_ads0*g0_yy_ads0-g0_xy_ads0**2)
         g0u_xy_ads0 =-g0_xy_ads0/(g0_xx_ads0*g0_yy_ads0-g0_xy_ads0**2)
+        g0u_xz_ads0 =0
         g0u_yy_ads0 =g0_xx_ads0/(g0_xx_ads0*g0_yy_ads0-g0_xy_ads0**2)
+        g0u_yz_ads0 =0
         g0u_psi_ads0=1/g0_psi_ads0
 
         ! set gbar values
         gb_tt0=gb_tt_n(i,j,k)
         gb_tx0=gb_tx_n(i,j,k)
         gb_ty0=gb_ty_n(i,j,k)
+        gb_tz0=gb_tz_n(i,j,k)
         gb_xx0=gb_xx_n(i,j,k)
         gb_xy0=gb_xy_n(i,j,k)
+        gb_xz0=gb_xz_n(i,j,k)
         gb_yy0=gb_yy_n(i,j,k)
+        gb_yz0=gb_yz_n(i,j,k)
         psi0=psi_n(i,j,k)
 
         ! set hbar values
         Hb_t0=Hb_t_n(i,j,k)
         Hb_x0=Hb_x_n(i,j,k)
         Hb_y0=Hb_y_n(i,j,k)
+        Hb_z0=Hb_z_n(i,j,k)
 
         ! set phi1 value
         phi10=phi1_n(i,j,k)
@@ -2617,12 +3683,43 @@ c----------------------------------------------------------------------
         ! ASSUMES L=1
         g0_tt_ads_x  =(8*x0*(1 + rho0**2))/(L**2*(-1 + rho0**2)**3)
         g0_tt_ads_y  =(8*y0*(1 + rho0**2))/(L**2*(-1 + rho0**2)**3)
+        g0_tt_ads_z  =0
         g0_tt_ads_xx =(-8*(1 + 3*x0**4 - y0**4 + 2*x0**2*(4 + y0**2)))/
      &  (L**2*(-1 + x0**2 + y0**2)**4)
         g0_tt_ads_xy =(-32*x0*y0*(2 + x0**2 + y0**2))/
      &  (L**2*(-1 + x0**2 + y0**2)**4)
         g0_tt_ads_yy =(8*(-1 + x0**4 - 2*(4 + x0**2)*y0**2 - 3*y0**4))/
      &  (L**2*(-1 + x0**2 + y0**2)**4)
+
+        g0_tx_ads_x  =0
+        g0_tx_ads_y  =0
+        g0_tx_ads_z  =0
+        g0_tx_ads_xx =0
+        g0_tx_ads_xy =0
+        g0_tx_ads_xz =0
+        g0_tx_ads_yy =0
+        g0_tx_ads_yz =0
+        g0_tx_ads_zz =0
+
+        g0_ty_ads_x  =0
+        g0_ty_ads_y  =0
+        g0_ty_ads_z  =0
+        g0_ty_ads_xx =0
+        g0_ty_ads_xy =0
+        g0_ty_ads_xz =0
+        g0_ty_ads_yy =0
+        g0_ty_ads_yz =0
+        g0_ty_ads_zz =0
+
+        g0_tz_ads_x  =0
+        g0_tz_ads_y  =0
+        g0_tz_ads_z  =0
+        g0_tz_ads_xx =0
+        g0_tz_ads_xy =0
+        g0_tz_ads_xz =0
+        g0_tz_ads_yy =0
+        g0_tz_ads_yz =0
+        g0_tz_ads_zz =0
 
         g0_xx_ads_x  =(-16*x0*(8*y0**2*(-1 + 3*x0**2 + 3*y0**2) + 
      &                L**4*(-1 + rho0**2)**2*
@@ -2639,6 +3736,7 @@ c----------------------------------------------------------------------
      &                x0**2*(-1 + y0**2 + 2*y0**4))))/
      &                ((-1 + rho0**2)**3*
      &                (L**2*(-1 + rho0**2)**2 + 4*(rho0**2))**2)
+        g0_xx_ads_z  =0
         g0_xx_ads_xx =(16*(32*y0**2*(3*(x0**2 - 4*x0**4 + 7*x0**6) + 
      &                (-1 - 8*x0**2 + 39*x0**4)*y0**2 + 
      &                (4 + 15*x0**2)*y0**4 - 3*y0**6) + 
@@ -2674,6 +3772,7 @@ c----------------------------------------------------------------------
      &                x0**2*(-3 + 4*y0**2 + 23*y0**4))))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_xx_ads_xz =0
         g0_xx_ads_yy =(-16*(L**6*(-1 + x0**2 + y0**2)**4*
      &                (-1 - 5*x0**2 + 5*x0**4 + x0**6 - 
      &                3*(1 + 22*x0**2 + x0**4)*y0**2 - 
@@ -2696,6 +3795,8 @@ c----------------------------------------------------------------------
      &                61*y0**8))))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_xx_ads_yz =0
+        g0_xx_ads_zz =0
 
         g0_xy_ads_x  =(-16*(-1 + L)*(1 + L)*y0*
      &                (L**2*(1 + 7*x0**2 - y0**2)*(-1 + rho0**2)**2 + 
@@ -2707,6 +3808,7 @@ c----------------------------------------------------------------------
      &                4*(x0**4 + y0**2 - 5*y0**4 - x0**2*(1+4*y0**2))))/
      &                ((-1 + rho0**2)**3*
      &                (L**2*(-1 + rho0**2)**2 + 4*(rho0**2))**2)
+        g0_xy_ads_z  =0
         g0_xy_ads_xx =(-128*x0*y0*(4*(x0**2 - 3*y0**2) - 
      &                L**6*(3+7*x0**2-3*y0**2)*(-1+ x0**2 + y0**2)**4 + 
      &                4*(x0**2 + y0**2)*
@@ -2741,6 +3843,7 @@ c----------------------------------------------------------------------
      &                x0**4*(4 + 41*y0**2 - 156*y0**4 + 60*y0**6))))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_xy_ads_xz =0
         g0_xy_ads_yy =(-128*x0*y0*(4*(-3*x0**2 + y0**2) + 
      &                L**6*(-3 + 3*x0**2 - 7*y0**2)*
      &                (-1 + x0**2 + y0**2)**4 - 
@@ -2756,6 +3859,18 @@ c----------------------------------------------------------------------
      &                2*x0**2*(21 - 34*y0**2 - 87*y0**4 + 48*y0**6))))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_xy_ads_yz =0
+        g0_xy_ads_zz =0
+
+        g0_xz_ads_x  =0
+        g0_xz_ads_y  =0
+        g0_xz_ads_z  =0
+        g0_xz_ads_xx =0
+        g0_xz_ads_xy =0
+        g0_xz_ads_xz =0
+        g0_xz_ads_yy =0
+        g0_xz_ads_yz =0
+        g0_xz_ads_zz =0
 
         g0_yy_ads_x  =(-16*x0*(16*x0**4 + 8*(1 + x0**2)*y0**2 -8*y0**4+ 
      &                L**4*(-1 + rho0**2)**2*
@@ -2772,6 +3887,7 @@ c----------------------------------------------------------------------
      &                x0**2*(11 - 10*y0**2 + 7*y0**4))))/
      &                ((-1 + rho0**2)**3*
      &                (L**2*(-1 + rho0**2)**2 + 4*(rho0**2))**2)
+        g0_yy_ads_z  =0
         g0_yy_ads_xx =(16*(4*L**4*(-1 + x0**2 + y0**2)**2*
      &                (3*x0**2*(-1 + x0**2)**2*(1 + 5*x0**2) + 
      &                (-1 - 46*x0**2 + 95*x0**4 + 24*x0**6)*y0**2 + 
@@ -2805,6 +3921,7 @@ c----------------------------------------------------------------------
      &                2*x0**2*(-7 + 5*y0**2*(3 + 3*y0**2 + y0**4)))))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_yy_ads_xz =0
         g0_yy_ads_yy =(-16*(32*x0**2*(x0**2 - 4*x0**4 + 3*x0**6 + 
      &                (-3 + 8*x0**2 - 15*x0**4)*y0**2 + 
      &                3*(4 - 13*x0**2)*y0**4 - 21*y0**6) + 
@@ -2824,112 +3941,369 @@ c----------------------------------------------------------------------
      &                4*(7 + 16*x0**2)*y0**8 - 3*y0**10)))/
      &                ((-1 + x0**2 + y0**2)**4*
      &                (L**2*(-1+x0**2+y0**2)**2 + 4*(x0**2 + y0**2))**3)
+        g0_yy_ads_yz =0
+        g0_yy_ads_zz =0
+
+        g0_yz_ads_x  =0
+        g0_yz_ads_y  =0
+        g0_yz_ads_z  =0
+        g0_yz_ads_xx =0
+        g0_yz_ads_xy =0
+        g0_yz_ads_xz =0
+        g0_yz_ads_yy =0
+        g0_yz_ads_yz =0
+        g0_yz_ads_zz =0
 
         g0_psi_ads_x  =(-16*x0*y0**2)/(-1 + rho0**2)**3
         g0_psi_ads_y  =(-8*(y0 - x0**2*y0 + y0**3))/(-1 + rho0**2)**3
+        g0_psi_ads_z  =0
         g0_psi_ads_xx =(-16*y0**2*(-1 - 5*x0**2 + y0**2))/
      &                 (-1 + x0**2 + y0**2)**4
         g0_psi_ads_xy =(-32*x0*y0*(-1 + x0**2 - 2*y0**2))/
      &                 (-1 + x0**2 + y0**2)**4
+        g0_psi_ads_xz =0
         g0_psi_ads_yy =(8*((-1+x0**2)**2-8*(-1+x0**2)*y0**2+3*y0**4))/
      &                 (-1 + x0**2 + y0**2)**4
+        g0_psi_ads_yz =0
+        g0_psi_ads_zz =0
 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t,
-     &       gb_tt_x,gb_tt_y,gb_tt_tt,gb_tt_tx,gb_tt_ty,
-     &       gb_tt_xx,gb_tt_xy,gb_tt_yy,
+     &       gb_tt_x,gb_tt_y,
+     &       gb_tt_z,
+     &       gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &       gb_tt_tz,
+     &       gb_tt_xx,gb_tt_xy,
+     &       gb_tt_xz,
+     &       gb_tt_yy,
+     &       gb_tt_yz,
+     &       gb_tt_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_tt')
         call df2_int(gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t,
-     &       gb_tx_x,gb_tx_y,gb_tx_tt,gb_tx_tx,gb_tx_ty,
-     &       gb_tx_xx,gb_tx_xy,gb_tx_yy,
+     &       gb_tx_x,gb_tx_y,
+     &       gb_tx_z,
+     &       gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &       gb_tx_tz,
+     &       gb_tx_xx,gb_tx_xy,
+     &       gb_tx_xz,
+     &       gb_tx_yy,
+     &       gb_tx_yz,
+     &       gb_tx_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_tx')
         call df2_int(gb_ty_np1,gb_ty_n,gb_ty_nm1,gb_ty_t,
-     &       gb_ty_x,gb_ty_y,gb_ty_tt,gb_ty_tx,gb_ty_ty,
-     &       gb_ty_xx,gb_ty_xy,gb_ty_yy,
+     &       gb_ty_x,gb_ty_y,
+     &       gb_ty_z,
+     &       gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &       gb_ty_tz,
+     &       gb_ty_xx,gb_ty_xy,
+     &       gb_ty_xz,
+     &       gb_ty_yy,
+     &       gb_ty_yz,
+     &       gb_ty_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_ty')
+        call df2_int(gb_tz_np1,gb_tz_n,gb_tz_nm1,gb_tz_t,
+     &       gb_tz_x,gb_tz_y,
+     &       gb_tz_z,
+     &       gb_tz_tt,gb_tz_tx,gb_tz_ty,
+     &       gb_tz_tz,
+     &       gb_tz_xx,gb_tz_xy,
+     &       gb_tz_xz,
+     &       gb_tz_yy,
+     &       gb_tz_yz,
+     &       gb_tz_zz,
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_tz')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t,
-     &       gb_xx_x,gb_xx_y,gb_xx_tt,gb_xx_tx,gb_xx_ty,
-     &       gb_xx_xx,gb_xx_xy,gb_xx_yy,
+     &       gb_xx_x,gb_xx_y,
+     &       gb_xx_z,
+     &       gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &       gb_xx_tz,
+     &       gb_xx_xx,gb_xx_xy,
+     &       gb_xx_xz,
+     &       gb_xx_yy,
+     &       gb_xx_yz,
+     &       gb_xx_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_xx')
         call df2_int(gb_xy_np1,gb_xy_n,gb_xy_nm1,gb_xy_t,
-     &       gb_xy_x,gb_xy_y,gb_xy_tt,gb_xy_tx,gb_xy_ty,
-     &       gb_xy_xx,gb_xy_xy,gb_xy_yy,
+     &       gb_xy_x,gb_xy_y,
+     &       gb_xy_z,
+     &       gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &       gb_xy_tz,
+     &       gb_xy_xx,gb_xy_xy,
+     &       gb_xy_xz,
+     &       gb_xy_yy,
+     &       gb_xy_yz,
+     &       gb_xy_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_xy')
+        call df2_int(gb_xz_np1,gb_xz_n,gb_xz_nm1,gb_xz_t,
+     &       gb_xz_x,gb_xz_y,
+     &       gb_xz_z,
+     &       gb_xz_tt,gb_xz_tx,gb_xz_ty,
+     &       gb_xz_tz,
+     &       gb_xz_xx,gb_xz_xy,
+     &       gb_xz_xz,
+     &       gb_xz_yy,
+     &       gb_xz_yz,
+     &       gb_xz_zz,
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_xz')
         call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t,
-     &       gb_yy_x,gb_yy_y,gb_yy_tt,gb_yy_tx,gb_yy_ty,
-     &       gb_yy_xx,gb_yy_xy,gb_yy_yy,
+     &       gb_yy_x,gb_yy_y,
+     &       gb_yy_z,
+     &       gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &       gb_yy_tz,
+     &       gb_yy_xx,gb_yy_xy,
+     &       gb_yy_xz,
+     &       gb_yy_yy,
+     &       gb_yy_yz,
+     &       gb_yy_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_yy')
+        call df2_int(gb_yz_np1,gb_yz_n,gb_yz_nm1,gb_yz_t,
+     &       gb_yz_x,gb_yz_y,
+     &       gb_yz_z,
+     &       gb_yz_tt,gb_yz_tx,gb_yz_ty,
+     &       gb_yz_tz,
+     &       gb_yz_xx,gb_yz_xy,
+     &       gb_yz_xz,
+     &       gb_yz_yy,
+     &       gb_yz_yz,
+     &       gb_yz_zz,
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_yz')
         call df2_int(psi_np1,psi_n,psi_nm1,psi_t,psi_x,
-     &       psi_y,psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy,
+     &       psi_y,
+     &       psi_z,
+     &       psi_tt,psi_tx,psi_ty,
+     &       psi_tz,
+     &       psi_xx,psi_xy,
+     &       psi_xz,
+     &       psi_yy,
+     &       psi_yz,
+     &       psi_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'psi')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t,Hb_t_x,
-     &       Hb_t_y,x,y,z,dt,i,j,k,
+     &       Hb_t_y,
+     &       Hb_t_z,
+     &       x,y,z,dt,i,j,k,
      &       chr,ex,Nx,Ny,Nz,'Hb_t')
         call df1_int(Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t,Hb_x_x,
-     &       Hb_x_y,x,y,z,dt,i,j,k,
+     &       Hb_x_y,
+     &       Hb_x_z,
+     &       x,y,z,dt,i,j,k,
      &       chr,ex,Nx,Ny,Nz,'Hb_x')
         call df1_int(Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t,Hb_y_x,
-     &       Hb_y_y,x,y,z,dt,i,j,k,
+     &       Hb_y_y,
+     &       Hb_y_z,
+     &       x,y,z,dt,i,j,k,
      &       chr,ex,Nx,Ny,Nz,'Hb_y')
+        call df1_int(Hb_z_np1,Hb_z_n,Hb_z_nm1,Hb_z_t,Hb_z_x,
+     &       Hb_z_y,
+     &       Hb_z_z,
+     &       x,y,z,dt,i,j,k,
+     &       chr,ex,Nx,Ny,Nz,'Hb_z')
 
         ! calculate phi1 derivatives
         call df2_int(phi1_np1,phi1_n,phi1_nm1,phi1_t,phi1_x,
-     &       phi1_y,phi1_tt,phi1_tx,phi1_ty,phi1_xx,
-     &       phi1_xy,phi1_yy,x,y,z,dt,i,j,k,
+     &       phi1_y,
+     &       phi1_z,
+     &       phi1_tt,phi1_tx,phi1_ty,
+     &       phi1_tz,
+     &       phi1_xx,phi1_xy,
+     &       phi1_xz,
+     &       phi1_yy,
+     &       phi1_yz,
+     &       phi1_zz,
+     &       x,y,z,dt,i,j,k,
      &       chr,ex,Nx,Ny,Nz,'phi1')
 
-!!!!!!TEST DERIVATIVE STENCILS!!!!!!!!!
+
+!!!!!!!!!!DEBUG DERIVATIVE STENCILS!!!!!!!!!!!
+!         if    ((gb_tt_z.ne.0.0d0)
+!     &      .or.(gb_tt_tz.ne.0.0d0)
+!     &      .or.(gb_tt_xz.ne.0.0d0)
+!     &      .or.(gb_tt_yz.ne.0.0d0)
+!     &      .or.(gb_tt_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_tt'
+!
+!          write(*,*) 'gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)='
+!     &               ,gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)
+!
+!          write(*,*) 'gb_tt_z,gb_tt_tz,gb_tt_xz,gb_tt_yz,gb_tt_zz='
+!     &               ,gb_tt_z,gb_tt_tz,gb_tt_xz,gb_tt_yz,gb_tt_zz
+!
+!         end if
+!
+!         if    ((gb_tx_z.ne.0.0d0)
+!     &      .or.(gb_tx_tz.ne.0.0d0)
+!     &      .or.(gb_tx_xz.ne.0.0d0)
+!     &      .or.(gb_tx_yz.ne.0.0d0)
+!     &      .or.(gb_tx_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_tx'
+!
+!         end if
+!
+!         if    ((gb_ty_z.ne.0.0d0)
+!     &      .or.(gb_ty_tz.ne.0.0d0)
+!     &      .or.(gb_ty_xz.ne.0.0d0)
+!     &      .or.(gb_ty_yz.ne.0.0d0)
+!     &      .or.(gb_ty_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_ty'
+!
+!         end if
+!
+!         if    ((gb_tz_n(i,j,k).ne.0.0d0)
+!     &      .or.(gb_tz_z.ne.0.0d0)
+!     &      .or.(gb_tz_tz.ne.0.0d0)
+!     &      .or.(gb_tz_xz.ne.0.0d0)
+!     &      .or.(gb_tz_yz.ne.0.0d0)
+!     &      .or.(gb_tz_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero
+!     &           gb_tz'
+!         end if
+!
+!         if    ((gb_xx_z.ne.0.0d0)
+!     &      .or.(gb_xx_tz.ne.0.0d0)
+!     &      .or.(gb_xx_xz.ne.0.0d0)
+!     &      .or.(gb_xx_yz.ne.0.0d0)
+!     &      .or.(gb_xx_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_xx'
+!         end if
+!
+!         if    ((gb_xy_z.ne.0.0d0)
+!     &      .or.(gb_xy_tz.ne.0.0d0)
+!     &      .or.(gb_xy_xz.ne.0.0d0)
+!     &      .or.(gb_xy_yz.ne.0.0d0)
+!     &      .or.(gb_xy_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_xy'
+!         end if
+!
+!         if    ((gb_xz_n(i,j,k).ne.0.0d0)
+!     &      .or.(gb_xz_z.ne.0.0d0)
+!     &      .or.(gb_xz_tz.ne.0.0d0)
+!     &      .or.(gb_xz_xz.ne.0.0d0)
+!     &      .or.(gb_xz_yz.ne.0.0d0)
+!     &      .or.(gb_xz_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero
+!     &           gb_xz'
+!         end if
+!
+!         if    ((gb_yy_z.ne.0.0d0)
+!     &      .or.(gb_yy_tz.ne.0.0d0)
+!     &      .or.(gb_yy_xz.ne.0.0d0)
+!     &      .or.(gb_yy_yz.ne.0.0d0)
+!     &      .or.(gb_yy_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           gb_yy'
+!         end if
+!
+!         if    ((gb_yz_n(i,j,k).ne.0.0d0)
+!     &      .or.(gb_yz_z.ne.0.0d0)
+!     &      .or.(gb_yz_tz.ne.0.0d0)
+!     &      .or.(gb_yz_xz.ne.0.0d0)
+!     &      .or.(gb_yz_yz.ne.0.0d0)
+!     &      .or.(gb_yz_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero
+!     &           gb_yz'
+!         end if
+!
+!         if    ((psi_z.ne.0.0d0)
+!     &      .or.(psi_tz.ne.0.0d0)
+!     &      .or.(psi_xz.ne.0.0d0)
+!     &      .or.(psi_yz.ne.0.0d0)
+!     &      .or.(psi_zz.ne.0.0d0)) then
+!
+!          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
+!     &           psi'
+!         end if
+!
+!!!TEST
 !        do a=1,Nx
 !         do b=1,Ny
-!          testf1(a,b)=x(a)**3+2*x(a)
-!          testf2(a,b)=y(b)**3+2*y(b)
-!          testf3(a,b)=x(a)**3+2*y(b)+x(a)**2*y(b)**5
-!          chr(2,b)=ex
-!          chr(4,b)=ex
-!          chr(7,b)=ex
-!          chr(11,b)=ex
-!          chr(a,5)=ex
-!          chr(a,7)=ex
+!          do c=1,Nz
+!          testf1(a,b,c)=x(a)**3+2*x(a)
+!          testf2(a,b,c)=y(b)**3+2*y(b)*z(c)**7
+!          testf3(a,b,c)=x(a)**3+2*y(b)+x(a)**2*y(b)**5*z(c)**5
+!          chr(a,b,c)=0
+!          chr(2,b,c)=ex
+!          chr(4,b,c)=ex
+!          chr(7,b,c)=ex
+!          chr(11,b,c)=ex
+!          chr(a,5,c)=ex
+!          chr(a,7,c)=ex
+!          chr(a,b,25)=ex
+!          chr(a,b,28)=ex
+!          end do
 !         end do
 !        end do
 !        
 !        do a=1,Nx
 !         do b=1,Ny
-!          if (chr(a,b).ne.ex) then
+!          do c=1,Nz
+!          if (chr(a,b,c).ne.ex) then
 !        call df1_int(testf1,testf1,testf1,testf1_t,testf1_x,
-!     &       testf1_y,x,y,dt,a,b,
-!     &       chr,ex,Nx,Ny,'testf1')
+!     &       testf1_y,testf1_z,x,y,z,dt,a,b,c,
+!     &       chr,ex,Nx,Ny,Nz,'testf1')
 !        call df1_int(testf2,testf2,testf2,testf2_t,testf2_x,
-!     &       testf2_y,x,y,dt,a,b,
-!     &       chr,ex,Nx,Ny,'testf2')
+!     &       testf2_y, testf2_z,x,y,z,dt,a,b,c,
+!     &       chr,ex,Nx,Ny,Nz,'testf2')
 !        call df1_int(testf3,testf3,testf3,testf3_t,testf3_x,
-!     &       testf3_y,x,y,dt,a,b,
-!     &       chr,ex,Nx,Ny,'testf3')
+!     &       testf3_y,testf3_z,x,y,z,dt,a,b,c,
+!     &       chr,ex,Nx,Ny,Nz,'testf3')
 !        call df2_int(testf1,testf1,testf1,testf1_t,testf1_x,
-!     &       testf1_y,testf1_tt,testf1_tx,testf1_ty,
-!     &       testf1_xx,testf1_xy,testf1_yy,
-!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf1')
+!     &       testf1_y,testf1_z,testf1_tt,testf1_tx,testf1_ty,
+!     &       testf1_tz,
+!     &       testf1_xx,testf1_xy,
+!     &       testf1_xz,
+!     &       testf1_yy,
+!     &       testf1_yz,
+!     &       testf1_zz,
+!     &       x,y,z,dt,a,b,c,chr,ex,Nx,Ny,Nz,'testf1')
 !        call df2_int(testf2,testf2,testf2,testf2_t,testf2_x,
-!     &       testf2_y,testf2_tt,testf2_tx,testf2_ty,
-!     &       testf2_xx,testf2_xy,testf2_yy,
-!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf2')
+!     &       testf2_y,testf2_z,testf2_tt,testf2_tx,testf2_ty,
+!     &       testf2_tz,
+!     &       testf2_xx,testf2_xy,
+!     &       testf2_xz,
+!     &       testf2_yy,
+!     &       testf2_yz,
+!     &       testf2_zz,
+!     &       x,y,z,dt,a,b,c,chr,ex,Nx,Ny,Nz,'testf2')
 !        call df2_int(testf3,testf3,testf3,testf3_t,testf3_x,
-!     &       testf3_y,testf3_tt,testf3_tx,testf3_ty,
-!     &       testf3_xx,testf3_xy,testf3_yy,
-!     &       x,y,dt,a,b,chr,ex,Nx,Ny,'testf3')
+!     &       testf3_y,testf3_z,testf3_tt,testf3_tx,testf3_ty,
+!     &       testf3_tz,
+!     &       testf3_xx,testf3_xy,
+!     &       testf3_xz,
+!     &       testf3_yy,
+!     &       testf3_yz,
+!     &       testf3_zz,
+!     &       x,y,z,dt,a,b,c,chr,ex,Nx,Ny,Nz,'testf3')
 !
-!      write(*,*) 'a,b,x(a),y(b),testf3(a,b)='
-!     &           ,a,b,x(a),y(b),testf3(a,b)
+!      write(*,*) 'a,b,c,x(a),y(b),z(c)='
+!     &           ,a,b,c,x(a),y(b),z(c)
 !
-!      write(*,*) 'testf3_t,testf3_x,testf3_y='
-!     &            ,testf3_t,testf3_x,testf3_y
-!      write(*,*) 'testf3_tt,testf3_tx,testf2_ty='
-!     &            ,testf3_tt,testf3_tx,testf2_ty
-!      write(*,*) 'testf3_xx,testf3_xy,testf3_yy='
-!     &            ,testf3_xx,testf3_xy,testf3_yy
+!      write(*,*) 'testf1_z,testf2_z,testf3_z='
+!     &            ,testf1_z,testf2_z,testf3_z
+!      write(*,*) 'testf1_tz,testf1_xz,testf1_yz,testf1_zz='
+!     &            ,testf1_tz,testf1_xz,testf1_yz,testf1_zz
+!      write(*,*) 'testf2_tz,testf2_xz,testf2_yz,testf2_zz='
+!     &            ,testf2_tz,testf2_xz,testf2_yz,testf2_zz
+!      write(*,*) 'testf3_tz,testf3_xz,testf3_yz,testf3_zz='
+!     &            ,testf3_tz,testf3_xz,testf3_yz,testf3_zz
+!
 !         end if
+!         end do
 !        end do
 !       end do
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -2939,9 +4313,12 @@ c----------------------------------------------------------------------
         g0_ll(1,1)=g0_tt_ads0+gb_tt0
         g0_ll(1,2)=           gb_tx0
         g0_ll(1,3)=           gb_ty0
+        g0_ll(1,4)=           gb_tz0
         g0_ll(2,2)=g0_xx_ads0+gb_xx0
         g0_ll(2,3)=g0_xy_ads0+gb_xy0
+        g0_ll(2,4)=           gb_xz0
         g0_ll(3,3)=g0_yy_ads0+gb_yy0
+        g0_ll(3,4)=           gb_yz0
         g0_ll(4,4)=g0_psi_ads0+psi0*y0**2
 
         g0_ll_x(1,1,1)   =0
@@ -2950,56 +4327,117 @@ c----------------------------------------------------------------------
      &                   +gb_tt_x
         g0_ll_x(1,1,3)   =g0_tt_ads_y
      &                   +gb_tt_y
+        g0_ll_x(1,1,4)   =g0_tt_ads_z
+     &                   +gb_tt_z
         g0_ll_xx(1,1,1,1)=0
      &                   +gb_tt_tt
         g0_ll_xx(1,1,1,2)=0
      &                   +gb_tt_tx
         g0_ll_xx(1,1,1,3)=0
      &                   +gb_tt_ty
+        g0_ll_xx(1,1,1,4)=0
+     &                   +gb_tt_tz
         g0_ll_xx(1,1,2,2)=g0_tt_ads_xx
      &                   +gb_tt_xx
         g0_ll_xx(1,1,2,3)=g0_tt_ads_xy
      &                   +gb_tt_xy
+        g0_ll_xx(1,1,2,4)=g0_tt_ads_xz
+     &                   +gb_tt_xz
         g0_ll_xx(1,1,3,3)=g0_tt_ads_yy
      &                   +gb_tt_yy
+        g0_ll_xx(1,1,3,4)=g0_tt_ads_yz
+     &                   +gb_tt_yz
+        g0_ll_xx(1,1,4,4)=g0_tt_ads_zz
+     &                   +gb_tt_zz
 
         g0_ll_x(1,2,1)   =0
      &                   +gb_tx_t
-        g0_ll_x(1,2,2)   =
+        g0_ll_x(1,2,2)   =0
      &                   +gb_tx_x
-        g0_ll_x(1,2,3)   =
+        g0_ll_x(1,2,3)   =0
      &                   +gb_tx_y
+        g0_ll_x(1,2,4)   =0
+     &                   +gb_tx_z
         g0_ll_xx(1,2,1,1)=0
      &                   +gb_tx_tt
         g0_ll_xx(1,2,1,2)=0
      &                   +gb_tx_tx
         g0_ll_xx(1,2,1,3)=0
      &                   +gb_tx_ty
-        g0_ll_xx(1,2,2,2)=
+        g0_ll_xx(1,2,1,3)=0
+     &                   +gb_tx_tz
+        g0_ll_xx(1,2,1,4)=0
+     &                   +gb_tx_tz
+        g0_ll_xx(1,2,2,2)=0
      &                   +gb_tx_xx
-        g0_ll_xx(1,2,2,3)=
+        g0_ll_xx(1,2,2,3)=0
      &                   +gb_tx_xy
-        g0_ll_xx(1,2,3,3)=
+        g0_ll_xx(1,2,2,4)=0
+     &                   +gb_tx_xz
+        g0_ll_xx(1,2,3,3)=0
      &                   +gb_tx_yy
+        g0_ll_xx(1,2,3,4)=0
+     &                   +gb_tx_yz
+        g0_ll_xx(1,2,4,4)=0
+     &                   +gb_tx_zz
 
         g0_ll_x(1,3,1)   =0
      &                   +gb_ty_t
-        g0_ll_x(1,3,2)   =
+        g0_ll_x(1,3,2)   =0
      &                   +gb_ty_x
-        g0_ll_x(1,3,3)   =
+        g0_ll_x(1,3,3)   =0
      &                   +gb_ty_y
+        g0_ll_x(1,3,4)   =0
+     &                   +gb_ty_z
         g0_ll_xx(1,3,1,1)=0
      &                   +gb_ty_tt
         g0_ll_xx(1,3,1,2)=0
      &                   +gb_ty_tx
         g0_ll_xx(1,3,1,3)=0
      &                   +gb_ty_ty
-        g0_ll_xx(1,3,2,2)=
+        g0_ll_xx(1,3,1,4)=0
+     &                   +gb_ty_tz
+        g0_ll_xx(1,3,2,2)=0
      &                   +gb_ty_xx
-        g0_ll_xx(1,3,2,3)=
+        g0_ll_xx(1,3,2,3)=0
      &                   +gb_ty_xy
-        g0_ll_xx(1,3,3,3)=
+        g0_ll_xx(1,3,2,4)=0
+     &                   +gb_ty_xz
+        g0_ll_xx(1,3,3,3)=0
      &                   +gb_ty_yy
+        g0_ll_xx(1,3,3,4)=0
+     &                   +gb_ty_yz
+        g0_ll_xx(1,3,4,4)=0
+     &                   +gb_ty_zz
+
+        g0_ll_x(1,4,1)   =0
+     &                   +gb_tz_t
+        g0_ll_x(1,4,2)   =0
+     &                   +gb_tz_x
+        g0_ll_x(1,4,3)   =0
+     &                   +gb_tz_y
+        g0_ll_x(1,4,4)   =0
+     &                   +gb_tz_z
+        g0_ll_xx(1,4,1,1)=0
+     &                   +gb_tz_tt
+        g0_ll_xx(1,4,1,2)=0
+     &                   +gb_tz_tx
+        g0_ll_xx(1,4,1,3)=0
+     &                   +gb_tz_ty
+        g0_ll_xx(1,4,1,4)=0
+     &                   +gb_tz_tz
+        g0_ll_xx(1,4,2,2)=0
+     &                   +gb_tz_xx
+        g0_ll_xx(1,4,2,3)=0
+     &                   +gb_tz_xy
+        g0_ll_xx(1,4,2,4)=0
+     &                   +gb_tz_xz
+        g0_ll_xx(1,4,3,3)=0
+     &                   +gb_tz_yy
+        g0_ll_xx(1,4,3,4)=0
+     &                   +gb_tz_yz
+        g0_ll_xx(1,4,4,4)=0
+     &                   +gb_tz_zz
 
         g0_ll_x(2,2,1)   =0
      &                   +gb_xx_t
@@ -3007,18 +4445,28 @@ c----------------------------------------------------------------------
      &                   +gb_xx_x
         g0_ll_x(2,2,3)   =g0_xx_ads_y
      &                   +gb_xx_y
+        g0_ll_x(2,2,4)   =g0_xx_ads_z
+     &                   +gb_xx_z
         g0_ll_xx(2,2,1,1)=0
      &                   +gb_xx_tt
         g0_ll_xx(2,2,1,2)=0
      &                   +gb_xx_tx
         g0_ll_xx(2,2,1,3)=0
      &                   +gb_xx_ty
+        g0_ll_xx(2,2,1,4)=0
+     &                   +gb_xx_tz
         g0_ll_xx(2,2,2,2)=g0_xx_ads_xx
      &                   +gb_xx_xx
         g0_ll_xx(2,2,2,3)=g0_xx_ads_xy
      &                   +gb_xx_xy
+        g0_ll_xx(2,2,2,4)=g0_xx_ads_xz
+     &                   +gb_xx_xz
         g0_ll_xx(2,2,3,3)=g0_xx_ads_yy
      &                   +gb_xx_yy
+        g0_ll_xx(2,2,3,4)=g0_xx_ads_yz
+     &                   +gb_xx_yz
+        g0_ll_xx(2,2,4,4)=g0_xx_ads_zz
+     &                   +gb_xx_zz
 
         g0_ll_x(2,3,1)   =0
      &                   +gb_xy_t
@@ -3026,18 +4474,57 @@ c----------------------------------------------------------------------
      &                   +gb_xy_x
         g0_ll_x(2,3,3)   =g0_xy_ads_y
      &                   +gb_xy_y
+        g0_ll_x(2,3,4)   =g0_xy_ads_z
+     &                   +gb_xy_z
         g0_ll_xx(2,3,1,1)=0
      &                   +gb_xy_tt
         g0_ll_xx(2,3,1,2)=0
      &                   +gb_xy_tx
         g0_ll_xx(2,3,1,3)=0
      &                   +gb_xy_ty
+        g0_ll_xx(2,3,1,4)=0
+     &                   +gb_xy_tz
         g0_ll_xx(2,3,2,2)=g0_xy_ads_xx
      &                   +gb_xy_xx
         g0_ll_xx(2,3,2,3)=g0_xy_ads_xy
      &                   +gb_xy_xy
+        g0_ll_xx(2,3,2,4)=g0_xy_ads_xz
+     &                   +gb_xy_xz
         g0_ll_xx(2,3,3,3)=g0_xy_ads_yy
      &                   +gb_xy_yy
+        g0_ll_xx(2,3,3,4)=g0_xy_ads_yz
+     &                   +gb_xy_yz
+        g0_ll_xx(2,3,4,4)=g0_xy_ads_zz
+     &                   +gb_xy_zz
+
+        g0_ll_x(2,4,1)   =0
+     &                   +gb_xz_t
+        g0_ll_x(2,4,2)   =0
+     &                   +gb_xz_x
+        g0_ll_x(2,4,3)   =0
+     &                   +gb_xz_y
+        g0_ll_x(2,4,4)   =0
+     &                   +gb_xz_z
+        g0_ll_xx(2,4,1,1)=0
+     &                   +gb_xz_tt
+        g0_ll_xx(2,4,1,2)=0
+     &                   +gb_xz_tx
+        g0_ll_xx(2,4,1,3)=0
+     &                   +gb_xz_ty
+        g0_ll_xx(2,4,1,4)=0
+     &                   +gb_xz_tz
+        g0_ll_xx(2,4,2,2)=0
+     &                   +gb_xz_xx
+        g0_ll_xx(2,4,2,3)=0
+     &                   +gb_xz_xy
+        g0_ll_xx(2,4,2,4)=0
+     &                   +gb_xz_xz
+        g0_ll_xx(2,4,3,3)=0
+     &                   +gb_xz_yy
+        g0_ll_xx(2,4,3,4)=0
+     &                   +gb_xz_yz
+        g0_ll_xx(2,4,4,4)=0
+     &                   +gb_xz_zz
 
         g0_ll_x(3,3,1)   =0
      &                   +gb_yy_t
@@ -3045,18 +4532,57 @@ c----------------------------------------------------------------------
      &                   +gb_yy_x
         g0_ll_x(3,3,3)   =g0_yy_ads_y
      &                   +gb_yy_y
+        g0_ll_x(3,3,4)   =g0_yy_ads_z
+     &                   +gb_yy_z
         g0_ll_xx(3,3,1,1)=0
      &                   +gb_yy_tt
         g0_ll_xx(3,3,1,2)=0
      &                   +gb_yy_tx
         g0_ll_xx(3,3,1,3)=0
      &                   +gb_yy_ty
+        g0_ll_xx(3,3,1,4)=0
+     &                   +gb_yy_tz
         g0_ll_xx(3,3,2,2)=g0_yy_ads_xx
      &                   +gb_yy_xx
         g0_ll_xx(3,3,2,3)=g0_yy_ads_xy
      &                   +gb_yy_xy
+        g0_ll_xx(3,3,2,4)=g0_yy_ads_xz
+     &                   +gb_yy_xz
         g0_ll_xx(3,3,3,3)=g0_yy_ads_yy
      &                   +gb_yy_yy
+        g0_ll_xx(3,3,3,4)=g0_yy_ads_yz
+     &                   +gb_yy_yz
+        g0_ll_xx(3,3,4,4)=g0_yy_ads_zz
+     &                   +gb_yy_zz
+
+        g0_ll_x(3,4,1)   =0
+     &                   +gb_yz_t
+        g0_ll_x(3,4,2)   =0
+     &                   +gb_yz_x
+        g0_ll_x(3,4,3)   =0
+     &                   +gb_yz_y
+        g0_ll_x(3,4,4)   =0
+     &                   +gb_yz_z
+        g0_ll_xx(3,4,1,1)=0
+     &                   +gb_yz_tt
+        g0_ll_xx(3,4,1,2)=0
+     &                   +gb_yz_tx
+        g0_ll_xx(3,4,1,3)=0
+     &                   +gb_yz_ty
+        g0_ll_xx(3,4,1,4)=0
+     &                   +gb_yz_tz
+        g0_ll_xx(3,4,2,2)=0
+     &                   +gb_yz_xx
+        g0_ll_xx(3,4,2,3)=0
+     &                   +gb_yz_xy
+        g0_ll_xx(3,4,2,4)=0
+     &                   +gb_yz_xz
+        g0_ll_xx(3,4,3,3)=0
+     &                   +gb_yz_yy
+        g0_ll_xx(3,4,3,4)=0
+     &                   +gb_yz_yz
+        g0_ll_xx(3,4,4,4)=0
+     &                   +gb_yz_zz
 
         g0_ll_x(4,4,1)   =0
      &                   +psi_t*y0**2
@@ -3065,6 +4591,7 @@ c----------------------------------------------------------------------
         g0_ll_x(4,4,3)   =g0_psi_ads_y
      &                   +psi_y*y0**2
      &                   +psi0*(2*y0)
+        g0_ll_x(4,4,4)   =0 !correct in 3+1 code
         g0_ll_xx(4,4,1,1)=0
      &                   +psi_tt*y0**2
         g0_ll_xx(4,4,1,2)=0
@@ -3072,16 +4599,20 @@ c----------------------------------------------------------------------
         g0_ll_xx(4,4,1,3)=0
      &                   +psi_ty*y0**2
      &                   +psi_t*(2*y0)
+        g0_ll_xx(4,4,1,4)=0 !correct in 3+1 code
         g0_ll_xx(4,4,2,2)=g0_psi_ads_xx
      &                   +psi_xx*y0**2
         g0_ll_xx(4,4,2,3)=g0_psi_ads_xy
      &                   +psi_xy*y0**2
      &                   +psi_x*(2*y0)
+        g0_ll_xx(4,4,2,4)=0 !correct in 3+1 code
         g0_ll_xx(4,4,3,3)=g0_psi_ads_yy
      &                   +psi_yy*y0**2
      &                   +psi_y*(2*y0)
      &                   +psi_y*(2*y0)
      &                   +psi0*(2)
+        g0_ll_xx(4,4,3,4)=0 !correct in 3+1 code
+        g0_ll_xx(4,4,4,4)=0 !correct in 3+1 code
 
         ! give values to the metric inverse
         call calc_g0uu(g0_ll(1,1),g0_ll(1,2),g0_ll(1,3),g0_ll(1,4),
@@ -3163,42 +4694,126 @@ c----------------------------------------------------------------------
 
         ! give values to the AdS metric
         gads_ll(1,1)=g0_tt_ads0
+        gads_ll(1,2)=g0_tx_ads0
+        gads_ll(1,3)=g0_ty_ads0
+        gads_ll(1,4)=g0_tz_ads0
         gads_ll(2,2)=g0_xx_ads0
         gads_ll(2,3)=g0_xy_ads0
+        gads_ll(2,4)=g0_xz_ads0
         gads_ll(3,3)=g0_yy_ads0
+        gads_ll(3,4)=g0_yz_ads0
         gads_ll(4,4)=g0_psi_ads0
 
         gads_uu(1,1)=g0u_tt_ads0
+        gads_uu(1,2)=g0u_tx_ads0
+        gads_uu(1,3)=g0u_ty_ads0
+        gads_uu(1,4)=g0u_tz_ads0
         gads_uu(2,2)=g0u_xx_ads0
         gads_uu(2,3)=g0u_xy_ads0
+        gads_uu(2,4)=g0u_xz_ads0
         gads_uu(3,3)=g0u_yy_ads0
+        gads_uu(3,4)=g0u_yz_ads0
         gads_uu(4,4)=g0u_psi_ads0
 
         gads_ll_x(1,1,2)   =g0_tt_ads_x
         gads_ll_x(1,1,3)   =g0_tt_ads_y
+        gads_ll_x(1,1,4)   =g0_tt_ads_z
         gads_ll_xx(1,1,2,2)=g0_tt_ads_xx
         gads_ll_xx(1,1,2,3)=g0_tt_ads_xy
+        gads_ll_xx(1,1,2,4)=g0_tt_ads_xz
         gads_ll_xx(1,1,3,3)=g0_tt_ads_yy
+        gads_ll_xx(1,1,3,4)=g0_tt_ads_yz
+        gads_ll_xx(1,1,4,4)=g0_tt_ads_zz
+
+        gads_ll_x(1,2,2)   =g0_tx_ads_x
+        gads_ll_x(1,2,3)   =g0_tx_ads_y
+        gads_ll_x(1,2,4)   =g0_tx_ads_z
+        gads_ll_xx(1,2,2,2)=g0_tx_ads_xx
+        gads_ll_xx(1,2,2,3)=g0_tx_ads_xy
+        gads_ll_xx(1,2,2,4)=g0_tx_ads_xz
+        gads_ll_xx(1,2,3,3)=g0_tx_ads_yy
+        gads_ll_xx(1,2,3,4)=g0_tx_ads_yz
+        gads_ll_xx(1,2,4,4)=g0_tx_ads_zz
+
+        gads_ll_x(1,3,2)   =g0_ty_ads_x
+        gads_ll_x(1,3,3)   =g0_ty_ads_y
+        gads_ll_x(1,3,4)   =g0_ty_ads_z
+        gads_ll_xx(1,3,2,2)=g0_ty_ads_xx
+        gads_ll_xx(1,3,2,3)=g0_ty_ads_xy
+        gads_ll_xx(1,3,2,4)=g0_ty_ads_xz
+        gads_ll_xx(1,3,3,3)=g0_ty_ads_yy
+        gads_ll_xx(1,3,3,4)=g0_ty_ads_yz
+        gads_ll_xx(1,3,4,4)=g0_ty_ads_zz
+
+        gads_ll_x(1,4,2)   =g0_tz_ads_x
+        gads_ll_x(1,4,3)   =g0_tz_ads_y
+        gads_ll_x(1,4,4)   =g0_tz_ads_z
+        gads_ll_xx(1,4,2,2)=g0_tz_ads_xx
+        gads_ll_xx(1,4,2,3)=g0_tz_ads_xy
+        gads_ll_xx(1,4,2,4)=g0_tz_ads_xz
+        gads_ll_xx(1,4,3,3)=g0_tz_ads_yy
+        gads_ll_xx(1,4,3,4)=g0_tz_ads_yz
+        gads_ll_xx(1,4,4,4)=g0_tz_ads_zz
+
         gads_ll_x(2,2,2)   =g0_xx_ads_x
         gads_ll_x(2,2,3)   =g0_xx_ads_y
+        gads_ll_x(2,2,4)   =g0_xx_ads_z
         gads_ll_xx(2,2,2,2)=g0_xx_ads_xx
         gads_ll_xx(2,2,2,3)=g0_xx_ads_xy
+        gads_ll_xx(2,2,2,4)=g0_xx_ads_xz
         gads_ll_xx(2,2,3,3)=g0_xx_ads_yy
+        gads_ll_xx(2,2,3,4)=g0_xx_ads_yz
+        gads_ll_xx(2,2,4,4)=g0_xx_ads_zz
+
         gads_ll_x(2,3,2)   =g0_xy_ads_x
         gads_ll_x(2,3,3)   =g0_xy_ads_y
+        gads_ll_x(2,3,4)   =g0_xy_ads_z
         gads_ll_xx(2,3,2,2)=g0_xy_ads_xx
         gads_ll_xx(2,3,2,3)=g0_xy_ads_xy
+        gads_ll_xx(2,3,2,4)=g0_xy_ads_xz
         gads_ll_xx(2,3,3,3)=g0_xy_ads_yy
+        gads_ll_xx(2,3,3,4)=g0_xy_ads_yz
+        gads_ll_xx(2,3,4,4)=g0_xy_ads_zz
+
+        gads_ll_x(2,4,2)   =g0_xz_ads_x
+        gads_ll_x(2,4,3)   =g0_xz_ads_y
+        gads_ll_x(2,4,4)   =g0_xz_ads_z
+        gads_ll_xx(2,4,2,2)=g0_xz_ads_xx
+        gads_ll_xx(2,4,2,3)=g0_xz_ads_xy
+        gads_ll_xx(2,4,2,4)=g0_xz_ads_xz
+        gads_ll_xx(2,4,3,3)=g0_xz_ads_yy
+        gads_ll_xx(2,4,3,4)=g0_xz_ads_yz
+        gads_ll_xx(2,4,4,4)=g0_xz_ads_zz
+
         gads_ll_x(3,3,2)   =g0_yy_ads_x
         gads_ll_x(3,3,3)   =g0_yy_ads_y
+        gads_ll_x(3,3,4)   =g0_yy_ads_z
         gads_ll_xx(3,3,2,2)=g0_yy_ads_xx
         gads_ll_xx(3,3,2,3)=g0_yy_ads_xy
+        gads_ll_xx(3,3,2,4)=g0_yy_ads_xz
         gads_ll_xx(3,3,3,3)=g0_yy_ads_yy
+        gads_ll_xx(3,3,3,4)=g0_yy_ads_yz
+        gads_ll_xx(3,3,4,4)=g0_yy_ads_zz
+
+        gads_ll_x(3,4,2)   =g0_yz_ads_x
+        gads_ll_x(3,4,3)   =g0_yz_ads_y
+        gads_ll_x(3,4,4)   =g0_yz_ads_z
+        gads_ll_xx(3,4,2,2)=g0_yz_ads_xx
+        gads_ll_xx(3,4,2,3)=g0_yz_ads_xy
+        gads_ll_xx(3,4,2,4)=g0_yz_ads_xz
+        gads_ll_xx(3,4,3,3)=g0_yz_ads_yy
+        gads_ll_xx(3,4,3,4)=g0_yz_ads_yz
+        gads_ll_xx(3,4,4,4)=g0_yz_ads_zz
+
         gads_ll_x(4,4,2)   =g0_psi_ads_x
         gads_ll_x(4,4,3)   =g0_psi_ads_y
+        gads_ll_x(4,4,4)   =g0_psi_ads_z
         gads_ll_xx(4,4,2,2)=g0_psi_ads_xx
         gads_ll_xx(4,4,2,3)=g0_psi_ads_xy
+        gads_ll_xx(4,4,2,4)=g0_psi_ads_xz
         gads_ll_xx(4,4,3,3)=g0_psi_ads_yy
+        gads_ll_xx(4,4,3,4)=g0_psi_ads_yz
+        gads_ll_xx(4,4,4,4)=g0_psi_ads_zz
 
         do a=1,3
           do b=a+1,4
@@ -3238,116 +4853,223 @@ c----------------------------------------------------------------------
         h0_ll(1,1)=gb_tt0 
         h0_ll(1,2)=gb_tx0
         h0_ll(1,3)=gb_ty0
+        h0_ll(1,4)=gb_tz0
         h0_ll(2,2)=gb_xx0
         h0_ll(2,3)=gb_xy0
+        h0_ll(2,4)=gb_xz0
         h0_ll(3,3)=gb_yy0
+        h0_ll(3,4)=gb_yz0
         h0_ll(4,4)=psi0*y0**2
   
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)
         h0_uu(1,3)=g0_uu(1,3)
+        h0_uu(1,4)=g0_uu(1,4)
         h0_uu(2,2)=g0_uu(2,2)-gads_uu(2,2)
         h0_uu(2,3)=g0_uu(2,3)-gads_uu(2,3)
+        h0_uu(2,4)=g0_uu(2,4)-gads_uu(2,4)
         h0_uu(3,3)=g0_uu(3,3)-gads_uu(3,3)
+        h0_uu(3,4)=g0_uu(3,4)-gads_uu(3,4)
         h0_uu(4,4)=g0_uu(4,4)-gads_uu(4,4)
 
         h0_ll_x(1,1,1)   =g0_ll_x(1,1,1)
         h0_ll_x(1,1,2)   =g0_ll_x(1,1,2)-gads_ll_x(1,1,2)
         h0_ll_x(1,1,3)   =g0_ll_x(1,1,3)-gads_ll_x(1,1,3)
+        h0_ll_x(1,1,4)   =g0_ll_x(1,1,4)-gads_ll_x(1,1,4)
         h0_ll_xx(1,1,1,1)=g0_ll_xx(1,1,1,1)
         h0_ll_xx(1,1,1,2)=g0_ll_xx(1,1,1,2)
         h0_ll_xx(1,1,1,3)=g0_ll_xx(1,1,1,3)
+        h0_ll_xx(1,1,1,4)=g0_ll_xx(1,1,1,4)
         h0_ll_xx(1,1,2,2)=g0_ll_xx(1,1,2,2)-gads_ll_xx(1,1,2,2)
         h0_ll_xx(1,1,2,3)=g0_ll_xx(1,1,2,3)-gads_ll_xx(1,1,2,3)
+        h0_ll_xx(1,1,2,4)=g0_ll_xx(1,1,2,4)-gads_ll_xx(1,1,2,4)
         h0_ll_xx(1,1,3,3)=g0_ll_xx(1,1,3,3)-gads_ll_xx(1,1,3,3)
+        h0_ll_xx(1,1,3,4)=g0_ll_xx(1,1,3,4)-gads_ll_xx(1,1,3,4)
+        h0_ll_xx(1,1,4,4)=g0_ll_xx(1,1,4,4)-gads_ll_xx(1,1,4,4)
 
         h0_ll_x(1,2,1)   =g0_ll_x(1,2,1)
         h0_ll_x(1,2,2)   =g0_ll_x(1,2,2)
         h0_ll_x(1,2,3)   =g0_ll_x(1,2,3)
+        h0_ll_x(1,2,4)   =g0_ll_x(1,2,4)
         h0_ll_xx(1,2,1,1)=g0_ll_xx(1,2,1,1)
         h0_ll_xx(1,2,1,2)=g0_ll_xx(1,2,1,2)
         h0_ll_xx(1,2,1,3)=g0_ll_xx(1,2,1,3)
+        h0_ll_xx(1,2,1,4)=g0_ll_xx(1,2,1,4)
         h0_ll_xx(1,2,2,2)=g0_ll_xx(1,2,2,2)
         h0_ll_xx(1,2,2,3)=g0_ll_xx(1,2,2,3)
+        h0_ll_xx(1,2,2,4)=g0_ll_xx(1,2,2,4)
         h0_ll_xx(1,2,3,3)=g0_ll_xx(1,2,3,3)
+        h0_ll_xx(1,2,3,4)=g0_ll_xx(1,2,3,4)
+        h0_ll_xx(1,2,4,4)=g0_ll_xx(1,2,4,4)
 
         h0_ll_x(1,3,1)   =g0_ll_x(1,3,1)
         h0_ll_x(1,3,2)   =g0_ll_x(1,3,2)
         h0_ll_x(1,3,3)   =g0_ll_x(1,3,3)
+        h0_ll_x(1,3,4)   =g0_ll_x(1,3,4)
         h0_ll_xx(1,3,1,1)=g0_ll_xx(1,3,1,1)
         h0_ll_xx(1,3,1,2)=g0_ll_xx(1,3,1,2)
         h0_ll_xx(1,3,1,3)=g0_ll_xx(1,3,1,3)
+        h0_ll_xx(1,3,1,4)=g0_ll_xx(1,3,1,4)
         h0_ll_xx(1,3,2,2)=g0_ll_xx(1,3,2,2)
         h0_ll_xx(1,3,2,3)=g0_ll_xx(1,3,2,3)
+        h0_ll_xx(1,3,2,4)=g0_ll_xx(1,3,2,4)
         h0_ll_xx(1,3,3,3)=g0_ll_xx(1,3,3,3)
+        h0_ll_xx(1,3,3,4)=g0_ll_xx(1,3,3,4)
+        h0_ll_xx(1,3,4,4)=g0_ll_xx(1,3,4,4)
+
+        h0_ll_x(1,4,1)   =g0_ll_x(1,4,1)
+        h0_ll_x(1,4,2)   =g0_ll_x(1,4,2)
+        h0_ll_x(1,4,3)   =g0_ll_x(1,4,3)
+        h0_ll_x(1,4,4)   =g0_ll_x(1,4,4)
+        h0_ll_xx(1,4,1,1)=g0_ll_xx(1,4,1,1)
+        h0_ll_xx(1,4,1,2)=g0_ll_xx(1,4,1,2)
+        h0_ll_xx(1,4,1,3)=g0_ll_xx(1,4,1,3)
+        h0_ll_xx(1,4,1,4)=g0_ll_xx(1,4,1,4)
+        h0_ll_xx(1,4,2,2)=g0_ll_xx(1,4,2,2)
+        h0_ll_xx(1,4,2,3)=g0_ll_xx(1,4,2,3)
+        h0_ll_xx(1,4,2,4)=g0_ll_xx(1,4,2,4)
+        h0_ll_xx(1,4,3,3)=g0_ll_xx(1,4,3,3)
+        h0_ll_xx(1,4,3,4)=g0_ll_xx(1,4,3,4)
+        h0_ll_xx(1,4,4,4)=g0_ll_xx(1,4,4,4)
 
         h0_ll_x(2,2,1)   =g0_ll_x(2,2,1)
         h0_ll_x(2,2,2)   =g0_ll_x(2,2,2)-gads_ll_x(2,2,2)
         h0_ll_x(2,2,3)   =g0_ll_x(2,2,3)-gads_ll_x(2,2,3)
+        h0_ll_x(2,2,4)   =g0_ll_x(2,2,4)-gads_ll_x(2,2,4)
         h0_ll_xx(2,2,1,1)=g0_ll_xx(2,2,1,1)
         h0_ll_xx(2,2,1,2)=g0_ll_xx(2,2,1,2)
         h0_ll_xx(2,2,1,3)=g0_ll_xx(2,2,1,3)
+        h0_ll_xx(2,2,1,4)=g0_ll_xx(2,2,1,4)
         h0_ll_xx(2,2,2,2)=g0_ll_xx(2,2,2,2)-gads_ll_xx(2,2,2,2)
         h0_ll_xx(2,2,2,3)=g0_ll_xx(2,2,2,3)-gads_ll_xx(2,2,2,3)
+        h0_ll_xx(2,2,2,4)=g0_ll_xx(2,2,2,4)-gads_ll_xx(2,2,2,4)
         h0_ll_xx(2,2,3,3)=g0_ll_xx(2,2,3,3)-gads_ll_xx(2,2,3,3)
+        h0_ll_xx(2,2,3,4)=g0_ll_xx(2,2,3,4)-gads_ll_xx(2,2,3,4)
+        h0_ll_xx(2,2,4,4)=g0_ll_xx(2,2,4,4)-gads_ll_xx(2,2,4,4)
 
         h0_ll_x(2,3,1)   =g0_ll_x(2,3,1)
         h0_ll_x(2,3,2)   =g0_ll_x(2,3,2)-gads_ll_x(2,3,2)
         h0_ll_x(2,3,3)   =g0_ll_x(2,3,3)-gads_ll_x(2,3,3)
+        h0_ll_x(2,3,4)   =g0_ll_x(2,3,4)-gads_ll_x(2,3,4)
         h0_ll_xx(2,3,1,1)=g0_ll_xx(2,3,1,1)
         h0_ll_xx(2,3,1,2)=g0_ll_xx(2,3,1,2)
         h0_ll_xx(2,3,1,3)=g0_ll_xx(2,3,1,3)
+        h0_ll_xx(2,3,1,4)=g0_ll_xx(2,3,1,4)
         h0_ll_xx(2,3,2,2)=g0_ll_xx(2,3,2,2)-gads_ll_xx(2,3,2,2)
         h0_ll_xx(2,3,2,3)=g0_ll_xx(2,3,2,3)-gads_ll_xx(2,3,2,3)
+        h0_ll_xx(2,3,2,4)=g0_ll_xx(2,3,2,4)-gads_ll_xx(2,3,2,4)
         h0_ll_xx(2,3,3,3)=g0_ll_xx(2,3,3,3)-gads_ll_xx(2,3,3,3)
+        h0_ll_xx(2,3,3,4)=g0_ll_xx(2,3,3,4)-gads_ll_xx(2,3,3,4)
+        h0_ll_xx(2,3,4,4)=g0_ll_xx(2,3,4,4)-gads_ll_xx(2,3,4,4)
+
+        h0_ll_x(2,4,1)   =g0_ll_x(2,4,1)
+        h0_ll_x(2,4,2)   =g0_ll_x(2,4,2)-gads_ll_x(2,4,2)
+        h0_ll_x(2,4,3)   =g0_ll_x(2,4,3)-gads_ll_x(2,4,3)
+        h0_ll_x(2,4,4)   =g0_ll_x(2,4,4)-gads_ll_x(2,4,4)
+        h0_ll_xx(2,4,1,1)=g0_ll_xx(2,4,1,1)
+        h0_ll_xx(2,4,1,2)=g0_ll_xx(2,4,1,2)
+        h0_ll_xx(2,4,1,3)=g0_ll_xx(2,4,1,3)
+        h0_ll_xx(2,4,1,4)=g0_ll_xx(2,4,1,4)
+        h0_ll_xx(2,4,2,2)=g0_ll_xx(2,4,2,2)-gads_ll_xx(2,4,2,2)
+        h0_ll_xx(2,4,2,3)=g0_ll_xx(2,4,2,3)-gads_ll_xx(2,4,2,3)
+        h0_ll_xx(2,4,2,4)=g0_ll_xx(2,4,2,4)-gads_ll_xx(2,4,2,4)
+        h0_ll_xx(2,4,3,3)=g0_ll_xx(2,4,3,3)-gads_ll_xx(2,4,3,3)
+        h0_ll_xx(2,4,3,4)=g0_ll_xx(2,4,3,4)-gads_ll_xx(2,4,3,4)
+        h0_ll_xx(2,4,4,4)=g0_ll_xx(2,4,4,4)-gads_ll_xx(2,4,4,4)
 
         h0_ll_x(3,3,1)   =g0_ll_x(3,3,1)
         h0_ll_x(3,3,2)   =g0_ll_x(3,3,2)-gads_ll_x(3,3,2)
         h0_ll_x(3,3,3)   =g0_ll_x(3,3,3)-gads_ll_x(3,3,3)
+        h0_ll_x(3,3,4)   =g0_ll_x(3,3,4)-gads_ll_x(3,3,4)
         h0_ll_xx(3,3,1,1)=g0_ll_xx(3,3,1,1)
         h0_ll_xx(3,3,1,2)=g0_ll_xx(3,3,1,2)
         h0_ll_xx(3,3,1,3)=g0_ll_xx(3,3,1,3)
+        h0_ll_xx(3,3,1,4)=g0_ll_xx(3,3,1,4)
         h0_ll_xx(3,3,2,2)=g0_ll_xx(3,3,2,2)-gads_ll_xx(3,3,2,2)
         h0_ll_xx(3,3,2,3)=g0_ll_xx(3,3,2,3)-gads_ll_xx(3,3,2,3)
+        h0_ll_xx(3,3,2,4)=g0_ll_xx(3,3,2,4)-gads_ll_xx(3,3,2,4)
         h0_ll_xx(3,3,3,3)=g0_ll_xx(3,3,3,3)-gads_ll_xx(3,3,3,3)
+        h0_ll_xx(3,3,3,4)=g0_ll_xx(3,3,3,4)-gads_ll_xx(3,3,3,4)
+        h0_ll_xx(3,3,4,4)=g0_ll_xx(3,3,4,4)-gads_ll_xx(3,3,4,4)
+
+        h0_ll_x(3,4,1)   =g0_ll_x(3,4,1)
+        h0_ll_x(3,4,2)   =g0_ll_x(3,4,2)-gads_ll_x(3,4,2)
+        h0_ll_x(3,4,3)   =g0_ll_x(3,4,3)-gads_ll_x(3,4,3)
+        h0_ll_x(3,4,4)   =g0_ll_x(3,4,4)-gads_ll_x(3,4,4)
+        h0_ll_xx(3,4,1,1)=g0_ll_xx(3,4,1,1)
+        h0_ll_xx(3,4,1,2)=g0_ll_xx(3,4,1,2)
+        h0_ll_xx(3,4,1,3)=g0_ll_xx(3,4,1,3)
+        h0_ll_xx(3,4,1,4)=g0_ll_xx(3,4,1,4)
+        h0_ll_xx(3,4,2,2)=g0_ll_xx(3,4,2,2)-gads_ll_xx(3,4,2,2)
+        h0_ll_xx(3,4,2,3)=g0_ll_xx(3,4,2,3)-gads_ll_xx(3,4,2,3)
+        h0_ll_xx(3,4,2,4)=g0_ll_xx(3,4,2,4)-gads_ll_xx(3,4,2,4)
+        h0_ll_xx(3,4,3,3)=g0_ll_xx(3,4,3,3)-gads_ll_xx(3,4,3,3)
+        h0_ll_xx(3,4,3,4)=g0_ll_xx(3,4,3,4)-gads_ll_xx(3,4,3,4)
+        h0_ll_xx(3,4,4,4)=g0_ll_xx(3,4,4,4)-gads_ll_xx(3,4,4,4)
 
         h0_ll_x(4,4,1)   =g0_ll_x(4,4,1)
         h0_ll_x(4,4,2)   =g0_ll_x(4,4,2)-gads_ll_x(4,4,2)
         h0_ll_x(4,4,3)   =g0_ll_x(4,4,3)-gads_ll_x(4,4,3)
+        h0_ll_x(4,4,4)   =g0_ll_x(4,4,4)-gads_ll_x(4,4,4)
         h0_ll_xx(4,4,1,1)=g0_ll_xx(4,4,1,1)
         h0_ll_xx(4,4,1,2)=g0_ll_xx(4,4,1,2)
         h0_ll_xx(4,4,1,3)=g0_ll_xx(4,4,1,3)
+        h0_ll_xx(4,4,1,4)=g0_ll_xx(4,4,1,4)
         h0_ll_xx(4,4,2,2)=g0_ll_xx(4,4,2,2)-gads_ll_xx(4,4,2,2)
         h0_ll_xx(4,4,2,3)=g0_ll_xx(4,4,2,3)-gads_ll_xx(4,4,2,3)
+        h0_ll_xx(4,4,2,4)=g0_ll_xx(4,4,2,4)-gads_ll_xx(4,4,2,4)
         h0_ll_xx(4,4,3,3)=g0_ll_xx(4,4,3,3)-gads_ll_xx(4,4,3,3)
+        h0_ll_xx(4,4,3,4)=g0_ll_xx(4,4,3,4)-gads_ll_xx(4,4,3,4)
 
         h0_uu_x(1,1,1)=g0_uu_x(1,1,1)
         h0_uu_x(1,1,2)=g0_uu_x(1,1,2)-gads_uu_x(1,1,2)
         h0_uu_x(1,1,3)=g0_uu_x(1,1,3)-gads_uu_x(1,1,3)
+        h0_uu_x(1,1,4)=g0_uu_x(1,1,4)-gads_uu_x(1,1,4)
 
         h0_uu_x(1,2,1)=g0_uu_x(1,2,1)
         h0_uu_x(1,2,2)=g0_uu_x(1,2,2)
         h0_uu_x(1,2,3)=g0_uu_x(1,2,3)
+        h0_uu_x(1,2,4)=g0_uu_x(1,2,4)
 
         h0_uu_x(1,3,1)=g0_uu_x(1,3,1) 
         h0_uu_x(1,3,2)=g0_uu_x(1,3,2) 
         h0_uu_x(1,3,3)=g0_uu_x(1,3,3) 
+        h0_uu_x(1,3,4)=g0_uu_x(1,3,4)
+
+        h0_uu_x(1,4,1)=g0_uu_x(1,4,1)
+        h0_uu_x(1,4,2)=g0_uu_x(1,4,2)
+        h0_uu_x(1,4,3)=g0_uu_x(1,4,3)
+        h0_uu_x(1,4,4)=g0_uu_x(1,4,4)
 
         h0_uu_x(2,2,1)=g0_uu_x(2,2,1)
         h0_uu_x(2,2,2)=g0_uu_x(2,2,2)-gads_uu_x(2,2,2)
         h0_uu_x(2,2,3)=g0_uu_x(2,2,3)-gads_uu_x(2,2,3)
+        h0_uu_x(2,2,4)=g0_uu_x(2,2,4)-gads_uu_x(2,2,4)
 
         h0_uu_x(2,3,1)=g0_uu_x(2,3,1)
         h0_uu_x(2,3,2)=g0_uu_x(2,3,2)-gads_uu_x(2,3,2)
         h0_uu_x(2,3,3)=g0_uu_x(2,3,3)-gads_uu_x(2,3,3)
+        h0_uu_x(2,3,4)=g0_uu_x(2,3,4)-gads_uu_x(2,3,4)
+
+        h0_uu_x(2,4,1)=g0_uu_x(2,4,1)
+        h0_uu_x(2,4,2)=g0_uu_x(2,4,2)-gads_uu_x(2,4,2)
+        h0_uu_x(2,4,3)=g0_uu_x(2,4,3)-gads_uu_x(2,4,3)
+        h0_uu_x(2,4,4)=g0_uu_x(2,4,4)-gads_uu_x(2,4,4)
 
         h0_uu_x(3,3,1)=g0_uu_x(3,3,1)
         h0_uu_x(3,3,2)=g0_uu_x(3,3,2)-gads_uu_x(3,3,2)
         h0_uu_x(3,3,3)=g0_uu_x(3,3,3)-gads_uu_x(3,3,3)
+        h0_uu_x(3,3,4)=g0_uu_x(3,3,4)-gads_uu_x(3,3,4)
+
+        h0_uu_x(3,4,1)=g0_uu_x(3,4,1)
+        h0_uu_x(3,4,2)=g0_uu_x(3,4,2)-gads_uu_x(3,4,2)
+        h0_uu_x(3,4,3)=g0_uu_x(3,4,3)-gads_uu_x(3,4,3)
+        h0_uu_x(3,4,4)=g0_uu_x(3,4,4)-gads_uu_x(3,4,4)
 
         h0_uu_x(4,4,1)=g0_uu_x(4,4,1)
         h0_uu_x(4,4,2)=g0_uu_x(4,4,2)-gads_uu_x(4,4,2)
         h0_uu_x(4,4,3)=g0_uu_x(4,4,3)-gads_uu_x(4,4,3)
+        h0_uu_x(4,4,4)=g0_uu_x(4,4,4)-gads_uu_x(4,4,4)
 
         do a=1,3
           do b=a+1,4
@@ -3364,24 +5086,33 @@ c----------------------------------------------------------------------
         A_l(1)=Hb_t0*(1-rho0**2)
         A_l(2)=Hb_x0*(1-rho0**2)
         A_l(3)=Hb_y0*(1-rho0**2)
+        A_l(4)=Hb_z0*(1-rho0**2)
 
         A_l_x(1,1)=Hb_t_t*(1-rho0**2)
         A_l_x(1,2)=Hb_t_x*(1-rho0**2)
      &            -Hb_t0*2*x0
         A_l_x(1,3)=Hb_t_y*(1-rho0**2)
      &            -Hb_t0*2*y0
+        A_l_x(1,4)=0
 
         A_l_x(2,1)=Hb_x_t*(1-rho0**2)
         A_l_x(2,2)=Hb_x_x*(1-rho0**2)
      &            -Hb_x0*2*x0
         A_l_x(2,3)=Hb_x_y*(1-rho0**2)
      &            -Hb_x0*2*y0
+        A_l_x(2,4)=0
 
         A_l_x(3,1)=Hb_y_t*(1-rho0**2)
         A_l_x(3,2)=Hb_y_x*(1-rho0**2)
      &            -Hb_y0*2*x0
         A_l_x(3,3)=Hb_y_y*(1-rho0**2)
      &            -Hb_y0*2*y0
+        A_l_x(3,4)=0
+
+        A_l_x(4,1)=0
+        A_l_x(4,2)=0
+        A_l_x(4,3)=0
+        A_l_x(4,4)=0
 
         ! give values to the AdS source functions
         Hads_l(1)=0
@@ -3395,12 +5126,15 @@ c----------------------------------------------------------------------
      &            +phi10*(-4*x0)*(1-rho0**2)
         phi10_x(3)=phi1_y*(1-rho0**2)**2
      &            +phi10*(-4*y0)*(1-rho0**2)
+        phi10_x(4)=0
 
         phi10_xx(1,1)=phi1_tt*(1-rho0**2)**2
         phi10_xx(1,2)=phi1_tx*(1-rho0**2)**2
      &               +phi1_t*(-4*x0)*(1-rho0**2)
         phi10_xx(1,3)=phi1_ty*(1-rho0**2)**2
      &               +phi1_t*(-4*y0)*(1-rho0**2)
+        phi10_xx(1,4)=0
+
         phi10_xx(2,2)=phi1_xx*(1-rho0**2)**2
      &               +phi1_x*(2)*(-4*x0)*(1-rho0**2)
      &               +phi10*(-4*(1-rho0**2)+8*x0**2)
@@ -3408,9 +5142,14 @@ c----------------------------------------------------------------------
      &               +phi1_x*(-4*y0)*(1-rho0**2)
      &               +phi1_y*(-4*x0)*(1-rho0**2)
      &               +phi10*(-4*x0)*(-2*y0)
+        phi10_xx(2,4)=0
+
         phi10_xx(3,3)=phi1_yy*(1-rho0**2)**2
      &               +phi1_y*(2)*(-4*y0)*(1-rho0**2)
      &               +phi10*(-4*(1-rho0**2)+8*y0**2)
+        phi10_xx(3,4)=0
+
+        phi10_xx(4,4)=0
 
         do a=1,3
           do b=a+1,4

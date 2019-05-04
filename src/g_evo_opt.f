@@ -156,6 +156,7 @@ c----------------------------------------------------------------------
         real*8 d_gb_xx_res,d_gb_xy_res,d_gb_yy_res
         real*8 d_psi_res
         real*8 d_gb_tt_J,d_gb_tx_J,d_gb_ty_J
+        real*8 d_gb_tz_J
         real*8 d_gb_xx_J,d_gb_xy_J,d_gb_yy_J
         real*8 d_psi_J
 
@@ -247,6 +248,7 @@ c----------------------------------------------------------------------
         real*8 H0_t_ads0,H0_x_ads0,H0_y_ads0
 
         real*8 dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty
+        real*8 ddgb_J_tz
         real*8 dc_J
 
         real*8 lambda4
@@ -328,6 +330,7 @@ c----------------------------------------------------------------------
         data H0_t_ads0,H0_x_ads0,H0_y_ads0/0.0,0.0,0.0/
 
         data dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty/0.0,0.0,0.0,0.0/
+        data ddgb_J_tz/0.0/
         data dc_J/0.0/
 
         data dlll/64*0.0/
@@ -505,9 +508,12 @@ c----------------------------------------------------------------------
             gb_tt_np1(1,j,k) = 0
             gb_tx_np1(1,j,k) = 0
             gb_ty_np1(1,j,k) = 0
+            gb_tz_np1(1,j,k) = 0
             gb_xx_np1(1,j,k) = 0
             gb_xy_np1(1,j,k) = 0
+            gb_xz_np1(1,j,k) = 0
             gb_yy_np1(1,j,k) = 0
+            gb_yz_np1(1,j,k) = 0
             psi_np1(1,j,k) = 0
             phi1_np1(1,j,k) = 0
            end do
@@ -519,9 +525,12 @@ c----------------------------------------------------------------------
             gb_tt_np1(Nx,j,k) = 0
             gb_tx_np1(Nx,j,k) = 0
             gb_ty_np1(Nx,j,k) = 0
+            gb_tz_np1(Nx,j,k) = 0
             gb_xx_np1(Nx,j,k) = 0
             gb_xy_np1(Nx,j,k) = 0
+            gb_xz_np1(Nx,j,k) = 0
             gb_yy_np1(Nx,j,k) = 0
+            gb_yz_np1(Nx,j,k) = 0
             psi_np1(Nx,j,k) = 0
             phi1_np1(Nx,j,k) = 0
            end do
@@ -533,9 +542,12 @@ c----------------------------------------------------------------------
             gb_tt_np1(i,Ny,k) = 0
             gb_tx_np1(i,Ny,k) = 0
             gb_ty_np1(i,Ny,k) = 0
+            gb_tz_np1(i,Ny,k) = 0
             gb_xx_np1(i,Ny,k) = 0
             gb_xy_np1(i,Ny,k) = 0
+            gb_xz_np1(i,Ny,k) = 0
             gb_yy_np1(i,Ny,k) = 0
+            gb_yz_np1(i,Ny,k) = 0
             psi_np1(i,Ny,k) = 0
             phi1_np1(i,Ny,k) = 0
            end do
@@ -1794,6 +1806,9 @@ c----------------------------------------------------------------------
                    return
                end if
         end if
+
+!k
+        ddgb_J_tz=0
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -2043,7 +2058,7 @@ c----------------------------------------------------------------------
      &                                )
                 end do
 
-                   efe_J(1,4)=0
+                   efe_J(1,4)=1
 
                 do a=2,3
                   do b=a,3
@@ -2141,6 +2156,9 @@ c----------------------------------------------------------------------
      &                                )
                   end do
                 end do
+
+                efe_J(2,4)=1
+                efe_J(3,4)=1
 
                 efe_J(4,4)=    -0.5d0*(
      &                            y0**2*g0_uu(1,1)*ddgb_J
@@ -2318,6 +2336,7 @@ c----------------------------------------------------------------------
      &              -(1+rho_cd)*g0_ll(1,3)*n_u(3)*
      &                    (g0_uu(1,1)*dc_J)
      &              )
+                cd_J_ll(1,4)=0
                 cd_J_ll(2,2)=-kappa_cd*
      &              (
      &               2*n_l(2)*g0_uu(1,2)*dc_J
@@ -2334,6 +2353,7 @@ c----------------------------------------------------------------------
      &                     +n_u(2)*(g0_uu(1,3)*dc_J)
      &                     +n_u(3)*(g0_uu(1,2)*dc_J))
      &              )
+                cd_J_ll(2,4)=0
                 cd_J_ll(3,3)=-kappa_cd*
      &              (
      &               2*n_l(3)*g0_uu(1,3)*dc_J
@@ -2341,6 +2361,7 @@ c----------------------------------------------------------------------
      &                    (-n_u(1)*(0.5d0*g0_uu(3,3)*dc_J)
      &                     +n_u(3)*(g0_uu(1,3)*dc_J))
      &              )
+                cd_J_ll(3,4)=0
                 cd_J_ll(4,4)=-kappa_cd*
      &              (
      &              -(1+rho_cd)*g0_ll(4,4)*n_u(1)*
@@ -2351,16 +2372,22 @@ c----------------------------------------------------------------------
                   efe(1,1)=efe(1,1)+cd_ll(1,1)
                   efe(1,2)=efe(1,2)+cd_ll(1,2)
                   efe(1,3)=efe(1,3)+cd_ll(1,3)
+                  efe(1,4)=efe(1,4)+cd_ll(1,4)
                   efe(2,2)=efe(2,2)+cd_ll(2,2)
                   efe(2,3)=efe(2,3)+cd_ll(2,3)
+                  efe(2,4)=efe(2,4)+cd_ll(2,4)
                   efe(3,3)=efe(3,3)+cd_ll(3,3)
+                  efe(3,4)=efe(3,4)+cd_ll(3,4)
                   efe(4,4)=efe(4,4)+cd_ll(4,4)
                   efe_J(1,1)=efe_J(1,1)+cd_J_ll(1,1)
                   efe_J(1,2)=efe_J(1,2)+cd_J_ll(1,2)
                   efe_J(1,3)=efe_J(1,3)+cd_J_ll(1,3)
+                  efe_J(1,4)=efe_J(1,4)+cd_J_ll(1,4)
                   efe_J(2,2)=efe_J(2,2)+cd_J_ll(2,2)
                   efe_J(2,3)=efe_J(2,3)+cd_J_ll(2,3)
+                  efe_J(2,4)=efe_J(2,4)+cd_J_ll(2,4)
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
+                  efe_J(3,4)=efe_J(3,4)+cd_J_ll(3,4)
                   efe_J(4,4)=efe_J(4,4)+cd_J_ll(4,4)
                 end if
 
@@ -2390,6 +2417,15 @@ c----------------------------------------------------------------------
      &                               -efe(1,3)/efe_J(1,3)
                   end if
 
+                  if (is_nan(efe(1,4)).or.is_nan(efe_J(1,4)).or.
+     &              efe_J(1,4).eq.0) then
+                    dump=.true.
+                  else
+                    gb_tz_np1(i,j,k)=gb_tz_np1(i,j,k)
+     &                               -efe(1,4)/efe_J(1,4)
+                  end if
+
+
                   if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
      &             efe_J(2,2).eq.0) then
                     dump=.true.
@@ -2406,12 +2442,28 @@ c----------------------------------------------------------------------
      &                               -efe(2,3)/efe_J(2,3)
                   end if
 
+                  if (is_nan(efe(2,4)).or.is_nan(efe_J(2,4)).or.
+     &              efe_J(2,4).eq.0) then
+                    dump=.true.
+                  else
+                    gb_xz_np1(i,j,k)=gb_xz_np1(i,j,k)
+     &                               -efe(2,4)/efe_J(2,4)
+                  end if
+
                   if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
      &              efe_J(3,3).eq.0) then
                     dump=.true.
                   else
                     gb_yy_np1(i,j,k)=gb_yy_np1(i,j,k)
      &                               -efe(3,3)/efe_J(3,3)
+                  end if
+
+                  if (is_nan(efe(3,4)).or.is_nan(efe_J(3,4)).or.
+     &              efe_J(3,4).eq.0) then
+                    dump=.true.
+                  else
+                    gb_yz_np1(i,j,k)=gb_yz_np1(i,j,k)
+     &                               -efe(3,4)/efe_J(3,4)
                   end if
 
                   if (is_nan(efe(4,4)).or.is_nan(efe_J(4,4)).or.
@@ -2433,9 +2485,12 @@ c----------------------------------------------------------------------
      &            max(abs(efe(1,1)/efe_J(1,1)),
      &                abs(efe(1,2)/efe_J(1,2)),
      &                abs(efe(1,3)/efe_J(1,3)),
+     &                abs(efe(1,4)/efe_J(1,4)),
      &                abs(efe(2,2)/efe_J(2,2)),
      &                abs(efe(2,3)/efe_J(2,3)),
+     &                abs(efe(2,4)/efe_J(2,4)),
      &                abs(efe(3,3)/efe_J(3,3)),
+     &                abs(efe(3,4)/efe_J(3,4)),
      &                abs(efe(4,4)/efe_J(4,4)))
                 kg_res(i,j,k)=abs(phi1_res/phi1_J)
 
@@ -2449,11 +2504,11 @@ c----------------------------------------------------------------------
      &             ) then
                   first_nan=.false.
                   write(*,*)
-                  write(*,*) 'g_evo_opt: Nan/zero at i,j,Nx,Ny,dx=',
-     &                                              i,j,Nx,Ny,dx
-                  write(*,*) 'x,y=',x(i),y(j)
-                  write(*,*) 'dt,dx,dy=',dt,dx,dy
-                  write(*,*) 'x0,y0,rho0=',x0,y0,rho0
+                  write(*,*) 'g_evo_opt: Nan/zero at i,j,k,Nx,Ny,Nz,dx='
+     &                                              ,i,j,k,Nx,Ny,Nz,dx
+                  write(*,*) 'x,y,z=',x(i),y(j),z(k)
+                  write(*,*) 'dt,dx,dy,dz=',dt,dx,dy,dz
+                  write(*,*) 'x0,y0,z0,rho0=',x0,y0,z0,rho0
 
 
                   write(*,*) ' at tn:'
@@ -2463,12 +2518,18 @@ c----------------------------------------------------------------------
      &                   gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
                   write(*,*) ' gb_ty np1,n,nm1:',gb_ty_np1(i,j,k),
      &                   gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+                  write(*,*) ' gb_tz np1,n,nm1:',gb_tz_np1(i,j,k),
+     &                   gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)
                   write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j,k),
      &                   gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
                   write(*,*) ' gb_xy np1,n,nm1:',gb_xy_np1(i,j,k),
      &                   gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+                  write(*,*) ' gb_xz np1,n,nm1:',gb_xz_np1(i,j,k),
+     &                   gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)
                   write(*,*) ' gb_yy np1,n,nm1:',gb_yy_np1(i,j,k),
      &                   gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+                  write(*,*) ' gb_yz np1,n,nm1:',gb_yz_np1(i,j,k),
+     &                   gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)
                   write(*,*) ' psi np1,n,nm1:',psi_np1(i,j,k),
      &                   psi_n(i,j,k),psi_nm1(i,j,k)
 
@@ -2482,30 +2543,42 @@ c----------------------------------------------------------------------
                   write(*,*) ' h0_tt :',h0_ll(1,1)
                   write(*,*) ' h0_tx :',h0_ll(1,2)
                   write(*,*) ' h0_ty :',h0_ll(1,3)
+                  write(*,*) ' h0_tz :',h0_ll(1,4)
                   write(*,*) ' h0_xx :',h0_ll(2,2)
                   write(*,*) ' h0_xy :',h0_ll(2,3)
+                  write(*,*) ' h0_xz :',h0_ll(2,4)
                   write(*,*) ' h0_yy :',h0_ll(3,3)
+                  write(*,*) ' h0_yz :',h0_ll(3,4)
                   write(*,*) ' h0_psi:',h0_ll(4,4)
                   write(*,*) ' g0_tt :',g0_ll(1,1)
                   write(*,*) ' g0_tx :',g0_ll(1,2)
                   write(*,*) ' g0_ty :',g0_ll(1,3)
+                  write(*,*) ' g0_tz :',g0_ll(1,4)
                   write(*,*) ' g0_xx :',g0_ll(2,2)
                   write(*,*) ' g0_xy :',g0_ll(2,3)
+                  write(*,*) ' g0_xz :',g0_ll(2,4)
                   write(*,*) ' g0_yy :',g0_ll(3,3)
+                  write(*,*) ' g0_yz :',g0_ll(3,4)
                   write(*,*) ' g0_psi:',g0_ll(4,4)
                   write(*,*) ' g0u_tt :',g0_uu(1,1)
                   write(*,*) ' g0u_tx :',g0_uu(1,2)
                   write(*,*) ' g0u_ty :',g0_uu(1,3)
+                  write(*,*) ' g0u_tz :',g0_uu(1,4)
                   write(*,*) ' g0u_xx :',g0_uu(2,2)
                   write(*,*) ' g0u_xy :',g0_uu(2,3)
+                  write(*,*) ' g0u_xz :',g0_uu(2,4)
                   write(*,*) ' g0u_yy :',g0_uu(3,3)
+                  write(*,*) ' g0u_yz :',g0_uu(3,4)
                   write(*,*) ' g0u_psi:',g0_uu(4,4)
                   write(*,*) ' cd_tt:',cd_ll(1,1)
                   write(*,*) ' cd_tx:',cd_ll(1,2)
                   write(*,*) ' cd_ty:',cd_ll(1,3)
+                  write(*,*) ' cd_tz:',cd_ll(1,4)
                   write(*,*) ' cd_xx:',cd_ll(2,2)
                   write(*,*) ' cd_xy:',cd_ll(2,3)
+                  write(*,*) ' cd_xz:',cd_ll(2,4)
                   write(*,*) ' cd_yy:',cd_ll(3,3)
+                  write(*,*) ' cd_yz:',cd_ll(3,4)
                   write(*,*) ' cd_psi:',cd_ll(4,4)
                   write(*,*) ' phi1:',phi1_n(i,j,k)
                   write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j,k),
@@ -2514,9 +2587,12 @@ c----------------------------------------------------------------------
                   write(*,*) ' tt:',efe(1,1),efe_J(1,1)
                   write(*,*) ' tx:',efe(1,2),efe_J(1,2)
                   write(*,*) ' ty:',efe(1,3),efe_J(1,3)
+                  write(*,*) ' tz:',efe(1,4),efe_J(1,4)
                   write(*,*) ' xx:',efe(2,2),efe_J(2,2)
                   write(*,*) ' xy:',efe(2,3),efe_J(2,3)
+                  write(*,*) ' xz:',efe(2,4),efe_J(2,4)
                   write(*,*) ' yy:',efe(3,3),efe_J(3,3)
+                  write(*,*) ' yz:',efe(3,4),efe_J(3,4)
                   write(*,*) ' psi:',efe(4,4),efe_J(4,4)
                   write(*,*) ' phi1:',phi1_res,phi1_J
                 end if
@@ -2530,11 +2606,17 @@ c----------------------------------------------------------------------
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(gb_ty_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_tz_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(gb_xx_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(gb_xy_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_xz_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(gb_yy_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(gb_yz_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(psi_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
@@ -2544,17 +2626,23 @@ c----------------------------------------------------------------------
      &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(Hb_y_np1,x,y,z,L,i,j,k,chr,ex,
      &                 Nx,Ny,Nz)
+                call interp_from_ads_bdy(Hb_z_np1,x,y,z,L,i,j,k,chr,ex,
+     &                 Nx,Ny,Nz)
                 call interp_from_ads_bdy(phi1_np1,x,y,z,L,i,j,k,
      &                    chr,ex,Nx,Ny,Nz)
 !                 gb_tx_np1(i,j,k)=0
 !                 gb_ty_np1(i,j,k)=0
+!                 gb_tz_np1(i,j,k)=0
 !                 gb_xx_np1(i,j,k)=0
 !                 gb_xy_np1(i,j,k)=0
+!                 gb_xz_np1(i,j,k)=0
 !                 gb_yy_np1(i,j,k)=0
+!                 gb_yz_np1(i,j,k)=0
 !                 psi_np1(i,j,k)=0
 !                 Hb_t_np1(i,j,k)=0
 !                 Hb_x_np1(i,j,k)=0
 !                 Hb_y_np1(i,j,k)=0
+!                 Hb_z_np1(i,j,k)=0
 !                 phi1_np1(i,j,k)=0
                 gb_tt_np1(i,j,k)=gb_xx_np1(i,j,k)+gb_yy_np1(i,j,k)
      &                        +2*psi_np1(i,j,k)
@@ -2564,9 +2652,12 @@ c----------------------------------------------------------------------
                 gb_tt_np1(i,j,k) = 0
                 gb_tx_np1(i,j,k) = 0
                 gb_ty_np1(i,j,k) = 0
+                gb_tz_np1(i,j,k) = 0
                 gb_xx_np1(i,j,k) = 0
                 gb_xy_np1(i,j,k) = 0
+                gb_xz_np1(i,j,k) = 0
                 gb_yy_np1(i,j,k) = 0
+                gb_yz_np1(i,j,k) = 0
                 psi_np1(i,j,k) = 0 
                 phi1_np1(i,j,k) = 0 
                 gb_res(i,j,k) = 0

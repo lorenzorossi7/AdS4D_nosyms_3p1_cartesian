@@ -109,6 +109,7 @@ c----------------------------------------------------------------------
            Hb_t_n(i,j,k)=0
            Hb_x_n(i,j,k)=0
            Hb_y_n(i,j,k)=0
+           Hb_z_n(i,j,k)=0
            zeros(i,j,k)=0
           end do
          end do
@@ -190,6 +191,7 @@ c----------------------------------------------------------------------
               Hb_t_n(i,j,k)=(boxx_l(1)-Hads_l(1))/(1-rho0**2)
               Hb_x_n(i,j,k)=(boxx_l(2)-Hads_l(2))/(1-rho0**2)
               Hb_y_n(i,j,k)=(boxx_l(3)-Hads_l(3))/(1-rho0**2)
+              Hb_z_n(i,j,k)=(boxx_l(4)-Hads_l(4))/(1-rho0**2)
 
             end if
            end do

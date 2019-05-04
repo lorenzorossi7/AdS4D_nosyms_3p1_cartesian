@@ -79,13 +79,17 @@ c----------------------------------------------------------------------
         real*8 gb_tt_t0,gb_tt_tt0
         real*8 gb_tx_t0,gb_tx_tt0
         real*8 gb_ty_t0,gb_ty_tt0
+        real*8 gb_tz_t0,gb_tz_tt0
         real*8 gb_xx_t0,gb_xx_tt0
         real*8 gb_xy_t0,gb_xy_tt0
+        real*8 gb_xz_t0,gb_xz_tt0
         real*8 gb_yy_t0,gb_yy_tt0
+        real*8 gb_yz_t0,gb_yz_tt0
         real*8 psi_t0,psi_tt0
         real*8 Hb_t_t0
         real*8 Hb_x_t0
         real*8 Hb_y_t0
+        real*8 Hb_z_t0
         real*8 phi1_t0,phi1_tt0
 
         real*8 h0_ll_tt(4,4),phi10_tt
@@ -277,26 +281,34 @@ c----------------------------------------------------------------------
               h0_ll_x(1,1,1)=gb_tt_t_n(i,j,k)
               h0_ll_x(1,2,1)=gb_tx_t_n(i,j,k)
               h0_ll_x(1,3,1)=gb_ty_t_n(i,j,k)
+              h0_ll_x(1,4,1)=gb_tz_t_n(i,j,k)
               h0_ll_x(2,2,1)=gb_xx_t_n(i,j,k)
               h0_ll_x(2,3,1)=gb_xy_t_n(i,j,k)
+              h0_ll_x(2,4,1)=gb_xz_t_n(i,j,k)
               h0_ll_x(3,3,1)=gb_yy_t_n(i,j,k)
+              h0_ll_x(3,4,1)=gb_yz_t_n(i,j,k)
               h0_ll_x(4,4,1)=psi_t_n(i,j,k)*y0**2
               A_l_x(1,1)    =Hb_t_t_n(i,j,k)*(1-rho0**2)
               A_l_x(2,1)    =Hb_x_t_n(i,j,k)*(1-rho0**2)
               A_l_x(3,1)    =Hb_y_t_n(i,j,k)*(1-rho0**2)
+              A_l_x(4,1)    =Hb_z_t_n(i,j,k)*(1-rho0**2)
 
               ! need this in gb_ii_nm1/np1,Hb_i_nm1/np1,phi1_nm1/np1 updates
               phi1_t0 =phi1_t_n(i,j,k)*(1-rho0**2)**2 
               gb_tt_t0=gb_tt_t_n(i,j,k)
               gb_tx_t0=gb_tx_t_n(i,j,k)
               gb_ty_t0=gb_ty_t_n(i,j,k)
+              gb_tz_t0=gb_tz_t_n(i,j,k)
               gb_xx_t0=gb_xx_t_n(i,j,k)
               gb_xy_t0=gb_xy_t_n(i,j,k)
+              gb_xz_t0=gb_xz_t_n(i,j,k)
               gb_yy_t0=gb_yy_t_n(i,j,k)
+              gb_yz_t0=gb_yz_t_n(i,j,k)
               psi_t0  =psi_t_n(i,j,k)*y0**2
               Hb_t_t0 =Hb_t_t_n(i,j,k)*(1-rho0**2)
               Hb_x_t0 =Hb_x_t_n(i,j,k)*(1-rho0**2)
               Hb_y_t0 =Hb_y_t_n(i,j,k)*(1-rho0**2)
+              Hb_z_t0 =Hb_z_t_n(i,j,k)*(1-rho0**2)
                        
               ! 0 = efe_ab
               do a=1,4
@@ -810,15 +822,21 @@ c----------------------------------------------------------------------
      &                                                                )
 
               if (is_nan(h0_ll_tt(1,1)).or.is_nan(h0_ll_tt(1,2))
-     &        .or.is_nan(h0_ll_tt(1,3)).or.is_nan(h0_ll_tt(2,2))
-     &        .or.is_nan(h0_ll_tt(2,3)).or.is_nan(h0_ll_tt(3,3))
-     &        .or.is_nan(h0_ll_tt(4,4)) ) then
+     &        .or.is_nan(h0_ll_tt(1,3))
+     &        .or.is_nan(h0_ll_tt(1,4))
+     &        .or.is_nan(h0_ll_tt(2,2)).or.is_nan(h0_ll_tt(2,3))
+     &        .or.is_nan(h0_ll_tt(2,4))
+     &        .or.is_nan(h0_ll_tt(3,3))
+     &        .or.is_nan(h0_ll_tt(3,4)).or.is_nan(h0_ll_tt(4,4)) ) then
                 write(*,*) 'h0_ll_tt(1,1)=',h0_ll_tt(1,1)
                 write(*,*) 'h0_ll_tt(1,2)=',h0_ll_tt(1,2)
                 write(*,*) 'h0_ll_tt(1,3)=',h0_ll_tt(1,3)
+                write(*,*) 'h0_ll_tt(1,4)=',h0_ll_tt(1,4)
                 write(*,*) 'h0_ll_tt(2,2)=',h0_ll_tt(2,2)
                 write(*,*) 'h0_ll_tt(2,3)=',h0_ll_tt(2,3)
+                write(*,*) 'h0_ll_tt(2,4)=',h0_ll_tt(2,4)
                 write(*,*) 'h0_ll_tt(3,3)=',h0_ll_tt(3,3)
+                write(*,*) 'h0_ll_tt(3,4)=',h0_ll_tt(3,4)
                 write(*,*) 'h0_ll_tt(4,4)=',h0_ll_tt(4,4)
                 stop
               end if
@@ -827,9 +845,12 @@ c----------------------------------------------------------------------
               gb_tt_tt0=h0_ll_tt(1,1)
               gb_tx_tt0=h0_ll_tt(1,2)
               gb_ty_tt0=h0_ll_tt(1,3)
+              gb_tz_tt0=h0_ll_tt(1,4)
               gb_xx_tt0=h0_ll_tt(2,2)
               gb_xy_tt0=h0_ll_tt(2,3)
+              gb_xz_tt0=h0_ll_tt(2,4)
               gb_yy_tt0=h0_ll_tt(3,3)
+              gb_yz_tt0=h0_ll_tt(3,4)
               psi_tt0  =h0_ll_tt(4,4)/y0**2
               phi1_tt0 =phi10_tt/(1-rho0**2)**2
 
@@ -840,12 +861,18 @@ c----------------------------------------------------------------------
      &                         + gb_tx_tt0*dt**2/2
               gb_ty_nm1(i,j,k)=gb_ty_n(i,j,k) - gb_ty_t0*dt
      &                         + gb_ty_tt0*dt**2/2
+              gb_tz_nm1(i,j,k)=gb_tz_n(i,j,k) - gb_tz_t0*dt
+     &                         + gb_tz_tt0*dt**2/2
               gb_xx_nm1(i,j,k)=gb_xx_n(i,j,k) - gb_xx_t0*dt
      &                         + gb_xx_tt0*dt**2/2
               gb_xy_nm1(i,j,k)=gb_xy_n(i,j,k) - gb_xy_t0*dt
      &                         + gb_xy_tt0*dt**2/2
+              gb_xz_nm1(i,j,k)=gb_xz_n(i,j,k) - gb_xz_t0*dt
+     &                         + gb_xz_tt0*dt**2/2
               gb_yy_nm1(i,j,k)=gb_yy_n(i,j,k) - gb_yy_t0*dt
      &                         + gb_yy_tt0*dt**2/2
+              gb_yz_nm1(i,j,k)=gb_yz_n(i,j,k) - gb_yz_t0*dt
+     &                         + gb_yz_tt0*dt**2/2
               psi_nm1(i,j,k)=psi_n(i,j,k) - psi_t0*dt
      &                         + psi_tt0*dt**2/2
               phi1_nm1(i,j,k)=phi1_n(i,j,k) - phi1_t0*dt
@@ -854,6 +881,7 @@ c----------------------------------------------------------------------
               Hb_t_nm1(i,j,k)=Hb_t_n(i,j,k)-Hb_t_t0*dt
               Hb_x_nm1(i,j,k)=Hb_x_n(i,j,k)-Hb_x_t0*dt
               Hb_y_nm1(i,j,k)=Hb_y_n(i,j,k)-Hb_y_t0*dt
+              Hb_z_nm1(i,j,k)=Hb_z_n(i,j,k)-Hb_z_t0*dt
 
               ! initialize future time level by O(h^3) expansion
               gb_tt_np1(i,j,k)=gb_tt_n(i,j,k) + gb_tt_t0*dt
@@ -862,12 +890,18 @@ c----------------------------------------------------------------------
      &                         + gb_tx_tt0*dt**2/2
               gb_ty_np1(i,j,k)=gb_ty_n(i,j,k) + gb_ty_t0*dt
      &                         + gb_ty_tt0*dt**2/2
+              gb_tz_np1(i,j,k)=gb_tz_n(i,j,k) + gb_tz_t0*dt
+     &                         + gb_tz_tt0*dt**2/2
               gb_xx_np1(i,j,k)=gb_xx_n(i,j,k) + gb_xx_t0*dt
      &                         + gb_xx_tt0*dt**2/2
               gb_xy_np1(i,j,k)=gb_xy_n(i,j,k) + gb_xy_t0*dt
      &                         + gb_xy_tt0*dt**2/2
+              gb_xz_np1(i,j,k)=gb_xz_n(i,j,k) + gb_xz_t0*dt
+     &                         + gb_xz_tt0*dt**2/2
               gb_yy_np1(i,j,k)=gb_yy_n(i,j,k) + gb_yy_t0*dt
      &                         + gb_yy_tt0*dt**2/2
+              gb_yz_np1(i,j,k)=gb_yz_n(i,j,k) + gb_yz_t0*dt
+     &                         + gb_yz_tt0*dt**2/2
               psi_np1(i,j,k)=psi_n(i,j,k) + psi_t0*dt
      &                         + psi_tt0*dt**2/2
               phi1_np1(i,j,k)=phi1_n(i,j,k) + phi1_t0*dt
@@ -876,6 +910,7 @@ c----------------------------------------------------------------------
               Hb_t_np1(i,j,k)=Hb_t_n(i,j,k)+Hb_t_t0*dt
               Hb_x_np1(i,j,k)=Hb_x_n(i,j,k)+Hb_x_t0*dt
               Hb_y_np1(i,j,k)=Hb_y_n(i,j,k)+Hb_y_t0*dt
+              Hb_z_np1(i,j,k)=Hb_z_n(i,j,k)+Hb_z_t0*dt
 
               ! diagnostic
               tfunction(i,j,k)=gb_tt_tt0

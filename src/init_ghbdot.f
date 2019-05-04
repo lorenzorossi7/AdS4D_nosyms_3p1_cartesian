@@ -56,97 +56,125 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         real*8 gb_tt_t, gb_tt_x, gb_tt_y, gb_tt_tt
+        real*8 gb_tt_z
         real*8 gb_tt_xx,gb_tt_yy,gb_tt_tx,gb_tt_ty
         real*8 gb_tt_xy
 
         real*8 gb_tx_t, gb_tx_x, gb_tx_y, gb_tx_tt
+        real*8 gb_tx_z
         real*8 gb_tx_xx,gb_tx_yy,gb_tx_tx,gb_tx_ty
         real*8 gb_tx_xy
 
         real*8 gb_ty_t, gb_ty_x, gb_ty_y, gb_ty_tt
+        real*8 gb_ty_z
         real*8 gb_ty_xx,gb_ty_yy,gb_ty_tx,gb_ty_ty
         real*8 gb_ty_xy
 
         real*8 gb_tz_t, gb_tz_x, gb_tz_y, gb_tz_tt
+        real*8 gb_tz_z
         real*8 gb_tz_xx,gb_tz_yy,gb_tz_tx,gb_tz_ty
         real*8 gb_tz_xy
 
         real*8 gb_xx_t, gb_xx_x, gb_xx_y, gb_xx_tt
+        real*8 gb_xx_z
         real*8 gb_xx_xx,gb_xx_yy,gb_xx_tx,gb_xx_ty
         real*8 gb_xx_xy
 
         real*8 gb_xy_t, gb_xy_x, gb_xy_y, gb_xy_tt
+        real*8 gb_xy_z
         real*8 gb_xy_xx,gb_xy_yy,gb_xy_tx,gb_xy_ty
         real*8 gb_xy_xy
 
         real*8 gb_xz_t, gb_xz_x, gb_xz_y, gb_xz_tt
+        real*8 gb_xz_z
         real*8 gb_xz_xx,gb_xz_yy,gb_xz_tx,gb_xz_ty
         real*8 gb_xz_xy
 
         real*8 gb_yy_t, gb_yy_x, gb_yy_y, gb_yy_tt
+        real*8 gb_yy_z
         real*8 gb_yy_xx,gb_yy_yy,gb_yy_tx,gb_yy_ty
         real*8 gb_yy_xy
 
         real*8 gb_yz_t, gb_yz_x, gb_yz_y, gb_yz_tt
+        real*8 gb_yz_z
         real*8 gb_yz_xx,gb_yz_yy,gb_yz_tx,gb_yz_ty
         real*8 gb_yz_xy
 
         real*8 psi_t, psi_x, psi_y, psi_tt
+        real*8 psi_z
         real*8 psi_xx,psi_yy,psi_tx,psi_ty
         real*8 psi_xy
 
         real*8 g0_tt_t, g0_tt_x, g0_tt_y, g0_tt_tt
+        real*8 g0_tt_z
         real*8 g0_tt_xx,g0_tt_yy,g0_tt_tx,g0_tt_ty
         real*8 g0_tt_xy
 
         real*8 g0_tx_t, g0_tx_x, g0_tx_y, g0_tx_tt
+        real*8 g0_tx_z
         real*8 g0_tx_xx,g0_tx_yy,g0_tx_tx,g0_tx_ty
         real*8 g0_tx_xy
 
         real*8 g0_ty_t, g0_ty_x, g0_ty_y, g0_ty_tt
+        real*8 g0_ty_z
         real*8 g0_ty_xx,g0_ty_yy,g0_ty_tx,g0_ty_ty
         real*8 g0_ty_xy
 
         real*8 g0_tz_t, g0_tz_x, g0_tz_y, g0_tz_tt
+        real*8 g0_tz_z
         real*8 g0_tz_xx,g0_tz_yy,g0_tz_tx,g0_tz_ty
         real*8 g0_tz_xy
 
         real*8 g0_xx_t, g0_xx_x, g0_xx_y, g0_xx_tt
+        real*8 g0_xx_z
         real*8 g0_xx_xx,g0_xx_yy,g0_xx_tx,g0_xx_ty
         real*8 g0_xx_xy
 
         real*8 g0_xy_t, g0_xy_x, g0_xy_y, g0_xy_tt
+        real*8 g0_xy_z
         real*8 g0_xy_xx,g0_xy_yy,g0_xy_tx,g0_xy_ty
         real*8 g0_xy_xy
 
         real*8 g0_xz_t, g0_xz_x, g0_xz_y, g0_xz_tt
+        real*8 g0_xz_z
         real*8 g0_xz_xx,g0_xz_yy,g0_xz_tx,g0_xz_ty
         real*8 g0_xz_xy
 
         real*8 g0_yy_t, g0_yy_x, g0_yy_y, g0_yy_tt
+        real*8 g0_yy_z
         real*8 g0_yy_xx,g0_yy_yy,g0_yy_tx,g0_yy_ty
         real*8 g0_yy_xy
 
         real*8 g0_yz_t, g0_yz_x, g0_yz_y, g0_yz_tt
+        real*8 g0_yz_z
         real*8 g0_yz_xx,g0_yz_yy,g0_yz_tx,g0_yz_ty
         real*8 g0_yz_xy
 
         real*8 g0_psi_t, g0_psi_x, g0_psi_y, g0_psi_tt
+        real*8 g0_psi_z
         real*8 g0_psi_xx,g0_psi_yy,g0_psi_tx,g0_psi_ty
         real*8 g0_psi_xy
 
         real*8 H0_t_t,H0_t_x,H0_t_y
+        real*8 H0_t_z
         real*8 H0_x_t,H0_x_x,H0_x_y
+        real*8 H0_x_z
         real*8 H0_y_t,H0_y_x,H0_y_y
+        real*8 H0_y_z
         real*8 H0_z_t,H0_z_x,H0_z_y
+        real*8 H0_z_z
 
         real*8 Hb_t0, Hb_x0, Hb_y0
         real*8 Hb_z0
 
         real*8 Hb_t_t,Hb_t_x,Hb_t_y
+        real*8 Hb_t_z
         real*8 Hb_x_t,Hb_x_x,Hb_x_y
+        real*8 Hb_x_z
         real*8 Hb_y_t,Hb_y_x,Hb_y_y
+        real*8 Hb_y_z
         real*8 Hb_z_t,Hb_z_x,Hb_z_y
+        real*8 Hb_z_z
 
         real*8 gb_tt0,g0u_tt0,g0_tt0
         real*8 gb_tx0,g0u_tx0,g0_tx0
@@ -323,13 +351,17 @@ c----------------------------------------------------------------------
            gb_tt_t_n(i,j,k)=0
            gb_tx_t_n(i,j,k)=0
            gb_ty_t_n(i,j,k)=0
+           gb_tz_t_n(i,j,k)=0
            gb_xx_t_n(i,j,k)=0
            gb_xy_t_n(i,j,k)=0
+           gb_xz_t_n(i,j,k)=0
            gb_yy_t_n(i,j,k)=0
+           gb_yz_t_n(i,j,k)=0
            psi_t_n(i,j,k)=0
            Hb_t_t_n(i,j,k)=0
            Hb_x_t_n(i,j,k)=0
            Hb_y_t_n(i,j,k)=0
+           Hb_z_t_n(i,j,k)=0
           end do
          end do
         end do
@@ -355,31 +387,63 @@ c----------------------------------------------------------------------
 
            ! calculate all needed derivatives 
            call df1_int(gb_tt_n,gb_tt_n,gb_tt_n,gb_tt_t,gb_tt_x,
-     &          gb_tt_y,x,y,z,dt,i,j,k,
+     &          gb_tt_y,
+     &          gb_tt_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_tt')
 
            call df1_int(gb_tx_n,gb_tx_n,gb_tx_n,gb_tx_t,gb_tx_x,
-     &          gb_tx_y,x,y,z,dt,i,j,k,
+     &          gb_tx_y,
+     &          gb_tx_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_tx')
 
            call df1_int(gb_ty_n,gb_ty_n,gb_ty_n,gb_ty_t,gb_ty_x,
-     &          gb_ty_y,x,y,z,dt,i,j,k,
+     &          gb_ty_y,
+     &          gb_ty_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_ty')
 
+           call df1_int(gb_tz_n,gb_tz_n,gb_tz_n,gb_tz_t,gb_tz_x,
+     &          gb_tz_y,
+     &          gb_tz_z,
+     &          x,y,z,dt,i,j,k,
+     &          chr,ex,Nx,Ny,Nz,'gb_tz')
+
            call df1_int(gb_xx_n,gb_xx_n,gb_xx_n,gb_xx_t,gb_xx_x,
-     &          gb_xx_y,x,y,z,dt,i,j,k,
+     &          gb_xx_y,
+     &          gb_xx_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_xx')
 
            call df1_int(gb_xy_n,gb_xy_n,gb_xy_n,gb_xy_t,gb_xy_x,
-     &          gb_xy_y,x,y,z,dt,i,j,k,
+     &          gb_xy_y,
+     &          gb_xy_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_xy')
 
+           call df1_int(gb_xz_n,gb_xz_n,gb_xz_n,gb_xz_t,gb_xz_x,
+     &          gb_xz_y,
+     &          gb_xz_z,
+     &          x,y,z,dt,i,j,k,
+     &          chr,ex,Nx,Ny,Nz,'gb_xz')
+
            call df1_int(gb_yy_n,gb_yy_n,gb_yy_n,gb_yy_t,gb_yy_x,
-     &          gb_yy_y,x,y,z,dt,i,j,k,
+     &          gb_yy_y,
+     &          gb_yy_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'gb_yy')
 
+           call df1_int(gb_yz_n,gb_yz_n,gb_yz_n,gb_yz_t,gb_yz_x,
+     &          gb_yz_y,
+     &          gb_yz_z,
+     &          x,y,z,dt,i,j,k,
+     &          chr,ex,Nx,Ny,Nz,'gb_yz')
+
            call df1_int(psi_n,psi_n,psi_n,psi_t,psi_x,
-     &          psi_y,x,y,z,dt,i,j,k,
+     &          psi_y,
+     &          psi_z,
+     &          x,y,z,dt,i,j,k,
      &          chr,ex,Nx,Ny,Nz,'psi')
 
            ! set time derivatives; zero gb_xx_t,gb_xy_t,gb_yy_t,psi_t from time-symmetry,
@@ -387,9 +451,12 @@ c----------------------------------------------------------------------
            gb_tt_t_n(i,j,k)=0
            gb_tx_t_n(i,j,k)=0
            gb_ty_t_n(i,j,k)=0
+           gb_tz_t_n(i,j,k)=0
            gb_xx_t_n(i,j,k)=0
            gb_xy_t_n(i,j,k)=0
+           gb_xz_t_n(i,j,k)=0
            gb_yy_t_n(i,j,k)=0
+           gb_yz_t_n(i,j,k)=0
            psi_t_n(i,j,k)=0
            
           end if

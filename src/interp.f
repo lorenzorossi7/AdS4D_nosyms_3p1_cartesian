@@ -65,6 +65,132 @@ c-----------------------------------------------------------------------
         return
         end
 
+!3+1 version!!!
+c-----------------------------------------------------------------------
+c Sets f at i,j via xy interpolation between interior point and AdS
+c boundary
+c-----------------------------------------------------------------------
+!        subroutine interp_from_ads_bdy(f,x,y,z,L,i,j,k,chr,ex,Nx,Ny,Nz)
+!        implicit none
+!        integer Nx,Ny,Nz,i,j,k
+!        real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,x(Nx),y(Ny),z(Nz),L
+!
+!        real*8 dx,dy,dz,rho_bdy,xi,phi
+!        real*8 d_to_bdy
+!        real*8 f_bdy,f_int
+!
+!        real*8 PI
+!        parameter (PI=3.141592653589793d0)
+!
+!        real*8 maxxyz
+!
+!        ! initialize fixed-size variables
+!        data dx,dy,dz,rho_bdy,xi,phi/0.0,0.0,0.0,0.0,0.0,0.0/
+!        data d_to_bdy/0.0/
+!        data f_bdy,f_int/0.0,0.0/
+!
+!        !--------------------------------------------------------------
+!
+!        dx=x(2)-x(1)
+!        dy=y(2)-y(1)
+!        dz=z(2)-z(1)
+!
+!        rho_bdy=1.0d0
+!        f_bdy=0.0d0
+!
+!        maxxyz=max(abs(x(i)),abs(y(j)),abs(z(k)))
+!
+!        ! see if linear interpolation does the trick ... either in x or
+!        ! y
+!
+!        if (abs(x(i)).eq.maxxyz) then
+!           xi=acos(x(i)/rho_bdy)
+!           if (x(i).lt.0) then
+!              d_to_bdy=x(i)-rho_bdy*cos(xi)
+!              if (i.eq.Nx) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'i=Nx'
+!                 stop
+!              end if
+!              f_int=f(i+1,j,k)
+!           else
+!              d_to_bdy=rho_bdy*cos(xi)-x(i)
+!              if (i.eq.1) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'i=1'
+!                 stop
+!              end if
+!              f_int=f(i-1,j,k)
+!           end if
+!           f(i,j,k)=(dx*f_bdy+d_to_bdy*f_int)/(dx+d_to_bdy)
+!        else if (abs(y(j).eq.maxxyz) then
+!           xi=acos(x(i)/rho_bdy)
+!
+!           if (y(j).ne.0) then
+!              if (z(k).lt.0) then
+!                 phi=atan2(z(k),y(j))+2*PI
+!              else
+!                 phi=atan2(z(k),y(j))
+!              end if
+!           else
+!              write(*,*) 'interp_from_ads_bdy, error: center of the
+!              grid
+!              write(*,*) 'i,j,k,x(i),y(j),z(k)=',i,j,k,x(i),y(j),z(k)
+!              stop
+!           end if
+!
+!           if (y(j).lt.0) then
+!              d_to_bdy=y(j)-rho_bdy*sin(xi)*cos(phi)
+!              if (j.eq.Ny) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'j=Ny'
+!                 stop
+!              end if
+!              f_int=f(i,j+1,k)
+!           else
+!              d_to_bdy=rho_bdy*sin(xi)*cos(phi)-y(j)
+!              if (j.eq.1) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'j=1'
+!                 stop
+!              end if
+!              f_int=f(i,j-1,k)
+!           end if
+!           f(i,j,k)=(dy*f_bdy+d_to_bdy*f_int)/(dy+d_to_bdy)
+!        else
+!           xi=acos(x(i)/rho_bdy)
+!           if (z(k).ne.0.0)
+!              if (z(k).lt.0) then
+!                 phi=atan2(z(k),y(j))+2*PI
+!                 d_to_bdy=z(k)-rho_bdy*sin(xi)*sin(phi)
+!              if (k.eq.Nz) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'k=Nz'
+!                 stop
+!              end if
+!              f_int=f(i,j,k+1)
+!              else
+!                 phi=atan2(z(k),y(j))
+!                 d_to_bdy=rho_bdy*sin(xi)*sin(phi)-z(k)
+!              if (k.eq.1) then
+!                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+!                 write(*,*) 'k=1'
+!                 stop
+!              end if
+!              f_int=f(i,j,k-1)
+!           else
+!              write(*,*) 'interp_from_ads_bdy, error: center of the
+!              grid
+!              write(*,*) 'i,j,k,x(i),y(j),z(k)=',i,j,k,x(i),y(j),z(k)
+!              stop
+!           end if
+!           f(i,j,k)=(dz*f_bdy+d_to_bdy*f_int)/(dz+d_to_bdy)
+!        end if
+!
+!        return
+!        end
+
+
 c----------------------------------------------------------------------
 c Sets f at i,j via rho interpolation between interior point and AdS boundary 
 c----------------------------------------------------------------------

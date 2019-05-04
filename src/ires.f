@@ -223,16 +223,23 @@ c----------------------------------------------------------------------
               efe_tt_ires(i,j,k)=efe_ires(1,1) 
               efe_tx_ires(i,j,k)=efe_ires(1,2) 
               efe_ty_ires(i,j,k)=efe_ires(1,3) 
+              efe_tz_ires(i,j,k)=efe_ires(1,4)
               efe_xx_ires(i,j,k)=efe_ires(2,2)
               efe_xy_ires(i,j,k)=efe_ires(2,3)
+              efe_xz_ires(i,j,k)=efe_ires(2,4)
               efe_yy_ires(i,j,k)=efe_ires(3,3)
+              efe_yz_ires(i,j,k)=efe_ires(3,4)
               efe_psi_ires(i,j,k)=efe_ires(4,4)
 
               ! calculate efe_all_ires function at point i,j
               efe_all_ires(i,j,k)=
      &        max(abs(efe_tt_ires(i,j,k)),abs(efe_tx_ires(i,j,k)),
-     &            abs(efe_ty_ires(i,j,k)),abs(efe_xx_ires(i,j,k)),
-     &            abs(efe_xy_ires(i,j,k)),abs(efe_yy_ires(i,j,k)),
+     &            abs(efe_ty_ires(i,j,k)),
+     &            abs(efe_tz_ires(i,j,k)),
+     &            abs(efe_xx_ires(i,j,k)),abs(efe_xy_ires(i,j,k)),
+     &            abs(efe_xz_ires(i,j,k)),
+     &            abs(efe_yy_ires(i,j,k)),
+     &            abs(efe_yz_ires(i,j,k)),
      &            abs(efe_psi_ires(i,j,k)))
 
               x0=x(i)
@@ -400,41 +407,41 @@ c----------------------------------------------------------------------
                 end do
               end do
 
-              efe_tt_ires(i,j,k)=!Hads_l(1)+A_l(1)-boxx_l(1)
-     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j,k)**2+
-     &                (-4+(-1+rho0**2)**3*gb_xx_n(i,j,k))*
-     &                (-4+(-1+rho0**2)**3*gb_yy_n(i,j,k)))*
-     &                (-4+(-1+rho0**2)**3*psi_n(i,j,k))**2)!/(-1+rho0**2)**8*y0**4
-              efe_tx_ires(i,j,k)=g0_ll(1,2)!Hads_l(2)+A_l(2)-boxx_l(2)
-              efe_ty_ires(i,j,k)=g0_ll(1,3)!Hads_l(3)+A_l(3)-boxx_l(3)
-              efe_xx_ires(i,j,k)=theta(i,j,k)
-              efe_xy_ires(i,j,k)=boxx_l(2)
-              efe_yy_ires(i,j,k)=-1/g0_uu(1,1)*(1-x(i)**2-y(j)**2)**2
-              efe_psi_ires(i,j,k)=0
-              do a=1,4
-                do b=1,4
-                  do c=1,4
-                    do d=1,4
-                      do i1=1,4
-                        do j1=1,4
-                          do k1=1,4
-                            do e=1,4
-                              efe_psi_ires(i,j,k)=efe_psi_ires(i,j,k)+
-     &                                          g0_ll(a,i1)*
-     &                                          g0_uu(b,j1)*
-     &                                          g0_uu(c,k1)*
-     &                                          g0_uu(d,e)*
-     &                                          riemann_ulll(a,b,c,d)*
-     &                                          riemann_ulll(i1,j1,k1,e)
-                            end do
-                          end do
-                        end do
-                      end do
-                    end do
-                  end do
-                end do
-              end do
-
+!              efe_tt_ires(i,j,k)=!Hads_l(1)+A_l(1)-boxx_l(1)
+!     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j,k)**2+
+!     &                (-4+(-1+rho0**2)**3*gb_xx_n(i,j,k))*
+!     &                (-4+(-1+rho0**2)**3*gb_yy_n(i,j,k)))*
+!     &                (-4+(-1+rho0**2)**3*psi_n(i,j,k))**2)!/(-1+rho0**2)**8*y0**4
+!              efe_tx_ires(i,j,k)=g0_ll(1,2)!Hads_l(2)+A_l(2)-boxx_l(2)
+!              efe_ty_ires(i,j,k)=g0_ll(1,3)!Hads_l(3)+A_l(3)-boxx_l(3)
+!              efe_xx_ires(i,j,k)=theta(i,j,k)
+!              efe_xy_ires(i,j,k)=boxx_l(2)
+!              efe_yy_ires(i,j,k)=-1/g0_uu(1,1)*(1-x(i)**2-y(j)**2)**2
+!              efe_psi_ires(i,j,k)=0
+!              do a=1,4
+!                do b=1,4
+!                  do c=1,4
+!                    do d=1,4
+!                      do i1=1,4
+!                        do j1=1,4
+!                          do k1=1,4
+!                            do e=1,4
+!                              efe_psi_ires(i,j,k)=efe_psi_ires(i,j,k)+
+!     &                                          g0_ll(a,i1)*
+!     &                                          g0_uu(b,j1)*
+!     &                                          g0_uu(c,k1)*
+!     &                                          g0_uu(d,e)*
+!     &                                          riemann_ulll(a,b,c,d)*
+!     &                                          riemann_ulll(i1,j1,k1,e)
+!                            end do
+!                          end do
+!                        end do
+!                      end do
+!                    end do
+!                  end do
+!                end do
+!              end do
+!
             end if
            end do
           end do

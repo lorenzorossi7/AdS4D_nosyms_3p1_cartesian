@@ -32,7 +32,7 @@ extern real phi4_qb_amp_2,phi4_qb_x0_2[3],phi4_qb_w0_2,phi4_qb_k_2[3],phi4_qb_de
 extern real ief_bh_r0;
 extern real ex_rbuf[MAX_BHS];
 extern int ex_reset_rbuf;
-extern real ex_r[MAX_BHS][2],ex_xc[MAX_BHS][2];
+extern real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 extern int bh_background,background,skip_constraints;
 extern int use_bg_inc,output_ires,output_quasiset;

@@ -60,7 +60,7 @@ int ex_reset_rbuf;
 int ex_max_repop,ex_repop_buf,ex_repop_io;
 
 // "internal" excision parameters, set by AH finder (eventually)
-real ex_r[MAX_BHS][2],ex_xc[MAX_BHS][2];
+real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
 int output_ires,output_quasiset;
@@ -1006,8 +1006,8 @@ void AdS4D_var_post_init(char *pfile)
 
       if (!AMRD_cp_restart)
       {
-         ex_xc[j][0]=ex_xc[j][1]=0;
-         ex_r[j][0]=ex_r[j][1]=0;
+         ex_xc[j][0]=ex_xc[j][1]=ex_xc[j][2]=0;
+         ex_r[j][0]=ex_r[j][1]=ex_r[j][2]=0;
       }
    }
 
@@ -1169,7 +1169,7 @@ void AdS4D_var_post_init(char *pfile)
          /(pow(3,(2.0/3.0)));
      mh=ief_bh_r0/2;
      rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
-     ex_r[0][0]=ex_r[0][1]=rhoh*(1-ex_rbuf[0]);
+     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
      if (my_rank==0) printf("\nBH initial data\n"
                             "r0/L=%lf, rh/L=%lf, mass M = r0/2 = rh*(1+rh^2/L^2)/2 = %lf\n"
                             "Initial BH radius=%lf, (%lf in compactified (code) coords)\n"
@@ -1383,6 +1383,7 @@ void AdS4D_t0_cnst_data(void)
        Hb_t_0[i]=Hb_t[i];
        Hb_x_0[i]=Hb_x[i];
        Hb_y_0[i]=Hb_y[i];
+       Hb_z_0[i]=Hb_z[i];
      }
    }
 
@@ -1579,7 +1580,7 @@ real AdS4D_evo_residual(void)
    {
       printf("\nl2norm_phi1=%lf, l2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, g_norms[phi1_n_gfn-1]=%lf\n",
               l2norm_phi1,l2norm_gb,l2norm_hb_t,l2norm_hb_i,g_norms[phi1_n_gfn-1]);
-      printf("[Nx,Ny]=[%i,%i],L=%i\n",Nx,Ny,g_L);
+      printf("[Nx,Ny,Nz]=[%i,%i,%i],L=%i\n",Nx,Ny,Nz,g_L);
       AMRD_stop("l2norm is nan ... stopping","");
       l2norm=0;
    }
@@ -1810,10 +1811,10 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                {
                  xp=(x-ex_xc[l][0]);
                  yp=(y-ex_xc[l][1]);
-                 zp=xp;
+                 zp=(z-ex_xc[l][2]);
                  ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
                  ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
-                 ex_r_zp=ex_r_xp;
+                 ex_r_zp=(ex_r[l][2]);
                  if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp))<1) 
                  {
                   mask[ind]=excised;
@@ -2061,7 +2062,7 @@ void AdS4D_pre_tstep(int L)
             /(pow(3,(2.0/3.0)));
          mh=ief_bh_r0/2;
          rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
-         ex_r[0][0]=ex_r[0][1]=rhoh*(1-ex_rbuf[0]);
+         ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
          printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
         }
      }
@@ -2208,9 +2209,12 @@ void AdS4D_post_regrid(void)
       gb_tt_nm1[i]=gb_tt_np1[i]=gb_tt_n[i];
       gb_tx_nm1[i]=gb_tx_np1[i]=gb_tx_n[i];
       gb_ty_nm1[i]=gb_ty_np1[i]=gb_ty_n[i];
+      gb_tz_nm1[i]=gb_tz_np1[i]=gb_tz_n[i];
       gb_xx_nm1[i]=gb_xx_np1[i]=gb_xx_n[i];
       gb_xy_nm1[i]=gb_xy_np1[i]=gb_xy_n[i];
+      gb_xz_nm1[i]=gb_xz_np1[i]=gb_xz_n[i];
       gb_yy_nm1[i]=gb_yy_np1[i]=gb_yy_n[i];
+      gb_yz_nm1[i]=gb_yz_np1[i]=gb_yz_n[i];
       psi_nm1[i]=psi_np1[i]=psi_n[i];
    }
 }
