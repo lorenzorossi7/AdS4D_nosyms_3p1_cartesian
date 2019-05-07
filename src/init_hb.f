@@ -133,7 +133,7 @@ c----------------------------------------------------------------------
             x0=x(i)
             y0=y(j)
             z0=z(k)
-            rho0=sqrt(x0**2+y0**2)
+            rho0=sqrt(x0**2+y0**2+z0**2)
 
             ! computes tensors at point i,j
             call tensor_init(

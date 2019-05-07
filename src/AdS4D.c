@@ -1498,7 +1498,7 @@ void AdS4D_pre_io_calc(void)
           for (k=0; k<Nz; k++)
           {
             ind=i+Nx*(j+Ny*k);
-            rho=sqrt(x[i]*x[i]+y[j]*y[j]);
+            rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
 
             // excise rho=1-1.5*dx pts (pure AdS diverges at rho=1, so cannot use these pts in difference stencils) 
             if (chr[ind]==AMRD_ex || 1-rho<1.5*dx_Lc)
@@ -1793,7 +1793,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
        for (k=0; k<shape[2]; k++)
        {
          z=bbox[4]+k*dz;
-         rho=sqrt(x*x+y*y);
+         rho=sqrt(x*x+y*y+z*z);
          ind=i+shape[0]*(j+shape[1]*k);
 
          if (rho>=(1-dx_Lc/2)) 
@@ -1815,7 +1815,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                  ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
                  ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
                  ex_r_zp=(ex_r[l][2]);
-                 if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp))<1) 
+                 if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp+zp*zp/ex_r_zp/ex_r_zp))<1) 
                  {
                   mask[ind]=excised;
                  }

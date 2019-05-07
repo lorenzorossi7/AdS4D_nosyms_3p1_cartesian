@@ -574,11 +574,11 @@ c----------------------------------------------------------------------
         do rb=1,2
          do k=ks,ke
           do j=js,je
-            do i=is+mod(j+rb,2),ie,2
+            do i=is+mod(j+k+rb,2),ie,2
               x0=x(i)
               y0=y(j)
               z0=z(k)
-              rho0=sqrt(x0**2+y0**2)
+              rho0=sqrt(x0**2+y0**2+z0**2)
               dump=.false.
 
               if (ltrace) write(*,*) 'i,j:',i,j

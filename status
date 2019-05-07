@@ -1,7 +1,4 @@
 STATUS OF THIS BRANCH:
-2+1 Cartesian code in 3D grid (we extended the declaration of grid functions to a 3D grid and included the new grid functions and their derivatives in the code; the derivatives w.r.t. the new z-coordinate are still set to 0 as well as the grid functions associated with the z coordinate, so this is still a 2+1 code).
-We implemented Schwarzschild-AdS analytic initial data in horizon penetrating Cartesian coordinates.
-The code has been tested for analytic Schwarzschild-AdS initial data mainly.
-Convergence at t=0 is good as expected.
-Derivative stencils have been rearranged so that no errors arise and arrays don't go out of boundaries.
+3+1 Cartesian code. So far, we've written the 3+1 version of tensor_init
 We excise inside a region determined by the initial black hole radius at all time steps. We don't use an AH finder for now.
+New derivative stencils in z have been tested.
