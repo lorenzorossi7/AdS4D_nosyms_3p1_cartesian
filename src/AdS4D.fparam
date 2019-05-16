@@ -9,7 +9,7 @@ num_evo_tl := 3
 ic_n := 2
 t0 := 0
 
-base_bbox := [-1.0 1.0 0.0 1.0 -1.0 1.0]
+base_bbox := [-1.0 1.0 -1.0 1.0 -1.0 1.0]
 
 #==============================================================================
 # Also, excision is not optional
@@ -80,9 +80,9 @@ tn_diss_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz"
 num_tnp1_diss_vars := 30
 tnp1_diss_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ] 
 
-num_even_vars_x1min := 22
-even_vars_x1min := [ "phi1" "gb_tt" "gb_tx" "gb_tz" "gb_xx" "gb_xz" "gb_yy" "Hb_t" "Hb_x" "Hb_z" "psi" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_tz_t" "gb_xx_t" "gb_xz_t" "gb_yy_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_z_t" ]
-num_odd_vars_x1min := 8
-odd_vars_x1min := [ "gb_ty" "gb_xy" "gb_yz" "Hb_y" "gb_ty_t" "gb_xy_t" "gb_yz_t" "Hb_y_t"]
-
+#num_even_vars_x1min := 22
+#even_vars_x1min := [ "phi1" "gb_tt" "gb_tx" "gb_tz" "gb_xx" "gb_xz" "gb_yy" "Hb_t" "Hb_x" "Hb_z" "psi" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_tz_t" "gb_xx_t" "gb_xz_t" "gb_yy_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_z_t" ]
+#num_odd_vars_x1min := 8
+#odd_vars_x1min := [ "gb_ty" "gb_xy" "gb_yz" "Hb_y" "gb_ty_t" "gb_xy_t" "gb_yz_t" "Hb_y_t"]
+#
 #-----------------------------------------------------

@@ -317,26 +317,37 @@ void set_gfns(void)
 
     if ((phi1_t_gfn = PAMR_get_gfn("phi1_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_t_n_gfn = PAMR_get_gfn("phi1_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_tt_t_gfn = PAMR_get_gfn("gb_tt_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tt_t_n_gfn = PAMR_get_gfn("gb_tt_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_tx_t_gfn = PAMR_get_gfn("gb_tx_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tx_t_n_gfn = PAMR_get_gfn("gb_tx_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_ty_t_gfn = PAMR_get_gfn("gb_ty_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_ty_t_n_gfn = PAMR_get_gfn("gb_ty_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_tz_t_gfn = PAMR_get_gfn("gb_tz_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tz_t_n_gfn = PAMR_get_gfn("gb_tz_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_xx_t_gfn = PAMR_get_gfn("gb_xx_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_xx_t_n_gfn = PAMR_get_gfn("gb_xx_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_xy_t_gfn = PAMR_get_gfn("gb_xy_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_xy_t_n_gfn = PAMR_get_gfn("gb_xy_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_xz_t_gfn = PAMR_get_gfn("gb_xz_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_xz_t_n_gfn = PAMR_get_gfn("gb_xz_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_yy_t_gfn = PAMR_get_gfn("gb_yy_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yy_t_n_gfn = PAMR_get_gfn("gb_yy_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((gb_yz_t_gfn = PAMR_get_gfn("gb_yz_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yz_t_n_gfn = PAMR_get_gfn("gb_yz_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((psi_t_gfn = PAMR_get_gfn("psi_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((psi_t_n_gfn = PAMR_get_gfn("psi_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+
     if ((Hb_t_t_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_t_n_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_t_gfn  = PAMR_get_gfn("Hb_x_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -588,26 +599,37 @@ void ldptr(void)
 
    phi1_t = gfs[phi1_t_gfn-1];
    phi1_t_n = gfs[phi1_t_n_gfn-1];
+
    gb_tt_t = gfs[gb_tt_t_gfn-1];
    gb_tt_t_n = gfs[gb_tt_t_n_gfn-1];
+
    gb_tx_t = gfs[gb_tx_t_gfn-1];
    gb_tx_t_n = gfs[gb_tx_t_n_gfn-1];
+
    gb_ty_t = gfs[gb_ty_t_gfn-1];
    gb_ty_t_n = gfs[gb_ty_t_n_gfn-1];
+
    gb_tz_t = gfs[gb_tz_t_gfn-1];
    gb_tz_t_n = gfs[gb_tz_t_n_gfn-1];
+
    gb_xx_t = gfs[gb_xx_t_gfn-1];
    gb_xx_t_n = gfs[gb_xx_t_n_gfn-1];
+
    gb_xy_t = gfs[gb_xy_t_gfn-1];
    gb_xy_t_n = gfs[gb_xy_t_n_gfn-1];
+
    gb_xz_t = gfs[gb_xz_t_gfn-1];
    gb_xz_t_n = gfs[gb_xz_t_n_gfn-1];
+
    gb_yy_t = gfs[gb_yy_t_gfn-1];
    gb_yy_t_n = gfs[gb_yy_t_n_gfn-1];
+
    gb_yz_t = gfs[gb_yz_t_gfn-1];
    gb_yz_t_n = gfs[gb_yz_t_n_gfn-1];
+
    psi_t = gfs[psi_t_gfn-1];
    psi_t_n = gfs[psi_t_n_gfn-1];
+
    Hb_t_t  = gfs[Hb_t_t_gfn-1];
    Hb_t_t_n  = gfs[Hb_t_t_n_gfn-1];
    Hb_x_t  = gfs[Hb_x_t_gfn-1];
@@ -1435,6 +1457,7 @@ void AdS4D_pre_io_calc(void)
       {
       //(NOTE: for t>t0, have cycled time sequence np1,n,nm1 to time sequence n,nm1,np1,
       // so here, time level n is the most advanced time level)
+
       ires_(efe_all_ires,
          efe_tt_ires,efe_tx_ires,efe_ty_ires,
          efe_tz_ires,
@@ -1464,6 +1487,7 @@ void AdS4D_pre_io_calc(void)
       {
       //(NOTE: for t=t0, have *not* cycled time sequence, so still np1,n,nm1,
       // so here, time level np1 is the most advanced time level)
+
       ires_(efe_all_ires,
          efe_tt_ires,efe_tx_ires,efe_ty_ires,
          efe_tz_ires,
@@ -1804,6 +1828,10 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
          else 
          {
             mask[ind]=excised-1;
+//       printf("point not excised");
+//       printf("EX_MASK: i=%i,j=%i,k=%i,ind=%i\n",i,j,k,ind);
+//       printf("EX_MASK: x=%lf,y=%lf,z=%lf,rho=%lf\n",x,y,z,rho);
+//       printf("EX_MASK: mask[ind]=%lf\n",mask[ind]);
             //when MAX_BHS.ne.0, excise inside a fraction ex_r of the horizon
             for (l=0; l<MAX_BHS; l++)
             {
@@ -1815,6 +1843,10 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                  ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
                  ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
                  ex_r_zp=(ex_r[l][2]);
+
+//                 printf("xp=%lf,yp=%lf,zp=%lf\n",xp,yp,zp);
+//                 printf("ex_r_xp=%lf,ex_r_yp=%lf,ex_r_zp=%lf\n",ex_r_xp,ex_r_yp,ex_r_zp);
+
                  if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp+zp*zp/ex_r_zp/ex_r_zp))<1) 
                  {
                   mask[ind]=excised;
@@ -2063,7 +2095,7 @@ void AdS4D_pre_tstep(int L)
          mh=ief_bh_r0/2;
          rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
          ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
-         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
+         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius smaller than rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
         }
      }
 

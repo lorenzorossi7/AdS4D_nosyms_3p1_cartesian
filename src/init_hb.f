@@ -193,6 +193,52 @@ c----------------------------------------------------------------------
               Hb_y_n(i,j,k)=(boxx_l(3)-Hads_l(3))/(1-rho0**2)
               Hb_z_n(i,j,k)=(boxx_l(4)-Hads_l(4))/(1-rho0**2)
 
+!        write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!        write (*,*) ' Hb_t_n(i,j,k),Hb_x_n(i,j,k),
+!     &                Hb_y_n(i,j,k),Hb_z_n(i,j,k)='
+!     &               ,Hb_t_n(i,j,k),Hb_x_n(i,j,k)
+!     &               ,Hb_y_n(i,j,k),Hb_z_n(i,j,k)
+!        write (*,*) ' boxx_l(1),Hads_l(1)=',boxx_l(1),Hads_l(1)
+!        write (*,*) ' boxx_l(2),Hads_l(2)=',boxx_l(2),Hads_l(2)
+!        write (*,*) ' boxx_l(3),Hads_l(3)=',boxx_l(3),Hads_l(3)
+!        write (*,*) ' boxx_l(4),Hads_l(4)=',boxx_l(4),Hads_l(4)
+!        write (*,*) ' boxx_u(1),g0_ll(1,1)=',boxx_u(1),g0_ll(1,1)
+!        write (*,*) ' boxx_u(2),g0_ll(1,2)=',boxx_u(2),g0_ll(1,2)
+!        write (*,*) ' boxx_u(3),g0_ll(2,2)=',boxx_u(3),g0_ll(2,2)
+!        write (*,*) ' boxx_u(4),g0_ll(3,3)=',boxx_u(4),g0_ll(3,3)
+
+!        write (*,*) ' gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)='
+!     &               ,gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)
+!        write (*,*) ' gb_tx_nm1(i,j,k),gb_tx_n(i,j,k),gb_tx_np1(i,j,k)='
+!     &               ,gb_tx_nm1(i,j,k),gb_tx_n(i,j,k),gb_tx_np1(i,j,k)
+!        write (*,*) ' gb_ty_nm1(i,j,k),gb_ty_n(i,j,k),gb_ty_np1(i,j,k)='
+!     &               ,gb_ty_nm1(i,j,k),gb_ty_n(i,j,k),gb_ty_np1(i,j,k)
+!        write (*,*) ' gb_tz_nm1(i,j,k),gb_tz_n(i,j,k),gb_tz_np1(i,j,k)='
+!     &               ,gb_tz_nm1(i,j,k),gb_tz_n(i,j,k),gb_tz_np1(i,j,k)
+!        write (*,*) ' gb_xx_nm1(i,j,k),gb_xx_n(i,j,k),gb_xx_np1(i,j,k)='
+!     &               ,gb_xx_nm1(i,j,k),gb_xx_n(i,j,k),gb_xx_np1(i,j,k)
+!        write (*,*) ' gb_xy_nm1(i,j,k),gb_xy_n(i,j,k),gb_xy_np1(i,j,k)='
+!     &               ,gb_xy_nm1(i,j,k),gb_xy_n(i,j,k),gb_xy_np1(i,j,k)
+!        write (*,*) ' gb_xz_nm1(i,j,k),gb_xz_n(i,j,k),gb_xz_np1(i,j,k)='
+!     &               ,gb_xz_nm1(i,j,k),gb_xz_n(i,j,k),gb_xz_np1(i,j,k)
+!        write (*,*) ' gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)='
+!     &               ,gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)
+!        write (*,*) ' gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)='
+!     &               ,gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)
+!        write (*,*) ' psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)='
+!     &               ,psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)
+
+!        write (*,*) ' g0_uu(1,1)=',g0_uu(1,1)
+!        write (*,*) ' g0_uu(1,2)=',g0_uu(1,2)
+!        write (*,*) ' g0_uu(1,3)=',g0_uu(1,3)
+!        write (*,*) ' g0_uu(1,4)=',g0_uu(1,4)
+!        write (*,*) ' g0_uu(2,2)=',g0_uu(2,2)
+!        write (*,*) ' g0_uu(2,3)=',g0_uu(2,3)
+!        write (*,*) ' g0_uu(2,4)=',g0_uu(2,4)
+!        write (*,*) ' g0_uu(3,3)=',g0_uu(3,3)
+!        write (*,*) ' g0_uu(3,4)=',g0_uu(3,4)
+!        write (*,*) ' g0_uu(4,4)=',g0_uu(4,4)
+
             end if
            end do
           end do
@@ -202,48 +248,93 @@ c----------------------------------------------------------------------
 !        if (extrap_int_boundaries) then
 !           if (phys_bdy(1).eq.0) then
 !              do j=1,Ny
-!                    Hb_t_n(1,j)=4*Hb_t_n(2,j) - 6*Hb_t_n(3,j) + 
-!     &                            4*Hb_t_n(4,j) 
-!                    Hb_x_n(1,j)=4*Hb_x_n(2,j) - 6*Hb_x_n(3,j) + 
-!     &                            4*Hb_x_n(4,j) 
-!                    Hb_y_n(1,j)=4*Hb_y_n(2,j) - 6*Hb_y_n(3,j) + 
-!     &                            4*Hb_y_n(4,j) 
+!               do k=1,Nz
+!                    Hb_t_n(1,j,k)=4*Hb_t_n(2,j,k) - 6*Hb_t_n(3,j,k) + 
+!     &                            4*Hb_t_n(4,j,k) 
+!                    Hb_x_n(1,j,k)=4*Hb_x_n(2,j,k) - 6*Hb_x_n(3,j,k) + 
+!     &                            4*Hb_x_n(4,j,k) 
+!                    Hb_y_n(1,j,k)=4*Hb_y_n(2,j,k) - 6*Hb_y_n(3,j,k) + 
+!     &                            4*Hb_y_n(4,j,k) 
+!                    Hb_z_n(1,j,k)=4*Hb_z_n(2,j,k) - 6*Hb_z_n(3,j,k) +
+!     &                            4*Hb_z_n(4,j,k)
+!               end do
 !              end do
 !           end if
 !           if (phys_bdy(2).eq.0) then
 !              do j=1,Ny
-!                    Hb_t_n(Nx,j)=4*Hb_t_n(Nx-1,j)-6*Hb_t_n(Nx-2,j)
-!     &                            +4*Hb_t_n(Nx-3,j)-  Hb_t_n(Nx-4,j)
-!                    Hb_x_n(Nx,j)=4*Hb_x_n(Nx-1,j)-6*Hb_x_n(Nx-2,j) 
-!     &                            +4*Hb_x_n(Nx-3,j)-  Hb_x_n(Nx-4,j)
-!                    Hb_y_n(Nx,j)=4*Hb_y_n(Nx-1,j)-6*Hb_y_n(Nx-2,j) 
-!     &                            +4*Hb_y_n(Nx-3,j)-  Hb_y_n(Nx-4,j)
+!               do k=1,Nz
+!                    Hb_t_n(Nx,j,k)=4*Hb_t_n(Nx-1,j,k)-6*Hb_t_n(Nx-2,j,k)
+!     &                            +4*Hb_t_n(Nx-3,j,k)-  Hb_t_n(Nx-4,j,k)
+!                    Hb_x_n(Nx,j,k)=4*Hb_x_n(Nx-1,j,k)-6*Hb_x_n(Nx-2,j,k)
+!     &                            +4*Hb_x_n(Nx-3,j,k)-  Hb_x_n(Nx-4,j,k)
+!                    Hb_y_n(Nx,j,k)=4*Hb_y_n(Nx-1,j,k)-6*Hb_y_n(Nx-2,j,k)
+!     &                            +4*Hb_y_n(Nx-3,j,k)-  Hb_y_n(Nx-4,j,k)
+!                    Hb_z_n(Nx,j,k)=4*Hb_z_n(Nx-1,j,k)-6*Hb_z_n(Nx-2,j,k)
+!     &                            +4*Hb_z_n(Nx-3,j,k)-  Hb_z_n(Nx-4,j,k)
+!               end do
 !              end do
 !           end if
 !           if (phys_bdy(3).eq.0) then
 !              do i=1,Nx
-!                    Hb_t_n(i,1)=4*Hb_t_n(i,2) - 6*Hb_t_n(i,3) + 
-!     &                            4*Hb_t_n(i,4) 
-!                    Hb_x_n(i,1)=4*Hb_x_n(i,2) - 6*Hb_x_n(i,3) + 
-!     &                            4*Hb_x_n(i,4) 
-!                    Hb_y_n(i,1)=4*Hb_y_n(i,2) - 6*Hb_y_n(i,3) + 
-!     &                            4*Hb_y_n(i,4) 
+!               do k=1,Nz
+!                    Hb_t_n(i,1,k)=4*Hb_t_n(i,2,k) - 6*Hb_t_n(i,3,k) + 
+!     &                            4*Hb_t_n(i,4,k) 
+!                    Hb_x_n(i,1,k)=4*Hb_x_n(i,2,k) - 6*Hb_x_n(i,3,k) + 
+!     &                            4*Hb_x_n(i,4,k) 
+!                    Hb_y_n(i,1,k)=4*Hb_y_n(i,2,k) - 6*Hb_y_n(i,3,k) + 
+!     &                            4*Hb_y_n(i,4,k) 
+!                    Hb_z_n(i,1,k)=4*Hb_z_n(i,2,k) - 6*Hb_z_n(i,3,k) +
+!     &                            4*Hb_z_n(i,4,k)
+!               end do
 !              end do
 !           end if
 !           if (phys_bdy(4).eq.0) then
 !              do i=1,Nx
-!                    Hb_t_n(i,Ny)=4*Hb_t_n(i,Ny-1)-6*Hb_t_n(i,Ny-2)
-!     &                            +4*Hb_t_n(i,Ny-3)-  Hb_t_n(i,Ny-4)
-!                    Hb_x_n(i,Ny)=4*Hb_x_n(i,Ny-1)-6*Hb_x_n(i,Ny-2) 
-!     &                            +4*Hb_x_n(i,Ny-3)-  Hb_x_n(i,Ny-4)
-!                    Hb_y_n(i,Ny)=4*Hb_y_n(i,Ny-1)-6*Hb_y_n(i,Ny-2) 
-!     &                            +4*Hb_y_n(i,Ny-3)-  Hb_y_n(i,Ny-4)
+!               do k=1,Nz
+!                    Hb_t_n(i,Ny,k)=4*Hb_t_n(i,Ny-1,k)-6*Hb_t_n(i,Ny-2,k)
+!     &                            +4*Hb_t_n(i,Ny-3,k)-  Hb_t_n(i,Ny-4,k)
+!                    Hb_x_n(i,Ny,k)=4*Hb_x_n(i,Ny-1,k)-6*Hb_x_n(i,Ny-2,k)
+!     &                            +4*Hb_x_n(i,Ny-3,k)-  Hb_x_n(i,Ny-4,k)
+!                    Hb_y_n(i,Ny,k)=4*Hb_y_n(i,Ny-1,k)-6*Hb_y_n(i,Ny-2,k)
+!     &                            +4*Hb_y_n(i,Ny-3,k)-  Hb_y_n(i,Ny-4,k)
+!                    Hb_z_n(i,Ny,k)=4*Hb_z_n(i,Ny-1,k)-6*Hb_z_n(i,Ny-2,k)
+!     &                            +4*Hb_z_n(i,Ny-3,k)-  Hb_z_n(i,Ny-4,k)
+!               end do
 !              end do
 !           end if
+!           if (phys_bdy(5).eq.0) then
+!              do i=1,Nx
+!               do j=1,Ny
+!                    Hb_t_n(i,j,1)=4*Hb_t_n(i,j,2) - 6*Hb_t_n(i,j,3) +
+!     &                            4*Hb_t_n(i,j,4)
+!                    Hb_x_n(i,j,1)=4*Hb_x_n(i,j,2) - 6*Hb_x_n(i,j,3) +
+!     &                            4*Hb_x_n(i,j,4)
+!                    Hb_y_n(i,j,1)=4*Hb_y_n(i,j,2) - 6*Hb_y_n(i,j,3) +
+!     &                            4*Hb_y_n(i,j,4)
+!                    Hb_z_n(i,j,1)=4*Hb_z_n(i,j,2) - 6*Hb_z_n(i,j,3) +
+!     &                            4*Hb_z_n(i,j,4)
+!               end do
+!              end do
+!           end if
+!           if (phys_bdy(6).eq.0) then
+!              do i=1,Nx
+!               do j=1,Ny
+!                    Hb_t_n(i,j,Nz)=4*Hb_t_n(i,j,Nz-1)-6*Hb_t_n(i,j,Nz-2)
+!     &                            +4*Hb_t_n(i,j,Nz-3)-  Hb_t_n(i,j,Nz-4)
+!                    Hb_x_n(i,j,Nz)=4*Hb_x_n(i,j,Nz-1)-6*Hb_x_n(i,j,Nz-2)
+!     &                            +4*Hb_x_n(i,j,Nz-3)-  Hb_x_n(i,j,Nz-4)
+!                    Hb_y_n(i,j,Nz)=4*Hb_y_n(i,j,Nz-1)-6*Hb_y_n(i,j,Nz-2)
+!     &                            +4*Hb_y_n(i,j,Nz-3)-  Hb_y_n(i,j,Nz-4)
+!                    Hb_z_n(i,j,Nz)=4*Hb_z_n(i,j,Nz-1)-6*Hb_z_n(i,j,Nz-2)
+!     &                            +4*Hb_z_n(i,j,Nz-3)-  Hb_z_n(i,j,Nz-4)
+!               end do
+!              end do
+!           end if
+!
 !        end if
-
-        call axi_reg_Hb(Hb_t_n,Hb_x_n,Hb_y_n,chr,ex,
-     &                  L,x,y,z,Nx,Ny,Nz,regtype)
+!
+!        call axi_reg_Hb(Hb_t_n,Hb_x_n,Hb_y_n,chr,ex,
+!     &                  L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end

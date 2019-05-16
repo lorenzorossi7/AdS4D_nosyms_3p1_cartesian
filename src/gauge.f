@@ -118,9 +118,11 @@ c----------------------------------------------------------------------
         real*8 F_t_np1,F_x_np1,F_y_np1
         real*8 F_z_np1
         real*8 G_t_np1,G_x_np1,G_y_np1
+        real*8 G_z_np1
 
-        real*8 g0uu11,gbtt,gbtx,gbty,gbxx,gbxy,gbyy,gbpsi
-        real*8 alphasq0,alpha0,betax0,betay0
+        real*8 g0uu11,gbtt,gbtx,gbty,gbtz
+        real*8 gbxx,gbxy,gbxz,gbyy,gbyz,gbpsi
+        real*8 alphasq0,alpha0,betax0,betay0,betaz0
 
         real*8 x0,y0,z0,rho0
 
@@ -268,7 +270,8 @@ c----------------------------------------------------------------------
               if (chr(i,j,k).ne.ex) then
                 x0=x(i)
                 y0=y(j)
-                rho0=sqrt(x0**2+y0**2)
+                z0=z(k)
+                rho0=sqrt(x0**2+y0**2+z0**2)
                 Hb_t0=Hb_t_0(i,j,k)
 
                 f0=trans(rho0,rho1,rho2)
@@ -281,21 +284,66 @@ c----------------------------------------------------------------------
                 gbtt =gb_tt_np1(i,j,k)
                 gbtx =gb_tx_np1(i,j,k)
                 gbty =gb_ty_np1(i,j,k)
+                gbtz =gb_tz_np1(i,j,k)
                 gbxx =gb_xx_np1(i,j,k)
                 gbxy =gb_xy_np1(i,j,k)
+                gbxz =gb_xz_np1(i,j,k)
                 gbyy =gb_yy_np1(i,j,k)
+                gbyz =gb_yz_np1(i,j,k)
                 gbpsi=psi_np1(i,j,k)
-                g0uu11=(-gbxy**2+(4+gbxx*(-1+rho0**2)**2)
-     &                  *(4+gbyy*(-1+rho0**2)**2)
-     &                  /(-1+rho0**2)**4)
-     &                /(gbxy*(gbtx*gbty-gbtt*gbxy
-     &                  +gbxy*(1+rho0**2)**2/(-1+rho0**2)**2)
-     &                 +gbty*(gbtx*gbxy
-     &                  -gbty*(4+gbxx*(-1+rho0**2)**2)/(-1+rho0**2)**2)
-     &                 -(1/(-1+rho0**2)**6)*(4+gbyy*(-1+rho0**2)**2)
-     &                  *(gbtx**2*(-1+rho0**2)**4
-     &                   -gbtt*(-1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)
-     &                   +(1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)))
+                g0uu11=(-gbxz**2*(4+gbyy)-4*gbyz**2+4*gbyy*gbpsi
+     &               +16*(4+gbyy+gbpsi)+2*(-16*gbyy+gbxz**2*(8+3*gbyy)
+     &               +8*gbyz**2
+     &               -8*(2+gbyy)*gbpsi)*rho0**2+(-3*gbxz**2*(8+5*gbyy)
+     &               +8*(-3*gbyz**2+2*gbpsi+gbyy*(2+3*gbpsi)))*rho0**4
+     &               +4*(gbxz**2*(4+5*gbyy)
+     &                +4*gbyz**2-4*gbyy*gbpsi)*rho0**6
+     &               -(gbxz**2*(4+15*gbyy)+4*gbyz**2
+     &                -4*gbyy*gbpsi)*rho0**8
+     &               +6*gbxz**2*gbyy*rho0**10-gbxz**2*gbyy*rho0**12
+     &               +2*gbxy*gbxz*gbyz*(-1+rho0**2)**6
+     &               -gbxy**2*(-1+rho0**2)**4*(4+gbpsi*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(-gbyz**2*(-1+rho0**2)**4
+     &               +4*(4+gbpsi*(-1+rho0**2)**2)
+     &               +gbyy*(-1+rho0**2)**2*(4+gbpsi*(-1+rho0**2)**2)))
+     &               /((-1+rho0**2)**6
+     &                *(gbyz*(-gbtx*(gbtz*gbxy+gbty*gbxz)
+     &                +gbtx**2*gbyz+(gbty*gbtz*(4+gbxx*(-1+rho0**2)**2))
+     &               /(-1+rho0**2)**2
+     &               +((gbtt*(-1+rho0**2)**2
+     &               -(1+rho0**2)**2)*(gbxy*gbxz*(-1+rho0**2)**2
+     &               -gbyz*(4+gbxx*(-1+rho0**2)**2)))/(-1+rho0**2)**4)
+     &               +gbxz*(-gbty*gbtz*gbxy+gbty**2*gbxz-gbtx*gbty*gbyz
+     &               +(gbtx*gbtz*(4+gbyy*(-1+rho0**2)**2))
+     &               /(-1+rho0**2)**2
+     &               +((gbtt*(-1+rho0**2)**2
+     &                -(1+rho0**2)**2)*(gbxy*gbyz*(-1+rho0**2)**2
+     &               -gbxz*(4+gbyy*(-1+rho0**2)**2)))/(-1+rho0**2)**4)
+     &               +(1/((-1+rho0**2)**4))*gbtz*((-1+rho0**2)**2
+     &               *(-gbty*gbxy*gbxz*(-1+rho0**2)**2
+     &               -gbtx*gbxy*gbyz*(-1+rho0**2)**2
+     &                +gbty*gbyz*(4+gbxx*(-1+rho0**2)**2)
+     &               +gbtx*gbxz*(4+gbyy*(-1+rho0**2)**2))
+     &               -gbtz*(-gbxy**2*(-1+rho0**2)**4
+     &               +4*(4+gbyy*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(4+gbyy*(-1+rho0**2)**2)))
+     &               -(1/((-1+rho0**2)**8))*(4+gbpsi*(-1+rho0**2)**2)
+     &                *(gbty**2*(4+gbxx)
+     &                -gbxy**2+gbxx*gbyy
+     &               -2*(gbty**2*(8+3*gbxx)-gbxy**2+gbxx*gbyy)*rho0**2
+     &               +(16+3*gbty**2*(8+5*gbxx)+gbxy**2-8*gbyy
+     &                -gbxx*(8+gbyy))*rho0**4
+     &               -4*(gbty**2*(4+5*gbxx)+gbxy**2-gbxx*gbyy)*rho0**6
+     &               +(gbty**2*(4+15*gbxx)+gbxy**2
+     &                -gbxx*(-4+gbyy)+4*gbyy)*rho0**8
+     &               +2*(gbxy**2-gbxx*(3*gbty**2+gbyy))*rho0**10
+     &               +(-gbxy**2+gbxx*(gbty**2+gbyy))*rho0**12
+     &               -2*gbtx*gbty*gbxy*(-1+rho0**2)**6
+     &               +4*(4+gbxx+gbyy+8*rho0**2)
+     &               +gbtx**2*(-1+rho0**2)**4*(4+gbyy*(-1+rho0**2)**2)
+     &               -gbtt*(-1+rho0**2)**2*(-gbxy**2*(-1+rho0**2)**4
+     &               +4*(4+gbyy*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(4+gbyy*(-1+rho0**2)**2)))))
                 alphasq0=-1/g0uu11
                 if (alphasq0.ge.0) then
                   alpha0=sqrt(alphasq0)
@@ -304,12 +352,15 @@ c----------------------------------------------------------------------
                 end if
                 betax0=gb_tx_np1(i,j,k)
                 betay0=gb_ty_np1(i,j,k)
+                betaz0=gb_tz_np1(i,j,k)
 
                 F_t_np1=
      &                 +gb_tx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_ty_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +gb_tz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
                 G_t_np1=-c1*alpha0*log(1.0d0/alpha0)*(1-f2)
 
                 Hb_t_np1(i,j,k)=Hb_t0*exp(-g0)
@@ -395,9 +446,11 @@ c-----------------------------------------------------------------------
         real*8 F_t_np1,F_x_np1,F_y_np1
         real*8 F_z_np1
         real*8 G_t_np1,G_x_np1,G_y_np1
+        real*8 G_z_np1
 
-        real*8 g0uu11,gbtt,gbtx,gbty,gbxx,gbxy,gbyy,gbpsi
-        real*8 alphasq0,alpha0,betax0,betay0
+        real*8 g0uu11,gbtt,gbtx,gbty,gbtz
+        real*8 gbxx,gbxy,gbxz,gbyy,gbyz,gbpsi
+        real*8 alphasq0,alpha0,betax0,betay0,betaz0
 
         real*8 x0,y0,z0,rho0
 
@@ -542,12 +595,12 @@ c-----------------------------------------------------------------------
      &                 +gb_yy_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_xy_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_yz_np1(i,j,k)*cbulk*z0*(1-f1)
-                F_z_np1=0 !gb_yz_np1(i,j,k)*1.5d0*y0/rho0*f1
-!     &                 +gb_xz_np1(i,j,k)*1.5d0*x0/rho0*f1
-!     &                 +psi_np1(i,j,k)*1.5d0*z0/rho0*f1
-!     &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
-!     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
-!     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_z_np1=gb_yz_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +gb_xz_np1(i,j,k)*1.5d0*x0/rho0*f1
+     &                 +psi_np1(i,j,k)*1.5d0*z0/rho0*f1
+     &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
 
                 Hb_x_np1(i,j,k)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
                 Hb_y_np1(i,j,k)=F_y_np1+(Hb_y0-F_y_np1)*exp(-g0)
@@ -570,9 +623,11 @@ c-----------------------------------------------------------------------
               if (chr(i,j,k).ne.ex) then
                 x0=x(i)
                 y0=y(j)
-                rho0=sqrt(x0**2+y0**2)
+                z0=z(k)
+                rho0=sqrt(x0**2+y0**2+z0**2)
                 Hb_x0=Hb_x_0(i,j,k)
                 Hb_y0=Hb_y_0(i,j,k)
+                Hb_z0=Hb_z_0(i,j,k)
 
                 f0=trans(rho0,rho1,rho2)
                 f1=trans(rho0,rho3,rho4)
@@ -584,21 +639,66 @@ c-----------------------------------------------------------------------
                 gbtt =gb_tt_np1(i,j,k)
                 gbtx =gb_tx_np1(i,j,k)
                 gbty =gb_ty_np1(i,j,k)
+                gbtz =gb_tz_np1(i,j,k)
                 gbxx =gb_xx_np1(i,j,k)
                 gbxy =gb_xy_np1(i,j,k)
+                gbxz =gb_xz_np1(i,j,k)
                 gbyy =gb_yy_np1(i,j,k)
+                gbyz =gb_yz_np1(i,j,k)
                 gbpsi=psi_np1(i,j,k)
-                g0uu11=(-gbxy**2+(4+gbxx*(-1+rho0**2)**2)
-     &                  *(4+gbyy*(-1+rho0**2)**2)
-     &                  /(-1+rho0**2)**4)
-     &                /(gbxy*(gbtx*gbty-gbtt*gbxy
-     &                  +gbxy*(1+rho0**2)**2/(-1+rho0**2)**2)
-     &                 +gbty*(gbtx*gbxy
-     &                  -gbty*(4+gbxx*(-1+rho0**2)**2)/(-1+rho0**2)**2)
-     &                 -(1/(-1+rho0**2)**6)*(4+gbyy*(-1+rho0**2)**2)
-     &                  *(gbtx**2*(-1+rho0**2)**4
-     &                   -gbtt*(-1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)
-     &                   +(1+rho0**2)**2*(4+gbxx*(-1+rho0**2)**2)))
+                g0uu11=(-gbxz**2*(4+gbyy)-4*gbyz**2+4*gbyy*gbpsi
+     &               +16*(4+gbyy+gbpsi)+2*(-16*gbyy+gbxz**2*(8+3*gbyy)
+     &               +8*gbyz**2
+     &               -8*(2+gbyy)*gbpsi)*rho0**2+(-3*gbxz**2*(8+5*gbyy)
+     &               +8*(-3*gbyz**2+2*gbpsi+gbyy*(2+3*gbpsi)))*rho0**4
+     &               +4*(gbxz**2*(4+5*gbyy)
+     &                +4*gbyz**2-4*gbyy*gbpsi)*rho0**6
+     &               -(gbxz**2*(4+15*gbyy)+4*gbyz**2
+     &                -4*gbyy*gbpsi)*rho0**8
+     &               +6*gbxz**2*gbyy*rho0**10-gbxz**2*gbyy*rho0**12
+     &               +2*gbxy*gbxz*gbyz*(-1+rho0**2)**6
+     &               -gbxy**2*(-1+rho0**2)**4*(4+gbpsi*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(-gbyz**2*(-1+rho0**2)**4
+     &               +4*(4+gbpsi*(-1+rho0**2)**2)
+     &               +gbyy*(-1+rho0**2)**2*(4+gbpsi*(-1+rho0**2)**2)))
+     &               /((-1+rho0**2)**6
+     &                *(gbyz*(-gbtx*(gbtz*gbxy+gbty*gbxz)
+     &                +gbtx**2*gbyz+(gbty*gbtz*(4+gbxx*(-1+rho0**2)**2))
+     &               /(-1+rho0**2)**2
+     &               +((gbtt*(-1+rho0**2)**2
+     &               -(1+rho0**2)**2)*(gbxy*gbxz*(-1+rho0**2)**2
+     &               -gbyz*(4+gbxx*(-1+rho0**2)**2)))/(-1+rho0**2)**4)
+     &               +gbxz*(-gbty*gbtz*gbxy+gbty**2*gbxz-gbtx*gbty*gbyz
+     &               +(gbtx*gbtz*(4+gbyy*(-1+rho0**2)**2))
+     &               /(-1+rho0**2)**2
+     &               +((gbtt*(-1+rho0**2)**2
+     &                -(1+rho0**2)**2)*(gbxy*gbyz*(-1+rho0**2)**2
+     &               -gbxz*(4+gbyy*(-1+rho0**2)**2)))/(-1+rho0**2)**4)
+     &               +(1/((-1+rho0**2)**4))*gbtz*((-1+rho0**2)**2
+     &               *(-gbty*gbxy*gbxz*(-1+rho0**2)**2
+     &               -gbtx*gbxy*gbyz*(-1+rho0**2)**2
+     &                +gbty*gbyz*(4+gbxx*(-1+rho0**2)**2)
+     &               +gbtx*gbxz*(4+gbyy*(-1+rho0**2)**2))
+     &               -gbtz*(-gbxy**2*(-1+rho0**2)**4
+     &               +4*(4+gbyy*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(4+gbyy*(-1+rho0**2)**2)))
+     &               -(1/((-1+rho0**2)**8))*(4+gbpsi*(-1+rho0**2)**2)
+     &                *(gbty**2*(4+gbxx)
+     &                -gbxy**2+gbxx*gbyy
+     &               -2*(gbty**2*(8+3*gbxx)-gbxy**2+gbxx*gbyy)*rho0**2
+     &               +(16+3*gbty**2*(8+5*gbxx)+gbxy**2-8*gbyy
+     &                -gbxx*(8+gbyy))*rho0**4
+     &               -4*(gbty**2*(4+5*gbxx)+gbxy**2-gbxx*gbyy)*rho0**6
+     &               +(gbty**2*(4+15*gbxx)+gbxy**2
+     &                -gbxx*(-4+gbyy)+4*gbyy)*rho0**8
+     &               +2*(gbxy**2-gbxx*(3*gbty**2+gbyy))*rho0**10
+     &               +(-gbxy**2+gbxx*(gbty**2+gbyy))*rho0**12
+     &               -2*gbtx*gbty*gbxy*(-1+rho0**2)**6
+     &               +4*(4+gbxx+gbyy+8*rho0**2)
+     &               +gbtx**2*(-1+rho0**2)**4*(4+gbyy*(-1+rho0**2)**2)
+     &               -gbtt*(-1+rho0**2)**2*(-gbxy**2*(-1+rho0**2)**4
+     &               +4*(4+gbyy*(-1+rho0**2)**2)
+     &               +gbxx*(-1+rho0**2)**2*(4+gbyy*(-1+rho0**2)**2)))))
                 alphasq0=-1/g0uu11
                 if (alphasq0.ge.0) then
                   alpha0=sqrt(alphasq0)
@@ -607,17 +707,29 @@ c-----------------------------------------------------------------------
                 end if
                 betax0=gb_tx_np1(i,j,k)
                 betay0=gb_ty_np1(i,j,k)
+                betaz0=gb_tz_np1(i,j,k)
 
                 F_x_np1=gb_xx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +gb_xz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_xx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_xy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*z0*(1-f1)
                 F_y_np1=gb_yy_np1(i,j,k)*1.5d0*y0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*x0/rho0*f1
+     &                 +gb_yz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_yy_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_xy_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_yz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_z_np1=gb_xz_np1(i,j,k)*1.5d0*x0/rho0*f1
+     &                 +gb_yz_np1(i,j,k)*1.5d0*y0/rho0*f1
+     &                 +psi_np1(i,j,k)*1.5d0*z0/rho0*f1
+     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
                 G_x_np1=-c1*betax0/alpha0*(1-f2)
                 G_y_np1=-c1*betay0/alpha0*(1-f2)
+                G_z_np1=-c1*betaz0/alpha0*(1-f2)
 
                 Hb_x_np1(i,j,k)=Hb_x0*exp(-g0)
      &                       +(F_x_np1)*(1-exp(-g0))
@@ -625,6 +737,9 @@ c-----------------------------------------------------------------------
                 Hb_y_np1(i,j,k)=Hb_y0*exp(-g0)
      &                       +(F_y_np1)*(1-exp(-g0))
      &                       +(G_y_np1)*(1-exp(-g1))
+                Hb_z_np1(i,j,k)=Hb_z0*exp(-g0)
+     &                       +(F_z_np1)*(1-exp(-g0))
+     &                       +(G_z_np1)*(1-exp(-g1))
               end if
              end do
             end do

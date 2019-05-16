@@ -1,4 +1,6 @@
 STATUS OF THIS BRANCH:
-3+1 Cartesian code. So far, we've written the 3+1 version of tensor_init
+3+1 Cartesian code.
 We excise inside a region determined by the initial black hole radius at all time steps. We don't use an AH finder for now.
 New derivative stencils in z have been tested.
+Convergence at t=0 is good as expected for analytic Schwarzschild-AdS initial data. For BH Schwarzschild radius=0.6, ex_rbuf=0.1, Nans form too early in the evolution of runs with gauge 3 and L0/L1 resolution near the excision surface. For BH Schwarzschild radius=5.0, ex_rbug=0.35, L0 resolution and gauge 3, runs last until T=12.487500 without stopping.
+Convergence and stability at later times, higher resolutions and different values of the parameters needs to be tested.

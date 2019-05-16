@@ -2493,11 +2493,11 @@ c----------------------------------------------------------------------
            end do
         end do
 
-        call axi_reg_g(gb_tt,gb_tx,gb_ty,
-     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_g(gb_tt,gb_tx,gb_ty,
+!     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
+!     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
-        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -3164,47 +3164,160 @@ c----------------------------------------------------------------------
                  rho0=sqrt(x0**2+y0**2+z0**2)
 
                  ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
-                 
+
+!!!2+1 version!!!!!!!!                 
+!                 gb_tt(i,j,k)=(r0/2)*(1/rho0-rho0)
+!
+!                 gb_tx(i,j,k)=2*x0*(1+rho0**2)
+!     &                      *((1-rho_h)/(1-rho0))**(-n)
+!     &                      /rho0/(1-rho0**2)**2
+!                 gb_ty(i,j,k)=2*y0*(1+rho0**2)
+!     &                      *((1-rho_h)/(1-rho0))**(-n)
+!     &                      /rho0/(1-rho0**2)**2
+!                 gb_tz(i,j,k)=0
+!                 gb_xx(i,j,k)=4*x0**2*(1+rho0**2)**2
+!     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
+!     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
+!     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+!     &                       *(rho0+(r0/2)*(-1+rho0**2))))
+!     &                      /rho0**2/(1-rho0**2)**2
+!                 gb_xy(i,j,k)=4*L**2*x0*y0*(1+rho0**2)**2
+!     &                      *(-4*rho0**3+L**2*(1-rho0**2)**2
+!     &                      *(-rho0-(r0/2)*(-1+rho0**2)
+!     &                      *((1-rho_h)/(1-rho0))**(2*n)))
+!     &                      *((1-rho_h)/(1-rho0))**(-2*n)
+!     &                      /rho0**2/(1-rho0**2)**2
+!     &                      /(4*rho0**2+L**2*(1-rho0**2)**2)
+!     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+!     &                       *(rho0+(r0/2)*(-1+rho0**2)))
+!                 gb_xz(i,j,k)=0
+!                 gb_yy(i,j,k)=4*y0**2*(1+rho0**2)**2
+!     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
+!     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
+!     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
+!     &                       *(rho0+(r0/2)*(-1+rho0**2))))
+!     &                      /rho0**2/(1-rho0**2)**2
+!                 gb_yz(i,j,k)=0
+!                 psi(i,j,k)=0
+!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!CHECKED WITH MATHEMATICA!!
+
                  gb_tt(i,j,k)=(r0/2)*(1/rho0-rho0)
-
                  gb_tx(i,j,k)=2*x0*(1+rho0**2)
-     &                      *((1-rho_h)/(1-rho0))**(-n)
-     &                      /rho0/(1-rho0**2)**2
+     &                      *((-1+rho_h)/(-1+rho0))**(-n)
+     &                      /rho0/(-1+rho0**2)**2
                  gb_ty(i,j,k)=2*y0*(1+rho0**2)
-     &                      *((1-rho_h)/(1-rho0))**(-n)
-     &                      /rho0/(1-rho0**2)**2
-                 gb_tz(i,j,k)=0
-                 gb_xx(i,j,k)=4*x0**2*(1+rho0**2)**2
-     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
-     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
-     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
-     &                       *(rho0+(r0/2)*(-1+rho0**2))))
-     &                      /rho0**2/(1-rho0**2)**2
-                 gb_xy(i,j,k)=4*L**2*x0*y0*(1+rho0**2)**2
-     &                      *(-4*rho0**3+L**2*(1-rho0**2)**2
-     &                      *(-rho0-(r0/2)*(-1+rho0**2)
-     &                      *((1-rho_h)/(1-rho0))**(2*n)))
-     &                      *((1-rho_h)/(1-rho0))**(-2*n)
-     &                      /rho0**2/(1-rho0**2)**2
-     &                      /(4*rho0**2+L**2*(1-rho0**2)**2)
-     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
-     &                       *(rho0+(r0/2)*(-1+rho0**2)))
-                 gb_xz(i,j,k)=0
-                 gb_yy(i,j,k)=4*y0**2*(1+rho0**2)**2
-     &                      *(-1/(1+(-2+4/L**2)*rho0**2+rho0**4)
-     &                      +L**2*rho0*(1-((1-rho_h)/(1-rho0))**(-2*n))
-     &                      /(4*rho0**3+L**2*(1-rho0**2)**2
-     &                       *(rho0+(r0/2)*(-1+rho0**2))))
-     &                      /rho0**2/(1-rho0**2)**2
-                 gb_yz(i,j,k)=0
-                 psi(i,j,k)=0
+     &                      *((-1+rho_h)/(-1+rho0))**(-n)
+     &                      /rho0/(-1+rho0**2)**2
+                 gb_tz(i,j,k)=2*z0*(1+rho0**2)
+     &                      *((-1+rho_h)/(-1+rho0))**(-n)
+     &                      /rho0/(-1+rho0**2)**2
+                 gb_xx(i,j,k)=(-((8*(-1+L**2)*(x0**2-y0**2-z0**2)
+     &                        +8*rho0**2+4*L**2*(1+rho0**4))
+     &                        /(4*rho0**2+L**2*(-1+rho0**2)**2))
+     &                        +(4*(y0**2+z0**2
+     &                         +(L**2*x0**2*rho0*(1+rho0**2)**2
+     &                         *(-1+((-1+rho_h)/(-1+rho0))**(2*n))
+     &                         *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(4*rho0**3+L**2*(-1+rho0**2)**2
+     &                         *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2)))))
+     &                         /rho0**2)
+     &                          /(-1+rho0**2)**2
+                 gb_xy(i,j,k)=(4*L**2*x0*y0*(1+rho0**2)**2
+     &                        *(-4*rho0**3+L**2*(-1+rho0**2)**2
+     &                        *(-rho0-(1.0d0/2.0d0)*r0*(-1+rho0**2)
+     &                        *((-1+rho_h)/(-1+rho0))**(2*n)))
+     &                        *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(rho0**2*(-1+rho0**2)**2*(4*rho0**2
+     &                        +L**2*(-1+rho0**2)**2)*(4*rho0**3
+     &                        +L**2*(-1+rho0**2)**2
+     &                        *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
+                 gb_xz(i,j,k)=(4*L**2*x0*z0*(1+rho0**2)**2
+     &                        *(-4*rho0**3+L**2*(-1+rho0**2)**2
+     &                        *(-rho0-(1.0d0/2.0d0)*r0*(-1+rho0**2)
+     &                        *((-1+rho_h)/(-1+rho0))**(2*n)))
+     &                        *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(rho0**2*(-1+rho0**2)**2*(4*rho0**2
+     &                        +L**2*(-1+rho0**2)**2)*(4*rho0**3
+     &                        +L**2*(-1+rho0**2)**2
+     &                        *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
+           if (y0.ne.0.0d0) then
+                 gb_yy(i,j,k)=(1/((-1+rho0**2)**2))
+     &                        *((8*y0**2*(-x0**2+y0**2+z0**2)
+     &                        -8*(y0**2+2*z0**2)*rho0**2
+     &                        -4*L**2*(2*y0**4+z0**2*(-1+rho0**2)**2
+     &                        +y0**2*(1-2*x0**2+2*z0**2+rho0**4)))
+     &                        /((y0**2+z0**2)*(4*rho0**2
+     &                         +L**2*(-1+rho0**2)**2))
+     &                        +4*(z0**2/(y0**2+z0**2)
+     &                        +(x0**2*y0**2)/((y0**2+z0**2)*rho0**2)
+     &                        +(L**2*y0**2*(1+rho0**2)**2
+     &                         *(-1+((-1+rho_h)/(-1+rho0))**(2*n))
+     &                         *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(4*rho0**4+L**2*rho0*(-1+rho0**2)**2
+     &                         *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2)))))
+          else
+                 gb_yy(i,j,k)=0.0d0
+          end if
+                 gb_yz(i,j,k)=(4*L**2*y0*z0*(1+rho0**2)**2
+     &                        *(-4*rho0**3+L**2*(-1+rho0**2)**2
+     &                        *(-rho0-(1.0d0/2.0d0)*r0*(-1+rho0**2)
+     &                        *((-1+rho_h)/(-1+rho0))**(2*n)))
+     &                        *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(rho0**2*(-1+rho0**2)**2*(4*rho0**2
+     &                        +L**2*(-1+rho0**2)**2)*(4*rho0**3
+     &                        +L**2*(-1+rho0**2)**2
+     &                        *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
+           if (z0.ne.0.0d0) then
+                 psi(i,j,k)=(1/((-1+rho0**2)**2))
+     &                        *(
+     &                         (
+     &                         8*z0**2*(-x0**2+y0**2+z0**2)
+     &                        -8*(2*y0**2+z0**2)*rho0**2
+     &                        -4*L**2*(z0**2*(1-2*x0**2
+     &                         +2*z0**2+rho0**4)
+     &                         +y0**2*(2*z0**2+(-1+rho0**2)**2))
+     &                         )
+     &                        /((y0**2+z0**2)*(4*rho0**2
+     &                         +L**2*(-1+rho0**2)**2))
+     &                        +4*(y0**2/(y0**2+z0**2)
+     &                        +(x0**2*z0**2)/((y0**2+z0**2)*rho0**2)
+     &                        +(L**2*z0**2*(1+rho0**2)**2
+     &                         *(-1+((-1+rho_h)/(-1+rho0))**(2*n))
+     &                         *((-1+rho_h)/(-1+rho0))**(-2*n))
+     &                        /(4*rho0**4+L**2*rho0*(-1+rho0**2)**2
+     &                         *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
+     &                        )
+           else
+                 psi(i,j,k)=0.0d0
+           end if
 
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) ' gb_tt=',gb_tt(i,j,k)
+!       write (*,*) ' gb_tx=',gb_tx(i,j,k)
+!       write (*,*) ' gb_ty=',gb_ty(i,j,k)
+!       write (*,*) ' gb_tz=',gb_tz(i,j,k)
+!       write (*,*) ' gb_xx=',gb_xx(i,j,k)
+!       write (*,*) ' gb_xy=',gb_xy(i,j,k)
+!       write (*,*) ' gb_xz=',gb_xz(i,j,k)
+!       write (*,*) ' gb_yy=',gb_yy(i,j,k)
+!       write (*,*) ' gb_yz=',gb_yz(i,j,k)
+!       write (*,*) ' psi=',psi(i,j,k)
+!
 !                 ! (Schw coordinates)!
 !                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!
 !                 gb_tt(i,j,k)=0
+!                 gb_tx(i,j,k)=0
+!                 gb_ty(i,j,k)=0
+!                 gb_tz(i,j,k)=0
 !                 gb_xx(i,j,k)=0
 !                 gb_xy(i,j,k)=0
+!                 gb_xz(i,j,k)=0
 !                 gb_yy(i,j,k)=0
+!                 gb_yz(i,j,k)=0
+!                 psi(i,j,k)=0
 
               end if
             end do
@@ -3212,11 +3325,11 @@ c----------------------------------------------------------------------
         end do
 
         ! y=0 axis regularization
-        call axi_reg_g(gb_tt,gb_tx,gb_ty,
-     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_g(gb_tt,gb_tx,gb_ty,
+!     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
+!     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
-        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -3245,6 +3358,7 @@ c----------------------------------------------------------------------
      &      g13**2*g22*g44 + 2*g12*g13*g23*g44 - g11*g23**2*g44 - 
      &      g12**2*g33*g44 + g11*g22*g33*g44
 
+       if (invdenominator.ne.0.0d0) then
         g0_uu(1,1)=
      &      (
      &      -(g24**2*g33) + 2*g23*g24*g34 - g22*g34**2 - g23**2*g44 
@@ -3305,10 +3419,24 @@ c----------------------------------------------------------------------
      &      + g11*g22*g33
      &      )
      &      /invdenominator
+       else
+        write(*,*) 'the metric g0 is singular, the determinant is 0 
+     &              at some point'
+!        g0_uu(1,1)=0
+!        g0_uu(1,2)=0
+!        g0_uu(1,3)=0
+!        g0_uu(1,4)=0
+!        g0_uu(2,2)=0
+!        g0_uu(2,3)=0
+!        g0_uu(2,4)=0
+!        g0_uu(3,3)=0
+!        g0_uu(3,4)=0
+!        g0_uu(4,4)=0
+         stop
+       end if
         
-
-        return
-        end  
+       return
+       end  
 
 c----------------------------------------------------------------------
 c calculates all the tensorial objects in x,y coordinates, at point i,j
@@ -3581,6 +3709,7 @@ c----------------------------------------------------------------------
         real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
         real*8 g0_xz_ads0,g0_yz_ads0
 
+        real*8 detg0_ads0
         real*8 g0u_tt_ads0,g0u_xx_ads0
         real*8 g0u_tx_ads0,g0u_ty_ads0,g0u_tz_ads0
         real*8 g0u_xy_ads0,g0u_yy_ads0,g0u_psi_ads0
@@ -3620,6 +3749,137 @@ c----------------------------------------------------------------------
         y0=y(j)
         z0=z(k)
         rho0=sqrt(x0**2+y0**2+z0**2)
+
+
+!!DEBUG!!!
+!
+!        g0_tt_ads0 =0
+!        g0_tx_ads0 =0
+!        g0_ty_ads0 =0
+!        g0_tz_ads0 =0
+!        g0_xx_ads0 =0
+!        g0_xy_ads0 =0
+!        g0_xz_ads0 =0
+!        g0_yy_ads0 =0
+!        g0_yz_ads0 =0
+!        g0_psi_ads0=0
+!
+!        g0u_tt_ads0 =0
+!        g0u_tx_ads0 =0
+!        g0u_ty_ads0 =0
+!        g0u_tz_ads0 =0
+!        g0u_xx_ads0 =0
+!        g0u_xy_ads0 =0
+!        g0u_xz_ads0 =0
+!        g0u_yy_ads0 =0
+!        g0u_yz_ads0 =0
+!        g0u_psi_ads0=0
+!
+!        g0_tt_ads_x  =0
+!        g0_tt_ads_y  =0
+!        g0_tt_ads_z  =0
+!        g0_tt_ads_xx =0
+!        g0_tt_ads_xy =0
+!        g0_tt_ads_xz =0
+!        g0_tt_ads_yy =0
+!        g0_tt_ads_yz =0
+!        g0_tt_ads_zz =0
+!
+!        g0_tx_ads_x  =0
+!        g0_tx_ads_y  =0
+!        g0_tx_ads_z  =0
+!        g0_tx_ads_xx =0
+!        g0_tx_ads_xy =0
+!        g0_tx_ads_xz =0
+!        g0_tx_ads_yy =0
+!        g0_tx_ads_yz =0
+!        g0_tx_ads_zz =0
+!
+!        g0_ty_ads_x  =0
+!        g0_ty_ads_y  =0
+!        g0_ty_ads_z  =0
+!        g0_ty_ads_xx =0
+!        g0_ty_ads_xy =0
+!        g0_ty_ads_xz =0
+!        g0_ty_ads_yy =0
+!        g0_ty_ads_yz =0
+!        g0_ty_ads_zz =0
+!
+!        g0_tz_ads_x  =0
+!        g0_tz_ads_y  =0
+!        g0_tz_ads_z  =0
+!        g0_tz_ads_xx =0
+!        g0_tz_ads_xy =0
+!        g0_tz_ads_xz =0
+!        g0_tz_ads_yy =0
+!        g0_tz_ads_yz =0
+!        g0_tz_ads_zz =0
+!
+!        g0_xx_ads_x  =0
+!        g0_xx_ads_y  =0
+!        g0_xx_ads_z  =0
+!        g0_xx_ads_xx =0
+!        g0_xx_ads_xy =0
+!        g0_xx_ads_xz =0
+!        g0_xx_ads_yy =0
+!        g0_xx_ads_yz =0
+!        g0_xx_ads_zz =0
+!
+!        g0_xy_ads_x  =0
+!        g0_xy_ads_y  =0
+!        g0_xy_ads_z  =0
+!        g0_xy_ads_xx =0
+!        g0_xy_ads_xy =0
+!        g0_xy_ads_xz =0
+!        g0_xy_ads_yy =0
+!        g0_xy_ads_yz =0
+!        g0_xy_ads_zz =0
+!
+!        g0_xz_ads_x  =0
+!        g0_xz_ads_y  =0
+!        g0_xz_ads_z  =0
+!        g0_xz_ads_xx =0
+!        g0_xz_ads_xy =0
+!        g0_xz_ads_xz =0
+!        g0_xz_ads_yy =0
+!        g0_xz_ads_yz =0
+!        g0_xz_ads_zz =0
+!
+!        g0_yy_ads_x  =0
+!        g0_yy_ads_y  =0
+!        g0_yy_ads_z  =0
+!        g0_yy_ads_xx =0
+!        g0_yy_ads_xy =0
+!        g0_yy_ads_xz =0
+!        g0_yy_ads_yy =0
+!        g0_yy_ads_yz =0
+!        g0_yy_ads_zz =0
+!
+!        g0_yz_ads_x  =0
+!        g0_yz_ads_y  =0
+!        g0_yz_ads_z  =0
+!        g0_yz_ads_xx =0
+!        g0_yz_ads_xy =0
+!        g0_yz_ads_xz =0
+!        g0_yz_ads_yy =0
+!        g0_yz_ads_yz =0
+!        g0_yz_ads_zz =0
+!
+!        g0_psi_ads_x  =0
+!        g0_psi_ads_y  =0
+!        g0_psi_ads_z  =0
+!        g0_psi_ads_xx =0
+!        g0_psi_ads_xy =0
+!        g0_psi_ads_xz =0
+!        g0_psi_ads_yy =0
+!        g0_psi_ads_yz =0
+!        g0_psi_ads_zz =0
+!
+!        Hads_l(1)=0
+!        Hads_l(2)=0
+!        Hads_l(3)=0
+!        Hads_l(4)=0
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !!!!!!2+1 version!!!!!!
 !       
@@ -3674,25 +3934,39 @@ c----------------------------------------------------------------------
         g0_xz_ads0 =(16 *(-1 + L**2) *x0* z0)
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
-        g0_yy_ads0 =(-8*y0**2*(-x0**2+y0**2+z0**2)
-     &              +8*(y0**2+2*z0**2)*rho0**2
-     &              +4 *L**2* (2 *y0**4 + z0**2 *(-1 + rho0**2)**2
-     &              + y0**2 *(1 - 2* x0**2 + 2 *z0**2 + rho0**4)))
-     &              /((y0**2 + z0**2)* (-1 + rho0**2)**2
-     &              * (4* rho0**2 + L**2* (-1 + rho0**2)**2))
+!        g0_yy_ads0 =(-8*y0**2*(-x0**2+y0**2+z0**2)
+!     &              +8*(y0**2+2*z0**2)*rho0**2
+!     &              +4 *L**2* (2 *y0**4 + z0**2 *(-1 + rho0**2)**2
+!     &              + y0**2 *(1 - 2* x0**2 + 2 *z0**2 + rho0**4)))
+!     &              /((y0**2 + z0**2)* (-1 + rho0**2)**2
+!     &              * (4* rho0**2 + L**2* (-1 + rho0**2)**2))
+        g0_yy_ads0 =(4*(4*(x0**2+z0**2)+L**2*(x0**4+(1+y0**2)**2
+     &              +2*(-1+y0**2)*z0**2+z0**4
+     &              +2*x0**2*(-1+y0**2+z0**2))))
+     &              /(L**2*(-1+rho0**2)**4+4*(-1+rho0**2)**2*(rho0**2))
         g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
-        g0_psi_ads0=(-8*z0**2*(-x0**2+y0**2+z0**2)
-     &              +8*(2*y0**2+z0**2)*rho0**2
-     &              +4*L**2*(z0**2*(1-2*x0**2+2*z0**2+rho0**4)
-     &              +y0**2*(2*z0**2+(-1+rho0**2)**2)))
-     &              /(y0**2+z0**2)/(-1+rho0**2)**2
-     &              /(4*rho0**2+L**2*(-1+rho0**2)**2)
+!        g0_psi_ads0=(-8*z0**2*(-x0**2+y0**2+z0**2)
+!     &              +8*(2*y0**2+z0**2)*rho0**2
+!     &              +4*L**2*(z0**2*(1-2*x0**2+2*z0**2+rho0**4)
+!     &              +y0**2*(2*z0**2+(-1+rho0**2)**2)))
+!     &              /(y0**2+z0**2)/(-1+rho0**2)**2
+!     &              /(4*rho0**2+L**2*(-1+rho0**2)**2)
+        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+     &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
+     &              /(L**2*(-1+rho0**2)**4
+     &              +4*(-1+rho0**2)**2*(rho0**2))
 
 !!!!!diagnostic!!!!
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) ' g0_tt_ads0=',g0_tt_ads0
+!       write (*,*) ' g0_xx_ads0=',g0_xx_ads0
+!       write (*,*) ' g0_xy_ads0=',g0_xy_ads0
+!       write (*,*) ' g0_xz_ads0=',g0_xz_ads0
 !       write (*,*) ' g0_yy_ads0=',g0_yy_ads0 
+!       write (*,*) ' g0_yz_ads0=',g0_yz_ads0
+!       write (*,*) ' g0_psi_ads0=',g0_psi_ads0
 !!!!!!!!!!!!!!!
 
 !!!!!!2+1 version!!!!
@@ -3706,8 +3980,14 @@ c----------------------------------------------------------------------
 !        g0u_yy_ads0 =g0_xx_ads0/(g0_xx_ads0*g0_yy_ads0-g0_xy_ads0**2)
 !        g0u_yz_ads0 =0
 !        g0u_psi_ads0=1/g0_psi_ads0
-!!!!!!!!!!!!!
+!!!!!!!!!!!!!!
 
+        detg0_ads0=-g0_tt_ads0*(g0_xz_ads0**2*g0_yy_ads0
+     &       -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
+     &       +g0_xy_ads0**2*g0_psi_ads0
+     &       +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+
+      if ((detg0_ads0.ne.0.0d0).and.(g0_tt_ads0.ne.0.0d0)) then        
         g0u_tt_ads0 =1/g0_tt_ads0
         g0u_tx_ads0 =0
         g0u_ty_ads0 =0
@@ -3742,6 +4022,12 @@ c----------------------------------------------------------------------
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
      &               +g0_xy_ads0**2*g0_psi_ads0
      &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+      else
+       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+       write (*,*) 'detg0_ads0=',detg0_ads0
+       write (*,*) 'ERROR: the metric gads0 is singular at this point'
+       stop
+      end if
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
 !       write (*,*) ' g0u_tt_ads0=',g0u_tt_ads0
@@ -3784,8 +4070,11 @@ c----------------------------------------------------------------------
 !     &  (L**2*(-1 + x0**2 + y0**2)**4)
 !        g0_tt_ads_xy =(-32*x0*y0*(2 + x0**2 + y0**2))/
 !     &  (L**2*(-1 + x0**2 + y0**2)**4)
+!        g0_tt_ads_xz =0
 !        g0_tt_ads_yy =(8*(-1 + x0**4 - 2*(4 + x0**2)*y0**2 - 3*y0**4))/
 !     &  (L**2*(-1 + x0**2 + y0**2)**4)
+!        g0_tt_ads_yz =0
+!        g0_tt_ads_zz =0
 !
 !        g0_tx_ads_x  =0
 !        g0_tx_ads_y  =0
@@ -4920,6 +5209,97 @@ c----------------------------------------------------------------------
 !!!CHECKED WITH MATHEMATICA UP TO HERE!!
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!
+!       write (*,*) ' g0_tt_ads_x=' ,g0_tt_ads_x
+!       write (*,*) ' g0_tt_ads_y=' ,g0_tt_ads_y
+!       write (*,*) ' g0_tt_ads_z=' ,g0_tt_ads_z
+!       write (*,*) ' g0_tt_ads_xx=',g0_tt_ads_xx
+!       write (*,*) ' g0_tt_ads_xy=',g0_tt_ads_xy
+!       write (*,*) ' g0_tt_ads_xz=',g0_tt_ads_xz
+!       write (*,*) ' g0_tt_ads_yy=',g0_tt_ads_yy
+!       write (*,*) ' g0_tt_ads_yz=',g0_tt_ads_yz
+!       write (*,*) ' g0_tt_ads_zz=',g0_tt_ads_zz
+!
+!       write (*,*) ' g0_tx_ads_x=' ,g0_tx_ads_x
+!       write (*,*) ' g0_tx_ads_y=' ,g0_tx_ads_y
+!       write (*,*) ' g0_tx_ads_z=' ,g0_tx_ads_z
+!       write (*,*) ' g0_tx_ads_xx=',g0_tx_ads_xx
+!       write (*,*) ' g0_tx_ads_xy=',g0_tx_ads_xy
+!       write (*,*) ' g0_tx_ads_xz=',g0_tx_ads_xz
+!       write (*,*) ' g0_tx_ads_yy=',g0_tx_ads_yy
+!       write (*,*) ' g0_tx_ads_yz=',g0_tx_ads_yz
+!       write (*,*) ' g0_tx_ads_zz=',g0_tx_ads_zz
+!
+!       write (*,*) ' g0_ty_ads_x=' ,g0_ty_ads_x
+!       write (*,*) ' g0_ty_ads_y=' ,g0_ty_ads_y
+!       write (*,*) ' g0_ty_ads_z=' ,g0_ty_ads_z
+!       write (*,*) ' g0_ty_ads_xx=',g0_ty_ads_xx
+!       write (*,*) ' g0_ty_ads_xy=',g0_ty_ads_xy
+!       write (*,*) ' g0_ty_ads_xz=',g0_ty_ads_xz
+!       write (*,*) ' g0_ty_ads_yy=',g0_ty_ads_yy
+!       write (*,*) ' g0_ty_ads_yz=',g0_ty_ads_yz
+!       write (*,*) ' g0_ty_ads_zz=',g0_ty_ads_zz
+!
+!       write (*,*) ' g0_tz_ads_x=' ,g0_tz_ads_x
+!       write (*,*) ' g0_tz_ads_y=' ,g0_tz_ads_y
+!       write (*,*) ' g0_tz_ads_z=' ,g0_tz_ads_z
+!       write (*,*) ' g0_tz_ads_xx=',g0_tz_ads_xx
+!       write (*,*) ' g0_tz_ads_xy=',g0_tz_ads_xy
+!       write (*,*) ' g0_tz_ads_xz=',g0_tz_ads_xz
+!       write (*,*) ' g0_tz_ads_yy=',g0_tz_ads_yy
+!       write (*,*) ' g0_tz_ads_yz=',g0_tz_ads_yz
+!       write (*,*) ' g0_tz_ads_zz=',g0_tz_ads_zz
+!
+!       write (*,*) ' g0_xx_ads_x=' ,g0_xx_ads_x
+!       write (*,*) ' g0_xx_ads_y=' ,g0_xx_ads_y
+!       write (*,*) ' g0_xx_ads_z=' ,g0_xx_ads_z
+!       write (*,*) ' g0_xx_ads_xx=',g0_xx_ads_xx
+!       write (*,*) ' g0_xx_ads_xy=',g0_xx_ads_xy
+!       write (*,*) ' g0_xx_ads_xz=',g0_xx_ads_xz
+!       write (*,*) ' g0_xx_ads_yy=',g0_xx_ads_yy
+!       write (*,*) ' g0_xx_ads_yz=',g0_xx_ads_yz
+!       write (*,*) ' g0_xx_ads_zz=',g0_xx_ads_zz
+!
+!       write (*,*) ' g0_xy_ads_x=' ,g0_xy_ads_x
+!       write (*,*) ' g0_xy_ads_y=' ,g0_xy_ads_y
+!       write (*,*) ' g0_xy_ads_z=' ,g0_xy_ads_z
+!       write (*,*) ' g0_xy_ads_xx=',g0_xy_ads_xx
+!       write (*,*) ' g0_xy_ads_xy=',g0_xy_ads_xy
+!       write (*,*) ' g0_xy_ads_xz=',g0_xy_ads_xz
+!       write (*,*) ' g0_xy_ads_yy=',g0_xy_ads_yy
+!       write (*,*) ' g0_xy_ads_yz=',g0_xy_ads_yz
+!       write (*,*) ' g0_xy_ads_zz=',g0_xy_ads_zz
+!
+!       write (*,*) ' g0_xz_ads_x=' ,g0_xz_ads_x
+!       write (*,*) ' g0_xz_ads_y=' ,g0_xz_ads_y
+!       write (*,*) ' g0_xz_ads_z=' ,g0_xz_ads_z
+!       write (*,*) ' g0_xz_ads_xx=',g0_xz_ads_xx
+!       write (*,*) ' g0_xz_ads_xy=',g0_xz_ads_xy
+!       write (*,*) ' g0_xz_ads_xz=',g0_xz_ads_xz
+!       write (*,*) ' g0_xz_ads_yy=',g0_xz_ads_yy
+!       write (*,*) ' g0_xz_ads_yz=',g0_xz_ads_yz
+!       write (*,*) ' g0_xz_ads_zz=',g0_xz_ads_zz
+!
+!       write (*,*) ' g0_yy_ads_x=' ,g0_yy_ads_x
+!       write (*,*) ' g0_yy_ads_y=' ,g0_yy_ads_y
+!       write (*,*) ' g0_yy_ads_z=' ,g0_yy_ads_z
+!       write (*,*) ' g0_yy_ads_xx=',g0_yy_ads_xx
+!       write (*,*) ' g0_yy_ads_xy=',g0_yy_ads_xy
+!       write (*,*) ' g0_yy_ads_xz=',g0_yy_ads_xz
+!       write (*,*) ' g0_yy_ads_yy=',g0_yy_ads_yy
+!       write (*,*) ' g0_yy_ads_yz=',g0_yy_ads_yz
+!       write (*,*) ' g0_yy_ads_zz=',g0_yy_ads_zz
+!
+!       write (*,*) ' g0_yz_ads_x=' ,g0_yz_ads_x
+!       write (*,*) ' g0_yz_ads_y=' ,g0_yz_ads_y
+!       write (*,*) ' g0_yz_ads_z=' ,g0_yz_ads_z
+!       write (*,*) ' g0_yz_ads_xx=',g0_yz_ads_xx
+!       write (*,*) ' g0_yz_ads_xy=',g0_yz_ads_xy
+!       write (*,*) ' g0_yz_ads_xz=',g0_yz_ads_xz
+!       write (*,*) ' g0_yz_ads_yy=',g0_yz_ads_yy
+!       write (*,*) ' g0_yz_ads_yz=',g0_yz_ads_yz
+!       write (*,*) ' g0_yz_ads_zz=',g0_yz_ads_zz
+!
 !       write (*,*) ' g0_psi_ads_x=' ,g0_psi_ads_x
 !       write (*,*) ' g0_psi_ads_y=' ,g0_psi_ads_y
 !       write (*,*) ' g0_psi_ads_z=' ,g0_psi_ads_z
@@ -5198,7 +5578,8 @@ c----------------------------------------------------------------------
 !          do c=1,Nz
 !          testf1(a,b,c)=x(a)**3+2*x(a)
 !          testf2(a,b,c)=y(b)**3+2*y(b)*z(c)**7
-!          testf3(a,b,c)=x(a)**3+2*y(b)+x(a)**2*y(b)**5*z(c)**5
+!          testf3(a,b,c)=x(a)**3+2*y(b)+x(a)**2*y(b)**5*z(c)**5+z(c)
+!     &                  +x(a)*z(c)
 !          chr(a,b,c)=0
 !          chr(2,b,c)=ex
 !          chr(4,b,c)=ex
@@ -5253,8 +5634,8 @@ c----------------------------------------------------------------------
 !     &       testf3_zz,
 !     &       x,y,z,dt,a,b,c,chr,ex,Nx,Ny,Nz,'testf3')
 !
-!      write(*,*) 'a,b,c,x(a),y(b),z(c)='
-!     &           ,a,b,c,x(a),y(b),z(c)
+!      write(*,*) 'a,b,c,x(a),y(b),z(c),dx,dy,dz='
+!     &           ,a,b,c,x(a),y(b),z(c),dx,dy,dz
 !      write(*,*) 'testf1_x,testf2_x,testf3_x='
 !     &            ,testf1_x,testf2_x,testf3_x
 !      write(*,*) 'testf1_z,testf2_z,testf3_z='
@@ -5275,15 +5656,29 @@ c----------------------------------------------------------------------
 
         ! give values to the metric
         g0_ll(1,1)=g0_tt_ads0+gb_tt0
-        g0_ll(1,2)=           gb_tx0
-        g0_ll(1,3)=           gb_ty0
-        g0_ll(1,4)=           gb_tz0
+        g0_ll(1,2)=g0_tx_ads0+gb_tx0
+        g0_ll(1,3)=g0_ty_ads0+gb_ty0
+        g0_ll(1,4)=g0_tz_ads0+gb_tz0
         g0_ll(2,2)=g0_xx_ads0+gb_xx0
         g0_ll(2,3)=g0_xy_ads0+gb_xy0
-        g0_ll(2,4)=           gb_xz0
+        g0_ll(2,4)=g0_xz_ads0+gb_xz0
         g0_ll(3,3)=g0_yy_ads0+gb_yy0
-        g0_ll(3,4)=           gb_yz0
+        g0_ll(3,4)=g0_yz_ads0+gb_yz0
         g0_ll(4,4)=g0_psi_ads0+psi0
+
+!CHECKED WITH MATHEMATICA UP TO HERE
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) 'g0_ll(1,1)=',g0_ll(1,1)
+!       write (*,*) 'g0_ll(1,2)=',g0_ll(1,2)
+!       write (*,*) 'g0_ll(1,3)=',g0_ll(1,3)
+!       write (*,*) 'g0_ll(1,4)=',g0_ll(1,4)
+!       write (*,*) 'g0_ll(2,2)=',g0_ll(2,2) 
+!       write (*,*) 'g0_ll(2,3)=',g0_ll(2,3) 
+!       write (*,*) 'g0_ll(2,4)=',g0_ll(2,4) 
+!       write (*,*) 'g0_ll(3,3)=',g0_ll(3,3) 
+!       write (*,*) 'g0_ll(3,4)=',g0_ll(3,4) 
+!       write (*,*) 'g0_ll(4,4)=',g0_ll(4,4) 
 
         g0_ll_x(1,1,1)   =0
      &                   +gb_tt_t
@@ -5314,6 +5709,11 @@ c----------------------------------------------------------------------
         g0_ll_xx(1,1,4,4)=g0_tt_ads_zz
      &                   +gb_tt_zz
 
+!
+!       write (*,*) 'gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)='
+!     &             ,gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)
+
+
         g0_ll_x(1,2,1)   =0
      &                   +gb_tx_t
         g0_ll_x(1,2,2)   =0
@@ -5328,8 +5728,6 @@ c----------------------------------------------------------------------
      &                   +gb_tx_tx
         g0_ll_xx(1,2,1,3)=0
      &                   +gb_tx_ty
-        g0_ll_xx(1,2,1,3)=0
-     &                   +gb_tx_tz
         g0_ll_xx(1,2,1,4)=0
      &                   +gb_tx_tz
         g0_ll_xx(1,2,2,2)=0
@@ -5344,6 +5742,23 @@ c----------------------------------------------------------------------
      &                   +gb_tx_yz
         g0_ll_xx(1,2,4,4)=0
      &                   +gb_tx_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(1,2)=',g0_ll(1,2)
+!       write (*,*) 'g0_ll_x(1,2,1)=',g0_ll_x(1,2,1)
+!       write (*,*) 'g0_ll_x(1,2,2)=',g0_ll_x(1,2,2)
+!       write (*,*) 'g0_ll_x(1,2,3)=',g0_ll_x(1,2,3)
+!       write (*,*) 'g0_ll_x(1,2,4)=',g0_ll_x(1,2,4)
+!       write (*,*) 'g0_ll_xx(1,2,1,1)=',g0_ll_xx(1,2,1,1)
+!       write (*,*) 'g0_ll_xx(1,2,1,2)=',g0_ll_xx(1,2,1,2)
+!       write (*,*) 'g0_ll_xx(1,2,1,3)=',g0_ll_xx(1,2,1,3)
+!       write (*,*) 'g0_ll_xx(1,2,1,4)=',g0_ll_xx(1,2,1,4)
+!       write (*,*) 'g0_ll_xx(1,2,2,2)=',g0_ll_xx(1,2,2,2)
+!       write (*,*) 'g0_ll_xx(1,2,2,3)=',g0_ll_xx(1,2,2,3)
+!       write (*,*) 'g0_ll_xx(1,2,2,4)=',g0_ll_xx(1,2,2,4)
+!       write (*,*) 'g0_ll_xx(1,2,3,3)=',g0_ll_xx(1,2,3,3)
+!       write (*,*) 'g0_ll_xx(1,2,3,4)=',g0_ll_xx(1,2,3,4)
+!       write (*,*) 'g0_ll_xx(1,2,4,4)=',g0_ll_xx(1,2,4,4)
 
         g0_ll_x(1,3,1)   =0
      &                   +gb_ty_t
@@ -5374,6 +5789,23 @@ c----------------------------------------------------------------------
         g0_ll_xx(1,3,4,4)=0
      &                   +gb_ty_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(1,3)=',g0_ll(1,3)
+!       write (*,*) 'g0_ll_x(1,3,1)=',g0_ll_x(1,3,1)
+!       write (*,*) 'g0_ll_x(1,3,2)=',g0_ll_x(1,3,2)
+!       write (*,*) 'g0_ll_x(1,3,3)=',g0_ll_x(1,3,3)
+!       write (*,*) 'g0_ll_x(1,3,4)=',g0_ll_x(1,3,4)
+!       write (*,*) 'g0_ll_xx(1,3,1,1)=',g0_ll_xx(1,3,1,1)
+!       write (*,*) 'g0_ll_xx(1,3,1,2)=',g0_ll_xx(1,3,1,2)
+!       write (*,*) 'g0_ll_xx(1,3,1,3)=',g0_ll_xx(1,3,1,3)
+!       write (*,*) 'g0_ll_xx(1,3,1,4)=',g0_ll_xx(1,3,1,4)
+!       write (*,*) 'g0_ll_xx(1,3,2,2)=',g0_ll_xx(1,3,2,2)
+!       write (*,*) 'g0_ll_xx(1,3,2,3)=',g0_ll_xx(1,3,2,3)
+!       write (*,*) 'g0_ll_xx(1,3,2,4)=',g0_ll_xx(1,3,2,4)
+!       write (*,*) 'g0_ll_xx(1,3,3,3)=',g0_ll_xx(1,3,3,3)
+!       write (*,*) 'g0_ll_xx(1,3,3,4)=',g0_ll_xx(1,3,3,4)
+!       write (*,*) 'g0_ll_xx(1,3,4,4)=',g0_ll_xx(1,3,4,4)
+
         g0_ll_x(1,4,1)   =0
      &                   +gb_tz_t
         g0_ll_x(1,4,2)   =0
@@ -5402,6 +5834,23 @@ c----------------------------------------------------------------------
      &                   +gb_tz_yz
         g0_ll_xx(1,4,4,4)=0
      &                   +gb_tz_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(1,4)=',g0_ll(1,4)
+!       write (*,*) 'g0_ll_x(1,4,1)=',g0_ll_x(1,4,1)
+!       write (*,*) 'g0_ll_x(1,4,2)=',g0_ll_x(1,4,2)
+!       write (*,*) 'g0_ll_x(1,4,3)=',g0_ll_x(1,4,3)
+!       write (*,*) 'g0_ll_x(1,4,4)=',g0_ll_x(1,4,4)
+!       write (*,*) 'g0_ll_xx(1,4,1,1)=',g0_ll_xx(1,4,1,1)
+!       write (*,*) 'g0_ll_xx(1,4,1,2)=',g0_ll_xx(1,4,1,2)
+!       write (*,*) 'g0_ll_xx(1,4,1,3)=',g0_ll_xx(1,4,1,3)
+!       write (*,*) 'g0_ll_xx(1,4,1,4)=',g0_ll_xx(1,4,1,4)
+!       write (*,*) 'g0_ll_xx(1,4,2,2)=',g0_ll_xx(1,4,2,2)
+!       write (*,*) 'g0_ll_xx(1,4,2,3)=',g0_ll_xx(1,4,2,3)
+!       write (*,*) 'g0_ll_xx(1,4,2,4)=',g0_ll_xx(1,4,2,4)
+!       write (*,*) 'g0_ll_xx(1,4,3,3)=',g0_ll_xx(1,4,3,3)
+!       write (*,*) 'g0_ll_xx(1,4,3,4)=',g0_ll_xx(1,4,3,4)
+!       write (*,*) 'g0_ll_xx(1,4,4,4)=',g0_ll_xx(1,4,4,4)
 
         g0_ll_x(2,2,1)   =0
      &                   +gb_xx_t
@@ -5432,6 +5881,23 @@ c----------------------------------------------------------------------
         g0_ll_xx(2,2,4,4)=g0_xx_ads_zz
      &                   +gb_xx_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(2,2)=',g0_ll(2,2)
+!       write (*,*) 'g0_ll_x(2,2,1)=',g0_ll_x(2,2,1)
+!       write (*,*) 'g0_ll_x(2,2,2)=',g0_ll_x(2,2,2)
+!       write (*,*) 'g0_ll_x(2,2,3)=',g0_ll_x(2,2,3)
+!       write (*,*) 'g0_ll_x(2,2,4)=',g0_ll_x(2,2,4)
+!       write (*,*) 'g0_ll_xx(2,2,1,1)=',g0_ll_xx(2,2,1,1)
+!       write (*,*) 'g0_ll_xx(2,2,1,2)=',g0_ll_xx(2,2,1,2)
+!       write (*,*) 'g0_ll_xx(2,2,1,3)=',g0_ll_xx(2,2,1,3)
+!       write (*,*) 'g0_ll_xx(2,2,1,4)=',g0_ll_xx(2,2,1,4)
+!       write (*,*) 'g0_ll_xx(2,2,2,2)=',g0_ll_xx(2,2,2,2)
+!       write (*,*) 'g0_ll_xx(2,2,2,3)=',g0_ll_xx(2,2,2,3)
+!       write (*,*) 'g0_ll_xx(2,2,2,4)=',g0_ll_xx(2,2,2,4)
+!       write (*,*) 'g0_ll_xx(2,2,3,3)=',g0_ll_xx(2,2,3,3)
+!       write (*,*) 'g0_ll_xx(2,2,3,4)=',g0_ll_xx(2,2,3,4)
+!       write (*,*) 'g0_ll_xx(2,2,4,4)=',g0_ll_xx(2,2,4,4)
+
         g0_ll_x(2,3,1)   =0
      &                   +gb_xy_t
         g0_ll_x(2,3,2)   =g0_xy_ads_x
@@ -5460,6 +5926,23 @@ c----------------------------------------------------------------------
      &                   +gb_xy_yz
         g0_ll_xx(2,3,4,4)=g0_xy_ads_zz
      &                   +gb_xy_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(2,3)=',g0_ll(2,3)
+!       write (*,*) 'g0_ll_x(2,3,1)=',g0_ll_x(2,3,1)
+!       write (*,*) 'g0_ll_x(2,3,2)=',g0_ll_x(2,3,2)
+!       write (*,*) 'g0_ll_x(2,3,3)=',g0_ll_x(2,3,3)
+!       write (*,*) 'g0_ll_x(2,3,4)=',g0_ll_x(2,3,4)
+!       write (*,*) 'g0_ll_xx(2,3,1,1)=',g0_ll_xx(2,3,1,1)
+!       write (*,*) 'g0_ll_xx(2,3,1,2)=',g0_ll_xx(2,3,1,2)
+!       write (*,*) 'g0_ll_xx(2,3,1,3)=',g0_ll_xx(2,3,1,3)
+!       write (*,*) 'g0_ll_xx(2,3,1,4)=',g0_ll_xx(2,3,1,4)
+!       write (*,*) 'g0_ll_xx(2,3,2,2)=',g0_ll_xx(2,3,2,2)
+!       write (*,*) 'g0_ll_xx(2,3,2,3)=',g0_ll_xx(2,3,2,3)
+!       write (*,*) 'g0_ll_xx(2,3,2,4)=',g0_ll_xx(2,3,2,4)
+!       write (*,*) 'g0_ll_xx(2,3,3,3)=',g0_ll_xx(2,3,3,3)
+!       write (*,*) 'g0_ll_xx(2,3,3,4)=',g0_ll_xx(2,3,3,4)
+!       write (*,*) 'g0_ll_xx(2,3,4,4)=',g0_ll_xx(2,3,4,4)
 
         g0_ll_x(2,4,1)   =0
      &                   +gb_xz_t
@@ -5490,6 +5973,23 @@ c----------------------------------------------------------------------
         g0_ll_xx(2,4,4,4)=g0_xz_ads_zz
      &                   +gb_xz_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(2,4)=',g0_ll(2,4)
+!       write (*,*) 'g0_ll_x(2,4,1)=',g0_ll_x(2,4,1)
+!       write (*,*) 'g0_ll_x(2,4,2)=',g0_ll_x(2,4,2)
+!       write (*,*) 'g0_ll_x(2,4,3)=',g0_ll_x(2,4,3)
+!       write (*,*) 'g0_ll_x(2,4,4)=',g0_ll_x(2,4,4)
+!       write (*,*) 'g0_ll_xx(2,4,1,1)=',g0_ll_xx(2,4,1,1)
+!       write (*,*) 'g0_ll_xx(2,4,1,2)=',g0_ll_xx(2,4,1,2)
+!       write (*,*) 'g0_ll_xx(2,4,1,3)=',g0_ll_xx(2,4,1,3)
+!       write (*,*) 'g0_ll_xx(2,4,1,4)=',g0_ll_xx(2,4,1,4)
+!       write (*,*) 'g0_ll_xx(2,4,2,2)=',g0_ll_xx(2,4,2,2)
+!       write (*,*) 'g0_ll_xx(2,4,2,3)=',g0_ll_xx(2,4,2,3)
+!       write (*,*) 'g0_ll_xx(2,4,2,4)=',g0_ll_xx(2,4,2,4)
+!       write (*,*) 'g0_ll_xx(2,4,3,3)=',g0_ll_xx(2,4,3,3)
+!       write (*,*) 'g0_ll_xx(2,4,3,4)=',g0_ll_xx(2,4,3,4)
+!       write (*,*) 'g0_ll_xx(2,4,4,4)=',g0_ll_xx(2,4,4,4)
+
         g0_ll_x(3,3,1)   =0
      &                   +gb_yy_t
         g0_ll_x(3,3,2)   =g0_yy_ads_x
@@ -5518,6 +6018,23 @@ c----------------------------------------------------------------------
      &                   +gb_yy_yz
         g0_ll_xx(3,3,4,4)=g0_yy_ads_zz
      &                   +gb_yy_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(3,3)=',g0_ll(3,3)
+!       write (*,*) 'g0_ll_x(3,3,1)=',g0_ll_x(3,3,1)
+!       write (*,*) 'g0_ll_x(3,3,2)=',g0_ll_x(3,3,2)
+!       write (*,*) 'g0_ll_x(3,3,3)=',g0_ll_x(3,3,3)
+!       write (*,*) 'g0_ll_x(3,3,4)=',g0_ll_x(3,3,4)
+!       write (*,*) 'g0_ll_xx(3,3,1,1)=',g0_ll_xx(3,3,1,1)
+!       write (*,*) 'g0_ll_xx(3,3,1,2)=',g0_ll_xx(3,3,1,2)
+!       write (*,*) 'g0_ll_xx(3,3,1,3)=',g0_ll_xx(3,3,1,3)
+!       write (*,*) 'g0_ll_xx(3,3,1,4)=',g0_ll_xx(3,3,1,4)
+!       write (*,*) 'g0_ll_xx(3,3,2,2)=',g0_ll_xx(3,3,2,2)
+!       write (*,*) 'g0_ll_xx(3,3,2,3)=',g0_ll_xx(3,3,2,3)
+!       write (*,*) 'g0_ll_xx(3,3,2,4)=',g0_ll_xx(3,3,2,4)
+!       write (*,*) 'g0_ll_xx(3,3,3,3)=',g0_ll_xx(3,3,3,3)
+!       write (*,*) 'g0_ll_xx(3,3,3,4)=',g0_ll_xx(3,3,3,4)
+!       write (*,*) 'g0_ll_xx(3,3,4,4)=',g0_ll_xx(3,3,4,4)
 
         g0_ll_x(3,4,1)   =0
      &                   +gb_yz_t
@@ -5548,6 +6065,23 @@ c----------------------------------------------------------------------
         g0_ll_xx(3,4,4,4)=g0_yz_ads_zz
      &                   +gb_yz_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(3,4)=',g0_ll(3,4)
+!       write (*,*) 'g0_ll_x(3,4,1)=',g0_ll_x(3,4,1)
+!       write (*,*) 'g0_ll_x(3,4,2)=',g0_ll_x(3,4,2)
+!       write (*,*) 'g0_ll_x(3,4,3)=',g0_ll_x(3,4,3)
+!       write (*,*) 'g0_ll_x(3,4,4)=',g0_ll_x(3,4,4)
+!       write (*,*) 'g0_ll_xx(3,4,1,1)=',g0_ll_xx(3,4,1,1)
+!       write (*,*) 'g0_ll_xx(3,4,1,2)=',g0_ll_xx(3,4,1,2)
+!       write (*,*) 'g0_ll_xx(3,4,1,3)=',g0_ll_xx(3,4,1,3)
+!       write (*,*) 'g0_ll_xx(3,4,1,4)=',g0_ll_xx(3,4,1,4)
+!       write (*,*) 'g0_ll_xx(3,4,2,2)=',g0_ll_xx(3,4,2,2)
+!       write (*,*) 'g0_ll_xx(3,4,2,3)=',g0_ll_xx(3,4,2,3)
+!       write (*,*) 'g0_ll_xx(3,4,2,4)=',g0_ll_xx(3,4,2,4)
+!       write (*,*) 'g0_ll_xx(3,4,3,3)=',g0_ll_xx(3,4,3,3)
+!       write (*,*) 'g0_ll_xx(3,4,3,4)=',g0_ll_xx(3,4,3,4)
+!       write (*,*) 'g0_ll_xx(3,4,4,4)=',g0_ll_xx(3,4,4,4)
+
         g0_ll_x(4,4,1)   =0
      &                   +psi_t
         g0_ll_x(4,4,2)   =g0_psi_ads_x
@@ -5577,10 +6111,42 @@ c----------------------------------------------------------------------
         g0_ll_xx(4,4,4,4)=g0_psi_ads_zz
      &                   +psi_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_ll(4,4)=',g0_ll(4,4)
+!       write (*,*) 'g0_ll_x(4,4,1)=',g0_ll_x(4,4,1)
+!       write (*,*) 'g0_ll_x(4,4,2)=',g0_ll_x(4,4,2)
+!       write (*,*) 'g0_ll_x(4,4,3)=',g0_ll_x(4,4,3)
+!       write (*,*) 'g0_ll_x(4,4,4)=',g0_ll_x(4,4,4)
+!       write (*,*) 'g0_ll_xx(4,4,1,1)=',g0_ll_xx(4,4,1,1)
+!       write (*,*) 'g0_ll_xx(4,4,1,2)=',g0_ll_xx(4,4,1,2)
+!       write (*,*) 'g0_ll_xx(4,4,1,3)=',g0_ll_xx(4,4,1,3)
+!       write (*,*) 'g0_ll_xx(4,4,1,4)=',g0_ll_xx(4,4,1,4)
+!       write (*,*) 'g0_ll_xx(4,4,2,2)=',g0_ll_xx(4,4,2,2)
+!       write (*,*) 'g0_ll_xx(4,4,2,3)=',g0_ll_xx(4,4,2,3)
+!       write (*,*) 'g0_ll_xx(4,4,2,4)=',g0_ll_xx(4,4,2,4)
+!       write (*,*) 'g0_ll_xx(4,4,3,3)=',g0_ll_xx(4,4,3,3)
+!       write (*,*) 'g0_ll_xx(4,4,3,4)=',g0_ll_xx(4,4,3,4)
+!       write (*,*) 'g0_ll_xx(4,4,4,4)=',g0_ll_xx(4,4,4,4)
+
+
         ! give values to the metric inverse
         call calc_g0uu(g0_ll(1,1),g0_ll(1,2),g0_ll(1,3),g0_ll(1,4),
      &         g0_ll(2,2),g0_ll(2,3),g0_ll(2,4),
      &         g0_ll(3,3),g0_ll(3,4),g0_ll(4,4),g0_uu)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'g0_uu(1,1)=',g0_uu(1,1)
+!       write (*,*) 'g0_uu(1,2)=',g0_uu(1,2)
+!       write (*,*) 'g0_uu(1,3)=',g0_uu(1,3)
+!       write (*,*) 'g0_uu(1,4)=',g0_uu(1,4)
+!       write (*,*) 'g0_uu(2,2)=',g0_uu(2,2)
+!       write (*,*) 'g0_uu(2,3)=',g0_uu(2,3)
+!       write (*,*) 'g0_uu(2,4)=',g0_uu(2,4)
+!       write (*,*) 'g0_uu(3,3)=',g0_uu(3,3)
+!       write (*,*) 'g0_uu(3,4)=',g0_uu(3,4)
+!       write (*,*) 'g0_uu(4,4)=',g0_uu(4,4)
+
+!CHECKED WITH MATHEMATICA UP TO HERE
 
         do a=1,3
           do b=a+1,4
@@ -5667,6 +6233,18 @@ c----------------------------------------------------------------------
         gads_ll(3,4)=g0_yz_ads0
         gads_ll(4,4)=g0_psi_ads0
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll(1,1)=',gads_ll(1,1)
+!       write (*,*) 'gads_ll(1,2)=',gads_ll(1,2)
+!       write (*,*) 'gads_ll(1,3)=',gads_ll(1,3)
+!       write (*,*) 'gads_ll(1,4)=',gads_ll(1,4)
+!       write (*,*) 'gads_ll(2,2)=',gads_ll(2,2)
+!       write (*,*) 'gads_ll(2,3)=',gads_ll(2,3)
+!       write (*,*) 'gads_ll(2,4)=',gads_ll(2,4)
+!       write (*,*) 'gads_ll(3,3)=',gads_ll(3,3)
+!       write (*,*) 'gads_ll(3,4)=',gads_ll(3,4)
+!       write (*,*) 'gads_ll(4,4)=',gads_ll(4,4)
+
         gads_uu(1,1)=g0u_tt_ads0
         gads_uu(1,2)=g0u_tx_ads0
         gads_uu(1,3)=g0u_ty_ads0
@@ -5678,6 +6256,19 @@ c----------------------------------------------------------------------
         gads_uu(3,4)=g0u_yz_ads0
         gads_uu(4,4)=g0u_psi_ads0
 
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_uu(1,1)=',gads_uu(1,1)
+!       write (*,*) 'gads_uu(1,2)=',gads_uu(1,2)
+!       write (*,*) 'gads_uu(1,3)=',gads_uu(1,3)
+!       write (*,*) 'gads_uu(1,4)=',gads_uu(1,4)
+!       write (*,*) 'gads_uu(2,2)=',gads_uu(2,2)
+!       write (*,*) 'gads_uu(2,3)=',gads_uu(2,3)
+!       write (*,*) 'gads_uu(2,4)=',gads_uu(2,4)
+!       write (*,*) 'gads_uu(3,3)=',gads_uu(3,3)
+!       write (*,*) 'gads_uu(3,4)=',gads_uu(3,4)
+!       write (*,*) 'gads_uu(4,4)=',gads_uu(4,4)
+
         gads_ll_x(1,1,2)   =g0_tt_ads_x
         gads_ll_x(1,1,3)   =g0_tt_ads_y
         gads_ll_x(1,1,4)   =g0_tt_ads_z
@@ -5687,6 +6278,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(1,1,3,3)=g0_tt_ads_yy
         gads_ll_xx(1,1,3,4)=g0_tt_ads_yz
         gads_ll_xx(1,1,4,4)=g0_tt_ads_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(1,1,2)=',gads_ll_x(1,1,2)
+!       write (*,*) 'gads_ll_x(1,1,3)=',gads_ll_x(1,1,3)
+!       write (*,*) 'gads_ll_x(1,1,4)=',gads_ll_x(1,1,4)
+!       write (*,*) 'gads_ll_xx(1,1,2,2)=',gads_ll_xx(1,1,2,2)
+!       write (*,*) 'gads_ll_xx(1,1,2,3)=',gads_ll_xx(1,1,2,3)
+!       write (*,*) 'gads_ll_xx(1,1,2,4)=',gads_ll_xx(1,1,2,4)
+!       write (*,*) 'gads_ll_xx(1,1,3,3)=',gads_ll_xx(1,1,3,3)
+!       write (*,*) 'gads_ll_xx(1,1,3,4)=',gads_ll_xx(1,1,3,4)
+!       write (*,*) 'gads_ll_xx(1,1,4,4)=',gads_ll_xx(1,1,4,4)
 
         gads_ll_x(1,2,2)   =g0_tx_ads_x
         gads_ll_x(1,2,3)   =g0_tx_ads_y
@@ -5698,6 +6300,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(1,2,3,4)=g0_tx_ads_yz
         gads_ll_xx(1,2,4,4)=g0_tx_ads_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(1,2,2)=',gads_ll_x(1,2,2)
+!       write (*,*) 'gads_ll_x(1,2,3)=',gads_ll_x(1,2,3)
+!       write (*,*) 'gads_ll_x(1,2,4)=',gads_ll_x(1,2,4)
+!       write (*,*) 'gads_ll_xx(1,2,2,2)=',gads_ll_xx(1,2,2,2)
+!       write (*,*) 'gads_ll_xx(1,2,2,3)=',gads_ll_xx(1,2,2,3)
+!       write (*,*) 'gads_ll_xx(1,2,2,4)=',gads_ll_xx(1,2,2,4)
+!       write (*,*) 'gads_ll_xx(1,2,3,3)=',gads_ll_xx(1,2,3,3)
+!       write (*,*) 'gads_ll_xx(1,2,3,4)=',gads_ll_xx(1,2,3,4)
+!       write (*,*) 'gads_ll_xx(1,2,4,4)=',gads_ll_xx(1,2,4,4)
+
         gads_ll_x(1,3,2)   =g0_ty_ads_x
         gads_ll_x(1,3,3)   =g0_ty_ads_y
         gads_ll_x(1,3,4)   =g0_ty_ads_z
@@ -5707,6 +6320,18 @@ c----------------------------------------------------------------------
         gads_ll_xx(1,3,3,3)=g0_ty_ads_yy
         gads_ll_xx(1,3,3,4)=g0_ty_ads_yz
         gads_ll_xx(1,3,4,4)=g0_ty_ads_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(1,3,2)=',gads_ll_x(1,3,2)
+!       write (*,*) 'gads_ll_x(1,3,3)=',gads_ll_x(1,3,3)
+!       write (*,*) 'gads_ll_x(1,3,4)=',gads_ll_x(1,3,4)
+!       write (*,*) 'gads_ll_xx(1,3,2,2)=',gads_ll_xx(1,3,2,2)
+!       write (*,*) 'gads_ll_xx(1,3,2,3)=',gads_ll_xx(1,3,2,3)
+!       write (*,*) 'gads_ll_xx(1,3,2,4)=',gads_ll_xx(1,3,2,4)
+!       write (*,*) 'gads_ll_xx(1,3,3,3)=',gads_ll_xx(1,3,3,3)
+!       write (*,*) 'gads_ll_xx(1,3,3,4)=',gads_ll_xx(1,3,3,4)
+!       write (*,*) 'gads_ll_xx(1,3,4,4)=',gads_ll_xx(1,3,4,4)
+
 
         gads_ll_x(1,4,2)   =g0_tz_ads_x
         gads_ll_x(1,4,3)   =g0_tz_ads_y
@@ -5718,6 +6343,18 @@ c----------------------------------------------------------------------
         gads_ll_xx(1,4,3,4)=g0_tz_ads_yz
         gads_ll_xx(1,4,4,4)=g0_tz_ads_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(1,4,2)=',gads_ll_x(1,4,2)
+!       write (*,*) 'gads_ll_x(1,4,3)=',gads_ll_x(1,4,3)
+!       write (*,*) 'gads_ll_x(1,4,4)=',gads_ll_x(1,4,4)
+!       write (*,*) 'gads_ll_xx(1,4,2,2)=',gads_ll_xx(1,4,2,2)
+!       write (*,*) 'gads_ll_xx(1,4,2,3)=',gads_ll_xx(1,4,2,3)
+!       write (*,*) 'gads_ll_xx(1,4,2,4)=',gads_ll_xx(1,4,2,4)
+!       write (*,*) 'gads_ll_xx(1,4,3,3)=',gads_ll_xx(1,4,3,3)
+!       write (*,*) 'gads_ll_xx(1,4,3,4)=',gads_ll_xx(1,4,3,4)
+!       write (*,*) 'gads_ll_xx(1,4,4,4)=',gads_ll_xx(1,4,4,4)
+
+
         gads_ll_x(2,2,2)   =g0_xx_ads_x
         gads_ll_x(2,2,3)   =g0_xx_ads_y
         gads_ll_x(2,2,4)   =g0_xx_ads_z
@@ -5727,6 +6364,18 @@ c----------------------------------------------------------------------
         gads_ll_xx(2,2,3,3)=g0_xx_ads_yy
         gads_ll_xx(2,2,3,4)=g0_xx_ads_yz
         gads_ll_xx(2,2,4,4)=g0_xx_ads_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(2,2,2)=',gads_ll_x(2,2,2)
+!       write (*,*) 'gads_ll_x(2,2,3)=',gads_ll_x(2,2,3)
+!       write (*,*) 'gads_ll_x(2,2,4)=',gads_ll_x(2,2,4)
+!       write (*,*) 'gads_ll_xx(2,2,2,2)=',gads_ll_xx(2,2,2,2)
+!       write (*,*) 'gads_ll_xx(2,2,2,3)=',gads_ll_xx(2,2,2,3)
+!       write (*,*) 'gads_ll_xx(2,2,2,4)=',gads_ll_xx(2,2,2,4)
+!       write (*,*) 'gads_ll_xx(2,2,3,3)=',gads_ll_xx(2,2,3,3)
+!       write (*,*) 'gads_ll_xx(2,2,3,4)=',gads_ll_xx(2,2,3,4)
+!       write (*,*) 'gads_ll_xx(2,2,4,4)=',gads_ll_xx(2,2,4,4)
+
 
         gads_ll_x(2,3,2)   =g0_xy_ads_x
         gads_ll_x(2,3,3)   =g0_xy_ads_y
@@ -5738,6 +6387,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(2,3,3,4)=g0_xy_ads_yz
         gads_ll_xx(2,3,4,4)=g0_xy_ads_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(2,3,2)=',gads_ll_x(2,3,2)
+!       write (*,*) 'gads_ll_x(2,3,3)=',gads_ll_x(2,3,3)
+!       write (*,*) 'gads_ll_x(2,3,4)=',gads_ll_x(2,3,4)
+!       write (*,*) 'gads_ll_xx(2,3,2,2)=',gads_ll_xx(2,3,2,2)
+!       write (*,*) 'gads_ll_xx(2,3,2,3)=',gads_ll_xx(2,3,2,3)
+!       write (*,*) 'gads_ll_xx(2,3,2,4)=',gads_ll_xx(2,3,2,4)
+!       write (*,*) 'gads_ll_xx(2,3,3,3)=',gads_ll_xx(2,3,3,3)
+!       write (*,*) 'gads_ll_xx(2,3,3,4)=',gads_ll_xx(2,3,3,4)
+!       write (*,*) 'gads_ll_xx(2,3,4,4)=',gads_ll_xx(2,3,4,4)
+
         gads_ll_x(2,4,2)   =g0_xz_ads_x
         gads_ll_x(2,4,3)   =g0_xz_ads_y
         gads_ll_x(2,4,4)   =g0_xz_ads_z
@@ -5747,6 +6407,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(2,4,3,3)=g0_xz_ads_yy
         gads_ll_xx(2,4,3,4)=g0_xz_ads_yz
         gads_ll_xx(2,4,4,4)=g0_xz_ads_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(2,4,2)=',gads_ll_x(2,4,2)
+!       write (*,*) 'gads_ll_x(2,4,3)=',gads_ll_x(2,4,3)
+!       write (*,*) 'gads_ll_x(2,4,4)=',gads_ll_x(2,4,4)
+!       write (*,*) 'gads_ll_xx(2,4,2,2)=',gads_ll_xx(2,4,2,2)
+!       write (*,*) 'gads_ll_xx(2,4,2,3)=',gads_ll_xx(2,4,2,3)
+!       write (*,*) 'gads_ll_xx(2,4,2,4)=',gads_ll_xx(2,4,2,4)
+!       write (*,*) 'gads_ll_xx(2,4,3,3)=',gads_ll_xx(2,4,3,3)
+!       write (*,*) 'gads_ll_xx(2,4,3,4)=',gads_ll_xx(2,4,3,4)
+!       write (*,*) 'gads_ll_xx(2,4,4,4)=',gads_ll_xx(2,4,4,4)
 
         gads_ll_x(3,3,2)   =g0_yy_ads_x
         gads_ll_x(3,3,3)   =g0_yy_ads_y
@@ -5758,6 +6429,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(3,3,3,4)=g0_yy_ads_yz
         gads_ll_xx(3,3,4,4)=g0_yy_ads_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(3,3,2)=',gads_ll_x(3,3,2)
+!       write (*,*) 'gads_ll_x(3,3,3)=',gads_ll_x(3,3,3)
+!       write (*,*) 'gads_ll_x(3,3,4)=',gads_ll_x(3,3,4)
+!       write (*,*) 'gads_ll_xx(3,3,2,2)=',gads_ll_xx(3,3,2,2)
+!       write (*,*) 'gads_ll_xx(3,3,2,3)=',gads_ll_xx(3,3,2,3)
+!       write (*,*) 'gads_ll_xx(3,3,2,4)=',gads_ll_xx(3,3,2,4)
+!       write (*,*) 'gads_ll_xx(3,3,3,3)=',gads_ll_xx(3,3,3,3)
+!       write (*,*) 'gads_ll_xx(3,3,3,4)=',gads_ll_xx(3,3,3,4)
+!       write (*,*) 'gads_ll_xx(3,3,4,4)=',gads_ll_xx(3,3,4,4)
+
         gads_ll_x(3,4,2)   =g0_yz_ads_x
         gads_ll_x(3,4,3)   =g0_yz_ads_y
         gads_ll_x(3,4,4)   =g0_yz_ads_z
@@ -5767,6 +6449,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(3,4,3,3)=g0_yz_ads_yy
         gads_ll_xx(3,4,3,4)=g0_yz_ads_yz
         gads_ll_xx(3,4,4,4)=g0_yz_ads_zz
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(3,4,2)=',gads_ll_x(3,4,2)
+!       write (*,*) 'gads_ll_x(3,4,3)=',gads_ll_x(3,4,3)
+!       write (*,*) 'gads_ll_x(3,4,4)=',gads_ll_x(3,4,4)
+!       write (*,*) 'gads_ll_xx(3,4,2,2)=',gads_ll_xx(3,4,2,2)
+!       write (*,*) 'gads_ll_xx(3,4,2,3)=',gads_ll_xx(3,4,2,3)
+!       write (*,*) 'gads_ll_xx(3,4,2,4)=',gads_ll_xx(3,4,2,4)
+!       write (*,*) 'gads_ll_xx(3,4,3,3)=',gads_ll_xx(3,4,3,3)
+!       write (*,*) 'gads_ll_xx(3,4,3,4)=',gads_ll_xx(3,4,3,4)
+!       write (*,*) 'gads_ll_xx(3,4,4,4)=',gads_ll_xx(3,4,4,4)
 
         gads_ll_x(4,4,2)   =g0_psi_ads_x
         gads_ll_x(4,4,3)   =g0_psi_ads_y
@@ -5778,6 +6471,17 @@ c----------------------------------------------------------------------
         gads_ll_xx(4,4,3,4)=g0_psi_ads_yz
         gads_ll_xx(4,4,4,4)=g0_psi_ads_zz
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'gads_ll_x(4,4,2)=',gads_ll_x(4,4,2)
+!       write (*,*) 'gads_ll_x(4,4,3)=',gads_ll_x(4,4,3)
+!       write (*,*) 'gads_ll_x(4,4,4)=',gads_ll_x(4,4,4)
+!       write (*,*) 'gads_ll_xx(4,4,2,2)=',gads_ll_xx(4,4,2,2)
+!       write (*,*) 'gads_ll_xx(4,4,2,3)=',gads_ll_xx(4,4,2,3)
+!       write (*,*) 'gads_ll_xx(4,4,2,4)=',gads_ll_xx(4,4,2,4)
+!       write (*,*) 'gads_ll_xx(4,4,3,3)=',gads_ll_xx(4,4,3,3)
+!       write (*,*) 'gads_ll_xx(4,4,3,4)=',gads_ll_xx(4,4,3,4)
+!       write (*,*) 'gads_ll_xx(4,4,4,4)=',gads_ll_xx(4,4,4,4)
+!
         do a=1,3
           do b=a+1,4
             gads_ll(b,a)=gads_ll(a,b)
@@ -5812,6 +6516,7 @@ c----------------------------------------------------------------------
           end do
         end do
 
+
         ! give values to the metric deviation
         h0_ll(1,1)=gb_tt0 
         h0_ll(1,2)=gb_tx0
@@ -5823,6 +6528,18 @@ c----------------------------------------------------------------------
         h0_ll(3,3)=gb_yy0
         h0_ll(3,4)=gb_yz0
         h0_ll(4,4)=psi0
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll(1,1)=',h0_ll(1,1)
+!       write (*,*) 'h0_ll(1,2)=',h0_ll(1,2)
+!       write (*,*) 'h0_ll(1,3)=',h0_ll(1,3)
+!       write (*,*) 'h0_ll(1,4)=',h0_ll(1,4)
+!       write (*,*) 'h0_ll(2,2)=',h0_ll(2,2)
+!       write (*,*) 'h0_ll(2,3)=',h0_ll(2,3)
+!       write (*,*) 'h0_ll(2,4)=',h0_ll(2,4)
+!       write (*,*) 'h0_ll(3,3)=',h0_ll(3,3)
+!       write (*,*) 'h0_ll(3,4)=',h0_ll(3,4)
+!       write (*,*) 'h0_ll(4,4)=',h0_ll(4,4)
   
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)
@@ -5834,6 +6551,18 @@ c----------------------------------------------------------------------
         h0_uu(3,3)=g0_uu(3,3)-gads_uu(3,3)
         h0_uu(3,4)=g0_uu(3,4)-gads_uu(3,4)
         h0_uu(4,4)=g0_uu(4,4)-gads_uu(4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_uu(1,1)=',h0_uu(1,1)
+!       write (*,*) 'h0_uu(1,2)=',h0_uu(1,2)
+!       write (*,*) 'h0_uu(1,3)=',h0_uu(1,3)
+!       write (*,*) 'h0_uu(1,4)=',h0_uu(1,4)
+!       write (*,*) 'h0_uu(2,2)=',h0_uu(2,2)
+!       write (*,*) 'h0_uu(2,3)=',h0_uu(2,3)
+!       write (*,*) 'h0_uu(2,4)=',h0_uu(2,4)
+!       write (*,*) 'h0_uu(3,3)=',h0_uu(3,3)
+!       write (*,*) 'h0_uu(3,4)=',h0_uu(3,4)
+!       write (*,*) 'h0_uu(4,4)=',h0_uu(4,4)
 
         h0_ll_x(1,1,1)   =g0_ll_x(1,1,1)
         h0_ll_x(1,1,2)   =g0_ll_x(1,1,2)-gads_ll_x(1,1,2)
@@ -5850,6 +6579,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(1,1,3,4)=g0_ll_xx(1,1,3,4)-gads_ll_xx(1,1,3,4)
         h0_ll_xx(1,1,4,4)=g0_ll_xx(1,1,4,4)-gads_ll_xx(1,1,4,4)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(1,1,1)=',h0_ll_x(1,1,1)
+!       write (*,*) 'h0_ll_x(1,1,2)=',h0_ll_x(1,1,2)
+!       write (*,*) 'h0_ll_x(1,1,3)=',h0_ll_x(1,1,3)
+!       write (*,*) 'h0_ll_x(1,1,4)=',h0_ll_x(1,1,4)
+!       write (*,*) 'h0_ll_xx(1,1,1,1)=',h0_ll_xx(1,1,1,1)
+!       write (*,*) 'h0_ll_xx(1,1,1,2)=',h0_ll_xx(1,1,1,2)
+!       write (*,*) 'h0_ll_xx(1,1,1,3)=',h0_ll_xx(1,1,1,3)
+!       write (*,*) 'h0_ll_xx(1,1,1,4)=',h0_ll_xx(1,1,1,4)
+!       write (*,*) 'h0_ll_xx(1,1,2,2)=',h0_ll_xx(1,1,2,2)
+!       write (*,*) 'h0_ll_xx(1,1,2,3)=',h0_ll_xx(1,1,2,3)
+!       write (*,*) 'h0_ll_xx(1,1,2,4)=',h0_ll_xx(1,1,2,4)
+!       write (*,*) 'h0_ll_xx(1,1,3,3)=',h0_ll_xx(1,1,3,3)
+!       write (*,*) 'h0_ll_xx(1,1,3,4)=',h0_ll_xx(1,1,3,4)
+!       write (*,*) 'h0_ll_xx(1,1,4,4)=',h0_ll_xx(1,1,4,4)
+
         h0_ll_x(1,2,1)   =g0_ll_x(1,2,1)
         h0_ll_x(1,2,2)   =g0_ll_x(1,2,2)
         h0_ll_x(1,2,3)   =g0_ll_x(1,2,3)
@@ -5864,6 +6609,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(1,2,3,3)=g0_ll_xx(1,2,3,3)
         h0_ll_xx(1,2,3,4)=g0_ll_xx(1,2,3,4)
         h0_ll_xx(1,2,4,4)=g0_ll_xx(1,2,4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(1,2,1)=',h0_ll_x(1,2,1)
+!       write (*,*) 'h0_ll_x(1,2,2)=',h0_ll_x(1,2,2)
+!       write (*,*) 'h0_ll_x(1,2,3)=',h0_ll_x(1,2,3)
+!       write (*,*) 'h0_ll_x(1,2,4)=',h0_ll_x(1,2,4)
+!       write (*,*) 'h0_ll_xx(1,2,1,1)=',h0_ll_xx(1,2,1,1)
+!       write (*,*) 'h0_ll_xx(1,2,1,2)=',h0_ll_xx(1,2,1,2)
+!       write (*,*) 'h0_ll_xx(1,2,1,3)=',h0_ll_xx(1,2,1,3)
+!       write (*,*) 'h0_ll_xx(1,2,1,4)=',h0_ll_xx(1,2,1,4)
+!       write (*,*) 'h0_ll_xx(1,2,2,2)=',h0_ll_xx(1,2,2,2)
+!       write (*,*) 'h0_ll_xx(1,2,2,3)=',h0_ll_xx(1,2,2,3)
+!       write (*,*) 'h0_ll_xx(1,2,2,4)=',h0_ll_xx(1,2,2,4)
+!       write (*,*) 'h0_ll_xx(1,2,3,3)=',h0_ll_xx(1,2,3,3)
+!       write (*,*) 'h0_ll_xx(1,2,3,4)=',h0_ll_xx(1,2,3,4)
+!       write (*,*) 'h0_ll_xx(1,2,4,4)=',h0_ll_xx(1,2,4,4)
 
         h0_ll_x(1,3,1)   =g0_ll_x(1,3,1)
         h0_ll_x(1,3,2)   =g0_ll_x(1,3,2)
@@ -5880,6 +6641,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(1,3,3,4)=g0_ll_xx(1,3,3,4)
         h0_ll_xx(1,3,4,4)=g0_ll_xx(1,3,4,4)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(1,3,1)=',h0_ll_x(1,3,1)
+!       write (*,*) 'h0_ll_x(1,3,2)=',h0_ll_x(1,3,2)
+!       write (*,*) 'h0_ll_x(1,3,3)=',h0_ll_x(1,3,3)
+!       write (*,*) 'h0_ll_x(1,3,4)=',h0_ll_x(1,3,4)
+!       write (*,*) 'h0_ll_xx(1,3,1,1)=',h0_ll_xx(1,3,1,1)
+!       write (*,*) 'h0_ll_xx(1,3,1,2)=',h0_ll_xx(1,3,1,2)
+!       write (*,*) 'h0_ll_xx(1,3,1,3)=',h0_ll_xx(1,3,1,3)
+!       write (*,*) 'h0_ll_xx(1,3,1,4)=',h0_ll_xx(1,3,1,4)
+!       write (*,*) 'h0_ll_xx(1,3,2,2)=',h0_ll_xx(1,3,2,2)
+!       write (*,*) 'h0_ll_xx(1,3,2,3)=',h0_ll_xx(1,3,2,3)
+!       write (*,*) 'h0_ll_xx(1,3,2,4)=',h0_ll_xx(1,3,2,4)
+!       write (*,*) 'h0_ll_xx(1,3,3,3)=',h0_ll_xx(1,3,3,3)
+!       write (*,*) 'h0_ll_xx(1,3,3,4)=',h0_ll_xx(1,3,3,4)
+!       write (*,*) 'h0_ll_xx(1,3,4,4)=',h0_ll_xx(1,3,4,4)
+
         h0_ll_x(1,4,1)   =g0_ll_x(1,4,1)
         h0_ll_x(1,4,2)   =g0_ll_x(1,4,2)
         h0_ll_x(1,4,3)   =g0_ll_x(1,4,3)
@@ -5894,6 +6671,23 @@ c----------------------------------------------------------------------
         h0_ll_xx(1,4,3,3)=g0_ll_xx(1,4,3,3)
         h0_ll_xx(1,4,3,4)=g0_ll_xx(1,4,3,4)
         h0_ll_xx(1,4,4,4)=g0_ll_xx(1,4,4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(1,4,1)=',h0_ll_x(1,4,1)
+!       write (*,*) 'h0_ll_x(1,4,2)=',h0_ll_x(1,4,2)
+!       write (*,*) 'h0_ll_x(1,4,3)=',h0_ll_x(1,4,3)
+!       write (*,*) 'h0_ll_x(1,4,4)=',h0_ll_x(1,4,4)
+!       write (*,*) 'h0_ll_xx(1,4,1,1)=',h0_ll_xx(1,4,1,1)
+!       write (*,*) 'h0_ll_xx(1,4,1,2)=',h0_ll_xx(1,4,1,2)
+!       write (*,*) 'h0_ll_xx(1,4,1,3)=',h0_ll_xx(1,4,1,3)
+!       write (*,*) 'h0_ll_xx(1,4,1,4)=',h0_ll_xx(1,4,1,4)
+!       write (*,*) 'h0_ll_xx(1,4,2,2)=',h0_ll_xx(1,4,2,2)
+!       write (*,*) 'h0_ll_xx(1,4,2,3)=',h0_ll_xx(1,4,2,3)
+!       write (*,*) 'h0_ll_xx(1,4,2,4)=',h0_ll_xx(1,4,2,4)
+!       write (*,*) 'h0_ll_xx(1,4,3,3)=',h0_ll_xx(1,4,3,3)
+!       write (*,*) 'h0_ll_xx(1,4,3,4)=',h0_ll_xx(1,4,3,4)
+!       write (*,*) 'h0_ll_xx(1,4,4,4)=',h0_ll_xx(1,4,4,4)
+
 
         h0_ll_x(2,2,1)   =g0_ll_x(2,2,1)
         h0_ll_x(2,2,2)   =g0_ll_x(2,2,2)-gads_ll_x(2,2,2)
@@ -5910,6 +6704,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(2,2,3,4)=g0_ll_xx(2,2,3,4)-gads_ll_xx(2,2,3,4)
         h0_ll_xx(2,2,4,4)=g0_ll_xx(2,2,4,4)-gads_ll_xx(2,2,4,4)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(2,2,1)=',h0_ll_x(2,2,1)
+!       write (*,*) 'h0_ll_x(2,2,2)=',h0_ll_x(2,2,2)
+!       write (*,*) 'h0_ll_x(2,2,3)=',h0_ll_x(2,2,3)
+!       write (*,*) 'h0_ll_x(2,2,4)=',h0_ll_x(2,2,4)
+!       write (*,*) 'h0_ll_xx(2,2,1,1)=',h0_ll_xx(2,2,1,1)
+!       write (*,*) 'h0_ll_xx(2,2,1,2)=',h0_ll_xx(2,2,1,2)
+!       write (*,*) 'h0_ll_xx(2,2,1,3)=',h0_ll_xx(2,2,1,3)
+!       write (*,*) 'h0_ll_xx(2,2,1,4)=',h0_ll_xx(2,2,1,4)
+!       write (*,*) 'h0_ll_xx(2,2,2,2)=',h0_ll_xx(2,2,2,2)
+!       write (*,*) 'h0_ll_xx(2,2,2,3)=',h0_ll_xx(2,2,2,3)
+!       write (*,*) 'h0_ll_xx(2,2,2,4)=',h0_ll_xx(2,2,2,4)
+!       write (*,*) 'h0_ll_xx(2,2,3,3)=',h0_ll_xx(2,2,3,3)
+!       write (*,*) 'h0_ll_xx(2,2,3,4)=',h0_ll_xx(2,2,3,4)
+!       write (*,*) 'h0_ll_xx(2,2,4,4)=',h0_ll_xx(2,2,4,4)
+
         h0_ll_x(2,3,1)   =g0_ll_x(2,3,1)
         h0_ll_x(2,3,2)   =g0_ll_x(2,3,2)-gads_ll_x(2,3,2)
         h0_ll_x(2,3,3)   =g0_ll_x(2,3,3)-gads_ll_x(2,3,3)
@@ -5924,6 +6734,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(2,3,3,3)=g0_ll_xx(2,3,3,3)-gads_ll_xx(2,3,3,3)
         h0_ll_xx(2,3,3,4)=g0_ll_xx(2,3,3,4)-gads_ll_xx(2,3,3,4)
         h0_ll_xx(2,3,4,4)=g0_ll_xx(2,3,4,4)-gads_ll_xx(2,3,4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(2,3,1)=',h0_ll_x(2,3,1)
+!       write (*,*) 'h0_ll_x(2,3,2)=',h0_ll_x(2,3,2)
+!       write (*,*) 'h0_ll_x(2,3,3)=',h0_ll_x(2,3,3)
+!       write (*,*) 'h0_ll_x(2,3,4)=',h0_ll_x(2,3,4)
+!       write (*,*) 'h0_ll_xx(2,3,1,1)=',h0_ll_xx(2,3,1,1)
+!       write (*,*) 'h0_ll_xx(2,3,1,2)=',h0_ll_xx(2,3,1,2)
+!       write (*,*) 'h0_ll_xx(2,3,1,3)=',h0_ll_xx(2,3,1,3)
+!       write (*,*) 'h0_ll_xx(2,3,1,4)=',h0_ll_xx(2,3,1,4)
+!       write (*,*) 'h0_ll_xx(2,3,2,2)=',h0_ll_xx(2,3,2,2)
+!       write (*,*) 'h0_ll_xx(2,3,2,3)=',h0_ll_xx(2,3,2,3)
+!       write (*,*) 'h0_ll_xx(2,3,2,4)=',h0_ll_xx(2,3,2,4)
+!       write (*,*) 'h0_ll_xx(2,3,3,3)=',h0_ll_xx(2,3,3,3)
+!       write (*,*) 'h0_ll_xx(2,3,3,4)=',h0_ll_xx(2,3,3,4)
+!       write (*,*) 'h0_ll_xx(2,3,4,4)=',h0_ll_xx(2,3,4,4)
 
         h0_ll_x(2,4,1)   =g0_ll_x(2,4,1)
         h0_ll_x(2,4,2)   =g0_ll_x(2,4,2)-gads_ll_x(2,4,2)
@@ -5940,6 +6766,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(2,4,3,4)=g0_ll_xx(2,4,3,4)-gads_ll_xx(2,4,3,4)
         h0_ll_xx(2,4,4,4)=g0_ll_xx(2,4,4,4)-gads_ll_xx(2,4,4,4)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(2,4,1)=',h0_ll_x(2,4,1)
+!       write (*,*) 'h0_ll_x(2,4,2)=',h0_ll_x(2,4,2)
+!       write (*,*) 'h0_ll_x(2,4,3)=',h0_ll_x(2,4,3)
+!       write (*,*) 'h0_ll_x(2,4,4)=',h0_ll_x(2,4,4)
+!       write (*,*) 'h0_ll_xx(2,4,1,1)=',h0_ll_xx(2,4,1,1)
+!       write (*,*) 'h0_ll_xx(2,4,1,2)=',h0_ll_xx(2,4,1,2)
+!       write (*,*) 'h0_ll_xx(2,4,1,3)=',h0_ll_xx(2,4,1,3)
+!       write (*,*) 'h0_ll_xx(2,4,1,4)=',h0_ll_xx(2,4,1,4)
+!       write (*,*) 'h0_ll_xx(2,4,2,2)=',h0_ll_xx(2,4,2,2)
+!       write (*,*) 'h0_ll_xx(2,4,2,3)=',h0_ll_xx(2,4,2,3)
+!       write (*,*) 'h0_ll_xx(2,4,2,4)=',h0_ll_xx(2,4,2,4)
+!       write (*,*) 'h0_ll_xx(2,4,3,3)=',h0_ll_xx(2,4,3,3)
+!       write (*,*) 'h0_ll_xx(2,4,3,4)=',h0_ll_xx(2,4,3,4)
+!       write (*,*) 'h0_ll_xx(2,4,4,4)=',h0_ll_xx(2,4,4,4)
+
         h0_ll_x(3,3,1)   =g0_ll_x(3,3,1)
         h0_ll_x(3,3,2)   =g0_ll_x(3,3,2)-gads_ll_x(3,3,2)
         h0_ll_x(3,3,3)   =g0_ll_x(3,3,3)-gads_ll_x(3,3,3)
@@ -5954,6 +6796,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(3,3,3,3)=g0_ll_xx(3,3,3,3)-gads_ll_xx(3,3,3,3)
         h0_ll_xx(3,3,3,4)=g0_ll_xx(3,3,3,4)-gads_ll_xx(3,3,3,4)
         h0_ll_xx(3,3,4,4)=g0_ll_xx(3,3,4,4)-gads_ll_xx(3,3,4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(3,3,1)=',h0_ll_x(3,3,1)
+!       write (*,*) 'h0_ll_x(3,3,2)=',h0_ll_x(3,3,2)
+!       write (*,*) 'h0_ll_x(3,3,3)=',h0_ll_x(3,3,3)
+!       write (*,*) 'h0_ll_x(3,3,4)=',h0_ll_x(3,3,4)
+!       write (*,*) 'h0_ll_xx(3,3,1,1)=',h0_ll_xx(3,3,1,1)
+!       write (*,*) 'h0_ll_xx(3,3,1,2)=',h0_ll_xx(3,3,1,2)
+!       write (*,*) 'h0_ll_xx(3,3,1,3)=',h0_ll_xx(3,3,1,3)
+!       write (*,*) 'h0_ll_xx(3,3,1,4)=',h0_ll_xx(3,3,1,4)
+!       write (*,*) 'h0_ll_xx(3,3,2,2)=',h0_ll_xx(3,3,2,2)
+!       write (*,*) 'h0_ll_xx(3,3,2,3)=',h0_ll_xx(3,3,2,3)
+!       write (*,*) 'h0_ll_xx(3,3,2,4)=',h0_ll_xx(3,3,2,4)
+!       write (*,*) 'h0_ll_xx(3,3,3,3)=',h0_ll_xx(3,3,3,3)
+!       write (*,*) 'h0_ll_xx(3,3,3,4)=',h0_ll_xx(3,3,3,4)
+!       write (*,*) 'h0_ll_xx(3,3,4,4)=',h0_ll_xx(3,3,4,4)
 
         h0_ll_x(3,4,1)   =g0_ll_x(3,4,1)
         h0_ll_x(3,4,2)   =g0_ll_x(3,4,2)-gads_ll_x(3,4,2)
@@ -5970,6 +6828,22 @@ c----------------------------------------------------------------------
         h0_ll_xx(3,4,3,4)=g0_ll_xx(3,4,3,4)-gads_ll_xx(3,4,3,4)
         h0_ll_xx(3,4,4,4)=g0_ll_xx(3,4,4,4)-gads_ll_xx(3,4,4,4)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(3,4,1)=',h0_ll_x(3,4,1)
+!       write (*,*) 'h0_ll_x(3,4,2)=',h0_ll_x(3,4,2)
+!       write (*,*) 'h0_ll_x(3,4,3)=',h0_ll_x(3,4,3)
+!       write (*,*) 'h0_ll_x(3,4,4)=',h0_ll_x(3,4,4)
+!       write (*,*) 'h0_ll_xx(3,4,1,1)=',h0_ll_xx(3,4,1,1)
+!       write (*,*) 'h0_ll_xx(3,4,1,2)=',h0_ll_xx(3,4,1,2)
+!       write (*,*) 'h0_ll_xx(3,4,1,3)=',h0_ll_xx(3,4,1,3)
+!       write (*,*) 'h0_ll_xx(3,4,1,4)=',h0_ll_xx(3,4,1,4)
+!       write (*,*) 'h0_ll_xx(3,4,2,2)=',h0_ll_xx(3,4,2,2)
+!       write (*,*) 'h0_ll_xx(3,4,2,3)=',h0_ll_xx(3,4,2,3)
+!       write (*,*) 'h0_ll_xx(3,4,2,4)=',h0_ll_xx(3,4,2,4)
+!       write (*,*) 'h0_ll_xx(3,4,3,3)=',h0_ll_xx(3,4,3,3)
+!       write (*,*) 'h0_ll_xx(3,4,3,4)=',h0_ll_xx(3,4,3,4)
+!       write (*,*) 'h0_ll_xx(3,4,4,4)=',h0_ll_xx(3,4,4,4)
+
         h0_ll_x(4,4,1)   =g0_ll_x(4,4,1)
         h0_ll_x(4,4,2)   =g0_ll_x(4,4,2)-gads_ll_x(4,4,2)
         h0_ll_x(4,4,3)   =g0_ll_x(4,4,3)-gads_ll_x(4,4,3)
@@ -5983,6 +6857,23 @@ c----------------------------------------------------------------------
         h0_ll_xx(4,4,2,4)=g0_ll_xx(4,4,2,4)-gads_ll_xx(4,4,2,4)
         h0_ll_xx(4,4,3,3)=g0_ll_xx(4,4,3,3)-gads_ll_xx(4,4,3,3)
         h0_ll_xx(4,4,3,4)=g0_ll_xx(4,4,3,4)-gads_ll_xx(4,4,3,4)
+        h0_ll_xx(4,4,4,4)=g0_ll_xx(4,4,4,4)-gads_ll_xx(4,4,4,4)
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
+!       write (*,*) 'h0_ll_x(4,4,1)=',h0_ll_x(4,4,1)
+!       write (*,*) 'h0_ll_x(4,4,2)=',h0_ll_x(4,4,2)
+!       write (*,*) 'h0_ll_x(4,4,3)=',h0_ll_x(4,4,3)
+!       write (*,*) 'h0_ll_x(4,4,4)=',h0_ll_x(4,4,4)
+!       write (*,*) 'h0_ll_xx(4,4,1,1)=',h0_ll_xx(4,4,1,1)
+!       write (*,*) 'h0_ll_xx(4,4,1,2)=',h0_ll_xx(4,4,1,2)
+!       write (*,*) 'h0_ll_xx(4,4,1,3)=',h0_ll_xx(4,4,1,3)
+!       write (*,*) 'h0_ll_xx(4,4,1,4)=',h0_ll_xx(4,4,1,4)
+!       write (*,*) 'h0_ll_xx(4,4,2,2)=',h0_ll_xx(4,4,2,2)
+!       write (*,*) 'h0_ll_xx(4,4,2,3)=',h0_ll_xx(4,4,2,3)
+!       write (*,*) 'h0_ll_xx(4,4,2,4)=',h0_ll_xx(4,4,2,4)
+!       write (*,*) 'h0_ll_xx(4,4,3,3)=',h0_ll_xx(4,4,3,3)
+!       write (*,*) 'h0_ll_xx(4,4,3,4)=',h0_ll_xx(4,4,3,4)
+!       write (*,*) 'h0_ll_xx(4,4,4,4)=',h0_ll_xx(4,4,4,4)
 
         h0_uu_x(1,1,1)=g0_uu_x(1,1,1)
         h0_uu_x(1,1,2)=g0_uu_x(1,1,2)-gads_uu_x(1,1,2)

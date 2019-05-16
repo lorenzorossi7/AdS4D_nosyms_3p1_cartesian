@@ -287,7 +287,7 @@ c----------------------------------------------------------------------
               h0_ll_x(2,4,1)=gb_xz_t_n(i,j,k)
               h0_ll_x(3,3,1)=gb_yy_t_n(i,j,k)
               h0_ll_x(3,4,1)=gb_yz_t_n(i,j,k)
-              h0_ll_x(4,4,1)=psi_t_n(i,j,k)*y0**2
+              h0_ll_x(4,4,1)=psi_t_n(i,j,k)
               A_l_x(1,1)    =Hb_t_t_n(i,j,k)*(1-rho0**2)
               A_l_x(2,1)    =Hb_x_t_n(i,j,k)*(1-rho0**2)
               A_l_x(3,1)    =Hb_y_t_n(i,j,k)*(1-rho0**2)
@@ -304,7 +304,7 @@ c----------------------------------------------------------------------
               gb_xz_t0=gb_xz_t_n(i,j,k)
               gb_yy_t0=gb_yy_t_n(i,j,k)
               gb_yz_t0=gb_yz_t_n(i,j,k)
-              psi_t0  =psi_t_n(i,j,k)*y0**2
+              psi_t0  =psi_t_n(i,j,k)
               Hb_t_t0 =Hb_t_t_n(i,j,k)*(1-rho0**2)
               Hb_x_t0 =Hb_x_t_n(i,j,k)*(1-rho0**2)
               Hb_y_t0 =Hb_y_t_n(i,j,k)*(1-rho0**2)
@@ -761,6 +761,33 @@ c----------------------------------------------------------------------
                 end do
               end do          
 
+!        write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!        write (*,*) ' Hb_t_n(i,j,k),Hb_x_n(i,j,k),
+!     &                Hb_y_n(i,j,k),Hb_z_n(i,j,k)='
+!     &               ,Hb_t_n(i,j,k),Hb_x_n(i,j,k)
+!     &               ,Hb_y_n(i,j,k),Hb_z_n(i,j,k)
+!        write (*,*) ' Hb_x_t,Hb_x_x,Hb_x_y,Hb_x_z='
+!     &               ,Hb_x_t,Hb_x_x,Hb_x_y,Hb_x_z
+!        write (*,*) ' Hb_y_t,Hb_y_x,Hb_y_y,Hb_y_z='
+!     &               ,Hb_y_t,Hb_y_x,Hb_y_y,Hb_y_z
+!        write (*,*) ' Hb_z_t,Hb_z_x,Hb_z_y,Hb_z_z='
+!     &               ,Hb_z_t,Hb_z_x,Hb_z_y,Hb_z_z
+
+
+!        write(*,*) 'i,j,k,Nx,Ny,Nz,x(i),y(j),z(k),rho0=',i,j,k,Nx,Ny,Nz
+!     &                                             ,x(i),y(j),z(k),rho0
+!        write(*,*) 'term4(1,1)=',term4(1,1)
+!        write(*,*) 'term4(1,2)=',term4(1,2)
+!        write(*,*) 'term4(1,3)=',term4(1,3)
+!        write(*,*) 'term4(1,4)=',term4(1,4)
+!        write(*,*) 'term4(2,2)=',term4(2,2)
+!        write(*,*) 'term4(2,3)=',term4(2,3)
+!        write(*,*) 'term4(2,4)=',term4(2,4)
+!        write(*,*) 'term4(3,3)=',term4(3,3)
+!        write(*,*) 'term4(3,4)=',term4(3,4)
+!        write(*,*) 'term4(4,4)=',term4(4,4)
+
+
               ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
               phi10_tt=-1/g0_uu(1,1)
      &                  *(
@@ -851,7 +878,7 @@ c----------------------------------------------------------------------
               gb_xz_tt0=h0_ll_tt(2,4)
               gb_yy_tt0=h0_ll_tt(3,3)
               gb_yz_tt0=h0_ll_tt(3,4)
-              psi_tt0  =h0_ll_tt(4,4)/y0**2
+              psi_tt0  =h0_ll_tt(4,4)
               phi1_tt0 =phi10_tt/(1-rho0**2)**2
 
               ! initialize past time level by O(h^3) expansion
@@ -920,14 +947,14 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        call axi_reg_phi(phi1_nm1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
-        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
-        call axi_reg_g(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,
-     &                 gb_xx_nm1,gb_xy_nm1,gb_yy_nm1,psi_nm1,
-     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
-        call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,
-     &                 gb_xx_np1,gb_xy_np1,gb_yy_np1,psi_np1,
-     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_phi(phi1_nm1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_g(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,
+!     &                 gb_xx_nm1,gb_xy_nm1,gb_yy_nm1,psi_nm1,
+!     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
+!        call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,
+!     &                 gb_xx_np1,gb_xy_np1,gb_yy_np1,psi_np1,
+!     &                 tfunction,chr,ex,L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end

@@ -118,6 +118,11 @@ c----------------------------------------------------------------------
 
         real*8 theta(Nx,Ny,Nz)
 
+!!!!!!!DEBUGGING!!!!!!
+        integer max_i,max_j,max_k
+        real*8  max_efe_all_ires
+!!!!!!!!!!!!!!!!!!!!!1
+
         ! initialize fixed-size variables
         data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
         data i1,j1,k1,a,b,c,d,e/0,0,0,0,0,0,0,0/
@@ -212,6 +217,43 @@ c----------------------------------------------------------------------
      &                phi10_x,phi10_xx,
      &                x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
 
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) 'g0_ll_x(1,1,1)=',g0_ll_x(1,1,1)
+!       write (*,*) 'g0_ll_x(1,1,2)=',g0_ll_x(1,1,2)
+!       write (*,*) 'g0_ll_x(1,1,3)=',g0_ll_x(1,1,3)
+!       write (*,*) 'g0_ll_x(1,1,4)=',g0_ll_x(1,1,4)
+!       write (*,*) 'g0_ll_x(1,1,1,1)=',g0_ll_xx(1,1,1,1)
+!       write (*,*) 'g0_ll_x(1,1,1,2)=',g0_ll_xx(1,1,1,2)
+!       write (*,*) 'g0_ll_x(1,1,1,3)=',g0_ll_xx(1,1,1,3)
+!       write (*,*) 'g0_ll_x(1,1,1,4)=',g0_ll_xx(1,1,1,4)
+!       write (*,*) 'g0_ll_x(1,1,2,2)=',g0_ll_xx(1,1,2,2)
+!       write (*,*) 'g0_ll_x(1,1,2,3)=',g0_ll_xx(1,1,2,3)
+!       write (*,*) 'g0_ll_x(1,1,2,4)=',g0_ll_xx(1,1,2,4)
+!       write (*,*) 'g0_ll_x(1,1,3,3)=',g0_ll_xx(1,1,3,3)
+!       write (*,*) 'g0_ll_x(1,1,3,4)=',g0_ll_xx(1,1,3,4)
+!       write (*,*) 'g0_ll_x(1,1,4,4)=',g0_ll_xx(1,1,4,4)
+!
+!       write (*,*) 'gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)='
+!     &             ,gb_tt_nm1(i,j,k),gb_tt_n(i,j,k),gb_tt_np1(i,j,k)
+!       write (*,*) 'gb_tx_nm1(i,j,k),gb_tx_n(i,j,k),gb_tx_np1(i,j,k)='
+!     &             ,gb_tx_nm1(i,j,k),gb_tx_n(i,j,k),gb_tx_np1(i,j,k)
+!       write (*,*) 'gb_ty_nm1(i,j,k),gb_ty_n(i,j,k),gb_ty_np1(i,j,k)='
+!     &             ,gb_ty_nm1(i,j,k),gb_ty_n(i,j,k),gb_ty_np1(i,j,k)
+!       write (*,*) 'gb_tz_nm1(i,j,k),gb_tz_n(i,j,k),gb_tz_np1(i,j,k)='
+!     &             ,gb_tz_nm1(i,j,k),gb_tz_n(i,j,k),gb_tz_np1(i,j,k)
+!       write (*,*) 'gb_xx_nm1(i,j,k),gb_xx_n(i,j,k),gb_xx_np1(i,j,k)='
+!     &             ,gb_xx_nm1(i,j,k),gb_xx_n(i,j,k),gb_xx_np1(i,j,k)
+!       write (*,*) 'gb_xy_nm1(i,j,k),gb_xy_n(i,j,k),gb_xy_np1(i,j,k)='
+!     &             ,gb_xy_nm1(i,j,k),gb_xy_n(i,j,k),gb_xy_np1(i,j,k)
+!       write (*,*) 'gb_xz_nm1(i,j,k),gb_xz_n(i,j,k),gb_xz_np1(i,j,k)='
+!     &             ,gb_xz_nm1(i,j,k),gb_xz_n(i,j,k),gb_xz_np1(i,j,k)
+!       write (*,*) 'gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)='
+!     &             ,gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)
+!       write (*,*) 'gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)='
+!     &             ,gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)
+!       write (*,*) 'psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)='
+!     &             ,psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)
+
               ! calculates efe_ires functions at point i,j
               !(efe_ires_ab=G_ab+lambda4*g_ab-8*PI*T_ab)
               do a=1,4
@@ -231,7 +273,7 @@ c----------------------------------------------------------------------
               efe_yz_ires(i,j,k)=efe_ires(3,4)
               efe_psi_ires(i,j,k)=efe_ires(4,4)
 
-              ! calculate efe_all_ires function at point i,j
+              ! calculate efe_all_ires function at point i,j,k
               efe_all_ires(i,j,k)=
      &        max(abs(efe_tt_ires(i,j,k)),abs(efe_tx_ires(i,j,k)),
      &            abs(efe_ty_ires(i,j,k)),
@@ -447,5 +489,36 @@ c----------------------------------------------------------------------
           end do
         end do
 
+!!!!!DEBUGGING!!!!!!!
+!        max_efe_all_ires=0.0d0
+!        max_i=0
+!        max_j=0
+!        max_k=0
+!
+!        do i=is,ie
+!          do j=js,je
+!           do k=ks,ke
+!
+!            if (chr(i,j,k).ne.ex) then
+!             if (efe_all_ires(i,j,k).gt.max_efe_all_ires) then
+!              max_efe_all_ires=efe_all_ires(i,j,k)
+!              max_i=i
+!              max_j=j
+!              max_k=k
+!             end if
+!            end if
+!           end do
+!          end do
+!         end do
+!
+!        write(*,*) 'max_i,max_j,max_k,x(max_i),y(max_j),z(max_k),rho,
+!     &              max_efe_all_ires='
+!     &             ,max_i,max_j,max_k,x(max_i),y(max_j),z(max_k),
+!     &              x(max_i)**2+y(max_j)**2+z(max_k)**2,
+!     &              max_efe_all_ires 
+!!!!!!!!!!!!!!!!!!!!!!!
+            
+
+             
         return
         end
