@@ -1109,7 +1109,7 @@ c----------------------------------------------------------------------
      &                  .and.chr(i,j+2).ne.ex) then
               !    write(*,*) 'df2_int: warning ... first order j=1'
               !    write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
-                   f_xx=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
+                   f_yy=(f(i,j+2)-2*f(i,j+1)+f(i,j))/dy/dy
                else
                  if (first) then
                    first=.false.

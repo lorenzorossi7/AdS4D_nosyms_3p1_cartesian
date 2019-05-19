@@ -1639,7 +1639,7 @@ c----------------------------------------------------------------------
      &            .and.(chr(i,j-3).ne.ex)
      &            .and.(chr(i,j-2).ne.ex)) then
                    ddgb_J_ty=1/dt/dy
-               else if (chr(i-2,j).ne.ex) then
+               else if (chr(i,j-2).ne.ex) then
                    ddgb_J_ty=3/4/dt/dy
                else
                    ddgb_J_ty=1/2/dt/dy
@@ -2442,6 +2442,8 @@ c----------------------------------------------------------------------
 
               ! (REGION) next-to-ads-bdy points; set by linear interpolation
               else if (chr2(i,j).eq.ex) then
+                call interp_from_ads_bdy(gb_tt_np1,x,y,L,i,j,chr,ex,
+     &                 Nx,Ny)
                 call interp_from_ads_bdy(gb_tx_np1,x,y,L,i,j,chr,ex,
      &                 Nx,Ny)
                 call interp_from_ads_bdy(gb_ty_np1,x,y,L,i,j,chr,ex,
@@ -2462,8 +2464,8 @@ c----------------------------------------------------------------------
      &                 Nx,Ny)
                 call interp_from_ads_bdy(phi1_np1,x,y,L,i,j,
      &                    chr,ex,Nx,Ny)
-                gb_tt_np1(i,j)=gb_xx_np1(i,j)+gb_yy_np1(i,j)
-     &                        +2*psi_np1(i,j)
+!                gb_tt_np1(i,j)=gb_xx_np1(i,j)+gb_yy_np1(i,j)
+!     &                        +2*psi_np1(i,j)
 
               ! (REGION) non-interior points; set to zero in prior to applying bcs 
               else 
