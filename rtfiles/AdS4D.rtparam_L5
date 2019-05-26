@@ -17,7 +17,7 @@ rhod := 0.8
 stype := 1
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 0.6
+ief_bh_r0 := 5.0
 
 #AH-finder#
 AH_Lmin := 1
@@ -61,6 +61,9 @@ background := 0
 skip_constraints := 1
 output_ires := 1
 output_quasiset := 1
+
+#activate background subtraction error technique (BEST)
+best := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
 
@@ -180,7 +183,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1600000
+steps := 32000000
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -220,6 +223,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_2p1horpen_gauge3_L5_"
 
-save_ivec := 1-*/160
+save_ivec := 1-*/32
 
 #-----------------------------------------------------

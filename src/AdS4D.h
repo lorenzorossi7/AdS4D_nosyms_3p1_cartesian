@@ -157,6 +157,14 @@ extern real *zeta,*zeta_res,*zeta_lop,*zeta_rhs;
 
 extern real *hb_t_res,*hb_i_res;
 extern real *Hb_t_0,*Hb_x_0,*Hb_y_0;
+//extern real *gb_tt_0,*gb_tx_0,*gb_ty_0,*gb_xx_0,*gb_xy_0,*gb_yy_0,*psi_0;
+extern real *background_error_tt;
+extern real *background_error_tx;
+extern real *background_error_ty;
+extern real *background_error_xx;
+extern real *background_error_xy;
+extern real *background_error_yy;
+extern real *background_error_psi;
 
 extern real *g_norms;
 

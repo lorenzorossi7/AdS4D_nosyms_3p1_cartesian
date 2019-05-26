@@ -93,7 +93,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [129 65]
+base_shape := [65 33]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
@@ -183,7 +183,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 2000000
+steps := 1000000
 evo_max_iter := 20
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -221,8 +221,8 @@ save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_xx" "gb_xy" "gb_yy" "psi" "H
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_2p1horpen_gauge3_L1_"
+save_tag := "AdS4D_2p1horpen_gauge3_L0_"
 
-save_ivec := 1-*/2
+save_ivec := 1-*/1
 
 #-----------------------------------------------------
