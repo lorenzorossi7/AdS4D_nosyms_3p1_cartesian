@@ -1936,7 +1936,7 @@ void AdS4D_post_tstep(int L)
    Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
 
 //implementation of background error subtraction technique
-   if (best)
+   if (best && gb_xx_nm1)
    {
      if (my_rank==0) printf("\nBEST is activated, we subtract the background error at this point, in AdS4D_post_tstep\n");
 
