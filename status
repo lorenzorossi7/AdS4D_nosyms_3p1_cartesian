@@ -5,4 +5,4 @@ Convergence at t=0 is good as expected. For gauge 3 or gauge 4 with small c1,c2 
 Gauge 3 and gauge 4 with c1<=2.0,c2<=0.05,c3<=0.1 are equivalent.
 Derivative stencils have been rearranged so that no errors arise and arrays don't go out of boundaries.
 We excise inside a region determined by the initial black hole radius at all time steps. We don't use an AH finder for now.
-We have implemented Background Error Subtraction Technique (BEST). This must be tested.
+We have implemented Background Error Subtraction Technique (BEST). Runs using BEST are shorther than those without BEST, this seems wrong and should be fixed or understood.
