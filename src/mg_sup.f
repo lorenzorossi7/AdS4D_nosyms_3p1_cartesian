@@ -83,8 +83,9 @@ c-----------------------------------------------------------------------
 
         h=x(2)-x(1)
 
-        if ((abs(1-(y(2)-y(1))/h).gt.1.0d-5)) then
-           write(*,*) 'error ... relax() expects dx=dy'
+        if ((abs(1-(y(2)-y(1))/h).gt.1.0d-5)
+     &     .or.(abs(1-(z(2)-z(1))/h).gt.1.0d-5)) then
+           write(*,*) 'error ... relax() expects dx=dy and dx=dz'
            stop
         end if
 
@@ -100,7 +101,7 @@ c-----------------------------------------------------------------------
             x0=x(i)
             y0=y(j)
             z0=z(k)
-            rho0=sqrt(x0**2+y0**2)
+            rho0=sqrt(x0**2+y0**2+z0**2)
             if (phi1(i,j,k).ne.0) phi10(i,j,k)=phi1(i,j,k)
      &                                         *(1-rho0**2)**2
             if (phi1(i,j,k).eq.0) phi10(i,j,k)=0
@@ -122,10 +123,10 @@ c-----------------------------------------------------------------------
               y3=y0*y0*y0
               x4=x0*x0*x0*x0
               y4=y0*y0*y0*y0
-              rho0=sqrt(x0**2+y0**2)
+              rho0=sqrt(x0**2+y0**2+z0**2)
 
               if (
-     &            ((do_red_black.and.mod(i+j+pass,2).eq.0)
+     &            ((do_red_black.and.mod(i+j+k+pass,2).eq.0)
      &             .or.(.not.do_red_black.and.pass.eq.0)) 
      &             .and.(cmask(i,j,k).eq.1)
      &             .and.(chr(i,j,k).ne.ex)      
@@ -182,34 +183,34 @@ c-----------------------------------------------------------------------
           end do
         end do
 
-        ! (REGION) y=0 axis, solve d/dy(zeta)=0  
-        if (phys_bdy(3).ne.0) then
-          do i=2,Nx-1
-            do k=2,Nz-1
-
-            ! computes normal residual d/dy(zeta)
-            res=zeta(i,1,k)-(4*zeta(i,2,k)-zeta(i,3,k))/3
-
-            ! computes MG residual d/dy(zeta)-R
-            rhs=res-zeta_rhs(i,1,k)
-
-            ! computes diag. Jacobian of zeta->L.zeta transformation
-            ! by differentiating L.zeta wrt. z(i,1,k) diag. entries
-            Jac=1
-
-            if (action.eq.residual) then
-              zeta_res(i,1,k)=rhs
-            else if (action.eq.lop) then
-              zeta_lop(i,1,k)=res
-            else if (action.eq.relax) then
-              zeta(i,1,k)=zeta(i,1,k)-rhs/Jac                  
-            end if
-
-            norm=norm+rhs**2
-            sum=sum+1
-           end do
-          end do
-        end if
+!        ! (REGION) y=0 axis, solve d/dy(zeta)=0  
+!        if (phys_bdy(3).ne.0) then
+!          do i=2,Nx-1
+!            do k=2,Nz-1
+!
+!            ! computes normal residual d/dy(zeta)
+!            res=zeta(i,1,k)-(4*zeta(i,2,k)-zeta(i,3,k))/3
+!
+!            ! computes MG residual d/dy(zeta)-R
+!            rhs=res-zeta_rhs(i,1,k)
+!
+!            ! computes diag. Jacobian of zeta->L.zeta transformation
+!            ! by differentiating L.zeta wrt. z(i,1,k) diag. entries
+!            Jac=1
+!
+!            if (action.eq.residual) then
+!              zeta_res(i,1,k)=rhs
+!            else if (action.eq.lop) then
+!              zeta_lop(i,1,k)=res
+!            else if (action.eq.relax) then
+!              zeta(i,1,k)=zeta(i,1,k)-rhs/Jac                  
+!            end if
+!
+!            norm=norm+rhs**2
+!            sum=sum+1
+!           end do
+!          end do
+!        end if
 
         norm=sqrt(norm/sum)
 
@@ -287,34 +288,66 @@ c-----------------------------------------------------------------------
             x0=x(i)
             y0=y(j)
             z0=z(k)
-            rho0=sqrt(x0**2+y0**2)
+            rho0=sqrt(x0**2+y0**2+z0**2)
 
-            f0=(1-rho0**2)**2+4*rho0**2/L**2
 
+!!!!!!!!!2+1 VERSION!!!!!!!!
+!            f0=(1-rho0**2)**2+4*rho0**2/L**2
+!
+!            ! set gads values
+!            g0_tt_ads0 =-f0
+!     &                 /(1-rho0**2)**2
+!            g0_tx_ads0 =0
+!            g0_ty_ads0 =0
+!            g0_tz_ads0 =0
+!            g0_xx_ads0 =(x0**2*(1+rho0**2)**2/f0+y0**2)
+!     &                 /(1-rho0**2)**2
+!     &                 /rho0**2
+!     &                 *4
+!            g0_xy_ads0 =((1+rho0**2)**2/f0-1)
+!     &                 /(1-rho0**2)**2
+!     &                 /rho0**2
+!     &                 *x0*y0
+!     &                 *4
+!            g0_xz_ads0 =0
+!            g0_yy_ads0 =(y0**2*(1+rho0**2)**2/f0+x0**2)
+!     &                 /(1-rho0**2)**2
+!     &                 /rho0**2
+!     &                 *4
+!            g0_yz_ads0 =0
+!            g0_psi_ads0=(y0**2)
+!     &                 /(1-rho0**2)**2
+!     &                 *4
+!
+!!!!!!!!!!!!!!!!!!!!!!!!
+
+!3+1 version
             ! set gads values
-            g0_tt_ads0 =-f0
-     &                 /(1-rho0**2)**2
+            g0_tt_ads0 =-(4*rho0**2+L**2*(-1+rho0**2)**2)
+     &               /L**2/(-1+rho0**2)**2
             g0_tx_ads0 =0
             g0_ty_ads0 =0
             g0_tz_ads0 =0
-            g0_xx_ads0 =(x0**2*(1+rho0**2)**2/f0+y0**2)
-     &                 /(1-rho0**2)**2
-     &                 /rho0**2
-     &                 *4
-            g0_xy_ads0 =((1+rho0**2)**2/f0-1)
-     &                 /(1-rho0**2)**2
-     &                 /rho0**2
-     &                 *x0*y0
-     &                 *4
-            g0_xz_ads0 =0
-            g0_yy_ads0 =(y0**2*(1+rho0**2)**2/f0+x0**2)
-     &                 /(1-rho0**2)**2
-     &                 /rho0**2
-     &                 *4
-            g0_yz_ads0 =0
-            g0_psi_ads0=(y0**2)
-     &                 /(1-rho0**2)**2
-     &                 *4
+            g0_xx_ads0 =(8*(-1+L**2)*(x0**2-y0**2-z0**2)
+     &              +8*rho0**2+4*L**2*(1+rho0**4))
+     &              /(-1+rho0**2)**2/(4*rho0**2+L**2*(-1+rho0**2)**2)
+            g0_xy_ads0 =(16 *(-1 + L**2) *x0* y0)
+     &              /((-1 + rho0**2)**2 
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+            g0_xz_ads0 =(16 *(-1 + L**2) *x0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+            g0_yy_ads0 =(4*(4*(x0**2+z0**2)+L**2*(x0**4+(1+y0**2)**2
+     &              +2*(-1+y0**2)*z0**2+z0**4
+     &              +2*x0**2*(-1+y0**2+z0**2))))
+     &              /(L**2*(-1+rho0**2)**4+4*(-1+rho0**2)**2*(rho0**2))
+            g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+            g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+     &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
+     &              /(L**2*(-1+rho0**2)**4
+     &              +4*(-1+rho0**2)**2*(rho0**2))
 
             if (chr(i,j,k).ne.ex) then 
 
@@ -328,7 +361,7 @@ c-----------------------------------------------------------------------
               gb_xz(i,j,k)=g0_xz_ads0*(zeta0**4-1)
               gb_yy(i,j,k)=g0_yy_ads0*(zeta0**4-1)
               gb_yz(i,j,k)=g0_yz_ads0*(zeta0**4-1)
-              psi(i,j,k)=g0_psi_ads0*(zeta0**4-1)/(y0**2)
+              psi(i,j,k)=g0_psi_ads0*(zeta0**4-1)
 
               f1=trans(rho0,rhoa,rhob)
 
@@ -340,10 +373,10 @@ c-----------------------------------------------------------------------
           end do
         end do
 
-        ! y=0 axis regularization
-        call axi_reg_g(gb_tt,gb_tx,gb_ty,
-     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
-     &                 L,x,y,z,Nx,Ny,Nz,regtype)
+!        ! y=0 axis regularization
+!        call axi_reg_g(gb_tt,gb_tx,gb_ty,
+!     &                 gb_xx,gb_xy,gb_yy,psi,tfunction,chr,ex,
+!     &                 L,x,y,z,Nx,Ny,Nz,regtype)
 
         return
         end
@@ -380,7 +413,7 @@ c----------------------------------------------------------------------
         x0=x(i)
         y0=y(j)
         z0=z(k)
-        rho0=sqrt(x0**2+y0**2)
+        rho0=sqrt(x0**2+y0**2+z0**2)
 
         x2=x0*x0
         y2=y0*y0
@@ -389,13 +422,29 @@ c----------------------------------------------------------------------
         x4=x0*x0*x0*x0
         y4=y0*y0*y0*y0
 
+!debugging!
+!        do a=1,Nx
+!         do b=1,Ny
+!          do c=1,Nz
+!           f0(a,b,c)=x(a)**2+y(b)**3+x(a)*y(b)**4*z(c)**7
+!          end do
+!         end do
+!        end do
+!
+!       write(*,*) "L,x0,y0,z0=",L,x0,y0,z0,dx
+!       write(*,*) "f0(i,j,k)=",f0(i,j,k)
+!       write(*,*) "f0(i+1,j,k)=",f0(i+1,j,k)
+!       write(*,*) "f0(i-1,j,k)=",f0(i-1,j,k)
+!       write(*,*) "(f0(i+1,j,k)-f0(i-1,j,k))/2/dx="
+!     &             ,(f0(i+1,j,k)-f0(i-1,j,k))/2/dx
+
         ! set first and second derivatives
         !(time symmetric initial data for now, so time derivatives vanish, and
         ! S2 symmetric initial data for now, so phi, theta derivatives vanish) 
         f0_x(1)=0
         f0_x(2)=(f0(i+1,j,k)-f0(i-1,j,k))/2/dx!f_x
         f0_x(3)=(f0(i,j+1,k)-f0(i,j-1,k))/2/dy!f_y
-        f0_x(4)=0
+        f0_x(4)=(f0(i,j,k+1)-f0(i,j,k-1))/2/dz!f_z
 
         f0_xx(1,1)=0
         f0_xx(1,2)=0
@@ -404,10 +453,21 @@ c----------------------------------------------------------------------
         f0_xx(2,2)=(f0(i+1,j,k)-2*f0(i,j,k)+f0(i-1,j,k))/dx/dx
         f0_xx(2,3)=( (f0(i+1,j+1,k)-f0(i+1,j-1,k))/2/dy
      &              -(f0(i-1,j+1,k)-f0(i-1,j-1,k))/2/dy )/2/dx
-        f0_xx(2,4)=0
+        f0_xx(2,4)=( (f0(i+1,j,k+1)-f0(i+1,j,k-1))/2/dz
+     &              -(f0(i-1,j,k+1)-f0(i-1,j,k-1))/2/dz )/2/dx
         f0_xx(3,3)=(f0(i,j+1,k)-2*f0(i,j,k)+f0(i,j-1,k))/dy/dy 
-        f0_xx(3,4)=0
-        f0_xx(4,4)=0
+        f0_xx(3,4)=( (f0(i,j+1,k+1)-f0(i,j+1,k-1))/2/dz
+     &              -(f0(i,j-1,k+1)-f0(i,j-1,k-1))/2/dz )/2/dy
+        f0_xx(4,4)=(f0(i,j,k+1)-2*f0(i,j,k)+f0(i,j,k-1))/dz/dz
+
+!       write(*,*) "L,x0,y0,z0=",L,x0,y0,z0
+!       write(*,*) "f0_x(2),f0_x(3),f0_x(4)=",f0_x(2),f0_x(3),f0_x(4)
+!       write(*,*) "f0_xx(2,2),f0_xx(2,3),f0_xx(2,4)="
+!     &             ,f0_xx(2,2),f0_xx(2,3),f0_xx(2,4)
+!       write(*,*) "f0_xx(3,3),f0_xx(3,4)="
+!     &             ,f0_xx(3,3),f0_xx(3,4)
+!       write(*,*) "f0_xx(4,4)="
+!     &             ,f0_xx(4,4)
 
         do a=1,3
           do b=a+1,4
@@ -415,36 +475,119 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        ! calculate ddf, background Laplacian acting on f
-        ! and ddf_Jac, Jacobian of f->ddf transformation 
-        !(DDf = g^ab D_a D_b f)
+!!!!2+1 version!!!!!!!!
+!        ! calculate ddf, background Laplacian acting on f
+!        ! and ddf_Jac, Jacobian of f->ddf transformation 
+!        !(DDf = g^ab D_a D_b f)
+!        ddf= 
+!     &        f0_x(3)*
+!     &        ((-1 + x0**2 - y0**2)*(-1 + x0**2 + y0**2))/(4*y0)
+!     &       +f0_xx(3,3)*
+!     &        (-1 + x0**2 + y0**2)**2/4
+!     &       +f0_x(2)*
+!     &        (-(x0*(-1 + x0**2 + y0**2)))/2
+!     &       +f0_xx(2,3)*
+!     &        0.0d0
+!     &       +f0_xx(2,2)*
+!     &        (-1 + x0**2 + y0**2)**2/4
+!
+!        ddf_Jac= 
+!     &            (-2/dy/dy)*
+!     &            (-1 + x0**2 + y0**2)**2/4
+!     &           +(-2/dx/dx)*
+!     &            (-1 + x0**2 + y0**2)**2/4
+!
+!        ! calculate grad_f_sq, squared gradient of f 
+!        !(Df^2 = g^ab D_a f D_b f)
+!        grad_f_sq= 
+!     &              f0_x(3)*f0_x(3)*
+!     &              (-1 + x0**2 + y0**2)**2/4
+!     &             +2*f0_x(3)*f0_x(2)*
+!     &              0.0d0
+!     &             +f0_x(2)*f0_x(2)*
+!     &              (-1 + x0**2 + y0**2)**2/4
+!!!!!!!!!!!!!!!!!!!!!!!!
+
+!3+1version
+
         ddf= 
-     &        f0_x(3)*
-     &        ((-1 + x0**2 - y0**2)*(-1 + x0**2 + y0**2))/(4*y0)
-     &       +f0_xx(3,3)*
-     &        (-1 + x0**2 + y0**2)**2/4
-     &       +f0_x(2)*
-     &        (-(x0*(-1 + x0**2 + y0**2)))/2
-     &       +f0_xx(2,3)*
-     &        0.0d0
-     &       +f0_xx(2,2)*
-     &        (-1 + x0**2 + y0**2)**2/4
+     &      (((-1+rho0**2)**2*(4*x0**2+L**2*(1+(-2+x0)*x0+y0**2+z0**2)
+     &       *(1+x0*(2+x0)+y0**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_xx(2,2)
+     &     +2*(-(((-1+L**2)*x0*y0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_xx(2,3)
+     &     +2*(-(((-1+L**2)*x0*z0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_xx(2,4)
+     &     +(((-1+rho0**2)**2*(4*y0**2+L**2*(x0**2+(-1+y0)**2+z0**2)
+     &      *(x0**2+(1+y0)**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_xx(3,3)
+     &     +2*(-(((-1+L**2)*y0*z0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_xx(3,4)
+     &     +(((-1+rho0**2)**2*(4*z0**2+L**2*((1+x0**2+y0**2)**2
+     &      +2*(-1+x0**2+y0**2)*z0**2+z0**4)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_xx(4,4)
+     &   
+     &     +(-(1/(2*L**2*(1+rho0**2)**3))*x0
+     &      *(-1+rho0**2)*(6+2*(rho0**2)**2
+     &      +L**2*(-1+rho0**2)*(5+x0**4+2*y0**2+2*z0**2
+     &      +(y0**2+z0**2)**2+2*x0**2*(1+y0**2+z0**2))))
+     &      *f0_x(2)
+     &     +(-(1/(2*L**2*(1+rho0**2)**3))*y0
+     &      *(-1+rho0**2)*(6+2*(rho0**2)**2
+     &      +L**2*(-1+rho0**2)*(5+x0**4+2*y0**2+2*z0**2
+     &      +(y0**2+z0**2)**2+2*x0**2*(1+y0**2+z0**2))))
+     &      *f0_x(3)
+     &     +(-(1/(2*L**2*(1+rho0**2)**3))*z0
+     &      *(-1+rho0**2)*(6+2*(rho0**2)**2
+     &      +L**2*(-1+rho0**2)*(5+x0**4+2*y0**2+2*z0**2
+     &      +(y0**2+z0**2)**2+2*x0**2*(1+y0**2+z0**2))))
+     &      *f0_x(4)
 
-        ddf_Jac=
-     &            (-2/dy/dy)*
-     &            (-1 + x0**2 + y0**2)**2/4
-     &           +(-2/dx/dx)*
-     &            (-1 + x0**2 + y0**2)**2/4
+        ddf_Jac= 
+     &      (((-1+rho0**2)**2*(4*x0**2+L**2*(1+(-2+x0)*x0+y0**2+z0**2)
+     &       *(1+x0*(2+x0)+y0**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *(-2/dx/dx)
+     &     +(((-1+rho0**2)**2*(4*y0**2+L**2*(x0**2+(-1+y0)**2+z0**2)
+     &      *(x0**2+(1+y0)**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *(-2/dy/dy)
+     &     +(((-1+rho0**2)**2*(4*z0**2+L**2*((1+x0**2+y0**2)**2
+     &      +2*(-1+x0**2+y0**2)*z0**2+z0**4)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *(-2/dz/dz)
+            
+        grad_f_sq= 
+     &       (((-1+rho0**2)**2*(4*x0**2+L**2*(1+(-2+x0)*x0+y0**2+z0**2)
+     &       *(1+x0*(2+x0)+y0**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_x(2)*f0_x(2)
+     &     +2*(-(((-1+L**2)*x0*y0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_x(2)*f0_x(3)
+     &     +2*(-(((-1+L**2)*x0*z0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_x(2)*f0_x(4)
+     &     +(((-1+rho0**2)**2*(4*y0**2+L**2*(x0**2+(-1+y0)**2+z0**2)
+     &      *(x0**2+(1+y0)**2+z0**2)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_x(3)*f0_x(3)
+     &     +2*(-(((-1+L**2)*y0*z0*(-1+rho0**2)**2)
+     &      /(L**2*(1+rho0**2)**2)) )
+     &      *f0_x(3)*f0_x(4)
+     &     +(((-1+rho0**2)**2*(4*z0**2+L**2*((1+x0**2+y0**2)**2
+     &      +2*(-1+x0**2+y0**2)*z0**2+z0**4)))
+     &      /(4*L**2*(1+rho0**2)**2))
+     &      *f0_x(4)*f0_x(4)
 
-        ! calculate grad_f_sq, squared gradient of f 
-        !(Df^2 = g^ab D_a f D_b f)
-        grad_f_sq=
-     &              f0_x(3)*f0_x(3)*
-     &              (-1 + x0**2 + y0**2)**2/4
-     &             +2*f0_x(3)*f0_x(2)*
-     &              0.0d0
-     &             +f0_x(2)*f0_x(2)*
-     &              (-1 + x0**2 + y0**2)**2/4
+!       write(*,*) "L,x0,y0,z0=",L,x0,y0,z0
+!       write(*,*) "ddf,grad_f_sq=",ddf,grad_f_sq
 
         return
         

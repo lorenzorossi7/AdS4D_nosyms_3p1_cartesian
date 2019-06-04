@@ -237,21 +237,38 @@ c----------------------------------------------------------------------
                 y0=y(j)
                 z0=z(k)
                 rho0=sqrt(x0**2+y0**2+z0**2)
+
+!        write(*,*) 'DEBUG from gauge.f'
+!        write(*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+
                 Hb_t0=Hb_t_0(i,j,k)
 
                 f0=trans(rho0,rho1,rho2)
                 f1=trans(rho0,rho3,rho4)
                 g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+!        write(*,*) 'f0,f1,g0=',f0,f1,g0
+!        write(*,*) 'F_t_np1,Hb_t_np1(i,j,k)=',F_t_np1,Hb_t_np1(i,j,k)
 
-                F_t_np1=
-     &                 +gb_tx_np1(i,j,k)*1.5d0*x0/rho0*f1
+        if (rho0.ne.0.0d0) then        
+                F_t_np1=gb_tx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_ty_np1(i,j,k)*1.5d0*y0/rho0*f1
      &                 +gb_tz_np1(i,j,k)*1.5d0*z0/rho0*f1
      &                 +gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
+        else
+                F_t_np1=gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
+        end if
 
                 Hb_t_np1(i,j,k)=F_t_np1+(Hb_t0-F_t_np1)*exp(-g0)
+
+!        write(*,*) 'DEBUG from gauge.f'
+!        write(*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+!        write(*,*) 'F_t_np1,Hb_t_np1(i,j,k)=',F_t_np1,Hb_t_np1(i,j,k)
+!        write(*,*) 'gb_tx_np1(i,j,k)=',gb_tx_np1(i,j,k)
+
               end if
             end do
            end do
@@ -354,6 +371,7 @@ c----------------------------------------------------------------------
                 betay0=gb_ty_np1(i,j,k)
                 betaz0=gb_tz_np1(i,j,k)
 
+        if (rho0.ne.0.0d0) then
                 F_t_np1=
      &                 +gb_tx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_ty_np1(i,j,k)*1.5d0*y0/rho0*f1
@@ -361,6 +379,12 @@ c----------------------------------------------------------------------
      &                 +gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
+         else
+                F_t_np1=gb_tx_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_ty_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_tz_np1(i,j,k)*cbulk*z0*(1-f1)
+         end if
+
                 G_t_np1=-c1*alpha0*log(1.0d0/alpha0)*(1-f2)
 
                 Hb_t_np1(i,j,k)=Hb_t0*exp(-g0)
@@ -518,9 +542,9 @@ c-----------------------------------------------------------------------
                 rho0=sqrt(x0**2+y0**2)
 
                 F_x_np1=
-     &                 +gb_xx_np1(i,j,k)*x0**2*rho0*(200)/100
+     &                 gb_xx_np1(i,j,k)*x0**2*rho0*(200)/100
                 F_y_np1=
-     &                 +gb_yy_np1(i,j,k)*y0/rho0*(-100)/100
+     &                 gb_yy_np1(i,j,k)*y0/rho0*(-100)/100
 
                 Hb_x_np1(i,j,k)=F_x_np1
                 Hb_y_np1(i,j,k)=F_y_np1
@@ -583,6 +607,8 @@ c-----------------------------------------------------------------------
                 f1=trans(rho0,rho3,rho4)
                 g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
+               if (rho0.ne.0.0d0) then
+
                 F_x_np1=gb_xx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*y0/rho0*f1
      &                 +gb_xz_np1(i,j,k)*1.5d0*z0/rho0*f1
@@ -601,6 +627,17 @@ c-----------------------------------------------------------------------
      &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
+               else 
+                F_x_np1=gb_xx_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_xy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_y_np1=gb_yy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xy_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_yz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_z_np1=gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
+               end if
 
                 Hb_x_np1(i,j,k)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
                 Hb_y_np1(i,j,k)=F_y_np1+(Hb_y0-F_y_np1)*exp(-g0)
@@ -709,6 +746,7 @@ c-----------------------------------------------------------------------
                 betay0=gb_ty_np1(i,j,k)
                 betaz0=gb_tz_np1(i,j,k)
 
+               if (rho0.ne.0.0d0) then
                 F_x_np1=gb_xx_np1(i,j,k)*1.5d0*x0/rho0*f1
      &                 +gb_xy_np1(i,j,k)*1.5d0*y0/rho0*f1
      &                 +gb_xz_np1(i,j,k)*1.5d0*z0/rho0*f1
@@ -727,6 +765,18 @@ c-----------------------------------------------------------------------
      &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
      &                 +gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
      &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
+               else
+                F_x_np1=gb_xx_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_xy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_y_np1=gb_yy_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xy_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +gb_yz_np1(i,j,k)*cbulk*z0*(1-f1)
+                F_z_np1=gb_yz_np1(i,j,k)*cbulk*y0*(1-f1)
+     &                 +gb_xz_np1(i,j,k)*cbulk*x0*(1-f1)
+     &                 +psi_np1(i,j,k)*cbulk*z0*(1-f1)
+               end if
+
                 G_x_np1=-c1*betax0/alpha0*(1-f2)
                 G_y_np1=-c1*betay0/alpha0*(1-f2)
                 G_z_np1=-c1*betaz0/alpha0*(1-f2)

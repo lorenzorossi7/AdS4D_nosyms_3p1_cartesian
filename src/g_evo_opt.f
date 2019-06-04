@@ -731,6 +731,37 @@ c----------------------------------------------------------------------
 !              end do
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+!      write (*,*) 'DEBUG from g_evo_opt'
+!      write (*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+!      write (*,*) 'gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)='
+!     &            ,gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+!      write (*,*) 'gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)='
+!     &            ,gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
+!      write (*,*) 'gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)='
+!     &            ,gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+!      write (*,*) 'gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)='
+!     &            ,gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)
+!      write (*,*) 'gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)='
+!     &            ,gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
+!      write (*,*) 'gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)='
+!     &            ,gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+!      write (*,*) 'gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)='
+!     &            ,gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)
+!      write (*,*) 'gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)='
+!     &            ,gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+!      write (*,*) 'gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)='
+!     &            ,gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)
+!      write (*,*) 'psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)='
+!     &            ,psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)
+!      write (*,*) 'Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)='
+!     &            ,Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)
+!      write (*,*) 'Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)='
+!     &            ,Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)
+!      write (*,*) 'Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)='
+!     &            ,Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)
+!      write (*,*) 'Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)='
+!     &            ,Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)
+
               ! computes tensors at point i,j
               call tensor_init(
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -920,6 +951,10 @@ c----------------------------------------------------------------------
      &                       phi10_x(2)*phi10_x(4)*g0_uu(2,4)+
      &                       phi10_x(3)*phi10_x(4)*g0_uu(3,4))
 
+!      write (*,*) 'DEBUG from g_evo_opt'
+!      write (*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+!      write (*,*) 'phi1_n(i,j,k)=',phi1_n(i,j,k)
+!      write (*,*) 'grad_phi1_sq=',grad_phi1_sq
                 do a=1,4
                   do b=1,4
                     set_ll(a,b)=phi10_x(a)*phi10_x(b)
@@ -937,6 +972,8 @@ c----------------------------------------------------------------------
      &                  set_ll(2,3)*g0_uu(2,3)+
      &                  set_ll(2,4)*g0_uu(2,4)+
      &                  set_ll(3,4)*g0_uu(3,4))
+
+!      write (*,*) 'tr_set=',tr_set
 
                 !---------------------------------------------------------------- 
                 ! Analytically remove the pure AdS terms in the EFEs, denoted ->, so 
@@ -1429,9 +1466,19 @@ c----------------------------------------------------------------------
 !!!!!!!!!!!!!!!!TO TEST efe(a,b)!!!!!!!!!!!!
 !                do a=1,4
 !                 do b=a,4
-!                  write(*,*) 'DEBUG from g_evo_opt'
-!                  write(*,*) 'i,j,x(i),y(j)=',i,j,x(i),y(j)
-!                  write(*,*) 'a,b,efe(a,b)=',a,b,efe(a,b)
+!                  write(*,*)'DEBUG from g_evo_opt'
+!                  write(*,*)'i,j,k,x(i),y(j),z(k)=',i,j,k,x(i),y(j),z(k)
+!                  write(*,*)'a,b,efe(a,b)=',a,b,efe(a,b)
+!                  write(*,*)'term1(a,b)=',term1(a,b)
+!                  write(*,*)'term2(a,b)=',term2(a,b)
+!                  write(*,*)'term3(a,b)=',term3(a,b)
+!                  write(*,*)'term4(a,b)=',term4(a,b)
+!                  write(*,*)'term5(a,b)=',term5(a,b)
+!                  write(*,*)'term6(a,b)=',term6(a,b)
+!                  write(*,*)'term7(a,b)=',term7(a,b)
+!                  write(*,*)'term8(a,b)=',term8(a,b)
+!                  write(*,*)'a,b,set_ll(a,b),tr_set='
+!     &                      ,a,b,set_ll(a,b),tr_set
 !
 !                 end do
 !                end do
@@ -1533,6 +1580,8 @@ c----------------------------------------------------------------------
      &                    phi10_x(4)*g0_uu(4,4)*gamma_ull(2,2,4)+
      &                    phi10_x(4)*g0_uu(4,4)*gamma_ull(3,3,4)+
      &                    phi10_x(4)*g0_uu(4,4)*gamma_ull(4,4,4)
+
+!       write (*,*) 'phi1_res=',phi1_res
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of g_np1->L.g_np1 transformation

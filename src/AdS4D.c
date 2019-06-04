@@ -36,8 +36,8 @@ real kappa_cd,rho_cd;
 //=============================================================================
 
 // gaussians
-real phi1_amp_1,phi1_B_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[3],phi1_ecc_1[3];
-real phi1_amp_2,phi1_B_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[3],phi1_ecc_2[3];
+real phi1_amp_1,phi1_B_1,phi1_C_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[3],phi1_ecc_1[3];
+real phi1_amp_2,phi1_B_2,phi1_C_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[3],phi1_ecc_2[3];
 
 // if > 0, initialize with exact BH
 real ief_bh_r0;
@@ -948,11 +948,12 @@ void AdS4D_var_post_init(char *pfile)
       printf("Reading AdS4D parameters:\n\n");
    }
 
-   phi1_amp_1=phi1_B_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_x0_1[2]=phi1_ecc_1[0]=phi1_ecc_1[1]=phi1_ecc_1[2]=0;
-   phi1_amp_2=phi1_B_2=phi1_r0_1=phi1_x0_2[0]=phi1_x0_2[1]=phi1_x0_2[2]=phi1_ecc_2[0]=phi1_ecc_2[1]=phi1_ecc_2[2]=0;
+   phi1_amp_1=phi1_B_1=phi1_C_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_x0_1[2]=phi1_ecc_1[0]=phi1_ecc_1[1]=phi1_ecc_1[2]=0;
+   phi1_amp_2=phi1_B_2=phi1_C_2=phi1_r0_1=phi1_x0_2[0]=phi1_x0_2[1]=phi1_x0_2[2]=phi1_ecc_2[0]=phi1_ecc_2[1]=phi1_ecc_2[2]=0;
 
    AMRD_real_param(pfile,"phi1_amp_1",&phi1_amp_1,1);
    AMRD_real_param(pfile,"phi1_B_1",&phi1_B_1,1);
+   AMRD_real_param(pfile,"phi1_C_1",&phi1_C_1,1);
    AMRD_real_param(pfile,"phi1_r0_1",&phi1_r0_1,1);
    AMRD_real_param(pfile,"phi1_delta_1",&phi1_delta_1,1);
    AMRD_real_param(pfile,"phi1_x0_1",phi1_x0_1,AMRD_dim);
@@ -960,6 +961,7 @@ void AdS4D_var_post_init(char *pfile)
 
    AMRD_real_param(pfile,"phi1_amp_2",&phi1_amp_2,1);
    AMRD_real_param(pfile,"phi1_B_2",&phi1_B_2,1);
+   AMRD_real_param(pfile,"phi1_C_2",&phi1_C_2,1);
    AMRD_real_param(pfile,"phi1_r0_2",&phi1_r0_2,1);
    AMRD_real_param(pfile,"phi1_delta_2",&phi1_delta_2,1);
    AMRD_real_param(pfile,"phi1_x0_2",phi1_x0_2,AMRD_dim);
@@ -1181,7 +1183,7 @@ void AdS4D_var_post_init(char *pfile)
    // ief_bh_r0 is BH radius parameter, ex_r is excision radius
    int l,ah_finder_is_off=1; 
    for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
-   if (ah_finder_is_off||ief_bh_r0) 
+   if (ah_finder_is_off||ief_bh_r0)
    {
      real rh,rhoh,mh;
      rh=-pow(AdS_L,2)
@@ -1245,11 +1247,11 @@ void AdS4D_free_data(void)
 
    zero_f(phi1_t_n); // holds initial time derivatives for ID
 
-   gauss2d_(phi1_n,&phi1_amp_1,&phi1_B_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_x0_1[1],
-            &phi1_ecc_1[0],&phi1_ecc_1[1],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
+   gauss3d_(phi1_n,&phi1_amp_1,&phi1_B_1,&phi1_C_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_x0_1[1],&phi1_x0_1[2],
+            &phi1_ecc_1[0],&phi1_ecc_1[1],&phi1_ecc_1[2],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
 
-   gauss2d_(w1,&phi1_amp_2,&phi1_B_2,&phi1_r0_2,&phi1_delta_2,&phi1_x0_2[0],&phi1_x0_2[1],
-            &phi1_ecc_2[0],&phi1_ecc_2[1],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
+   gauss3d_(w1,&phi1_amp_2,&phi1_B_2,&phi1_C_2,&phi1_r0_2,&phi1_delta_2,&phi1_x0_2[0],&phi1_x0_2[1],&phi1_x0_2[2],
+            &phi1_ecc_2[0],&phi1_ecc_2[1],&phi1_ecc_2[2],&AdS_L,x,y,z,&Nx,&Ny,&Nz,&rhoc,&rhod,&stype);
 
    for (i=0; i<size; i++) phi1_n[i]+=w1[i]; 
 

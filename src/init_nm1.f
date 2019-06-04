@@ -200,6 +200,36 @@ c----------------------------------------------------------------------
               ! some other initializion, which needs to be done before
               ! temporal derivatives are calculated
               !-----------------------------------------------------------
+!      write (*,*) 'DEBUG from init_nm1'
+!      write (*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+!      write (*,*) 'gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)='
+!     &            ,gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+!      write (*,*) 'gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)='
+!     &            ,gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
+!      write (*,*) 'gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)='
+!     &            ,gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+!      write (*,*) 'gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)='
+!     &            ,gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)
+!      write (*,*) 'gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)='
+!     &            ,gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
+!      write (*,*) 'gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)='
+!     &            ,gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+!      write (*,*) 'gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)='
+!     &            ,gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)
+!      write (*,*) 'gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)='
+!     &            ,gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+!      write (*,*) 'gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)='
+!     &            ,gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)
+!      write (*,*) 'psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)='
+!     &            ,psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)
+!      write (*,*) 'Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)='
+!     &            ,Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)
+!      write (*,*) 'Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)='
+!     &            ,Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)
+!      write (*,*) 'Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)='
+!     &            ,Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)
+!      write (*,*) 'Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)='
+!     &            ,Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)
 
               ! computes tensors at point i,j
               call tensor_init(
@@ -227,6 +257,35 @@ c----------------------------------------------------------------------
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
      &                x,y,z,dt,chr,L,ex,Nx,Ny,Nz,i,j,k)
+
+!      write (*,*) 'gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)='
+!     &            ,gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+!      write (*,*) 'gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)='
+!     &            ,gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
+!      write (*,*) 'gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)='
+!     &            ,gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+!      write (*,*) 'gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)='
+!     &            ,gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)
+!      write (*,*) 'gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)='
+!     &            ,gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
+!      write (*,*) 'gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)='
+!     &            ,gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+!      write (*,*) 'gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)='
+!     &            ,gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)
+!      write (*,*) 'gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)='
+!     &            ,gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+!      write (*,*) 'gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)='
+!     &            ,gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)
+!      write (*,*) 'psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)='
+!     &            ,psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)
+!      write (*,*) 'Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)='
+!     &            ,Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)
+!      write (*,*) 'Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)='
+!     &            ,Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)
+!      write (*,*) 'Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)='
+!     &            ,Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)
+!      write (*,*) 'Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)='
+!     &            ,Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)
 
               ! auxiliary objects
               do a=1,4
@@ -292,6 +351,9 @@ c----------------------------------------------------------------------
               A_l_x(2,1)    =Hb_x_t_n(i,j,k)*(1-rho0**2)
               A_l_x(3,1)    =Hb_y_t_n(i,j,k)*(1-rho0**2)
               A_l_x(4,1)    =Hb_z_t_n(i,j,k)*(1-rho0**2)
+
+!           write(*,*) 'A_l_x(1,1),A_l_x(2,1),A_l_x(3,1),A_l_x(4,1)='
+!     &                ,A_l_x(1,1),A_l_x(2,1),A_l_x(3,1),A_l_x(4,1)
 
               ! need this in gb_ii_nm1/np1,Hb_i_nm1/np1,phi1_nm1/np1 updates
               phi1_t0 =phi1_t_n(i,j,k)*(1-rho0**2)**2 
@@ -762,6 +824,7 @@ c----------------------------------------------------------------------
               end do          
 
 !        write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!        write(*,*) 'phi1_n(i,j,k)=',phi1_n(i,j,k)
 !        write (*,*) ' Hb_t_n(i,j,k),Hb_x_n(i,j,k),
 !     &                Hb_y_n(i,j,k),Hb_z_n(i,j,k)='
 !     &               ,Hb_t_n(i,j,k),Hb_x_n(i,j,k)
@@ -941,6 +1004,35 @@ c----------------------------------------------------------------------
 
               ! diagnostic
               tfunction(i,j,k)=gb_tt_tt0
+
+!      write (*,*) 'gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)='
+!     &            ,gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+!      write (*,*) 'gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)='
+!     &            ,gb_tx_np1(i,j,k),gb_tx_n(i,j,k),gb_tx_nm1(i,j,k)
+!      write (*,*) 'gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)='
+!     &            ,gb_ty_np1(i,j,k),gb_ty_n(i,j,k),gb_ty_nm1(i,j,k)
+!      write (*,*) 'gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)='
+!     &            ,gb_tz_np1(i,j,k),gb_tz_n(i,j,k),gb_tz_nm1(i,j,k)
+!      write (*,*) 'gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)='
+!     &            ,gb_xx_np1(i,j,k),gb_xx_n(i,j,k),gb_xx_nm1(i,j,k)
+!      write (*,*) 'gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)='
+!     &            ,gb_xy_np1(i,j,k),gb_xy_n(i,j,k),gb_xy_nm1(i,j,k)
+!      write (*,*) 'gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)='
+!     &            ,gb_xz_np1(i,j,k),gb_xz_n(i,j,k),gb_xz_nm1(i,j,k)
+!      write (*,*) 'gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)='
+!     &            ,gb_yy_np1(i,j,k),gb_yy_n(i,j,k),gb_yy_nm1(i,j,k)
+!      write (*,*) 'gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)='
+!     &            ,gb_yz_np1(i,j,k),gb_yz_n(i,j,k),gb_yz_nm1(i,j,k)
+!      write (*,*) 'psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)='
+!     &            ,psi_np1(i,j,k),psi_n(i,j,k),psi_nm1(i,j,k)
+!      write (*,*) 'Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)='
+!     &            ,Hb_t_np1(i,j,k),Hb_t_n(i,j,k),Hb_t_nm1(i,j,k)
+!      write (*,*) 'Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)='
+!     &            ,Hb_x_np1(i,j,k),Hb_x_n(i,j,k),Hb_x_nm1(i,j,k)
+!      write (*,*) 'Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)='
+!     &            ,Hb_y_np1(i,j,k),Hb_y_n(i,j,k),Hb_y_nm1(i,j,k)
+!      write (*,*) 'Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)='
+!     &            ,Hb_z_np1(i,j,k),Hb_z_n(i,j,k),Hb_z_nm1(i,j,k)
 
             end if
            end do

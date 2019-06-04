@@ -2511,17 +2511,17 @@ c   = A , r < r0
 c
 c where r = sqrt ( (1-ex^2)*(x)^2 + (1-ey^2)*(y)^2 )
 c----------------------------------------------------------------------
-        subroutine gauss2d(f,A,B,r0,delta,xu0,yu0,ex,ey,
+        subroutine gauss3d(f,A,B,C,r0,delta,xu0,yu0,zu0,ex,ey,ez,
      &                     L,x,y,z,Nx,Ny,Nz,
      &                     rhoc,rhod,stype)
         implicit none
         integer Nx,Ny,Nz
         real*8 f(Nx,Ny,Nz),x(Nx),y(Ny),z(Nz)
-        real*8 A,B,r0,delta,ex,ey,xu0,yu0,L
+        real*8 A,B,C,r0,delta,ex,ey,ez,xu0,yu0,zu0,L
 
         integer i,j,k
         integer stype
-        real*8 r,x0,y0,z0,rho0,chi0,csr,xb,yb
+        real*8 r,x0,y0,z0,rho0,xi0,chi0,csr,xb,yb,zb
 
         real*8 rhoc,rhod
         real*8 f1,trans
@@ -2531,7 +2531,8 @@ c----------------------------------------------------------------------
 
         ! initialize fixed-size variables
         data i,j,k/0,0,0/
-        data r,x0,y0,z0,rho0,csr,xb,yb/0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0/
+        data r,x0,y0,z0,rho0,xi0,chi0,csr,xb,yb,zb
+     &       /0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0/
   
         !--------------------------------------------------------------
  
@@ -2543,13 +2544,24 @@ c----------------------------------------------------------------------
               x0=x(i)
               y0=y(j)
               z0=z(k)
-              rho0=sqrt(x0**2+y0**2)
-              chi0=atan2(y0,x0)
-              if (chi0.lt.0) chi0=chi0+2*PI
+              rho0=sqrt(x0**2+y0**2+z0**2)
+!CHECK AND INCLUDE DEFORMATIONS DEPENDING ON THE OTHER ANGLE
+              if (rho0.ne.0.0d0) then
+               xi0=acos(x0/rho0)
+              end if
+              if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
+                chi0=atan2(z0,y0)
+                if (chi0.lt.0) chi0=chi0+2*PI
+              end if
+!            write (*,*) 'DEBUG from gauss3d'
+!            write(*,*) 'rho0=',rho0
+!            write(*,*) 'chi0,xi0=',chi0,xi0
 
               xb=x0-xu0
               yb=y0-yu0
-              r=sqrt(xb**2+yb**2-ex**2*xb**2-ey**2*yb**2)
+              zb=z0-zu0
+              r=sqrt(xb**2+yb**2+zb**2
+     &           -ex**2*xb**2-ey**2*yb**2-ez**2*zb**2)
 
               f1=trans(rho0,rhoc,rhod)
 
@@ -2572,11 +2584,13 @@ c----------------------------------------------------------------------
      &              A*exp(-((2*r/(1+r*(2-r))-r0)/delta)**2)
      &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
      &             +B*cos(chi0)*4*f1*(1-f1)
+     &             +C*cos(xi0)*4*f1*(1-f1)
                  else
                     f(i,j,k)=
      &              A
      &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
      &             +B*cos(chi0)*4*f1*(1-f1)
+     &             +C*cos(xi0)*4*f1*(1-f1)
                  end if
 
               else if (stype.eq.1) then
@@ -2587,10 +2601,21 @@ c----------------------------------------------------------------------
                     f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
+     &             +C*cos(xi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  else
+                  if (rho0.ne.0.0d0) then
                     f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
+     &             +C*cos(xi0)*4*f1*(1-f1)/(1-rho0**2)**2
+                  else if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
+                    f(i,j,k)=
+     &              A*(1-f1)/(1-rho0**2)**2
+     &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
+                  else
+                    f(i,j,k)=
+     &              A*(1-f1)/(1-rho0**2)**2
+                  end if
                  end if
 
               else if (stype.eq.2) then !annulus ID
@@ -2601,10 +2626,12 @@ c----------------------------------------------------------------------
                     f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
+     &             +C*cos(xi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  else
                     f(i,j,k)=
      &              A*(1-f1)/(1-rho0**2)**2
      &             +B*cos(chi0)*4*f1*(1-f1)/(1-rho0**2)**2
+     &             +C*cos(xi0)*4*f1*(1-f1)/(1-rho0**2)**2
                  end if
 
               end if
@@ -6942,6 +6969,11 @@ c----------------------------------------------------------------------
         A_l(3)=Hb_y0*(1-rho0**2)
         A_l(4)=Hb_z0*(1-rho0**2)
 
+!      write(*,*) 'DEBUG from misc.f'
+!      write(*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx
+!      write(*,*) 'A_l(1),A_l(2),A_l(3),A_l(4)='
+!     &           ,A_l(1),A_l(2),A_l(3),A_l(4)
+
         A_l_x(1,1)=Hb_t_t*(1-rho0**2)
         A_l_x(1,2)=Hb_t_x*(1-rho0**2)
      &            -Hb_t0*2*x0
@@ -6973,6 +7005,19 @@ c----------------------------------------------------------------------
      &            -Hb_z0*2*y0
         A_l_x(4,4)=Hb_z_z*(1-rho0**2)
      &            -Hb_z0*2*z0
+
+!      write (*,*) 'Hb_t0,Hb_t_t,Hb_t_x,Hb_t_y,Hb_t_z='
+!     &            ,Hb_t0,Hb_t_t,Hb_t_x,Hb_t_y,Hb_t_z
+!      write(*,*)  'Hb_t_np1(i,j,k),Hb_t_nm1(i,j,k)='
+!     &            ,Hb_t_np1(i,j,k),Hb_t_nm1(i,j,k)
+!      write(*,*) 'A_l_x(1,1),A_l_x(1,2),A_l_x(1,3),A_l_x(1,4)='
+!     &           ,A_l_x(1,1),A_l_x(1,2),A_l_x(1,3),A_l_x(1,4)
+!      write(*,*) 'A_l_x(2,1),A_l_x(2,2),A_l_x(2,3),A_l_x(2,4)='
+!     &           ,A_l_x(2,1),A_l_x(2,2),A_l_x(2,3),A_l_x(2,4)
+!      write(*,*) 'A_l_x(3,1),A_l_x(3,2),A_l_x(3,3),A_l_x(3,4)='
+!     &           ,A_l_x(3,1),A_l_x(3,2),A_l_x(3,3),A_l_x(3,4)
+!      write(*,*) 'A_l_x(4,1),A_l_x(4,2),A_l_x(4,3),A_l_x(4,4)='
+!     &           ,A_l_x(4,1),A_l_x(4,2),A_l_x(4,3),A_l_x(4,4)
 
         ! give values to the AdS source functions
 !!!!2=1 version!!!!!!

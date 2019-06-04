@@ -5,19 +5,20 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.0
+phi1_amp_1 := 0.02
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
 phi1_ecc_1 := [0 0 0]
-phi1_B_1 := 0.00
+phi1_B_1 := 0.003
+phi1_C_1 := 0.009
 
 rhoc := 0.4
 rhod := 0.8
 stype := 1
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 5.0
+ief_bh_r0 := 0.0
 
 #AH-finder#
 AH_Lmin := 1
@@ -58,7 +59,7 @@ AH_tmin := 5.85
 #        (also, skip_constraints=1 && ief_bh_r0!=0 for adsbh initial data) 
  
 background := 0
-skip_constraints := 1
+skip_constraints := 0
 output_ires := 1
 output_quasiset := 1
 
@@ -135,9 +136,9 @@ rho4_t := 0.95
 xi1_t := 0.1
 xi2_t := 0.0025
 cbulk_t := 0.0
-c1_t := 2.0
-c2_t := 0.05
-c3_t := 0.1
+c1_t := 20.0
+c2_t := 0.5
+c3_t := 1.0
 rho1_i := 0.0
 rho2_i := 0.95
 rho3_i := 0.05
@@ -145,9 +146,9 @@ rho4_i := 0.95
 xi1_i := 0.1
 xi2_i := 0.0025
 cbulk_i := 0.0
-c1_i := 2.0
-c2_i := 0.05
-c3_i := 0.1
+c1_i := 20.0
+c2_i := 0.5
+c3_i := 1.0
 
 rhoa := 0.85
 rhob := 0.95
@@ -180,7 +181,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 2000
+steps := 20000
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -212,8 +213,8 @@ max_t_interp_order := 3
 num_save_1_vars := 2
 save_1_vars := [ "iresall" "gb_res" ]
 
-num_save_2_vars := 14
-save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" ]
+num_save_2_vars := 15
+save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1

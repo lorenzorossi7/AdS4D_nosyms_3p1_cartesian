@@ -402,7 +402,7 @@ void init_ghb_(real *zeta,
                real *chr, real *ex, int *Nx, int *Ny, int *Nz, int *regtype,
                real* rhoa, real* rhob);
 
-void gauss2d_(real *f, real *A, real *B, real *r0, real *delta, real *xu0, real *yu0, real *ex, real *ey,
+void gauss3d_(real *f, real *A, real *B, real *C, real *r0, real *delta, real *xu0, real *yu0, real *zu0, real *ex, real *ey, real *ez,
               real *AdS_L, real *x, real *y, real *z, int *Nx, int *Ny, int *Nz, real *rhoc, real *rhod, int *stype);
 
 void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excised);
