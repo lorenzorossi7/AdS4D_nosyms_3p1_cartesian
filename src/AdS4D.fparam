@@ -1,6 +1,6 @@
 #---------- AdS 4D axisymmetric fixed parameter file --------------------------
 
-app_name := ["AdS 4D, 2+1 Cartesian, axisymmetry "]
+app_name := ["AdS 4D, 3+1 Cartesian "]
 
 #==============================================================================
 
