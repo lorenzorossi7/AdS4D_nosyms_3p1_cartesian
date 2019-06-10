@@ -195,6 +195,9 @@ c----------------------------------------------------------------------
             rho0=sqrt(x0**2+y0**2+z0**2)
 
             if (chr(i,j,k).ne.ex) then
+             write(*,*) "DEBUG from init_nm1"
+             write(*,*) "i,j,k,x0,y0,z0,dx=",i,j,k,x0,y0,z0,dx
+             write(*,*) "rho0=",rho0
 
               !-----------------------------------------------------------
               ! some other initializion, which needs to be done before

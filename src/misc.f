@@ -2579,18 +2579,33 @@ c----------------------------------------------------------------------
 
                  if (rho0.ge.1) then
                     f(i,j,k)=0
-                 else if (2*r/(1+r*(2-r)).gt.r0) then
-                    f(i,j,k)=
-     &              A*exp(-((2*r/(1+r*(2-r))-r0)/delta)**2)
-     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
-     &             +B*cos(chi0)*4*f1*(1-f1)
-     &             +C*cos(xi0)*4*f1*(1-f1)
+                 else if (r.gt.r0) then
+                   f(i,j,k)=
+!     &              A*exp(-((2*r/(1+r*(2-r))-r0)/delta)**2)
+!     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
+!     &             +B*cos(chi0)*4*f1*(1-f1)
+!     &             +C*cos(xi0)*4*f1*(1-f1)
+     &             A*exp(-((r-r0)/delta)**2)
+     &            +B*cos(chi0)*4*f1*(1-f1)
+     &            +C*cos(xi0)*4*f1*(1-f1)
                  else
-                    f(i,j,k)=
-     &              A
-     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
-     &             +B*cos(chi0)*4*f1*(1-f1)
-     &             +C*cos(xi0)*4*f1*(1-f1)
+                  if (rho0.ne.0.0d0) then
+                   f(i,j,k)=
+!     &              A
+!     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
+!     &             +B*cos(chi0)*4*f1*(1-f1)
+!     &             +C*cos(xi0)*4*f1*(1-f1)
+     &             A
+     &            +B*cos(chi0)*4*f1*(1-f1)
+     &            +C*cos(xi0)*4*f1*(1-f1)
+                  else if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
+                   f(i,j,k)=
+     &             A
+     &            +B*cos(chi0)*4*f1*(1-f1)
+                  else
+                   f(i,j,k)=
+     &             A
+                  end if
                  end if
 
               else if (stype.eq.1) then

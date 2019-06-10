@@ -1183,8 +1183,10 @@ void AdS4D_var_post_init(char *pfile)
    // ief_bh_r0 is BH radius parameter, ex_r is excision radius
    int l,ah_finder_is_off=1; 
    for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
-   if (ah_finder_is_off||ief_bh_r0)
+   if (ah_finder_is_off)
    {
+    if (ief_bh_r0)
+    { 
      real rh,rhoh,mh;
      rh=-pow(AdS_L,2)
          /(pow(3,(1.0/3.0)))
@@ -1198,6 +1200,13 @@ void AdS4D_var_post_init(char *pfile)
                             "r0/L=%lf, rh/L=%lf, mass M = r0/2 = rh*(1+rh^2/L^2)/2 = %lf\n"
                             "Initial BH radius=%lf, (%lf in compactified (code) coords)\n"
                             "Initial excision radius=%lf\n\n",ief_bh_r0/AdS_L,rh/AdS_L,mh,rh,rhoh,ex_r[0][0]);
+    }
+    else
+    {
+     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=(1-ex_rbuf[0]);
+     if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver, no BH\n"
+                            "We excise inside fixed excision radius=%lf\n\n",ex_r[0][0]);
+    }
    }
 
    if (AMRD_do_ex==0) AMRD_stop("require excision to be on","");

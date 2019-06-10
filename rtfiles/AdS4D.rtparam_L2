@@ -5,17 +5,17 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.02
+phi1_amp_1 := 0.1
 phi1_r0_1 := 0.0
-phi1_delta_1 := 0.2
+phi1_delta_1 := 0.6
 phi1_x0_1 := [0.0 0.0 0.0]
 phi1_ecc_1 := [0 0 0]
-phi1_B_1 := 0.003
-phi1_C_1 := 0.009
+phi1_B_1 := 0.07
+phi1_C_1 := 0.08
 
 rhoc := 0.4
 rhod := 0.8
-stype := 1
+stype := 0
 
 #AdS4D-Schwarzschild BH ID#
 ief_bh_r0 := 0.0
