@@ -237,9 +237,9 @@ c----------------------------------------------------------------------
                 y0=y(j)
                 z0=z(k)
                 rho0=sqrt(x0**2+y0**2+z0**2)
-             write(*,*) "DEBUG from gauge.f"
-             write(*,*) "i,j,k,x0,y0,z0,dx=",i,j,k,x0,y0,z0,dx
-             write(*,*) "rho0=",rho0
+!             write(*,*) "DEBUG from gauge.f"
+!             write(*,*) "i,j,k,x0,y0,z0,dx=",i,j,k,x0,y0,z0,dx
+!             write(*,*) "rho0=",rho0
 
 !        write(*,*) 'DEBUG from gauge.f'
 !        write(*,*) 'L,x0,y0,z0,rho0,dx=',L,x0,y0,z0,rho0,dx

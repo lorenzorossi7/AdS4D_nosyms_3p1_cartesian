@@ -5,13 +5,13 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.1
+phi1_amp_1 := 2.0
 phi1_r0_1 := 0.0
-phi1_delta_1 := 0.6
+phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
 phi1_ecc_1 := [0 0 0]
-phi1_B_1 := 0.07
-phi1_C_1 := 0.08
+phi1_B_1 := 0.06
+phi1_C_1 := 0.07
 
 rhoc := 0.4
 rhod := 0.8
@@ -34,7 +34,8 @@ AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 17
 AH_freq := 1
 AH_freq_aft := 1
-ex_rbuf := 0.35
+#excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary is there is no BH) is
+ex_rbuf := 0.65
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_lambda_2 := 0.0000001
