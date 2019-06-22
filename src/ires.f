@@ -9,6 +9,7 @@ c----------------------------------------------------------------------
      &                  efe_yy_ires,
      &                  efe_yz_ires,
      &                  efe_psi_ires,
+     &                  kretsch,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -73,7 +74,7 @@ c----------------------------------------------------------------------
 
         integer is,ie,js,je,ks,ke
 
-        integer i1,j1,k1,a,b,c,d,e
+        integer i1,j1,k1,a,b,c,d,e,f,g,h
         real*8 efe_ires(4,4)
 
         real*8 PI
@@ -117,6 +118,8 @@ c----------------------------------------------------------------------
         real*8 nufx,nuxfx(4),gamxfxfx(4)
 
         real*8 theta(Nx,Ny,Nz)
+
+        real*8 kretsch(Nx,Ny,Nz)
 
 !!!!!!!DEBUGGING!!!!!!
         integer max_i,max_j,max_k
@@ -484,10 +487,41 @@ c----------------------------------------------------------------------
 !                end do
 !              end do
 !
+
+               kretsch(i,j,k)=0.0d0
+       
+               do a=1,4
+                do b=1,4
+                 do c=1,4
+                  do d=1,4
+                   do e=1,4
+                    do f=1,4
+                     do g=1,4
+                      do h=1,4
+       
+                       kretsch(i,j,k)=kretsch(i,j,k)
+     &                         +riemann_ulll(a,b,c,d)
+     &                         *g0_ll(a,e)*g0_uu(b,f)*g0_uu(c,g)
+     &                         *g0_uu(d,h)*riemann_ulll(e,f,g,h)
+       
+                      end do
+                     end do
+                    end do
+                   end do
+                  end do
+                 end do
+                end do
+               end do
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) 'kretsch(i,j,k)=',kretsch(i,j,k)
+
+
             end if
            end do
           end do
         end do
+
 
 !!!!!DEBUGGING!!!!!!!
 !        max_efe_all_ires=0.0d0

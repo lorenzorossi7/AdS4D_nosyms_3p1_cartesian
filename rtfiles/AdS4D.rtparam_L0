@@ -5,20 +5,20 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 2.0
+phi1_amp_1 := 0.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
 phi1_ecc_1 := [0 0 0]
-phi1_B_1 := 0.06
-phi1_C_1 := 0.07
+phi1_B_1 := 0.0
+phi1_C_1 := 0.0
 
 rhoc := 0.4
 rhod := 0.8
 stype := 0
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 0.0
+ief_bh_r0 := 0.6
 
 #AH-finder#
 AH_Lmin := 1
@@ -34,8 +34,8 @@ AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 17
 AH_freq := 1
 AH_freq_aft := 1
-#excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary is there is no BH) is
-ex_rbuf := 0.65
+#excision buffer, i.e. how wide the region to evolve within the AH (or within the AdS boundary if there is no BH) is
+ex_rbuf := 0.35
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_lambda_2 := 0.0000001
@@ -60,7 +60,7 @@ AH_tmin := 5.85
 #        (also, skip_constraints=1 && ief_bh_r0!=0 for adsbh initial data) 
  
 background := 0
-skip_constraints := 0
+skip_constraints := 1
 output_ires := 1
 output_quasiset := 1
 
@@ -182,7 +182,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 10000
+steps := 1
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -211,8 +211,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 9
+save_1_vars := [ "iresall" "gb_res" "kretsch" "quasiset_tt" "quasiset_tchi" "quasiset_txi" "quasiset_chichi" "quasiset_chixi" "quasiset_xixi" ]
 
 num_save_2_vars := 15
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]

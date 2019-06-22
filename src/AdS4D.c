@@ -140,9 +140,8 @@ real *efe_tt_ires,*efe_tx_ires,*efe_ty_ires;
 real *efe_tz_ires;
 real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires,*efe_psi_ires;
 real *efe_xz_ires,*efe_yz_ires;
-real *quasiset_tt,*quasiset_tx,*quasiset_ty;
-real *quasiset_xx,*quasiset_xy,*quasiset_yy;
-real *quasiset_psi;
+real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
+real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
 real *quasiset_mass;
 real *kretsch;
 
@@ -213,9 +212,8 @@ int efe_tt_ires_gfn,efe_tx_ires_gfn,efe_ty_ires_gfn;
 int efe_tz_ires_gfn;
 int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_psi_ires_gfn;
 int efe_xz_ires_gfn,efe_yz_ires_gfn;
-int quasiset_tt_gfn,quasiset_tx_gfn,quasiset_ty_gfn;
-int quasiset_xx_gfn,quasiset_xy_gfn,quasiset_yy_gfn;
-int quasiset_psi_gfn;
+int quasiset_tt_gfn,quasiset_tchi_gfn,quasiset_txi_gfn;
+int quasiset_chichi_gfn,quasiset_chixi_gfn,quasiset_xixi_gfn;
 int quasiset_mass_gfn;
 int kretsch_gfn;
 
@@ -247,6 +245,22 @@ int gu_xy_gfn,gu_xz_gfn,gu_yy_gfn,gu_yz_gfn,gu_psi_gfn,m_g_det_gfn;
 real *AH_theta[MAX_BHS],*AH_R[MAX_BHS],*AH_w1[MAX_BHS],*AH_w2[MAX_BHS],*AH_w3[MAX_BHS];
 real *AH_theta_ads[MAX_BHS];
 int *AH_lev[MAX_BHS],*AH_own[MAX_BHS];
+
+//=============================================================================
+// arrays holding quasiset of CFT on ESU at outer bdy
+//=============================================================================
+real *lquasiset_tt0,*lquasiset_tchi0,*lquasiset_txi0;
+real *lquasiset_chichi0,*lquasiset_chixi0,*lquasiset_xixi0;
+real *lquasiset_mass0;
+real *maxquasiset_tt0,*maxquasiset_tchi0,*maxquasiset_txi0;
+real *maxquasiset_chichi0,*maxquasiset_chixi0,*maxquasiset_xixi0;
+real *maxquasiset_mass0;
+real *minquasiset_tt0,*minquasiset_tchi0,*minquasiset_txi0;
+real *minquasiset_chichi0,*minquasiset_chixi0,*minquasiset_xixi0;
+real *minquasiset_mass0;
+real *quasiset_tt0,*quasiset_tchi0,*quasiset_txi0;
+real *quasiset_chichi0,*quasiset_chixi0,*quasiset_xixi0;
+real *quasiset_mass0;
 
 //=============================================================================
 // call after variables have been defined
@@ -396,12 +410,11 @@ void set_gfns(void)
     if ((efe_yz_ires_gfn    = PAMR_get_gfn("efe_yz_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((efe_psi_ires_gfn    = PAMR_get_gfn("efe_psi_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_tt_gfn    = PAMR_get_gfn("quasiset_tt",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_tx_gfn    = PAMR_get_gfn("quasiset_tx",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_ty_gfn    = PAMR_get_gfn("quasiset_ty",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_xx_gfn    = PAMR_get_gfn("quasiset_xx",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_xy_gfn    = PAMR_get_gfn("quasiset_xy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_yy_gfn    = PAMR_get_gfn("quasiset_yy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_psi_gfn    = PAMR_get_gfn("quasiset_psi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_tchi_gfn    = PAMR_get_gfn("quasiset_tchi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_txi_gfn    = PAMR_get_gfn("quasiset_txi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_chichi_gfn    = PAMR_get_gfn("quasiset_chichi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_chixi_gfn    = PAMR_get_gfn("quasiset_chixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_xixi_gfn    = PAMR_get_gfn("quasiset_xixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_mass_gfn    = PAMR_get_gfn("quasiset_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((kretsch_gfn    = PAMR_get_gfn("kretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_t_res_gfn  = PAMR_get_gfn("hb_t_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -663,12 +676,11 @@ void ldptr(void)
    efe_yz_ires  = gfs[efe_yz_ires_gfn-1];
    efe_psi_ires  = gfs[efe_psi_ires_gfn-1];
    quasiset_tt  = gfs[quasiset_tt_gfn-1];
-   quasiset_tx  = gfs[quasiset_tx_gfn-1];
-   quasiset_ty  = gfs[quasiset_ty_gfn-1];
-   quasiset_xx  = gfs[quasiset_xx_gfn-1];
-   quasiset_xy  = gfs[quasiset_xy_gfn-1];
-   quasiset_yy  = gfs[quasiset_yy_gfn-1];
-   quasiset_psi  = gfs[quasiset_psi_gfn-1];
+   quasiset_tchi  = gfs[quasiset_tchi_gfn-1];
+   quasiset_txi  = gfs[quasiset_txi_gfn-1];
+   quasiset_chichi  = gfs[quasiset_chichi_gfn-1];
+   quasiset_chixi  = gfs[quasiset_chixi_gfn-1];
+   quasiset_xixi  = gfs[quasiset_xixi_gfn-1];
    quasiset_mass  = gfs[quasiset_mass_gfn-1];
    kretsch  = gfs[kretsch_gfn-1];
    hb_t_res  = gfs[hb_t_res_gfn-1];
@@ -1014,6 +1026,39 @@ void AdS4D_var_post_init(char *pfile)
 
    rhoc=1; AMRD_real_param(pfile,"rhoc",&rhoc,1);
    rhod=1; AMRD_real_param(pfile,"rhod",&rhod,1);
+
+   lquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   lquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   maxquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   minquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
+   quasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
 
    ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
 
@@ -1477,6 +1522,7 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kretsch,
          gb_tt_n,gb_tt_nm1,gb_tt_np1,
          gb_tx_n,gb_tx_nm1,gb_tx_np1,
          gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -1507,6 +1553,7 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kretsch,
          gb_tt_np1,gb_tt_n,gb_tt_nm1,
          gb_tx_np1,gb_tx_n,gb_tx_nm1,
          gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -1814,6 +1861,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
 {
    int i,j,k,ind,l;
    real x,y,z,dx,dy,dz,rho,xp,yp,zp,ex_r_xp,ex_r_yp,ex_r_zp,r;
+   real xlast,ylast,zlast,rholast;
 
    dx=(bbox[1]-bbox[0])/(shape[0]-1);
    dy=(bbox[3]-bbox[2])/(shape[1]-1);
@@ -1830,6 +1878,13 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
          z=bbox[4]+k*dz;
          rho=sqrt(x*x+y*y+z*z);
          ind=i+shape[0]*(j+shape[1]*k);
+
+//         xlast=bbox[0]+shape[0]*dx;
+//         ylast=bbox[2]+shape[1]*dy;
+//         zlast=bbox[4]+shape[2]*dz;
+//         rholast=sqrt(xlast*xlast+ylast*ylast+zlast*zlast);
+//         printf("EX_MASK: xlast=%lf,ylast=%lf,zlast=%lf,rholast=%lf\n",xlast,ylast,zlast,rholast);
+//         printf("EX_MASK: dx=%lf,dx_Lc=%lf\n",dx,dx_Lc);
 
          if (rho>=(1-dx_Lc/2)) 
          {
@@ -1907,7 +1962,7 @@ void AdS4D_pre_tstep(int L)
 
    int n,i,j,k,l,Lf,Lc;
 
-   int is,ie,js,je;
+   int is,ie,js,je,ks,ke;
 
    real rh,mh,rhoh;
 
@@ -1923,6 +1978,74 @@ void AdS4D_pre_tstep(int L)
       for (l=0; l<MAX_BHS; l++) { AH_count[l]=found_AH[l]=found_count_AH[l]=0; freq0[l]=AH_freq[l]; }
       pre_tstep_global_first=0;
    }
+
+//   // initialize qs objects at t=0, when at coarsest level L=Lc
+//   if (L==Lc && ct==0)
+//   {
+//     int lsteps=AMRD_lsteps[Lc-1];
+//     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+//     int baseNx=AMRD_base_shape[0];
+//     int baseNy=AMRD_base_shape[1];
+//     int baseNz=AMRD_base_shape[2];
+//     real lmass,mass;
+//
+//     valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
+//     while(valid)
+//     {
+//       ldptr();
+//
+////       printf("my rank is %i",my_rank);
+//       //(NOTE: for t=t0, have *not* cycled time sequence, so still np1,n,nm1,
+//       //       // so here, time level np1 is the most advanced time level)
+//       quasiset_(
+//          gb_tt_np1,gb_tt_n,gb_tt_nm1,
+//          gb_tx_np1,gb_tx_n,gb_tx_nm1,
+//          gb_ty_np1,gb_ty_n,gb_ty_nm1,
+//          gb_tz_np1,gb_tz_n,gb_tz_nm1,
+//          gb_xx_np1,gb_xx_n,gb_xx_nm1,
+//          gb_xy_np1,gb_xy_n,gb_xy_nm1,
+//          gb_xz_np1,gb_xz_n,gb_xz_nm1,
+//          gb_yy_np1,gb_yy_n,gb_yy_nm1,
+//          gb_yz_np1,gb_yz_n,gb_yz_nm1,
+//          psi_np1,psi_n,psi_nm1,
+//          quasiset_tt,quasiset_tchi,quasiset_txi,quasiset_chichi,quasiset_chixi,quasiset_xixi,quasiset_mass,
+//          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//
+//       is=(bbox[0]-base_bbox[0])/dx;
+//       ie=(bbox[1]-base_bbox[0])/dx+1;
+//       js=(bbox[2]-base_bbox[2])/dy;    // for "left-most"  processors, includes j=0
+//       je=(bbox[3]-base_bbox[2])/dy+1;  // for "right-most" processors, includes j=Ny
+//       ks=(bbox[4]-base_bbox[4])/dz;    // for "left-most"  processors, includes k=0
+//       ke=(bbox[5]-base_bbox[4])/dz+1;  // for "right-most" processors, includes k=Nz
+//
+//       for (n=0; n<ivecNt; n++)
+//       {
+//         // check ownership if this proc is responsible for rho=1
+//         if (n==0 && (phys_bdy[0]==1||phys_bdy[1]==1||phys_bdy[2]==1||phys_bdy[3]==1||phys_bdy[4]==1||phys_bdy[5]==1))
+//         {
+//          for (i=is;i<ie;i++)
+//          {
+//           for (j=js; j<je; j++)
+//           {
+//             for (k=ks; k<ke; k++)
+//             {
+//               lquasiset_tt0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_tt[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_tchi0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_tchi[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_txi0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_txi[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_chichi0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_chichi[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_chixi0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_chixi[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_xixi0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_xixi[i-is+Nx*((j-js)+Ny*(k-ks))];
+//               lquasiset_mass0[n+ivecNt*(i+baseNx*(j+baseNy*k))]=quasiset_mass[i-is+Nx*((j-js)+Ny*(k-ks))];
+//             }
+//           }
+//          }
+//         }
+//       }
+//
+//       valid=PAMR_next_g();
+//     }
+//
+//   }
 
 //   // search for AHs at t>0
 //  int ah_finder_is_off=1;
@@ -2132,6 +2255,37 @@ void AdS4D_post_tstep(int L)
 
    Lf=PAMR_get_max_lev(PAMR_AMRH);
    Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
+
+//   // qs objects at t>0, when at coarsest level L=Lc
+//   if (L==Lc)
+//   {
+//     int lsteps=AMRD_lsteps[Lc-1];
+//     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+//     real lmass,mass;
+//
+//     valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
+//     while(valid)
+//     {
+//       ldptr();
+//
+////       printf("my rank is %i",my_rank);
+//       quasiset_(
+//          gb_tt_n,gb_tt_nm1,gb_tt_np1,
+//          gb_tx_n,gb_tx_nm1,gb_tx_np1,
+//          gb_ty_n,gb_ty_nm1,gb_ty_np1,
+//          gb_tz_n,gb_tz_nm1,gb_tz_np1,
+//          gb_xx_n,gb_xx_nm1,gb_xx_np1,
+//          gb_xy_n,gb_xy_nm1,gb_xy_np1,
+//          gb_xz_n,gb_xz_nm1,gb_xz_np1,
+//          gb_yy_n,gb_yy_nm1,gb_yy_np1,
+//          gb_yz_n,gb_yz_nm1,gb_yz_np1,
+//          psi_n,psi_nm1,psi_np1,
+//          quasiset_tt,quasiset_tchi,quasiset_txi,quasiset_chichi,quasiset_chixi,quasiset_xixi,quasiset_mass,
+//          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//
+//       valid=PAMR_next_g();
+//     }
+//   }
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 
