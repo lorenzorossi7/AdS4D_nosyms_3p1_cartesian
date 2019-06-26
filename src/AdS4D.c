@@ -145,6 +145,7 @@ real *quasiset_xx,*quasiset_xy,*quasiset_yy;
 real *quasiset_psi;
 real *quasiset_mass;
 real *kretsch;
+real *relkretsch;
 
 real *tfunction,*test1,*test2,*test3,*test4;
 real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*irespsi;
@@ -218,6 +219,7 @@ int quasiset_xx_gfn,quasiset_xy_gfn,quasiset_yy_gfn;
 int quasiset_psi_gfn;
 int quasiset_mass_gfn;
 int kretsch_gfn;
+int relkretsch_gfn;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
 int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
@@ -404,6 +406,7 @@ void set_gfns(void)
     if ((quasiset_psi_gfn    = PAMR_get_gfn("quasiset_psi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_mass_gfn    = PAMR_get_gfn("quasiset_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((kretsch_gfn    = PAMR_get_gfn("kretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((relkretsch_gfn    = PAMR_get_gfn("relkretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_t_res_gfn  = PAMR_get_gfn("hb_t_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_i_res_gfn  = PAMR_get_gfn("hb_i_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_0_gfn  = PAMR_get_gfn("Hb_t_0",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -671,6 +674,7 @@ void ldptr(void)
    quasiset_psi  = gfs[quasiset_psi_gfn-1];
    quasiset_mass  = gfs[quasiset_mass_gfn-1];
    kretsch  = gfs[kretsch_gfn-1];
+   relkretsch  = gfs[relkretsch_gfn-1];
    hb_t_res  = gfs[hb_t_res_gfn-1];
    hb_i_res  = gfs[hb_i_res_gfn-1];
    Hb_t_0  = gfs[Hb_t_0_gfn-1];
@@ -1477,6 +1481,8 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kretsch,
+         relkretsch,
          gb_tt_n,gb_tt_nm1,gb_tt_np1,
          gb_tx_n,gb_tx_nm1,gb_tx_np1,
          gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -1507,6 +1513,8 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kretsch,
+         relkretsch,
          gb_tt_np1,gb_tt_n,gb_tt_nm1,
          gb_tx_np1,gb_tx_n,gb_tx_nm1,
          gb_ty_np1,gb_ty_n,gb_ty_nm1,
