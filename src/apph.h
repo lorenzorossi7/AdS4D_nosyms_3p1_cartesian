@@ -37,7 +37,7 @@ void ah_is_int_(int *is_int, real *AH_R, real *AH_xc, int *i, int *j, real *bbox
 void ah_fill_own_(real *AH_R, real *AH_xc, int *AH_own, int *AH_lev, real *bbox, real *dx, real *dy, real *dz, 
                  int *rank, int *AdS_L, int *AH_Nchi, int *AH_Nphi, int *axisym);
 
-void ah_fill_f_(real *AH_R, real *AH_xc, real *f, int *is, int *ie, int *js, int *je, 
+void ah_fill_f_(real *AH_R, real *AH_xc, real *f, int *is, int *ie, int *js, int *je, int *ks, int *ke,
                 real *x, real *y, real *z, int *AH_Nchi, int *AH_Nphi, int *Nx, int *Ny, int *Nz, int *axisym);
 
 void calc_exp0_(real *AH_R, real *AH_xc, real *AH_theta, int *i0, int *j0, int *AH_Nchi,int *AH_Nphi, real *theta, real *f, real *da, real *d_ceq, real *d_cp,

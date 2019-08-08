@@ -749,7 +749,7 @@ c-----------------------------------------------------------------------
         implicit none
         integer axisym
         integer is,ie,js,je,ks,ke,AH_Nchi,AH_Nphi,Nx,Ny,Nz
-        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
+        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(3)
         real*8 x(Nx),y(Ny),z(Nz),f(Nx,Ny,Nz)
         
         integer i,j,k,i0,j0,is0,ie0,js0,je0,ks0,ke0
@@ -783,14 +783,12 @@ c-----------------------------------------------------------------------
         dy=y(2)-y(1)
         dz=z(2)-z(1)
 
-        if (AH_xc(2).lt.dy) then
-          dahchi=PI/(AH_Nchi-1)
-        else
-          dahchi=2*PI/(AH_Nchi-1)
-        end if
+        dahchi=PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nchi-1)
 
         xb0=AH_xc(1)
         yb0=AH_xc(2)
+        zb0=AH_xc(3)
 
         is0=is
         js0=js
@@ -806,25 +804,22 @@ c-----------------------------------------------------------------------
               do k=ks0,ke0 
                  zb=z(k)
 
-                 !xb,yb: cartesian coordinates of some point "not on, but near" AH, wrt origin
-                 !AH_xc(1),AH_xc(2): cartesian coordinates of center of AH, wrt origin
+                 !xb,yb,zb: cartesian coordinates of some point "not on, but near" AH, wrt origin
+                 !AH_xc(1),AH_xc(2),AH_xc(3): cartesian coordinates of center of AH, wrt origin
                  !r,AH_chi,AH_phi polar coordinates of the point "not on, but near" AH, wrt center of AH
                  !AH_R,AH_chi,AH_phi: polar coordinates of point "projected" on AH, wrt center of AH)
                  r=sqrt( (xb-AH_xc(1))**2
-     &                  +(yb-AH_xc(2))**2 )
-                 AH_chi=atan2( yb-AH_xc(2),xb-AH_xc(1) )
-                 AH_phi=0
-                 if (AH_chi.lt.0) AH_chi=AH_chi+2*PI
+     &                  +(yb-AH_xc(2))**2 
+     &                  +(zb-AH_xc(3))**2 )
+                 AH_chi=acos( zb-AH_xc(3)/r )
+                 AH_phi=atan2( yb-AH_xc(2),xb-AH_xc(1) )
+                 if (AH_phi.lt.0) AH_phi=AH_phi+2*PI
 
                  !-----------------------------------------------------
                  ! bi-linear interpolate in AH_chi and AH_phi
                  !-----------------------------------------------------
                  i0=min(int(AH_chi/dahchi+1),AH_Nchi-1)
-                 if (axisym.eq.0) then
-                    j0=min(int(AH_phi/dahphi+1),AH_Nphi-1)
-                 else
-                    j0=1
-                 end if
+                 j0=min(int(AH_phi/dahphi+1),AH_Nphi-1)
 
                  if (r.eq.0) then
 !                   write(*,*) 'WARNING!!! i0 being set to 1'
@@ -851,20 +846,15 @@ c-----------------------------------------------------------------------
                  ft=((AH_chi-(i0-1)*dahchi))/dahchi
                  fp=((AH_phi-(j0-1)*dahphi))/dahphi
 
-                 if (axisym.eq.0) then
-                    rtp=AH_R(i0,j0)*(1-ft)*(1-fp)+
+                 rtp=AH_R(i0,j0)*(1-ft)*(1-fp)+
      &               AH_R(i0+1,j0)*(ft)*(1-fp)+
      &               AH_R(i0,j0+1)*(1-ft)*(fp)+
      &               AH_R(i0+1,j0+1)*(ft)*(fp)
-                 else
-                    rtp=AH_R(i0,j0)*(1-ft)+
-     &                  AH_R(i0+1,j0)*(ft)
-                 end if
 
                  f(i,j,k)=r-rtp
 
                  if (ltrace) then
-                    write(*,*) 'xb,yb=',xb,yb
+                    write(*,*) 'xb,yb,zb=',xb,yb,zb
                     write(*,*) 'AH_R(i0,j0)',AH_R(i0,j0)
                     write(*,*) 'AH_chi,AH_phi=',AH_chi,AH_phi
                     write(*,*) 'r=',r
@@ -913,7 +903,7 @@ c-----------------------------------------------------------------------
         implicit none
         integer axisym
         integer Nx,Ny,Nz,i0,j0,AH_Nchi,AH_Nphi,do_ex
-        real*8 theta(Nx,Ny,Nz),f(Nx,Ny,Nz),AH_xc(2),da,d_ceq,d_cp
+        real*8 theta(Nx,Ny,Nz),f(Nx,Ny,Nz),AH_xc(3),da,d_ceq,d_cp
         real*8 AH_R(AH_Nchi,AH_Nphi),AH_theta(AH_Nchi,AH_Nphi)
         real*8 chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
@@ -1421,7 +1411,7 @@ c-----------------------------------------------------------------------
         implicit none
         integer axisym
         integer AH_Nchi,AH_Nphi
-        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
+        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(3)
         
         integer i,j
         real*8 dahchi,dahphi,AH_chi,AH_phi
