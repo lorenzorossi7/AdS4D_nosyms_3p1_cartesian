@@ -1403,8 +1403,14 @@ c-----------------------------------------------------------------------
 !        end do
 
         ! set by zero-derivative extrapolation
-        AH_R(1,1)=(AH_R(2,1)*4-AH_R(3,1))/3
-        AH_R(AH_Nchi,1)=(AH_R(AH_Nchi-1,1)*4-AH_R(AH_Nchi-2,1))/3
+        do i=1,AH_Nchi
+           AH_R(i,1)=(AH_R(i,2)*4-AH_R(i,3))/3
+           AH_R(i,AH_Nphi)=(AH_R(i,AH_Nphi-1)*4-AH_R(i,AH_Nphi-1))/3
+        end do
+        do j=1,AH_Nphi
+           AH_R(1,j)=(AH_R(2,j)*4-AH_R(3,j))/3
+           AH_R(AH_Nchi,j)=(AH_R(AH_Nchi-1,j)*4-AH_R(AH_Nchi-2,j))/3
+        end do
 
         return 
         end
@@ -1455,30 +1461,30 @@ c-----------------------------------------------------------------------
         ymax=0
         zmax=0
 
-        if (AH_xc(2).lt.dy) then
-          dahchi=PI/(AH_Nchi-1)
-        else
-          dahchi=2*PI/(AH_Nchi-1)
-        end if
+        dahchi=PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nchi-1)
 
         do i=1,AH_Nchi
            AH_chi=(i-1)*dahchi
            do j=1,AH_Nphi
               AH_phi=(j-1)*dahphi
 
-              !x0,y0 cartesian coordinates of point on AH, wrt center of AH
+              !x0,y0,z0 cartesian coordinates of point on AH, wrt center of AH
               !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
-              x0=AH_R(i,j)*cos(AH_chi)
-              y0=AH_R(i,j)*sin(AH_chi)
+              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
 
               xmin=min(xmin,x0)
               xmax=max(xmax,x0)
               ymin=min(ymin,y0)
               ymax=max(ymax,y0)
+              zmin=min(zmin,z0)
+              zmax=max(zmax,z0)
            end do
         end do
 
-        ! for now, don't move xc (yc) when xc=0 (yc=0)
+        ! for now, don't move xc (yc,zc) when xc=0 (yc=0,zc=0)
         if (AH_xc(1).eq.0) then
           dx0=0
         else
@@ -1489,14 +1495,21 @@ c-----------------------------------------------------------------------
         else
           dy0=(ymax+ymin)/2
         end if
+        if (AH_xc(3).eq.0) then
+          dz0=0
+        else
+          dz0=(zmax+zmin)/2
+        end if
 
         AH_xc(1)=AH_xc(1)+dx0
         AH_xc(2)=AH_xc(2)+dy0
+        AH_xc(3)=AH_xc(3)+dz0
 
         if (ltrace) then
           write(*,*) '-----------------------------------'
           write(*,*) 'dx0,AH_xc(1)=',dx0,AH_xc(1)
           write(*,*) 'dy0,AH_xc(2)=',dy0,AH_xc(2)
+          write(*,*) 'dz0,AH_xc(3)=',dz0,AH_xc(3)
         end if
 
         do i=1,AH_Nchi
@@ -1504,16 +1517,17 @@ c-----------------------------------------------------------------------
            do j=1,AH_Nphi
               AH_phi=(j-1)*dahphi
 
-              !x0,y0 cartesian coordinates of point on AH, wrt center of AH
+              !x0,y0,z0 cartesian coordinates of point on AH, wrt center of AH
               !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
-              ! FIX: WHY IS CSX,CSY USED HERE? WHY NOT JUST
-              ! AH_R=SQRT((ABS(X)-DX)^2+(ABS(Y)-DY)^2)
-              x0=AH_R(i,j)*cos(AH_chi)
-              y0=AH_R(i,j)*sin(AH_chi)
+              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
               csx=x0/AH_R(i,j)
               csy=y0/AH_R(i,j)
+              csz=z0/AH_R(i,j)
               AH_R(i,j)=sqrt((abs(x0)-csx*dx0)**2+
-     &                       (abs(y0)-csy*dy0)**2)
+     &                       (abs(y0)-csy*dy0)**2+
+     &                       (abs(z0)-csz*dz0)**2)
 
            end do
         end do
