@@ -1,5 +1,5 @@
 c----------------------------------------------------------------------
-c in cartesian coordinates t,x,y for x in [-1,1], y in [0,1]
+c in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
 c
 c routines associated with the source functions
 c----------------------------------------------------------------------

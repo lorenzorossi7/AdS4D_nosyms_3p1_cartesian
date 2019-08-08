@@ -1,5 +1,5 @@
 c----------------------------------------------------------------------
-c in cartesian coordinates t,x,y
+c in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
 c
 c routines for computing y=0 axis regularity conditions for
 c metric and scalar fied

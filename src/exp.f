@@ -1,5 +1,5 @@
 c----------------------------------------------------------------------
-c in cartesian coordinates t,x,y,z for x in [0,1], y in [0,1], z in [-1,1]
+c in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
 c
 c support routines for apph.c
 c

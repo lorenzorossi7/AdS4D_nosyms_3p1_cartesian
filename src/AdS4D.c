@@ -1,5 +1,5 @@
 //============================================================================
-// in cartesian coordinates t,x,y for x in [-1,1], y in [0,1]
+// in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
 // using r=2*rho/(1-rho^2) compactification for rho=sqrt(x^2+y^2)
 //
 // application interface functions for AdS4D

@@ -1,5 +1,5 @@
 //=============================================================================
-// in cartesian coordinates t,x,y,z for x in [0,1], y in [0,1], z in [-1,1]
+// in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
 //
 // NOTES: ==> uses the global variables of AdS4D
 //        ==> hierarchy between Lmin and Lmax must be in-sync
