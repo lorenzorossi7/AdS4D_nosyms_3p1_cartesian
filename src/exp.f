@@ -43,13 +43,13 @@ c----------------------------------------------------------------------
 c----------------------------------------------------------------------
 c the following computes the outgoing null expansion (theta) 
 c
-c f is the level-surface function, and [is0..ie0,js0..je0] specifies
+c f is the level-surface function, and [is0..ie0,js0..je0,ks0..ke0] specifies
 c the region overwhich theta should be computed
 c
 c is_ex is set to 1 if couldn't compute expansion an some point due
 c to closeness of an excised region.
 c----------------------------------------------------------------------
-        subroutine calc_exp(theta,f,is0,ie0,js0,je0,is_ex,
+        subroutine calc_exp(theta,f,is0,ie0,js0,je0,ks0,ke0,is_ex,
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -63,7 +63,7 @@ c----------------------------------------------------------------------
      &                    L,x,y,z,dt,chr,ex,do_ex,
      &                    Nx,Ny,Nz)
         implicit none
-        integer Nx,Ny,Nz,is0,ie0,js0,je0,do_ex
+        integer Nx,Ny,Nz,is0,ie0,js0,je0,ks0,ke0,do_ex
         integer is_ex
         real*8 theta(Nx,Ny,Nz),f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
@@ -79,7 +79,7 @@ c----------------------------------------------------------------------
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
 
-        integer i,j,k,is,ie,js,je
+        integer i,j,k,is,ie,js,je,ks,ke
         integer a,b,c,d,e
 
         real*8 PI
@@ -132,7 +132,7 @@ c----------------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
         data i,j,k/0,0,0/
-        data is,ie,js,je/0,0,0,0/
+        data is,ie,js,je,ks,ke/0,0,0,0,0,0/
 
         data x0,y0,z0/0.0,0.0,0.0/
         data dx,dy,dz/0.0,0.0,0.0/
@@ -195,7 +195,7 @@ c----------------------------------------------------------------------
 
         do i=is0,ie0
           do j=js0,je0
-           do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+           do k=ks0,ke0 
            theta(i,j,k)=1.0d0
            end do
           end do
@@ -208,10 +208,8 @@ c----------------------------------------------------------------------
         ie=min(Nx-1,ie0)
         js=max(2,js0)
         je=min(Ny-1,je0)
-!        if (x(1) .lt.0+dx/2 .and.is.eq.2     ) is=3     !REMOVE
-!        if (x(Nx).gt.1-dx/2 .and.ie.eq.(Nx-1)) ie=Nx-2 
-!        if (y(1) .lt.0+dy/2 .and.js.eq.2     ) js=3 
-!        if (y(Ny).gt.1-dy/2 .and.je.eq.(Ny-1)) je=Ny-2
+        ks=max(2,ks0)
+        ke=min(Nz-1,ke0)
 
         do i=is,ie
           do j=js,je
@@ -426,16 +424,23 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
  
         do j=js,je
-         do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+         do k=ks,ke 
           if (is0.eq.1) theta(1,j,k)=theta(2,j,k)
           if (ie0.eq.Nx) theta(Nx,j,k)=theta(Nx-1,j,k)
          end do
         end do
 
-        do i=is-1,ie+1
-         do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+        do i=is,ie
+         do k=ks,ke 
           if (js0.eq.1) theta(i,1,k)=theta(i,2,k)
           if (je0.eq.Ny) theta(i,Ny,k)=theta(i,Ny-1,k)
+         end do
+        end do
+
+        do i=is,ie
+         do j=js,je 
+          if (ks0.eq.1) theta(i,j,1)=theta(i,j,2)
+          if (ke0.eq.Nz) theta(i,j,Nz)=theta(i,j,Nz-1)
          end do
         end do
 
@@ -753,15 +758,15 @@ c
 c AH_chi and AH_phi are measured relative to center of AH, which in
 c cartesian coordinates is given by AH_xc
 c-----------------------------------------------------------------------
-        subroutine ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,x,y,z,
+        subroutine ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,ks,ke,x,y,z,
      &                       AH_Nchi,AH_Nphi,Nx,Ny,Nz,axisym)
         implicit none
         integer axisym
-        integer is,ie,js,je,AH_Nchi,AH_Nphi,Nx,Ny,Nz
+        integer is,ie,js,je,ks,ke,AH_Nchi,AH_Nphi,Nx,Ny,Nz
         real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
         real*8 x(Nx),y(Ny),z(Nz),f(Nx,Ny,Nz)
         
-        integer i,j,k,i0,j0,is0,ie0,js0,je0
+        integer i,j,k,i0,j0,is0,ie0,js0,je0,ks0,ke0
         real*8 AH_chi,AH_phi,r,xb,yb,zb,dahchi,dahphi,ft,fp,rtp
         real*8 xb0,yb0,zb0
 
@@ -774,8 +779,7 @@ c-----------------------------------------------------------------------
         parameter (ltrace=.false.)
 
         ! initialize fixed-size variables
-        data i,j,k,i0,j0,is0,ie0/0,0,0,0,0,0,0/
-        data js0,je0/0,0/
+        data i,j,k,i0,j0,is0,ie0,js0,je0,ks0,ke0/0,0,0,0,0,0,0,0,0,0,0/
 
         data AH_chi,AH_phi,r,xb,yb,zb/0.0,0.0,0.0,0.0,0.0,0.0/
         data dahchi,dahphi,ft,fp,rtp/0.0,0.0,0.0,0.0,0.0/
@@ -786,7 +790,7 @@ c-----------------------------------------------------------------------
 
         if (ltrace) then
            write(*,*) 'ah_fill_f:'
-           write(*,*) 'is,ie,js,je:',is,ie,js,je
+           write(*,*) 'is,ie,js,je,ks,ke:',is,ie,js,je,ks,ke
         end if
 
         dx=x(2)-x(1)
@@ -804,19 +808,16 @@ c-----------------------------------------------------------------------
 
         is0=is
         js0=js
+        ks0=ks
         ie0=ie
         je0=je
-
-!        if (is0.eq.1.and.abs(x(1)+1).lt.1.0d-10) is0=2      !REMOVE
-!        if (js0.eq.1.and.abs(y(1)+1).lt.1.0d-10) js0=2
-!        if (ie0.eq.Nx.and.abs(x(Nx)-1).lt.1.0d-10) ie0=Nx-1
-!        if (je0.eq.Ny.and.abs(y(Ny)-1).lt.1.0d-10) je0=Ny-1
+        ke0=ke
 
         do i=is0,ie0
            xb=x(i)
            do j=js0,je0
               yb=y(j)
-              do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+              do k=ks0,ke0 
                  zb=z(k)
 
                  !xb,yb: cartesian coordinates of some point "not on, but near" AH, wrt origin
@@ -848,6 +849,7 @@ c-----------------------------------------------------------------------
 !                    write(*,*) 'xb,yb=',xb,yb
 !                    write(*,*) 'is,ie=',is,ie
 !                    write(*,*) 'js,je=',js,je
+!                    write(*,*) 'ks,ke=',ks,ke
 !                    write(*,*) 'i,j=',i,j
 !                    write(*,*) 'AH_R(i0,j0)',AH_R(i0,j0)
 !                    write(*,*) 'AH_chi,AH_phi=',AH_chi,AH_phi
@@ -1085,7 +1087,7 @@ c-----------------------------------------------------------------------
         ks=max(1,k-2)
         ke=min(Nz,k+3)
 
-        call ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,x,y,z,
+        call ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,ks,ke,x,y,z,
      &              AH_Nchi,AH_Nphi,Nx,Ny,Nz,axisym)
 
         is=i
@@ -1118,7 +1120,7 @@ c-----------------------------------------------------------------------
            end do
         end if
 
-        call calc_exp(theta,f,is,ie,js,je,is_ex,
+        call calc_exp(theta,f,is,ie,js,je,ks,ke,is_ex,
      &             gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &             gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &             gb_ty_np1,gb_ty_n,gb_ty_nm1,
