@@ -944,7 +944,7 @@ void AdS4D_var_pre_init(char *pfile)
 
 void AdS4D_var_post_init(char *pfile)
 {
-   int i,j,ind;
+   int i,j,l;
    char buf[64];
    real rmin,deltar;
 
@@ -1042,139 +1042,128 @@ void AdS4D_var_post_init(char *pfile)
    }
 
    // set AH parameters
-//   int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
-//
-//   use_AH_new_smooth=0; AMRD_int_param(pfile,"use_AH_new_smooth",&use_AH_new_smooth,1);
-//   use_AH_new=0; AMRD_int_param(pfile,"use_AH_new",&use_AH_new,1);
-//
-//   for (j=0; j<MAX_BHS; j++)
-//   {
-//      // because the AH shape is saved, we can't currently change that upon
-//      // a restart (unless we haven't yet found one)
-//      if (!AMRD_cp_restart || !found_AH[j])
-//      {
-//         if (AMRD_cp_restart) free(AH_R[j]);
-//         if (j==0) { AH_Nchi[j]=17; sprintf(buf,"AH_Nchi"); } 
-//         else { AH_Nchi[j]=AH_Nchi[0]; sprintf(buf,"AH_Nchi_%i",j+1); }
-//         AMRD_int_param(pfile,buf,&AH_Nchi[j],1);
-//
-//         AH_Nphi[j]=1;
-//
-//         if (!( ((AH_Nchi[j]-1)/2)==(AH_Nchi[j]/2) ) ||
-//             !( ((AH_Nphi[j]-1)/2)==(AH_Nphi[j]/2) ))
-//         { 
-//            printf("\n\n\n\n\n WARNING: SMOOTHING AND REGULARIZATION IN AH ROUTINES ASSUME\n"
-//                   " AN ODD NUMBER OF POINTS IN AH_Nchi and AH_Nphi\n\n\n\n\n");
-//         }
-//      }
-//
-//      if (j==0) { AH_find_best_fit[j]=0; sprintf(buf,"AH_find_best_fit"); }
-//      else { AH_find_best_fit[j]=AH_find_best_fit[0]; sprintf(buf,"AH_find_best_fit_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_find_best_fit[j],1);
-//
-//      if (j==0) { AH_Lmin[j]=2; sprintf(buf,"AH_Lmin"); }
-//      else { AH_Lmin[j]=AH_Lmin[0]; sprintf(buf,"AH_Lmin_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_Lmin[j],1);
-//
-//      if (j==0) { AH_Lmax[j]=100; sprintf(buf,"AH_Lmax"); }
-//      else { AH_Lmax[j]=AH_Lmax[0]; sprintf(buf,"AH_Lmax_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_Lmax[j],1);
-//
-//      if (j==0) { AH_max_iter[j]=0; sprintf(buf,"AH_max_iter"); }
-//      else { AH_max_iter[j]=AH_max_iter[0]; sprintf(buf,"AH_max_iter_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_max_iter[j],1);
-//
-//      if (j==0) { AH_freq[j]=1; sprintf(buf,"AH_freq"); }
-//      else { AH_freq[j]=AH_freq[0]; sprintf(buf,"AH_freq_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_freq[j],1);
-//
-//      if (j==0) { AH_freq_aft[j]=1; sprintf(buf,"AH_freq_aft"); }
-//      else { AH_freq_aft[j]=AH_freq_aft[0]; sprintf(buf,"AH_freq_aft_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_freq_aft[j],1);
-//
-//      if (AMRD_cp_restart)
-//      {
-//         if (found_AH[j]) freq0[j]=AH_freq_aft[j];
-//         else freq0[j]=AH_freq[j];
-//      }
-//
-//      if (j==0) { AH_rsteps[j]=1; sprintf(buf,"AH_rsteps"); }
-//      else { AH_rsteps[j]=AH_rsteps[0]; sprintf(buf,"AH_rsteps_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_rsteps[j],1);
-//
-//      if (j==0) { AH_maxinc[j]=10; sprintf(buf,"AH_maxinc"); }
-//      else { AH_maxinc[j]=AH_maxinc[0]; sprintf(buf,"AH_maxinc_%i",j+1); }
-//      AMRD_int_param(pfile,buf,&AH_maxinc[j],1);
-//
-//      if (j==0) { AH_tol[j]=1e-2; sprintf(buf,"AH_tol"); }
-//      else { AH_tol[j]=AH_tol[0]; sprintf(buf,"AH_tol_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_tol[j],1);
-//
-//      AH_tol_aft[j]=AH_tol[j];
-//      if (j==0) sprintf(buf,"AH_tol_aft"); else sprintf(buf,"AH_tol_aft_%i",j+1);
-//      AMRD_real_param(pfile,buf,&AH_tol_aft[j],1);
-//
-//      if (j==0) { AH_max_tol_inc[j]=1; sprintf(buf,"AH_max_tol_inc"); }
-//      else { AH_max_tol_inc[j]=AH_max_tol_inc[0]; sprintf(buf,"AH_max_tol_inc_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_max_tol_inc[j],1);
-//
-//      if (j==0) { AH_tol_scale[j]=1; sprintf(buf,"AH_tol_scale"); }
-//      else { AH_tol_scale[j]=AH_tol_scale[0]; sprintf(buf,"AH_tol_scale_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_tol_scale[j],1);
-//
-//      if (j==0) { AH_omt_scale[j]=1.1; sprintf(buf,"AH_omt_scale"); }
-//      else { AH_omt_scale[j]=AH_omt_scale[0]; sprintf(buf,"AH_omt_scale_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_omt_scale[j],1);
-//
-//      if (j==0) { AH_reset_scale[j]=0; sprintf(buf,"AH_reset_scale"); }
-//      else { AH_reset_scale[j]=AH_reset_scale[0]; sprintf(buf,"AH_reset_scale_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_reset_scale[j],1);
-//
-//      if (j==0) { AH_lambda_min[j]=0.1; sprintf(buf,"AH_lambda_min"); }
-//      else { AH_lambda_min[j]=AH_lambda_min[0]; sprintf(buf,"AH_lambda_min_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_lambda_min[j],1);
-//
-//      if (j==0) { AH_lambda[j]=0.1; sprintf(buf,"AH_lambda"); }
-//      else { AH_lambda[j]=AH_lambda[0]; sprintf(buf,"AH_lambda_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_lambda[j],1);
-//
-//      if (j==0) { AH_r0[j]=0.1; sprintf(buf,"AH_r0"); }
-//      else { AH_r0[j]=AH_r0[0]; sprintf(buf,"AH_r0_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_r0[j],1);
-//
-//      if (j==0) { AH_r1[j]=0.2; sprintf(buf,"AH_r1"); }
-//      else { AH_r1[j]=AH_r1[0]; sprintf(buf,"AH_r1_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_r1[j],1);
-//
-//      if (j==0) { AH_tmin[j]=0.0; sprintf(buf,"AH_tmin"); }
-//      else { AH_tmin[j]=AH_tmin[0]; sprintf(buf,"AH_tmin_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_tmin[j],1);
-//
-//      if (!AMRD_cp_restart || !found_AH[j])
-//      {
-//         AH_xc[j][0]=AH_xc[j][1]=0;
-//         if (j==0) sprintf(buf,"AH_xc");
-//         else sprintf(buf,"AH_xc_%i",j+1);
-//         AMRD_real_param(pfile,buf,AH_xc[j],AMRD_dim);
-//      }
-//
-//      if (j==0) { AH_eps[j]=0.0; sprintf(buf,"AH_eps"); }
-//      else { AH_eps[j]=AH_eps[0]; sprintf(buf,"AH_eps_%i",j+1); }
-//      AMRD_real_param(pfile,buf,&AH_eps[j],1);
-//
-//      if (AH_Nchi[j]<5 || (AMRD_dim==3 && AH_Nphi[j]<5)) AMRD_stop("error ... AH_Nchi<5 || AH_Nphi<5 \n","");
-//      if (AH_rsteps[j]<1) AMRD_stop("error ... AH_rsteps<1 \n","");
-//
-//      AH_theta[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      if (!AMRD_cp_restart) AH_R[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_w1[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_w2[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_w3[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_theta_ads[j]=(real *)malloc(sizeof(real)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_own[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
-//      AH_lev[j]=(int *)malloc(sizeof(int)*AH_Nchi[j]*AH_Nphi[j]);
-//
-//   }
+   int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
+   int found_count_AH[MAX_BHS];
+
+   for (l=0; l<MAX_BHS; l++)
+   {
+      // if restoring from check-point files, then this just searches for AH from scratch
+      if (AMRD_cp_restart) found_AH[l]=0;
+
+      // because the AH shape is saved, we can't currently change that upon a restart (unless we haven't yet found one)
+      if (!AMRD_cp_restart || !found_AH[l])
+      {
+         if (AMRD_cp_restart) free(AH_R[l]);
+         if (l==0) { AH_Nchi[l]=17; sprintf(buf,"AH_Nchi"); }
+         else { AH_Nchi[l]=AH_Nchi[0]; sprintf(buf,"AH_Nchi_%i",l+1); }
+         AMRD_int_param(pfile,buf,&AH_Nchi[l],1);
+
+         if (l==0) { AH_Nphi[l]=17; sprintf(buf,"AH_Nphi"); }
+         else { AH_Nphi[l]=AH_Nphi[0]; sprintf(buf,"AH_Nphi_%i",l+1); }
+         AMRD_int_param(pfile,buf,&AH_Nphi[l],1);
+
+         if (!( ((AH_Nchi[l]-1)/2)==(AH_Nchi[l]/2) ) ||
+             !( ((AH_Nphi[l]-1)/2)==(AH_Nphi[l]/2) ))
+         {
+            printf("\n\n\n\n\n WARNING: SMOOTHING AND REGULARIZATION IN AH ROUTINES ASSUME\n"
+                   " AN ODD NUMBER OF POINTS IN AH_Nchi,AH_Nphi\n\n\n\n\n");
+         }
+      }
+
+      if (l==0) { AH_Lmin[l]=2; sprintf(buf,"AH_Lmin"); }
+      else { AH_Lmin[l]=AH_Lmin[0]; sprintf(buf,"AH_Lmin_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_Lmin[l],1);
+
+      if (l==0) { AH_Lmax[l]=100; sprintf(buf,"AH_Lmax"); }
+      else { AH_Lmax[l]=AH_Lmax[0]; sprintf(buf,"AH_Lmax_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_Lmax[l],1);
+
+      if (l==0) { AH_max_iter[l]=0; sprintf(buf,"AH_max_iter"); }
+      else { AH_max_iter[l]=AH_max_iter[0]; sprintf(buf,"AH_max_iter_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_max_iter[l],1);
+
+      if (l==0) { AH_freq[l]=1; sprintf(buf,"AH_freq"); }
+      else { AH_freq[l]=AH_freq[0]; sprintf(buf,"AH_freq_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_freq[l],1);
+
+      if (l==0) { AH_freq_aft[l]=1; sprintf(buf,"AH_freq_aft"); }
+      else { AH_freq_aft[l]=AH_freq_aft[0]; sprintf(buf,"AH_freq_aft_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_freq_aft[l],1);
+
+      if (AMRD_cp_restart)
+      {
+         if (found_AH[l]) freq0[l]=AH_freq_aft[l];
+         else freq0[l]=AH_freq[l];
+      }
+
+      if (l==0) { AH_rsteps[l]=1; sprintf(buf,"AH_rsteps"); }
+      else { AH_rsteps[l]=AH_rsteps[0]; sprintf(buf,"AH_rsteps_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_rsteps[l],1);
+
+      if (l==0) { AH_maxinc[l]=10; sprintf(buf,"AH_maxinc"); }
+      else { AH_maxinc[l]=AH_maxinc[0]; sprintf(buf,"AH_maxinc_%i",l+1); }
+      AMRD_int_param(pfile,buf,&AH_maxinc[l],1);
+
+      if (l==0) { AH_tol[l]=1e-2; sprintf(buf,"AH_tol"); }
+      else { AH_tol[l]=AH_tol[0]; sprintf(buf,"AH_tol_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_tol[l],1);
+
+      AH_tol_aft[l]=AH_tol[l];
+      if (l==0) sprintf(buf,"AH_tol_aft"); else sprintf(buf,"AH_tol_aft_%i",l+1);
+      AMRD_real_param(pfile,buf,&AH_tol_aft[l],1);
+
+      if (l==0) { AH_r0[l]=0.1; sprintf(buf,"AH_r0"); }
+      else { AH_r0[l]=AH_r0[0]; sprintf(buf,"AH_r0_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_r0[l],1);
+
+      if (l==0) { AH_r1[l]=0.2; sprintf(buf,"AH_r1"); }
+      else { AH_r1[l]=AH_r1[0]; sprintf(buf,"AH_r1_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_r1[l],1);
+
+      if (l==0) { AH_lambda[l]=0.1; sprintf(buf,"AH_lambda"); }
+      else { AH_lambda[l]=AH_lambda[0]; sprintf(buf,"AH_lambda_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_lambda[l],1);
+
+      if (l==0) { AH_lambda_min[l]=0.1; sprintf(buf,"AH_lambda_min"); }
+      else { AH_lambda_min[l]=AH_lambda_min[0]; sprintf(buf,"AH_lambda_min_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_lambda_min[l],1);
+
+      if (l==0) { AH_eps[l]=0.0; sprintf(buf,"AH_eps"); }
+      else { AH_eps[l]=AH_eps[0]; sprintf(buf,"AH_eps_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_eps[l],1);
+
+      if (l==0) { AH_tmin[l]=0.0; sprintf(buf,"AH_tmin"); }
+      else { AH_tmin[l]=AH_tmin[0]; sprintf(buf,"AH_tmin_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_tmin[l],1);
+
+      if (l==0) { AH_reset_scale[l]=0; sprintf(buf,"AH_reset_scale"); }
+      else { AH_reset_scale[l]=AH_reset_scale[0]; sprintf(buf,"AH_reset_scale_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_reset_scale[l],1);
+
+      if (l==0) { AH_omt_scale[l]=1.1; sprintf(buf,"AH_omt_scale"); }
+      else { AH_omt_scale[l]=AH_omt_scale[0]; sprintf(buf,"AH_omt_scale_%i",l+1); }
+      AMRD_real_param(pfile,buf,&AH_omt_scale[l],1);
+
+      if (!AMRD_cp_restart || !found_AH[l])
+      {
+         AH_xc[l][0]=AH_xc[l][1]=0;
+         if (l==0) sprintf(buf,"AH_xc");
+         else sprintf(buf,"AH_xc_%i",l+1);
+         AMRD_real_param(pfile,buf,AH_xc[l],AMRD_dim);
+      }
+
+      if (AH_rsteps[l]<1) AMRD_stop("error ... AH_rsteps<1\n","");
+
+      AH_theta[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      if (!AMRD_cp_restart || !found_AH[l]) AH_R[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      AH_w1[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      AH_w2[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      AH_w3[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      AH_theta_ads[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+      AH_own[l]=(int *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(int));
+      AH_lev[l]=(int *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(int));
+
+   }
 
    ex_max_repop=0; AMRD_int_param(pfile,"ex_max_repop",&ex_max_repop,1);
    ex_repop_buf=1; AMRD_int_param(pfile,"ex_repop_buf",&ex_repop_buf,1);
@@ -1187,7 +1176,7 @@ void AdS4D_var_post_init(char *pfile)
    // later have a proper routine to convert from AH to excision parameters.
    // rh is radius in uncompcatified coordicates, rhoh in compactified,
    // ief_bh_r0 is BH radius parameter, ex_r is excision radius
-   int l,ah_finder_is_off=1; 
+   int ah_finder_is_off=1; 
    for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
    if (ah_finder_is_off)
    {
@@ -1209,9 +1198,10 @@ void AdS4D_var_post_init(char *pfile)
     }
     else
     {
-     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=(1-ex_rbuf[0]);
-     if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver, no BH\n"
-                            "We excise inside fixed excision radius=%lf\n\n",ex_r[0][0]);
+//     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=(1-ex_rbuf[0]);
+//     if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver, no BH\n"
+//                            "We excise inside fixed excision radius=%lf\n\n",ex_r[0][0]);
+     if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver\n");
     }
    }
 
