@@ -69,7 +69,7 @@ int fill_own(int Lmax, int ltrace, int *first)
       {
          ldptr();
 
-         ah_fill_own_(AH_R[c_AH],AH_xc[c_AH],AH_own[c_AH],AH_lev[c_AH],bbox,&dx,&dy,&g_rank,&L,&AH_Nchi[c_AH],&AH_Nphi[c_AH], &axisym);
+         ah_fill_own_(AH_R[c_AH],AH_xc[c_AH],AH_own[c_AH],AH_lev[c_AH],bbox,&dx,&dy,&dz,&g_rank,&L,&AH_Nchi[c_AH],&AH_Nphi[c_AH], &axisym);
          valid=PAMR_next_g();
       }
    }
@@ -97,8 +97,8 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
    int i,np,valid,dvtrace=0,i0,j0,is_int;
    static int num_trace=0;
    char name[256];
-   int AH_shape[2],rank;
-   real AH_bbox[4],resid,da[3],area_owned[3],area_global[3];  // elements 2 & 3 for circumferences.
+   int AH_shape[3],rank;
+   real AH_bbox[6],resid,da[3],area_owned[3],area_global[3];  // elements 2 & 3 for circumferences.
 
    int k;
    real tmp=1.0;
@@ -122,7 +122,7 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
          while(valid)
          {
             ldptr_bbox();
-            ah_is_int_(&is_int,AH_R[c_AH],AH_xc[c_AH],&i0,&j0,bbox,&dx,&dy,&AH_Nchi[c_AH],&AH_Nphi[c_AH],&axisym);
+            ah_is_int_(&is_int,AH_R[c_AH],AH_xc[c_AH],&i0,&j0,bbox,&dx,&dy,&dz,&AH_Nchi[c_AH],&AH_Nphi[c_AH],&axisym);
             if (is_int)
             {
                ldptr(); 

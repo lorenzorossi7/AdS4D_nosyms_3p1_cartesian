@@ -10,7 +10,7 @@ extern int AH_max_iter[MAX_BHS],AH_freq[MAX_BHS],AH_freq_aft[MAX_BHS],AH_rsteps[
 extern real AH_tol[MAX_BHS],AH_tol_aft[MAX_BHS],AH_r0[MAX_BHS],AH_r1[MAX_BHS],AH_lambda[MAX_BHS],AH_lambda_min[MAX_BHS];
 extern real AH_eps[MAX_BHS];
 extern real AH_tmin[MAX_BHS];
-extern real AH_xc[MAX_BHS][2];
+extern real AH_xc[MAX_BHS][3];
 extern int c_AH;
 
 extern real *AH_theta[MAX_BHS],*AH_R[MAX_BHS],*AH_w1[MAX_BHS],*AH_w2[MAX_BHS],*AH_w3[MAX_BHS];
@@ -31,10 +31,10 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
 
 void is_inside_(int *a_in_b, int *a_int_b, real *r_a, real *xc_a, real *r_b, real *xc_b, int *dim);
 
-void ah_is_int_(int *is_int, real *AH_R, real *AH_xc, int *i, int *j, real *bbox, real *dx, real *dy, 
+void ah_is_int_(int *is_int, real *AH_R, real *AH_xc, int *i, int *j, real *bbox, real *dx, real *dy, real *dz,
                int *AH_Nchi, int *AH_Nphi, int *axisym);
 
-void ah_fill_own_(real *AH_R, real *AH_xc, int *AH_own, int *AH_lev, real *bbox, real *dx, real *dy, 
+void ah_fill_own_(real *AH_R, real *AH_xc, int *AH_own, int *AH_lev, real *bbox, real *dx, real *dy, real *dz, 
                  int *rank, int *AdS_L, int *AH_Nchi, int *AH_Nphi, int *axisym);
 
 void ah_fill_f_(real *AH_R, real *AH_xc, real *f, int *is, int *ie, int *js, int *je, 

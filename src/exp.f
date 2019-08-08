@@ -626,18 +626,18 @@ c-----------------------------------------------------------------------
 c is a point on the hypersurface r=R(chi) (relative to the center
 c AH_xc) interior to the cartesian bounding box?? 
 c-----------------------------------------------------------------------
-        subroutine ah_is_int(is_int,AH_R,AH_xc,i,j,bbox,dx,dy,
+        subroutine ah_is_int(is_int,AH_R,AH_xc,i,j,bbox,dx,dy,dz,
      &                       AH_Nchi,AH_Nphi,axisym)
         implicit none
         integer axisym
         integer AH_Nchi,AH_Nphi,i,j,is_int
-        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
-        real*8 dx,dy,bbox(4)
+        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(3)
+        real*8 dx,dy,dz,bbox(6)
         
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 x,y,AH_chi,AH_phi,dahchi,dahphi
+        real*8 x,y,z,AH_chi,AH_phi,dahchi,dahphi
 
 !LOOKING!
         logical ltrace
@@ -650,38 +650,26 @@ c-----------------------------------------------------------------------
 
         !--------------------------------------------------------------
 
-        if (AH_xc(2).lt.dy) then
-          dahchi=PI/(AH_Nchi-1)
-        else
-          dahchi=2*PI/(AH_Nchi-1)
-        end if
+        dahchi=PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nchi-1)
 
         AH_chi=(i-1)*dahchi
         AH_phi=(j-1)*dahphi
 
-        ! AH_R,AH_chi,AH_phi: polar coordinates of point on AH, wrt center of AH
-        ! AH_xc(1),AH_xc(2): cartesian coordinates of center of AH, wrt origin
+        ! AH_R,AH_chi: polar coordinates of point on AH, wrt center of AH
+        ! AH_xc(1),AH_xc(2),AH_xc(3): cartesian coordinates of center of AH, wrt origin
         ! x,y,z cartesian coordinates of point on AH, wrt origin
-        x=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
-        y=AH_R(i,j)*sin(AH_chi)+AH_xc(2)
+        x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+        y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+        z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
 
-        if (AH_xc(2).lt.dy) then
-          if ((x-bbox(1)).gt.(2.5*dx).and.(bbox(2)-x).gt.(2.5*dx).and.
-     &        ((y-bbox(3)).gt.(2.5*dy).or.bbox(3).lt.(0+dy/2)).and. !allow y=0
-     &        (bbox(4)-y).gt.(2.5*dy))
-     &    then
-             is_int=1
-          else
-             is_int=0
-          end if
-        else 
-          if ((x-bbox(1)).gt.(2.5*dx).and.(bbox(2)-x).gt.(2.5*dx).and.
-     &        (y-bbox(3)).gt.(2.5*dy).and.(bbox(4)-y).gt.(2.5*dy))
-     &    then
-             is_int=1
-          else
-             is_int=0
-          end if
+        if ((x-bbox(1)).gt.(2.5*dx).and.(bbox(2)-x).gt.(2.5*dx).and.
+     &      (y-bbox(3)).gt.(2.5*dy).and.(bbox(4)-y).gt.(2.5*dy).and.
+     &      (z-bbox(5)).gt.(2.5*dz).and.(bbox(6)-z).gt.(2.5*dz))
+     &  then
+           is_int=1
+        else
+           is_int=0
         end if
 
         if (ltrace) then
@@ -689,9 +677,10 @@ c-----------------------------------------------------------------------
            write(*,*) 'is_int: ',is_int
            write(*,*) 'bbox(1),bbox(2)=',bbox(1),bbox(2)
            write(*,*) 'bbox(3),bbox(4)=',bbox(3),bbox(4)
-           write(*,*) 'x,y=',x,y
-           write(*,*) 'R,AH_chi',AH_R(i,j),AH_chi
-           write(*,*) 'xc,yc',AH_xc(1),AH_xc(2)
+           write(*,*) 'bbox(5),bbox(6)=',bbox(5),bbox(6)
+           write(*,*) 'x,y,z=',x,y,z
+           write(*,*) 'R,AH_chi,AH_phi',AH_R(i,j),AH_chi,AH_phi
+           write(*,*) 'xc,yc,zc',AH_xc(1),AH_xc(2),AH_xc(3)
         end if
 
         return
@@ -703,14 +692,14 @@ c calculated via interior stencils (2 *cells* away from boundaries,
 c as calculated above) on node rank ... fills in AH_lev(..)=L as well,
 c note that physical boundaries are exceptions; see ah_is_int() 
 c-----------------------------------------------------------------------
-        subroutine ah_fill_own(AH_R,AH_xc,AH_own,AH_lev,bbox,dx,dy,
+        subroutine ah_fill_own(AH_R,AH_xc,AH_own,AH_lev,bbox,dx,dy,dz,
      &                         rank,L,AH_Nchi,AH_Nphi,axisym)
         implicit none
         integer axisym
         integer rank,AH_Nchi,AH_Nphi,L
-        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2)
+        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(3)
         integer AH_own(AH_Nchi,AH_Nphi),AH_lev(AH_Nchi,AH_Nphi)
-        real*8 dx,dy,bbox(4)
+        real*8 dx,dy,dz,bbox(6)
         
         integer i,j,is_int
 
@@ -725,7 +714,7 @@ c-----------------------------------------------------------------------
         do i=1,AH_Nchi
            do j=1,AH_Nphi
               if (AH_own(i,j).eq.-1) then
-                 call ah_is_int(is_int,AH_R,AH_xc,i,j,bbox,dx,dy,
+                 call ah_is_int(is_int,AH_R,AH_xc,i,j,bbox,dx,dy,dz,
      &                          AH_Nchi,AH_Nphi,axisym)
                  if (is_int.eq.1) then
                     AH_own(i,j)=rank
