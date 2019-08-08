@@ -31,6 +31,7 @@ AH_tol := 1e-2
 AH_r0 := 0.10
 AH_r1 := 0.20
 AH_xc :=[0.0 0.0 0.0]
+AH_Nchi := 9
 AH_Nchi := 17
 AH_freq := 1
 AH_freq_aft := 1

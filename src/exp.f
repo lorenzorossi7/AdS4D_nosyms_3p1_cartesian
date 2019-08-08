@@ -213,7 +213,7 @@ c----------------------------------------------------------------------
 
         do i=is,ie
           do j=js,je
-           do k=1,Nz !MODIFY IN THE FULL 3+1 VERSION
+           do k=ks,ke 
             if (ltrace) write(*,*) 'i,j:',i,j
 
             any_ex=.false.
@@ -406,9 +406,6 @@ c----------------------------------------------------------------------
                 end do
               end do
 
-!              theta_ads=3.0d0/2.0d0/sqrt(x0**2+y0**2)*(1+x0**2+y0**2)
-!              theta(i,j)=theta(i,j)/theta_ads
-
               ! if theta is nan, then set it to the following instead
               if (.not.(theta(i,j,k).le.abs(theta(i,j,k)))) then
                  theta(i,j,k)=0.0d0
@@ -456,22 +453,22 @@ c-----------------------------------------------------------------------
         implicit none
         integer axisym
         integer AH_Nchi,AH_Nphi
-        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(2),ex_r0(2),ex_xc0(2)
+        real*8 AH_R(AH_Nchi,AH_Nphi),AH_xc(3),ex_r0(3),ex_xc0(3)
         
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        integer i,j
-        real*8 x,y,AH_chi,AH_phi,dahchi,dahphi
-        real*8 dx,dy
-        real*8 xmin,xmax,ymin,ymax
+        integer i,j,k
+        real*8 x,y,z,AH_chi,AH_phi,dahchi,dahphi
+        real*8 dx,dy,dz
+        real*8 xmin,xmax,ymin,ymax,zmin,zmax
 
         ! initialize fixed-size variables
-        data i,j/0,0/
+        data i,j,k/0,0,0/
 
-        data x,y,AH_chi,AH_phi/0.0,0.0,0.0,0.0/
+        data x,y,z,AH_chi,AH_phi/0.0,0.0,0.0,0.0,0.0/
         data dahchi,dahphi/0.0,0.0/
-        data xmin,xmax,ymin,ymax/0.0,0.0,0.0,0.0/
+        data xmin,xmax,ymin,ymax,zmin,zmax/0.0,0.0,0.0,0.0,0.0,0.0/
 
         !--------------------------------------------------------------
 
@@ -479,12 +476,11 @@ c-----------------------------------------------------------------------
         xmax=0
         ymin=1
         ymax=0
+        zmin=1
+        zmax=0
 
-        if (AH_xc(2).lt.dy) then
-          dahchi=PI/(AH_Nchi-1)
-        else
-          dahchi=2*PI/(AH_Nchi-1)
-        end if
+        dahchi=PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nchi-1)
 
         do i=1,AH_Nchi
           do j=1,AH_Nphi
@@ -493,16 +489,19 @@ c-----------------------------------------------------------------------
             AH_phi=(j-1)*dahphi
 
             ! AH_R,AH_chi: polar coordinates of point on AH, wrt center of AH
-            ! AH_xc(1),AH_xc(2): cartesian coordinates of center of AH, wrt origin
-            ! x,y cartesian coordinates of point on AH, wrt origin
-            x=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
-            y=AH_R(i,j)*sin(AH_chi)+AH_xc(2)
+            ! AH_xc(1),AH_xc(2),AH_xc(3): cartesian coordinates of center of AH, wrt origin
+            ! x,y,z cartesian coordinates of point on AH, wrt origin
+            x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+            y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+            z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
 
             xmin=min(x,xmin)
             ymin=min(y,ymin)
+            zmin=min(z,zmin)
 
             xmax=max(x,xmax)
             ymax=max(y,ymax)
+            zmax=max(z,ymax)
 
           end do
         end do
@@ -510,14 +509,12 @@ c-----------------------------------------------------------------------
         !sets excision coordinate center as AH coordinate center
         ex_xc0(1)=AH_xc(1)
         ex_xc0(2)=AH_xc(2)
+        ex_xc0(3)=AH_xc(3)
 
         !sets excision principal axis radii as ellipse semi-axes
         ex_r0(1)=(xmax-xmin)/2
-        if (AH_xc(2).lt.dy) then
-          ex_r0(2)=ymax
-        else
-          ex_r0(2)=(ymax-ymin)/2
-        end if
+        ex_r0(2)=(ymax-ymin)/2
+        ex_r0(3)=(zmax-zmin)/2
 
         return
         end

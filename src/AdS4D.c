@@ -1905,7 +1905,7 @@ void AdS4D_pre_tstep(int L)
    int AH_shape[1],got_an_AH,do_reinit_ex,do_repop;
    real M,J,c_equat,c_polar;
    real AH_bbox[2],AH_min_resid0,AH_min_resid1,AH_min_resid2;
-   real ex_r0[2],ex_xc0[2],dt;
+   real ex_r0[3],ex_xc0[3],dt;
 
    real ct;
    real new_rbuf;
@@ -2050,18 +2050,18 @@ void AdS4D_pre_tstep(int L)
 //            // if never found AH
 //            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=AH_r0[l];
 //
-//            // save AH grid functions if this time found AH
-//            if (AH[l]) 
-//            {
-//               AH_shape[0]=AH_Nchi[l];
-//               AH_bbox[0]=0;
-//               if (AH_xc[l][1]<dy) {AH_bbox[1]=M_PI;} else {AH_bbox[1]=2*M_PI;}
-//               int rank=1;
-//               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
-//               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
-//               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
-//               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
-//            }
+////            // save AH grid functions if this time found AH
+////            if (AH[l]) 
+////            {
+////               AH_shape[0]=AH_Nchi[l];
+////               AH_bbox[0]=0;
+////               if (AH_xc[l][1]<dy) {AH_bbox[1]=M_PI;} else {AH_bbox[1]=2*M_PI;}
+////               int rank=1;
+////               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
+////               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
+////               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
+////               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
+////            }
 //
 //            // fill in excision parameters 
 //            // ( ex_xc0[0],ex_xc0[1] are filled with coordinate center for excision
