@@ -53,9 +53,12 @@ c----------------------------------------------------------------------
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                    gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                    gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                    gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                    gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    L,x,y,z,dt,chr,ex,do_ex,
      &                    Nx,Ny,Nz)
@@ -68,9 +71,12 @@ c----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
         real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz),gb_tz_n(Nx,Ny,Nz),gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
         real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je
@@ -235,10 +241,14 @@ c----------------------------------------------------------------------
      &                 gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                 gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                 gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                 gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                 gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                 gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                 psi_np1,psi_n,psi_nm1,
+     &                 zeros,zeros,zeros,
      &                 zeros,zeros,zeros,
      &                 zeros,zeros,zeros,
      &                 zeros,zeros,zeros,
@@ -903,9 +913,12 @@ c-----------------------------------------------------------------------
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &                    gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                    gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &                    gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                    gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    L,x,y,z,dt,chr,ex,do_ex,
      &                    Nx,Ny,Nz,axisym)
@@ -920,9 +933,12 @@ c-----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
         real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+        real*8 gb_tz_np1(Nx,Ny,Nz),gb_tz_n(Nx,Ny,Nz),gb_tz_nm1(Nx,Ny,Nz)
         real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
         real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+        real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+        real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
 
         real*8 cosx(Nx),cosy(Ny),cosz(Nz)
@@ -1106,9 +1122,12 @@ c-----------------------------------------------------------------------
      &             gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &             gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &             gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &             gb_tz_np1,gb_tz_n,gb_tz_nm1,
      &             gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &             gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &             gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &             gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &             gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &             psi_np1,psi_n,psi_nm1,
      &             L,x,y,z,dt,chr,ex,do_ex,Nx,Ny,Nz)
 

@@ -44,9 +44,12 @@ void calc_exp0_(real *AH_R, real *AH_xc, real *AH_theta, int *i0, int *j0, int *
                 real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                 real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                 real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+                real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
                 real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
                 real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+                real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
                 real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+                real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
                 real *psi_np1, real *psi_n, real *psi_nm1,
                 real *AdS_L, real *x, real *y, real *z, real *dt, real *chr, 
                 real *ex, int *do_ex, int *Nx, int *Ny, int *Nz, int *axisym);
