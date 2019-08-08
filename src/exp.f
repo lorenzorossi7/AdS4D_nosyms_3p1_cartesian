@@ -944,7 +944,7 @@ c-----------------------------------------------------------------------
 
         real*8 g0_xx_ads0,g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
 
-        integer is_bad
+        integer is_bad,fill_later
 
 !LOOKING!
         logical ltrace
@@ -991,33 +991,35 @@ c-----------------------------------------------------------------------
         AH_phi=(j0-1)*dahphi
 
         !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
-        !AH_xc(1),AH_xc(2) cartesian coordinates of center of AH, wrt origin
-        !x0,y0 cartesian coordinates of point on AH, wrt origin
-        x0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(1)
-        y0=AH_R(i0,j0)*sin(AH_chi)+AH_xc(2)
+        !AH_xc(1),AH_xc(2),AH_xc(3) cartesian coordinates of center of AH, wrt origin
+        !x0,y0,z0 cartesian coordinates of point on AH, wrt origin
+        x0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+        y0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+        z0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(3)
 
         da=0
         d_ceq=0
         d_cp=0
 
-        ! extract (i,j) cartesian grid point closest to x0,y0
+        ! extract (i,j,z) cartesian grid point closest to x0,y0,z0
         i=(x0-x(1))/dx+1
         j=(y0-y(1))/dy+1
         k=(z0-z(1))/dz+1
 
         ! for bilinear interpolation of theta from 
-        ! (i,j),(i+1,j),(i,j+1),(i+1,j+1)
-        !(NOTE: since, x0,y0 does not necessarily lie on a grid point these fx,fy are *not* identically zero)
+        ! (i,j,k),(i+1,j,k),(i,j+1,k),(i+1,j+1,k),(i,j,k+1),(i+1,j,k+1),(i,j+1,k+1),(i+1,j+1,k+1)
+        !(NOTE: since, x0,y0,z0 does not necessarily lie on a grid point these fx,fy,fz are *not* identically zero)
         fx=(x0-((i-1)*dx+x(1)))/dx
         fy=(y0-((j-1)*dy+y(1)))/dy
+        fz=(z0-((k-1)*dz+z(1)))/dz
 
         if (ltrace) then
            write(*,*) 'calc_exp0: i0,j0=',i0,j0
            write(*,*) ' AH_R,AH_chi,AH_phi=',AH_R(i0,j0),AH_chi,AH_phi
-           write(*,*) ' i,j=',i,j
-           write(*,*) ' x0,y0=',x0,y0
-           write(*,*) ' x(1),y(1)=',x(1),y(1)
-           write(*,*) ' dx,dy=',dx,dy
+           write(*,*) ' i,j,k=',i,j,k
+           write(*,*) ' x0,y0,z0=',x0,y0,z0
+           write(*,*) ' x(1),y(1),z(1)=',x(1),y(1),z(1)
+           write(*,*) ' dx,dy,dz=',dx,dy,dz
            write(*,*) '----------------------------'
         end if
 
@@ -1028,14 +1030,15 @@ c-----------------------------------------------------------------------
         !------------------------------------------------------------
 
         is_bad=0
-        if (i.lt.2.or.j.lt.2.or.i.ge.Nx.or.j.ge.Ny)
+        fill_later=0
+        if (i.lt.2.or.j.lt.2.or.k.lt.2.or.i.ge.Nx.or.j.ge.Ny.or.k.ge.Nz)
      &  then
-          is_bad=1
-          if (i0.eq.1.or.i0.eq.AH_Nchi) 
+          if (i0.eq.1.or.i0.eq.AH_Nchi.or.j0.eq.1.or.j0.eq.AH_Nphi)
      &    then !these are allowed ... reg_ah_r() will fill it in 
-            AH_theta(i0,j0)=0
-            return
-          end if              
+            fill_later=1
+          else
+            is_bad=1
+          end if
         end if
 
         if (is_bad.eq.1) then
@@ -1056,140 +1059,147 @@ c-----------------------------------------------------------------------
            AH_theta(i0,j0)=100
         end if
 
-        is=max(1,i-2)
-        ie=min(Nx,i+3)
-        js=max(1,j-2)
-        je=min(Ny,j+3)
-        ks=max(1,k-2)
-        ke=min(Nz,k+3)
+        if (fill_later.eq.1) then
+            AH_theta(i0,j0)=0
+        else
 
-        call ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,ks,ke,x,y,z,
-     &              AH_Nchi,AH_Nphi,Nx,Ny,Nz,axisym)
+          is=max(1,i-2)
+          ie=min(Nx,i+3)
+          js=max(1,j-2)
+          je=min(Ny,j+3)
+          ks=max(1,k-2)
+          ke=min(Nz,k+3)
 
-        is=i
-        ie=i+1
-        js=j
-        je=j+1
-        ks=k
-        ke=k+1
+          call ah_fill_f(AH_R,AH_xc,f,is,ie,js,je,ks,ke,x,y,z,
+     &                AH_Nchi,AH_Nphi,Nx,Ny,Nz,axisym)
 
-        if (do_ex.ne.0) then
-           do i1=is,ie   
-              do j1=js,je   
-               do k1=ks,ke
-                 if (chr(i1,j1,k1).eq.ex) then
-                    write(*,*) ' calc_exp0: pt i1,j1 is excised'
-                    write(*,*) ' AH_chi,AH_phi=',AH_chi,AH_phi
-                    write(*,*) ' x0,y0=',x0,y0
-                    write(*,*) ' dx,dy=',dx,dy
-                    write(*,*) ' i,j=',i,j
-                    write(*,*) ' i1,j1=',i1,j1
-                    write(*,*) ' x(i1),y(j1)=',x(i1),y(j1)
-                    write(*,*) ' chr(i1,j1,k1)=',chr(i1,j1,k1)
-                    write(*,*) ' Nx,Ny=',Nx,Ny
-                    da=-10000
-                    AH_theta(i0,j0)=0
-                    return
-                 end if
+          is=i
+          ie=i+1
+          js=j
+          je=j+1
+          ks=k
+          ke=k+1
+
+          if (do_ex.ne.0) then
+             do i1=is,ie
+                do j1=js,je
+                   do k1=ks,ke
+                      if (chr(i1,j1,k1).eq.ex) then
+                         write(*,*) ' calc_exp0: pt i1,j1 is excised'
+                         write(*,*) ' i0,j0=',i0,j0
+                         write(*,*) ' AH_chi,AH_phi=',AH_chi,AH_phi
+                         write(*,*) ' x0,y0,z0=',x0,y0,z0
+                         write(*,*) ' dx,dy,dz=',dx,dy,dz
+                         write(*,*) ' i,j,k=',i,j,k
+                         write(*,*) ' i1,j1,k1=',i1,j1,k1
+                         write(*,*) ' xi1,yj1,zk1=',x(i1),y(j1),z(k1)
+                         write(*,*) ' chr(i1,j1,k1)=',chr(i1,j1,k1)
+                         write(*,*) ' Nx,Ny=',Nx,Ny
+                         da=-10000
+                         AH_theta(i0,j0)=0
+                         return
+                      end if
+                   end do
                 end do
-              end do
-           end do
+             end do
+          end if
+
+          call calc_exp(theta,f,is,ie,js,je,ks,ke,is_ex,
+     &               gb_tt_np1,gb_tt_n,gb_tt_nm1,
+     &               gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &               gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &               gb_tz_np1,gb_tz_n,gb_tz_nm1,
+     &               gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &               gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &               gb_xz_np1,gb_xz_n,gb_xz_nm1,
+     &               gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &               gb_yz_np1,gb_yz_n,gb_yz_nm1,
+     &               psi_np1,psi_n,psi_nm1,
+     &               L,x,y,z,dt,chr,ex,do_ex,Nx,Ny,Nz)
+
+          ! interpolate theta from 
+          ! (i,j,k),(i+1,j,k),(i,j+1,k),(i+1,j+1,k),(i,j,k+1),(i+1,j,k+1),(i,j+1,k+1),(i+1,j+1,k+1)
+          AH_theta(i0,j0)=(1-fx)*(1-fy)*(1-fz)*theta(i,j,k)+
+     &                    (  fx)*(1-fy)*(1-fz)*theta(i+1,j,k)+
+     &                    (1-fx)*(  fy)*(1-fz)*theta(i,j+1,k)+
+     &                    (1-fx)*(1-fy)*(  fz)*theta(i,j,k+1)+
+     &                    (  fx)*(  fy)*(1-fz)*theta(i+1,j+1,k)+
+     &                    (  fx)*(1-fy)*(  fz)*theta(i+1,j,k+1)+
+     &                    (1-fx)*(  fy)*(  fz)*theta(i,j+1,k+1)+
+     &                    (  fx)*(  fy)*(  fz)*theta(i+1,j+1,k+1)
         end if
-
-        call calc_exp(theta,f,is,ie,js,je,ks,ke,is_ex,
-     &             gb_tt_np1,gb_tt_n,gb_tt_nm1,
-     &             gb_tx_np1,gb_tx_n,gb_tx_nm1,
-     &             gb_ty_np1,gb_ty_n,gb_ty_nm1,
-     &             gb_tz_np1,gb_tz_n,gb_tz_nm1,
-     &             gb_xx_np1,gb_xx_n,gb_xx_nm1,
-     &             gb_xy_np1,gb_xy_n,gb_xy_nm1,
-     &             gb_xz_np1,gb_xz_n,gb_xz_nm1,
-     &             gb_yy_np1,gb_yy_n,gb_yy_nm1,
-     &             gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &             psi_np1,psi_n,psi_nm1,
-     &             L,x,y,z,dt,chr,ex,do_ex,Nx,Ny,Nz)
-
-        ! interpolate theta from 
-        ! (i,j),(i+1,j),(i,j+1),(i+1,j+1)
-        AH_theta(i0,j0) = (1-fx)*(1-fy)*theta(i,j,k)+
-     &                 (  fx)*(1-fy)*theta(i+1,j,k)+
-     &                 (1-fx)*(  fy)*theta(i,j+1,k)+
-     &                 (  fx)*(  fy)*theta(i+1,j+1,k)
 
         !--------------------------------------------------------------
         ! proper area element
-        ! 
-        ! NOTE: some definitions below are copied from tensor_init() in
-        ! misc.f, ideally should just call tensor_init()
+        ! NOTE: use AdS5Ds to fill this out
         !--------------------------------------------------------------
-
-        rho0=sqrt(x0**2+y0**2)
-        f0=(1-rho0**2)**2+4*rho0**2/L**2
-
-        drh_dch=(AH_R(i0+1,j0)-AH_R(i0-1,j0))/2/dahchi
-
-        dx_dch=cos(AH_chi)*drh_dch-rho0*sin(AH_chi)  !when rho=rho(chi)
-        dy_dch=sin(AH_chi)*drh_dch+rho0*cos(AH_chi)  
-
-        dx_dch_rh=rho0*sin(AH_chi)  !when rho=const
-        dy_dch_rh=rho0*cos(AH_chi)
-
-        g0_xx_ads0 =(x0**2*(1+rho0**2)**2/f0+y0**2)
-     &             /(1-rho0**2)**2
-     &             /rho0**2
-     &             *4
-        g0_xy_ads0 =((1+rho0**2)**2/f0-1)
-     &             /(1-rho0**2)**2
-     &             /rho0**2
-     &             *x0*y0
-     &             *4
-        g0_yy_ads0 =(y0**2*(1+rho0**2)**2/f0+x0**2)
-     &             /(1-rho0**2)**2
-     &             /rho0**2
-     &             *4
-        g0_psi_ads0=(y0**2)
-     &             /(1-rho0**2)**2
-     &             *4
-
-        gb_xx0=((1-fx)*(1-fy)*gb_xx_n(i,j,k)+
-     &       (  fx)*(1-fy)*gb_xx_n(i+1,j,k)+
-     &       (1-fx)*(  fy)*gb_xx_n(i,j+1,k)+
-     &       (  fx)*(  fy)*gb_xx_n(i+1,j+1,k))
-
-        gb_xy0=((1-fx)*(1-fy)*gb_xy_n(i,j,k)+
-     &       (  fx)*(1-fy)*gb_xy_n(i+1,j,k)+
-     &       (1-fx)*(  fy)*gb_xy_n(i,j+1,k)+
-     &       (  fx)*(  fy)*gb_xy_n(i+1,j+1,k))
-
-        gb_yy0=((1-fx)*(1-fy)*gb_yy_n(i,j,k)+
-     &       (  fx)*(1-fy)*gb_yy_n(i+1,j,k)+
-     &       (1-fx)*(  fy)*gb_yy_n(i,j+1,k)+
-     &       (  fx)*(  fy)*gb_yy_n(i+1,j+1,k))
-
-        psi0=((1-fx)*(1-fy)*psi_n(i,j,k)+
-     &       (  fx)*(1-fy)*psi_n(i+1,j,k)+
-     &       (1-fx)*(  fy)*psi_n(i,j+1,k)+
-     &       (  fx)*(  fy)*psi_n(i+1,j+1,k))
-
-        g_xx0   =g0_xx_ads0+gb_xx0
-        g_xy0   =g0_xy_ads0+gb_xy0
-        g_yy0   =g0_yy_ads0+gb_yy0
-        g_phph0 =g0_psi_ads0+psi0*y0**2
-
-        g_chch0 =g_xx0*dx_dch_rh**2+2*g_xy0*dx_dch_rh*dy_dch_rh
-     &          +g_yy0*dy_dch_rh**2
-        g_const0=g_xx0*dx_dch**2+2*g_xy0*dx_dch*dy_dch+g_yy0*dy_dch**2
-
-        da=2*PI*sqrt(g_const0*g_phph0)*dahchi
-
-        if (i0.eq.((AH_Nchi-1)/2)+1) then
-           d_ceq=2*PI*sqrt(g_phph0)
-        end if
-        d_cp=2*sqrt(g_chch0)*dahchi
-
-        if (is_ex.eq.1) then
-           da=-10000
-        end if
+!
+!        rho0=sqrt(x0**2+y0**2)
+!        f0=(1-rho0**2)**2+4*rho0**2/L**2
+!
+!        drh_dch=(AH_R(i0+1,j0)-AH_R(i0-1,j0))/2/dahchi
+!
+!        dx_dch=cos(AH_chi)*drh_dch-rho0*sin(AH_chi)  !when rho=rho(chi)
+!        dy_dch=sin(AH_chi)*drh_dch+rho0*cos(AH_chi)  
+!
+!        dx_dch_rh=rho0*sin(AH_chi)  !when rho=const
+!        dy_dch_rh=rho0*cos(AH_chi)
+!
+!        g0_xx_ads0 =(x0**2*(1+rho0**2)**2/f0+y0**2)
+!     &             /(1-rho0**2)**2
+!     &             /rho0**2
+!     &             *4
+!        g0_xy_ads0 =((1+rho0**2)**2/f0-1)
+!     &             /(1-rho0**2)**2
+!     &             /rho0**2
+!     &             *x0*y0
+!     &             *4
+!        g0_yy_ads0 =(y0**2*(1+rho0**2)**2/f0+x0**2)
+!     &             /(1-rho0**2)**2
+!     &             /rho0**2
+!     &             *4
+!        g0_psi_ads0=(y0**2)
+!     &             /(1-rho0**2)**2
+!     &             *4
+!
+!        gb_xx0=((1-fx)*(1-fy)*gb_xx_n(i,j,k)+
+!     &       (  fx)*(1-fy)*gb_xx_n(i+1,j,k)+
+!     &       (1-fx)*(  fy)*gb_xx_n(i,j+1,k)+
+!     &       (  fx)*(  fy)*gb_xx_n(i+1,j+1,k))
+!
+!        gb_xy0=((1-fx)*(1-fy)*gb_xy_n(i,j,k)+
+!     &       (  fx)*(1-fy)*gb_xy_n(i+1,j,k)+
+!     &       (1-fx)*(  fy)*gb_xy_n(i,j+1,k)+
+!     &       (  fx)*(  fy)*gb_xy_n(i+1,j+1,k))
+!
+!        gb_yy0=((1-fx)*(1-fy)*gb_yy_n(i,j,k)+
+!     &       (  fx)*(1-fy)*gb_yy_n(i+1,j,k)+
+!     &       (1-fx)*(  fy)*gb_yy_n(i,j+1,k)+
+!     &       (  fx)*(  fy)*gb_yy_n(i+1,j+1,k))
+!
+!        psi0=((1-fx)*(1-fy)*psi_n(i,j,k)+
+!     &       (  fx)*(1-fy)*psi_n(i+1,j,k)+
+!     &       (1-fx)*(  fy)*psi_n(i,j+1,k)+
+!     &       (  fx)*(  fy)*psi_n(i+1,j+1,k))
+!
+!        g_xx0   =g0_xx_ads0+gb_xx0
+!        g_xy0   =g0_xy_ads0+gb_xy0
+!        g_yy0   =g0_yy_ads0+gb_yy0
+!        g_phph0 =g0_psi_ads0+psi0*y0**2
+!
+!        g_chch0 =g_xx0*dx_dch_rh**2+2*g_xy0*dx_dch_rh*dy_dch_rh
+!     &          +g_yy0*dy_dch_rh**2
+!        g_const0=g_xx0*dx_dch**2+2*g_xy0*dx_dch*dy_dch+g_yy0*dy_dch**2
+!
+!        da=2*PI*sqrt(g_const0*g_phph0)*dahchi
+!        if (is_ex.eq.1) then
+!           da=-10000
+!        end if
+!
+!        if (i0.eq.((AH_Nchi-1)/2)+1) then
+!           d_ceq=2*PI*sqrt(g_phph0)
+!        end if
+!        d_cp=2*sqrt(g_chch0)*dahchi
 
         return
         end
