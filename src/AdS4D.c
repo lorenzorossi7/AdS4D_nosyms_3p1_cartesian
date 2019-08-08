@@ -785,124 +785,126 @@ real norm_l2(real *f, real *cmask, real *chr)
    return (sqrt(norm/sum));
 }
 
-////=============================================================================
-//// the following zeros the AH_max_iter and ex_r (semiaxes of best-fit ellipses) 
-//// of engulfed AHs
-////=============================================================================
-//void remove_redundant_AH()
-//{
-//   int i1,i2,is_1in2,is_2in1,intr;
-//   real d,min_bhr,bhr;
-//   int rem[MAX_BHS];
-//
-//   for (i1=0; i1<MAX_BHS; i1++) rem[i1]=0;
-//
-//   for (i1=0; i1<MAX_BHS; i1++)
-//   {
-//      for (i2=i1+1; i2<MAX_BHS; i2++)
-//      {
-//         if (ex_r[i1][0]>0 && ex_r[i2][0]>0)
-//         {
-//            is_inside_(&is_1in2,&intr,ex_r[i1],ex_xc[i1],ex_r[i2],ex_xc[i2],&AMRD_dim);
-//            is_inside_(&is_2in1,&intr,ex_r[i2],ex_xc[i2],ex_r[i1],ex_xc[i1],&AMRD_dim);
-//
-////(unless this is disabled, AH[4] is removed at first time step)
-//            if (is_1in2 || is_2in1)
-//            {
-//               if (my_rank==0) printf("\n\nremove_redundant_AH: the following two excised regions "
-//                  "overlap ... removing the smallest one (is_1in2=%i, is_2in1=%i).\n"
-//                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
-//                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",is_1in2,is_2in1,
-//                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
-//                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
-//               if (is_2in1) rem[i2]=1; else rem[i1]=1;
-//            }
-//
-//            // special case
-//            if (i2==MAX_BHS-1 && rem[i2]==1)
-//            { 
-//               if (my_rank==0) printf("\nremove_redundant_AH: 'unremoving' the tentative encapsulating BH\n");
-//               rem[i2]=0; 
-//            }
-//            if (i2==MAX_BHS-1 && i1!=MAX_BHS-2 && intr) 
-//            {
-//               if (my_rank==0) printf("\nremove_redundant_AH: encapsulating BH found, removing intersecting BHs.\n"
-//                  "1: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],  "
-//                  "2: ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n\n",
-//                  ex_r[i1][0],ex_r[i1][1],ex_xc[i1][0],ex_xc[i1][1],
-//                  ex_r[i2][0],ex_r[i2][1],ex_xc[i2][0],ex_xc[i2][1]);
-//               rem[i1]=1;
-//            }
-//
-//            if (is_1in2 && is_2in1 && my_rank==0) printf("WARNING ... both is_1in2 && is_2in1\n");
-//         }
-//      }
-//   }
-//
-//   for (i1=0; i1<MAX_BHS; i1++) if (rem[i1])
-//   {
-//       ex_r[i1][0]=0;
-//       ex_r[i1][1]=0;
-//       AH_max_iter[i1]=0;
-//   }
-//}
-//
-////=============================================================================
-//// the following returns 1 if the test ellipsoid does not intersect any
-//// existing horizons, *and* is entirely contained within the finest overlapping
-//// level
-////=============================================================================
-//#define MAX_GRIDS 20
-//#define EX_MIN_PTS_IN 4
-//int no_AH_intersect(real ex_r0[3],real ex_xc0[3],int inew)
-//{
-//   int i,i1;
-//   real d;
-//   real sgh[6*MAX_GRIDS],dx0[3],dt0,bound[6],max_xy;
-//   int num,L,Lf,contained,ex0_in_exi,ex0_int_exi,ltrace=1;
-//   int exi_in_ex0,exi_int_ex0;
-//
-//   for (i=0; i<MAX_BHS; i++)
-//   {
-//      if (ex_r[i][0]>0 && i!=inew)
-//      {
-//         is_inside_(&ex0_in_exi,&ex0_int_exi,ex_r0,ex_xc0,ex_r[i],ex_xc[i],&AMRD_dim);
-//         is_inside_(&exi_in_ex0,&exi_int_ex0,ex_r[i],ex_xc[i],ex_r0,ex_xc0,&AMRD_dim);
-//
-//         if (ex0_int_exi)
-//         {
-//            // special case
-//            if (inew==MAX_BHS-1)
-//            {
-//              if (my_rank==0) printf("\nno_AH_intersect: encapsulating BH found, ignoring intersections\n");
-//              return 1;
-//            }
-//            
-//            if (my_rank==0) printf("\nno_AH_intersect: new BH intersects existing BH\n"
-//                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
-//                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
-//                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
-//                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
-//            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
-//         }
-//
-//         if (ex0_in_exi)
-//         {
-//            if (my_rank==0) printf("no_AH_intersect: WARNING ... new BH is *entirely* contained in existing BH\n"
-//                   "new: ex_r=[%lf,%lf], ex_xc=[%lf,%lf],"
-//                   "current(%i): ex_r=[%lf,%lf], ex_xc=[%lf,%lf]\n",
-//                   ex_r0[0],ex_r0[1],ex_xc0[0],ex_xc0[1],i,
-//                   ex_r[i][0],ex_r[i][1],ex_xc[i][0],ex_xc[i][1]);
-//            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
-//            return 0;
-//         }
-//
-//         if (ex0_int_exi && !exi_in_ex0) return 0;
-//      }
-//   }
-//
-//   return 1;
-//}
+//=============================================================================
+// the following zeros the AH_max_iter and ex_r (semiaxes of best-fit ellipses) 
+// of engulfed AHs
+//=============================================================================
+void remove_redundant_AH()
+{
+   int i1,i2,is_1in2,is_2in1,intr;
+   real d,min_bhr,bhr;
+   int rem[MAX_BHS];
+
+   for (i1=0; i1<MAX_BHS; i1++) rem[i1]=0;
+
+   for (i1=0; i1<MAX_BHS; i1++)
+   {
+      for (i2=i1+1; i2<MAX_BHS; i2++)
+      {
+         if (ex_r[i1][0]>0 && ex_r[i2][0]>0)
+         {
+            is_inside_(&is_1in2,&intr,ex_r[i1],ex_xc[i1],ex_r[i2],ex_xc[i2],&AMRD_dim);
+            is_inside_(&is_2in1,&intr,ex_r[i2],ex_xc[i2],ex_r[i1],ex_xc[i1],&AMRD_dim);
+
+//(unless this is disabled, AH[4] is removed at first time step)
+            if (is_1in2 || is_2in1)
+            {
+               if (my_rank==0) printf("\n\nremove_redundant_AH: the following two excised regions "
+                  "overlap ... removing the smallest one (is_1in2=%i, is_2in1=%i).\n"
+                  "1: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf],  "
+                  "2: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n\n",is_1in2,is_2in1,
+                  ex_r[i1][0],ex_r[i1][1],ex_r[i1][2],ex_xc[i1][0],ex_xc[i1][1],ex_xc[i1][2],
+                  ex_r[i2][0],ex_r[i2][1],ex_r[i2][2],ex_xc[i2][0],ex_xc[i2][1],ex_xc[i2][2]);
+               if (is_2in1) rem[i2]=1; else rem[i1]=1;
+            }
+
+            // special case
+            if (i2==MAX_BHS-1 && rem[i2]==1)
+            { 
+               if (my_rank==0) printf("\nremove_redundant_AH: 'unremoving' the tentative encapsulating BH\n");
+               rem[i2]=0; 
+            }
+            if (i2==MAX_BHS-1 && i1!=MAX_BHS-2 && intr) 
+            {
+               if (my_rank==0) printf("\nremove_redundant_AH: encapsulating BH found, removing intersecting BHs.\n"
+                  "1: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf],  "
+                  "2: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n\n",
+                  ex_r[i1][0],ex_r[i1][1],ex_r[i1][2],ex_xc[i1][0],ex_xc[i1][1],ex_xc[i1][2],
+                  ex_r[i2][0],ex_r[i2][1],ex_r[i2][2],ex_xc[i2][0],ex_xc[i2][1],ex_xc[i2][2]);
+               rem[i1]=1;
+            }
+
+            if (is_1in2 && is_2in1 && my_rank==0) printf("WARNING ... both is_1in2 && is_2in1\n");
+         }
+      }
+   }
+
+   for (i1=0; i1<MAX_BHS; i1++) if (rem[i1])
+   {
+       ex_r[i1][0]=0;
+       ex_r[i1][1]=0;
+       ex_r[i1][2]=0;
+       AH_max_iter[i1]=0;
+   }
+}
+
+//=============================================================================
+// the following returns 1 if the test ellipsoid does not intersect any
+// existing horizons, *and* is entirely contained within the finest overlapping
+// level
+//=============================================================================
+#define MAX_GRIDS 20
+#define EX_MIN_PTS_IN 4
+int no_AH_intersect(real ex_r0[3],real ex_xc0[3],int inew)
+{
+   int i,i1;
+   real d;
+   real sgh[6*MAX_GRIDS],dx0[3],dt0,bound[6],max_xy;
+   int num,L,Lf,contained,ex0_in_exi,ex0_int_exi,ltrace=1;
+   int exi_in_ex0,exi_int_ex0;
+
+   for (i=0; i<MAX_BHS; i++)
+   {
+      if (ex_r[i][0]>0 && i!=inew)
+      {
+         is_inside_(&ex0_in_exi,&ex0_int_exi,ex_r0,ex_xc0,ex_r[i],ex_xc[i],&AMRD_dim);
+         is_inside_(&exi_in_ex0,&exi_int_ex0,ex_r[i],ex_xc[i],ex_r0,ex_xc0,&AMRD_dim);
+
+         if (ex0_int_exi)
+         {
+            // special case
+            if (inew==MAX_BHS-1)
+            {
+              if (my_rank==0) printf("\nno_AH_intersect: encapsulating BH found, ignoring intersections\n");
+              return 1;
+            }
+            
+            if (my_rank==0) printf("\nno_AH_intersect: new BH intersects existing BH\n"
+                   "new: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf.%lf],"
+                   "current(%i): ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n",
+                   ex_r0[0],ex_r0[1],ex_r0[2],ex_xc0[0],ex_xc0[1],ex_xc0[2],i,
+                   ex_r[i][0],ex_r[i][1],ex_r[i][2],ex_xc[i][0],ex_xc[i][1],ex_xc[i][2]);
+            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
+         }
+
+         if (ex0_in_exi)
+         {
+            if (my_rank==0) printf("no_AH_intersect: WARNING ... new BH is *entirely* contained in existing BH\n"
+                   "new: ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf.%lf],"
+                   "current(%i): ex_r=[%lf,%lf,%lf], ex_xc=[%lf,%lf,%lf]\n",
+                   ex_r0[0],ex_r0[1],ex_r0[2],ex_xc0[0],ex_xc0[1],ex_xc0[2],i,
+                   ex_r[i][0],ex_r[i][1],ex_r[i][2],ex_xc[i][0],ex_xc[i][1],ex_xc[i][2]);
+            if (my_rank==0) printf("ex0_in_exi=%i,ex0_int_exi=%i,exi_in_ex0=%i,exi_int_ex0=%i\n\n",ex0_in_exi,ex0_int_exi,exi_in_ex0,exi_int_ex0);
+            return 0;
+         }
+
+         if (ex0_int_exi && !exi_in_ex0) return 0;
+      }
+   }
+
+   return 1;
+}
+
 
 //=============================================================================
 // Routines required by amrd:
@@ -1932,161 +1934,162 @@ void AdS4D_pre_tstep(int L)
       pre_tstep_global_first=0;
    }
 
-//   // search for AHs at t>0
-//  int ah_finder_is_off=1;
-//  for (l=0; l<MAX_BHS; l++) {if (AH_max_iter[l]!=0) ah_finder_is_off=0;}
-//
-//  if (!ah_finder_is_off)
-//  {
-//   do_repop=do_reinit_ex=got_an_AH=0;
-//
-//   for (l=0; l<MAX_BHS; l++)
-//   {
-//      real prev_AH_R[AH_Nchi[l]*AH_Nphi[l]];
-//      real prev_AH_xc[2];
-//      for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {prev_AH_R[i]=AH_R[l][i];} 
-//      for (i=0; i<2; i++) {prev_AH_xc[i]=AH_xc[l][i];}
-//      c_AH=l;
-//      if (AH_max_iter[l]>0 && L==AH_Lmin[l] && ct>=AH_tmin[l])
-//      {
-//         if (AH_count[l]<0) { AH[l]=1; if (AMRD_state==AMRD_STATE_EVOLVE) M=J=0;}
-//         else if (!(AH_count[l] % freq0[l]) && !(c_AH==3 && ct==0)) // for fourth BH, do not search at t=0
-//         {
-//            omt=0; // over-max-tolerance
-//            AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0); // AH finder
-//
-//            if (AH[l]) { freq0[l]=AH_freq_aft[l]; found_AH[l]=1; got_an_AH=1; AH_tol[l]=AH_tol_aft[l]; found_count_AH[l]++; } // if this time found AH
-//
-//            // if previously found but failed now
-//            if (found_AH[l] && !AH[l]) 
-//            {
-//               if (AH_reset_scale[l]>0)
-//               {
-//                  // expand old initial-guess surface
-//                  if (my_rank==0 && AMRD_evo_trace>=1)
-//                     printf("t=%lf ... lost AH[%i] ...\n" 
-//                            "expanding old initial-guess surface by a factor %lf\n",ct,l+1,AH_reset_scale[l]);
-//                  for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l];
-//
-//                  if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
-//                  { 
-//                     // shrink old initial-guess surface
-//                     if (my_rank==0 && AMRD_evo_trace>=1) printf("... still can't find one (min_resid=%lf)\n"
-//                         "... shrinking old initial-guess surface by a factor %lf\n",AH_min_resid1,1/AH_reset_scale[l]);
-//                     for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
-//
-//                     if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
-//                     {
-//
-//                        // increase AH_tol to force an AH to be found, starting with shrunken initial-guess surface
-//                        if (AH_min_resid2<AH_min_resid1 && AH_min_resid2<AH_min_resid0) 
-//                        {
-//                           if (my_rank==0 && AMRD_evo_trace>=1)
-//                              printf("starting from shrunken initial-guess surface\n");
-//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
-//                           if (my_rank==0 && AMRD_evo_trace>=1) 
-//                              printf("and temporarily increasing tolerance to %lf; will then use the resulting surface\n"
-//                              ,AH_min_resid2*AH_omt_scale[l]);
-//                           omt=1;
-//                           tol_save=AH_tol[l];
-//                           AH_tol[l]=AH_min_resid2*AH_omt_scale[l];
-//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
-//                           {
-//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-//                           }
-//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-//                           AH_tol[l]=tol_save;
-//                        }
-//
-//                        // increase AH_tol to force an AH to be found, starting with expanded initial-guess surface
-//                        else if (AH_min_resid1<AH_min_resid0) 
-//                        {  
-//                           if (my_rank==0 && AMRD_evo_trace>=1)
-//                              printf("starting from expanded initial-guess surface\n");
-//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l]; 
-//                           if (my_rank==0 && AMRD_evo_trace>=1) 
-//                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid1*AH_omt_scale[l]);
-//                           omt=1;
-//                           tol_save=AH_tol[l];
-//                           AH_tol[l]=AH_min_resid1*AH_omt_scale[l];
-//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
-//                           {
-//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-//                           }
-//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-//                           AH_tol[l]=tol_save;
-//                        }
-//
-//                        // increase AH_tol to force an AH to be found, starting with old initial-guess surface
-//                        else 
-//                        {
-//                           if (my_rank==0 && AMRD_evo_trace>=1)
-//                              printf("starting from old initial-guess surface\n");
-//                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]; 
-//                           if (my_rank==0 && AMRD_evo_trace>=1) 
-//                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid0*AH_omt_scale[l]);
-//                           omt=1;
-//                           tol_save=AH_tol[l];
-//                           AH_tol[l]=AH_min_resid0*AH_omt_scale[l];
-//                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0)))
-//                           {
-//                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
-//                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
-//                           }
-//                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
-//                           AH_tol[l]=tol_save;
-//                        }
-//
-//                     }                 
-//                  }
-//               }
-//            }
+   // search for AHs at t>0
+   do_repop=do_reinit_ex=got_an_AH=0;
 
-//            // if still not found
-//            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[l][i]=prev_AH_R[i];}
-//
-//            // if never found AH
-//            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=AH_r0[l];
-//
-////            // save AH grid functions if this time found AH
-////            if (AH[l]) 
-////            {
-////               AH_shape[0]=AH_Nchi[l];
-////               AH_bbox[0]=0;
-////               if (AH_xc[l][1]<dy) {AH_bbox[1]=M_PI;} else {AH_bbox[1]=2*M_PI;}
-////               int rank=1;
-////               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
-////               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
-////               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
-////               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
-////            }
-//
-//            // fill in excision parameters 
-//            // ( ex_xc0[0],ex_xc0[1] are filled with coordinate center for excision
-//            //   and ex_r0[0],ex_r0[1] are filled with principle axis radii for excision )
-//            if (found_AH[l] && AH[l] && AMRD_do_ex)
-//            {
-//               fill_ex_params_(AH_R[l],AH_xc[l],ex_r0,ex_xc0,&AH_Nchi[l],&AH_Nphi[l],&dx,&dy,&axisym);
-//
-//               if (no_AH_intersect(ex_r0,ex_xc0,l))
-//               {
-//                 do_reinit_ex=1;
-//                 do_repop=1;
-//                 // saves local ex_r0,ex_xc0 to global ex_r, ex_xc
-//                 ex_r[l][0]=ex_r0[0]; //excision ellipse x-semiaxis
-//                 ex_r[l][1]=ex_r0[1]; //excision ellipse y-semiaxis
-//                 ex_xc[l][0]=ex_xc0[0]; //excision ellipse x-coordinate center
-//                 ex_xc[l][1]=ex_xc0[1]; //excision ellipse y-coordinate center 
-//               }
-//            }
-//
-//         }
-//         AH_count[l]++;
-//      }
-//   }
-//  }
+   for (l=0; l<MAX_BHS; l++)
+   {
+      real prev_AH_R[AH_Nchi[l]*AH_Nphi[l]];
+      real prev_AH_xc[3];
+      for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {prev_AH_R[i]=AH_R[l][i];} 
+      for (i=0; i<3; i++) {prev_AH_xc[i]=AH_xc[l][i];}
+      c_AH=l;
+      if (AH_max_iter[l]>0 && L==AH_Lmin[l] && ct>=AH_tmin[l])
+      {
+         if (AH_count[l]<0) { AH[l]=1; if (AMRD_state==AMRD_STATE_EVOLVE) M=J=0;}
+         else if (!(AH_count[l] % freq0[l]) && !(c_AH==3 && ct==0)) // for fourth BH, do not search at t=0
+         {
+            omt=0; // over-max-tolerance
+            AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0); // AH finder
+
+            if (AH[l]) { freq0[l]=AH_freq_aft[l]; found_AH[l]=1; got_an_AH=1; AH_tol[l]=AH_tol_aft[l]; found_count_AH[l]++; } // if this time found AH
+
+            // if previously found but failed now
+            if (found_AH[l] && !AH[l]) 
+            {
+               if (AH_reset_scale[l]>0)
+               {
+                  // expand old initial-guess surface
+                  if (my_rank==0 && AMRD_evo_trace>=1)
+                     printf("t=%lf ... lost AH[%i] ...\n" 
+                            "expanding old initial-guess surface by a factor %lf\n",ct,l+1,AH_reset_scale[l]);
+                  for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l];
+
+                  if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
+                  { 
+                     // shrink old initial-guess surface
+                     if (my_rank==0 && AMRD_evo_trace>=1) printf("... still can't find one (min_resid=%lf)\n"
+                         "... shrinking old initial-guess surface by a factor %lf\n",AH_min_resid1,1/AH_reset_scale[l]);
+                     for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
+
+                     if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
+                     {
+
+                        // increase AH_tol to force an AH to be found, starting with shrunken initial-guess surface
+                        if (AH_min_resid2<AH_min_resid1 && AH_min_resid2<AH_min_resid0) 
+                        {
+                           if (my_rank==0 && AMRD_evo_trace>=1)
+                              printf("starting from shrunken initial-guess surface\n");
+                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]/AH_reset_scale[l]; 
+                           if (my_rank==0 && AMRD_evo_trace>=1) 
+                              printf("and temporarily increasing tolerance to %lf; will then use the resulting surface\n"
+                              ,AH_min_resid2*AH_omt_scale[l]);
+                           omt=1;
+                           tol_save=AH_tol[l];
+                           AH_tol[l]=AH_min_resid2*AH_omt_scale[l];
+                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid2)))
+                           {
+                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+                           }
+                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+                           AH_tol[l]=tol_save;
+                        }
+
+                        // increase AH_tol to force an AH to be found, starting with expanded initial-guess surface
+                        else if (AH_min_resid1<AH_min_resid0) 
+                        {  
+                           if (my_rank==0 && AMRD_evo_trace>=1)
+                              printf("starting from expanded initial-guess surface\n");
+                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]*AH_reset_scale[l]; 
+                           if (my_rank==0 && AMRD_evo_trace>=1) 
+                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid1*AH_omt_scale[l]);
+                           omt=1;
+                           tol_save=AH_tol[l];
+                           AH_tol[l]=AH_min_resid1*AH_omt_scale[l];
+                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid1)))
+                           {
+                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+                           }
+                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+                           AH_tol[l]=tol_save;
+                        }
+
+                        // increase AH_tol to force an AH to be found, starting with old initial-guess surface
+                        else 
+                        {
+                           if (my_rank==0 && AMRD_evo_trace>=1)
+                              printf("starting from old initial-guess surface\n");
+                           for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=prev_AH_R[i]; 
+                           if (my_rank==0 && AMRD_evo_trace>=1) 
+                              printf("and temporarily increasing tolerance to %lf; use result surface\n",AH_min_resid0*AH_omt_scale[l]);
+                           omt=1;
+                           tol_save=AH_tol[l];
+                           AH_tol[l]=AH_min_resid0*AH_omt_scale[l];
+                           if (!(AH[l]=find_apph(&M,&J,&c_equat,&c_polar,found_AH[l],&AH_min_resid0)))
+                           {
+                              if (my_rank==0 && AMRD_evo_trace>=1) printf("BUG: couldn't find *same* AH\n");
+                              if (AH_RESET_AFTER_FAIL) found_AH[l]=0;
+                           }
+                           if (my_rank==0 && AMRD_evo_trace>=1) printf("setting tolerance back to %lf\n",tol_save);
+                           AH_tol[l]=tol_save;
+                        }
+
+                     }                 
+                  }
+               }
+            }
+
+            // if still not found
+            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[l][i]=prev_AH_R[i];}
+
+            // if never found AH
+            if (!(found_AH[l])) for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) AH_R[l][i]=AH_r0[l];
+
+            // save AH grid functions if this time found AH
+            if (AH[l]) 
+            {
+               AH_shape[0]=AH_Nchi[l];
+               AH_shape[1]=AH_Nphi[l];
+               AH_bbox[0]=0;
+               AH_bbox[1]=M_PI;
+               AH_bbox[2]=0;
+               if (AH_xc[l][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;}
+               int rank=2;
+               sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
+               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);
+               sprintf(name,"%sAH_theta_%i",AMRD_save_tag,l);
+               gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_theta[l]);
+            }
+
+            // fill in excision parameters 
+            // ( ex_xc0[0],ex_xc0[1],ex_xc0[2] are filled with coordinate center for excision
+            //   and ex_r0[0],ex_r0[1],ex_r0[2] are filled with principle axis radii for excision )
+            if (found_AH[l] && AH[l] && AMRD_do_ex)
+            {
+               fill_ex_params_(AH_R[l],AH_xc[l],ex_r0,ex_xc0,&AH_Nchi[l],&AH_Nphi[l],&dx,&dy,&dz,&axisym);
+
+               if (no_AH_intersect(ex_r0,ex_xc0,l))
+               {
+                 do_reinit_ex=1;
+                 do_repop=1;
+                 // saves local ex_r0,ex_xc0 to global ex_r, ex_xc
+                 ex_r[l][0]=ex_r0[0]; //excision ellipse x-semiaxis
+                 ex_r[l][1]=ex_r0[1]; //excision ellipse y-semiaxis
+                 ex_r[l][2]=ex_r0[2]; //excision ellipse z-semiaxis
+                 ex_xc[l][0]=ex_xc0[0]; //excision ellipse x-coordinate center
+                 ex_xc[l][1]=ex_xc0[1]; //excision ellipse y-coordinate center 
+                 ex_xc[l][2]=ex_xc0[2]; //excision ellipse z-coordinate center
+               }
+
+               if (my_rank==0) printf("excision ellipse semiaxes: (ex_r[0],ex_r[1],ex_r[2])=(%lf,%lf,%lf)\nexcision ellipse center:   (ex_xc[0],ex_xc[1],ex_xc[2])=(%lf,%lf,%lf)\n",ex_r[l][0],ex_r[l][1],ex_r[l][2],ex_xc[l][0],ex_xc[l][1],ex_xc[l][2]);
+            }
+
+         }
+         AH_count[l]++;
+      }
+   }
 
    // repopulate if needed
    int repop_n=1;

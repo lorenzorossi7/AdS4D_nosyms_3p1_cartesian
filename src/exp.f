@@ -449,7 +449,7 @@ c given AH_R,AH_xc, computes the corresponding coordinate center
 c and principle axis radii for excision ex_r0,ex_xc0
 c-----------------------------------------------------------------------
         subroutine fill_ex_params(AH_R,AH_xc,ex_r0,ex_xc0,
-     &                            AH_Nchi,AH_Nphi,dx,dy,axisym)
+     &                            AH_Nchi,AH_Nphi,dx,dy,dz,axisym)
         implicit none
         integer axisym
         integer AH_Nchi,AH_Nphi
