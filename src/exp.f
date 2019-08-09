@@ -90,7 +90,7 @@ c----------------------------------------------------------------------
 
         real*8 zeros(Nx,Ny,Nz)
 
-        real*8 f_x,f_y,f_xx,f_xy,f_yy
+        real*8 f_x,f_y,f_z,f_xx,f_xy,f_xz,f_yy,f_yz,f_zz
         real*8 tmp1,tmp2,tmp3,tmp4,tmp5
 
         real*8 n_l(4),s_l(4)
@@ -137,9 +137,9 @@ c----------------------------------------------------------------------
         data x0,y0,z0/0.0,0.0,0.0/
         data dx,dy,dz/0.0,0.0,0.0/
 
-        data f_x,f_y/0.0,0.0/
-        data f_xx,f_xy/0.0,0.0/
-        data f_yy/0.0/
+        data f_x,f_y,f_z/0.0,0.0,0.0/
+        data f_xx,f_xy,f_xz/0.0,0.0,0.0/
+        data f_yy,f_yz,f_zz/0.0,0.0,0.0/
         data tmp1,tmp2,tmp3,tmp4,tmp5/0.0,0.0,0.0,0.0,0.0/
 
         data n_l,s_l/4*0.0,4*0.0/
@@ -267,11 +267,13 @@ c----------------------------------------------------------------------
 
               ! computes needed derivatives of f=r-R(chi,phi)
               call df2_int(f,f,f,
-     &             tmp1, f_x, f_y, 
-     &             tmp2,tmp3,tmp4,
-     &             f_xx,f_xy,f_yy,
+     &             tmp1, f_x, f_y, f_z,
+     &             tmp2,tmp3,tmp4,tmp5,
+     &             f_xx,f_xy,f_xz,
+     &             f_yy,f_yz,
+     &             f_zz,
      &             x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'f')
- 
+
               ! define unit time-like vector n, normal to t=const
               ! surfaces
               n_l(1)=-1/sqrt(-g0_uu(1,1))
@@ -933,7 +935,6 @@ c-----------------------------------------------------------------------
         real*8 dxb_dp,dyb_dp,dzb_dp
         real*8 dtt,dpp,dpt
         real*8 gb_xx0,gb_xy0,gb_yy0,psi0
-        real*8 f_x,f_y,f_xx,f_xy,f_yy
 
         real*8 drh_dch,dx_dch,dy_dch
         real*8 dx_dch_rh,dy_dch_rh
@@ -966,8 +967,6 @@ c-----------------------------------------------------------------------
         data dtt,dpp,dpt/0.0,0.0,0.0/
         data gb_xx0,gb_xy0,gb_yy0/0.0,0.0,0.0/
         data psi0/0.0/
-        data f_x,f_y/0.0,0.0/
-        data f_xx,f_xy,f_yy/0.0,0.0,0.0/
 
         data drh_dch,dx_dch,dy_dch/0.0,0.0,0.0/
         data dx_dch_rh,dy_dch_rh/0.0,0.0/
