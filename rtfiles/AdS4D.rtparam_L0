@@ -28,7 +28,7 @@ AH_max_iter := 10000
 AH_lambda := 0.00001
 AH_tol := 1e-2
 AH_r0 := 0.10
-AH_r1 := 0.20
+AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
@@ -200,8 +200,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 4
-save_1_vars := [ "iresall" "gb_res" "kretsch" "relkretsch" ]
+num_save_1_vars := 5
+save_1_vars := [ "iresall" "gb_res" "kretsch" "relkretsch" "chr" ]
 
 num_save_2_vars := 15
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
