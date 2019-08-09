@@ -482,7 +482,7 @@ c-----------------------------------------------------------------------
         zmax=0
 
         dahchi=PI/(AH_Nchi-1)
-        dahphi=2*PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nphi-1)
 
         do i=1,AH_Nchi
           do j=1,AH_Nphi
@@ -653,7 +653,7 @@ c-----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         dahchi=PI/(AH_Nchi-1)
-        dahphi=2*PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nphi-1)
 
         AH_chi=(i-1)*dahchi
         AH_phi=(j-1)*dahphi
@@ -786,7 +786,7 @@ c-----------------------------------------------------------------------
         dz=z(2)-z(1)
 
         dahchi=PI/(AH_Nchi-1)
-        dahphi=2*PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nphi-1)
 
         xb0=AH_xc(1)
         yb0=AH_xc(2)
@@ -980,7 +980,7 @@ c-----------------------------------------------------------------------
         dz=z(2)-z(1)
 
         dahchi=PI/(AH_Nchi-1)
-        dahphi=2*PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nphi-1)
 
         AH_chi=(i0-1)*dahchi
         AH_phi=(j0-1)*dahphi
@@ -1460,7 +1460,7 @@ c-----------------------------------------------------------------------
         zmax=0
 
         dahchi=PI/(AH_Nchi-1)
-        dahphi=2*PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nphi-1)
 
         do i=1,AH_Nchi
            AH_chi=(i-1)*dahchi
