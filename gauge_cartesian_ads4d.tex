@@ -1,0 +1,303 @@
+\documentclass[12pt]{article}
+
+%\usepackage[showframe, nomarginpar, textwidth = 16cm]{geometry}
+\usepackage{amsthm}         
+\usepackage{graphicx} 	    
+\usepackage{amsmath} 
+%\usepackage{nccmath}	   
+\usepackage{amssymb}       
+\usepackage{setspace}	    
+\usepackage[round]{natbib}  
+\usepackage{capt-of}
+\usepackage{algorithm}
+\usepackage{algorithmic}       
+
+\setlength{\topmargin}{-1in}
+\setlength{\headheight}{1.5cm}
+\setlength{\headsep}{0.5cm}
+\setlength{\textheight}{8.9in}
+\setlength{\oddsidemargin}{.1in}
+\setlength{\evensidemargin}{.1in}
+\setlength{\textwidth}{6.3in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{unusedproblem}[theorem]{unused Problem}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{project}[theorem]{Project}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mbox{$I\!\!N$}}
+\newcommand{\Z}{\mbox{$Z\!\!\!Z$}}
+\newcommand{\Q}{\mbox{$I\:\!\!\!\!\!Q$}}
+\newcommand{\R}{\mbox{$I\!\!R$}}
+
+%\newenvironment{mpmatrix}{\begin{medsize}\begin{pmatrix}}%
+%{\end{pmatrix}\end{medsize}}%
+
+\begin{document}
+
+\title{Notes: Gauge in Cartesian Coordinates for AdS$_4$}
+
+\author{Lorenzo Rossi}
+
+\maketitle
+
+\begin{abstract}
+We show that a choice of gauge near the boundary, along with the GH constraints $C_\mu = 0$, can lead to 
+cancellations in the leading (divergent) terms of the near-boundary field equations for asymptotically AdS$_4$ spacetimes. 
+In Cartesian coordinates, $x=(1-q)\sin\theta\cos\phi$, $y=(1-q)\sin\theta\sin\phi$, $z=(1-q)\cos\theta$, we work to leading order in an expansion near the $q=0$ boundary of all 
+metric components and source functions, of the form $f=f_{(0)} + f_{(1)} q + f_{(2)} q^2 + f_{(3)} q^3 + ...$
+\end{abstract}
+
+
+
+
+
+\section{Cartesian Coordinates for AdS$_4$}
+The metric of AdS$_4$ in global coordinates $(t,r,\theta,\phi)$ can be expressed as
+\begin{equation}
+\hat{g} = \left( -(1+r^2/L^2) dt^2 + (1+r^2/L^2)^{-1} dr^2 +r^2 d{\Omega_2}^2 \right), \nonumber
+\end{equation}
+
+\noindent with a characteristic length scale $L$ that is related to the cosmological constant $\Lambda_D = - \frac{(D-1)(D-2)}{2 L^2}$, and where the metric of the 3-sphere is $d{\Omega_2}^2 = d\theta^2 + \sin^2\theta d\phi^2$. \\
+
+\noindent The compactification implemented by $r=2\rho/(1-\rho^2)$ includes the boundary at $r \rightarrow \infty$ as part of the spacetime at $\rho=1$. Defining a convenient function $\hat{f}(\rho) = (1-\rho^2)^2+4\rho^2/L^2$, this compactification brings the metric into the form
+\begin{equation}
+\hat{g} = \frac{1}{(1-\rho^2)^2} \left( -\hat{f}(\rho) dt^2 + 4(1+\rho^2)^2 \hat{f}(\rho)^{-1} d\rho^2 + 4\rho^2 d{\Omega_2}^2 \right). \nonumber
+\end{equation}
+
+\noindent Defining $x=\rho\sin\theta\cos\phi$, $y=\rho\sin\theta\sin\phi$, $z=\rho\cos\theta$,  we obtain the metric of AdS$_4$ in compactified Cartesian coordinates
+\begin{equation}
+\begin{split}
+\hat{g}=&\frac{1}{\left(1-\rho^2(x,y,z)\right)^2 }\{ -dt^2 \hat{f}(\rho(x,y,z)) \\
+&+\frac{4}{\rho^2(x,y,z)} \left[dx^2
+   \left(y^2+z^2\right)-2 dy y (dx x+dz z)-2 dx dz x
+   z+dy^2 \left(x^2+z^2\right)+dz^2 \left(x^2+y^2\right)\right]\\
+&+\frac{4}{\rho^2(x,y,z)\hat{f}(\rho(x,y,z))}
+   \left(1+\rho^2(x,y,z)\right)^2 (dx x+dy y+dz z)^2 \},
+   \end{split}
+   \end{equation}
+where $\rho(x,y,z)=\sqrt{x^2+y^2+z^2}$.
+
+In what follows, we shall use $q=1-\rho$ so that the boundary is located at $q=0$. 
+
+
+
+\section{Regularized Variables}
+
+The evolved variables $\bar{g}_{\mu\nu}$ are constructed out of the full metric $g_{\mu\nu}$ and the pure AdS metric $\hat{g}_{\mu\nu}$ by
+\begin{equation}
+g_{\mu\nu} = \hat{g}_{\mu\nu} + \bar{g}_{\mu\nu}, \nonumber.
+\end{equation}
+%and we define $\bar{g}_\psi$ so that 
+%$\bar{g}_{\phi\phi}=y^2\bar{g}_\psi$. 
+Similarly, the evolved variables $\bar{H}_\mu$ are 
+constructed out of the full GH source functions $H_\mu$ and the values they take on in pure AdS 
+$\hat{H}_\mu$ by 
+\begin{equation}
+H_\mu = \hat{H}_\mu + (1-\rho^2(x,y,z)) \bar{H}_\mu. \nonumber 
+\end{equation}
+The evolved variable $\bar{\phi}$ is constructed out of a real scalar field $\phi$ by
+\begin{equation}
+\phi = (1-\rho^2(x,y,z))^2 \bar{\phi}. \nonumber
+\end{equation} 
+So far, we considered the case of vanishing scalar field.
+
+
+
+
+\section{Near-Boundary Field Equations}
+
+After appropriately defining the $\bar{g}_{\mu\nu}$ regularized metric components, the $(t,t)$- component of modified Einstein field equations (EFE) can be written in a near-boundary expansion near $q=0$ as
+\begin{equation}
+\label{eqn:nearbdyefestt}
+\begin{split}
+\tilde{\Box}\bar{g}_{(1)tt}&=(-3\sin^2\theta\cos^2\phi\bar{g}_{(1)xx}-3\sin^2\theta\sin2\phi\bar{g}_{(1)xy}\\
+&-3\sin2\theta(\cos\phi\bar{g}_{(1)xz}+\sin\phi\bar{g}_{(1)yz})-3\sin^2\theta\sin^2\phi\bar{g}_{(1)yy}\\
+&-3\cos^2\theta\bar{g}_{(1)zz}+2\sin\theta(\cos\phi\bar{H}_{(1)x}+\sin\phi\bar{H}_{(1)y})+2\cos\theta\bar{H}_{(1)z})q^{-2}\\
+&+\mathcal{O}(q^{-1}).
+\end{split}
+\end{equation}
+Notice that computing this expansion by using Wolfram Mathematica has proved itself not to be as straightforward as in the other cases studied before. In fact, we saw that our machines take a time too long to compute this expansion, unless we expand first every single term in the modified EFE up to the minimum order in $q$ necessary to have accuracy to order $\mathcal{q}$ in the full expansion.
+We can immediately verify that the leading order term of the right hand side (RHS) of \eqref{eqn:nearbdyefestt} vanishes if we choose $\bar{H}_\mu$ such that their leading order satisfies
+\begin{align}
+\label{eq:hbx}
+\bar{H}_{(1)x}&=\frac{3}{2\sqrt{x^2+y^2+z^2}}(x \bar{g}_{(1)xx}+y\bar{g}_{(1)xy}+z\bar{g}_{(1)xz})\\
+\label{eq:hby}
+\bar{H}_{(1)y}&=\frac{3}{2\sqrt{x^2+y^2+z^2}}(x \bar{g}_{(1)xy}+y\bar{g}_{(1)yy}+z\bar{g}_{(1)yz})\\
+\label{eq:hbz}
+\bar{H}_{(1)z}&=\frac{3}{2\sqrt{x^2+y^2+z^2}}(x \bar{g}_{(1)xz}+y\bar{g}_{(1)yz}+z\bar{g}_{(1)zz}).
+\end{align}
+This choice of source functions is the trivial generalisation of the choice obtained in the 2+1 case in 5 dimensions with Cartesian coordinates $x=\rho\cos\chi,y=\rho\sin\chi$ presented in the paper ``Non-Spherically Symmetric Collapse in Asymptotically AdS Spacetimes'' by Bantilan, Figueras, Kunesch, Romatschke.
+At this point, we still need to obtain a choice for $\bar{H}_t$ that makes the RHS of the expressions analogous to \eqref{eqn:nearbdyefestt} for the $(t,x),(t,y),(t,z)$ component of the modified EFE vanish, as it happens in the other cases studied before. However, we realised that computing the near-boundary expansion of these components by Mathematica takes a very long time in the machines that we have available. We managed to find a way around this by simplifying the computation as follows:
+\begin{itemize}
+\item looking again at the gauge choice made in ``Non-Spherically Symmetric Collapse in Asymptotically AdS Spacetimes'', we assume that the trivial generalization of that choice to our 3+1 case in 4 dimensions is
+\begin{equation}
+\label{eq:hbt}
+\bar{H}_{(1)t}=\frac{3}{2\sqrt{x^2+y^2+z^2}}(x \bar{g}_{(1)tx}+y\bar{g}_{(1)ty}+z\bar{g}_{(1)tz}).
+\end{equation}
+\item we set to 0 all the coefficients in the expansion of the metric components, the source functions and their derivatives that will not appear in the leading order term, e.g. $\bar{g}_{(2)xx}=\bar{g}_{(3)xx}=\bar{g}_{(2)xx,y}=\bar{g}_{(3)xx,y}=\bar{g}_{(2)xx,yy}=\bar{g}_{(3)xx,yy}=\bar{H}_{(2)x}=\bar{H}_{(2)x,y}=0$.
+\item we fix numerical values for $\cos\theta\equiv\alpha$ and $\sin\theta=\sqrt{1-\alpha^2}$, and for $\cos\phi\equiv\beta,\sin\phi=\sqrt{1-\beta^2}$.
+\item we perform the near-boundary expansion using these values for all the above mentioned quantities.
+\end{itemize}
+With these simplifications, the computation is significantly sped up. By using different numerical values for $\alpha$ and $\beta$ (chosen arbitrarily and set manually in the Mathematica notebook), we can convince ourselves that the choice \eqref{eq:hbt} for $\bar{H}_{(1)t}$ is the correct one, i.e. the one that makes the RHS of the $(t,x),(t,y),(t,z)$ component of the modified EFE in the form \eqref{eqn:nearbdyefestt} vanish.
+
+Equations \eqref{eq:hbx},\eqref{eq:hby},\eqref{eq:hbz},\eqref{eq:hbt} provide the stable gauge we were looking for.
+Once this choice of source functions is made, all the remaining components of the modified EFE (i.e. the ones without the $t$ index) are proportional to $\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1)zz}$, in a way very similar to the 2+1 case.
+
+Notice that the equations \eqref{eq:hbx},\eqref{eq:hby},\eqref{eq:hbz} and \eqref{eq:hbt} don't change if we relabel the names of the Cartesian axes by an even permutation, e.g. $z\to x, x\to y,y\to z$. In particular, this property tells us that we can use the expressions \eqref{eq:hbx},\eqref{eq:hby},\eqref{eq:hbz} and \eqref{eq:hbt} even if we define Cartesian coordinates by the ``less natural'' expressions $x=\rho\cos\theta$, $y=\rho\sin\theta\cos\phi$, $z=\rho\sin\theta\sin\phi$, which is what we do in our code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\iffalse
+\section{GH Constraints}
+
+Define $C_\mu \equiv H_\mu - \square x_\mu$, so that the GH constraints read $C_\mu=0$. After appropriately 
+defining the $\bar{H}_\mu$ regularized source functions, the non-trivial components of $C_\mu$ can be expanded near $q=0$
+\begin{eqnarray}\label{eqn:nearbdyghconstraints}
+C_t    &=& ( -\frac{3}{2}\cos\chi\bar{g}_{(1) tx} - \frac{3}{2}\sin\chi\bar{g}_{(1) ty} + \bar{H}_{(1) t} )q + \mathcal{O}(q^2) \nonumber \\
+C_x    &=& ( -\frac{3}{2}\sin\chi\bar{g}_{(1) xy} - \frac{3}{4}\cos\chi(\bar{g}_{(1) tt}+\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) + \bar{H}_{(1) x} )q + \mathcal{O}(q^2) \nonumber \\
+C_y    &=& ( -\frac{3}{2}\cos\chi\bar{g}_{(1) xy} - \frac{3}{4}\sin\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) xx}+\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) + \bar{H}_{(1) y} )q + \mathcal{O}(q^2) \nonumber 
+\end{eqnarray}
+
+
+
+
+
+\section{Boundary Gauge}
+
+The boundary gauge is chosen such that, to leading order
+\begin{eqnarray}
+\bar{H}_{(1) t} = \frac{3}{2}\frac{x}{\rho} \bar{g}_{(1) tx} + \frac{3}{2}\frac{y}{\rho} \bar{g}_{(1) ty} \nonumber \\
+\bar{H}_{(1) x} = \frac{3}{2}\frac{x}{\rho} \bar{g}_{(1) xx} + \frac{3}{2}\frac{y}{\rho} \bar{g}_{(1) xy}\nonumber \\
+\bar{H}_{(1) y} = \frac{3}{2}\frac{y}{\rho} \bar{g}_{(1) yy} + \frac{3}{2}\frac{x}{\rho} \bar{g}_{(1) xy}\nonumber 
+\end{eqnarray}
+
+
+
+
+
+\section{Cancellations in the Near-Boundary Field Equations}
+
+The cancellation between leading order terms in the field equations is schematically displayed below, 
+starting with a component of the field equations and adding the appropriate multiples of the GH constraints and the 
+boundary gauge choice until the result is as close to zero as possible. The upshot from the calculations below: 
+the combination $\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}=0$ must also vanish in order 
+for the leading order terms in all the near-boundary field equations to cancel. Demanding that this combination vanish is equivalent to demanding that the leading-order coefficient of the GH constraints vanish in our choice of gauge, e.g. substitute in the choice in Section 5 of $\bar{H}_{(1) x}$ into the expression in Section 4 for $C_x$.
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{tt}$:              & \\
+&substitute $H_x$:      & \\
+&substitute $H_y$:      & \\
+\hline
+&                       &0
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{tx}$ (or $E_{ty}$):& \\
+&substitute $H_t$:      & \\
+\hline
+&                       &0
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{xx}$:              & \\
+&+$4\cos\chi C_x$:      & \\
+&-$4\sin\chi C_y$:      & \\
+\hline
+&                       &$ 6\sin\chi\cos\chi\bar{g}_{(1) xy} + 3\cos^2\chi\bar{g}_{(1) xx} + 3\sin^2\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) \psi}) - 2\bar{H}_{(1) x} - 2\bar{H}_{(1) y}$  \\
+&substitute $H_x$:      & \\
+&substitute $H_y$:      & \\
+\hline
+&                       &$ 3\sin^2\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) $
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{xy}$:              & \\
+&-$4\sin\chi C_x$:      & \\
+&-$4\cos\chi C_y$:      & \\
+\hline
+&                       &$ 3\sin\chi\cos\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) $
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{yy}$:              & \\
+&-$4\cos\chi C_x$:      & \\
+&+$4\sin\chi C_y$:      & \\
+\hline
+&                       &$ 6\sin\chi\cos\chi\bar{g}_{(1) xy} + 3\sin^2\chi\bar{g}_{(1) yy} + 3\cos^2\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) - 2\bar{H}_{(1) x} - 2\bar{H}_{(1) y}$  \\
+&substitute $H_x$:      & \\
+&substitute $H_y$:      & \\
+\hline
+&                       &$ 3\cos^2\chi(\bar{g}_{(1) tt}-\bar{g}_{(1) xx}-\bar{g}_{(1) yy}-\bar{g}_{(1) \psi}) $
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lll}
+&$E_{\psi}$:              & \\
+&substitute $H_x$:      & \\
+&substitute $H_y$:      & \\
+\hline
+&                       &$0$
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\fi
+
+
+\end{document}
