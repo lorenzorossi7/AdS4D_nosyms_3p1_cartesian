@@ -979,12 +979,8 @@ c-----------------------------------------------------------------------
         dy=y(2)-y(1)
         dz=z(2)-z(1)
 
-        if (AH_xc(2).lt.dy) then
-          dahchi=PI/(AH_Nchi-1)
-        else
-          dahchi=2*PI/(AH_Nchi-1)
-        end if
-        dahphi=1.0d0
+        dahchi=PI/(AH_Nchi-1)
+        dahphi=2*PI/(AH_Nchi-1)
 
         AH_chi=(i0-1)*dahchi
         AH_phi=(j0-1)*dahphi
@@ -1086,14 +1082,17 @@ c-----------------------------------------------------------------------
                       if (chr(i1,j1,k1).eq.ex) then
                          write(*,*) ' calc_exp0: pt i1,j1 is excised'
                          write(*,*) ' i0,j0=',i0,j0
+                         write(*,*) ' AH_Nchi,AH_Nphi=',AH_Nchi,AH_Nphi
                          write(*,*) ' AH_chi,AH_phi=',AH_chi,AH_phi
                          write(*,*) ' x0,y0,z0=',x0,y0,z0
-                         write(*,*) ' dx,dy,dz=',dx,dy,dz
                          write(*,*) ' i,j,k=',i,j,k
+                         write(*,*) ' xi,yj,zk=',x(i),y(j),z(k)
+                         write(*,*) ' chr(i,j,k)=',chr(i,j,k)
                          write(*,*) ' i1,j1,k1=',i1,j1,k1
                          write(*,*) ' xi1,yj1,zk1=',x(i1),y(j1),z(k1)
                          write(*,*) ' chr(i1,j1,k1)=',chr(i1,j1,k1)
-                         write(*,*) ' Nx,Ny=',Nx,Ny
+                    write(*,*) ' rho1=',sqrt(x(i1)**2+y(j1)**2+z(k1)**2)
+                         write(*,*) ' Nx,Ny,Nz=',Nx,Ny,Nz
                          da=-10000
                          AH_theta(i0,j0)=0
                          return
