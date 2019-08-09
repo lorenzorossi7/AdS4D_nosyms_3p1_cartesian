@@ -1891,9 +1891,9 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                  xp=(x-ex_xc[l][0]);
                  yp=(y-ex_xc[l][1]);
                  zp=(z-ex_xc[l][2]);
-                 ex_r_xp=(ex_r[l][0]); //*(1-ex_rbuf[l]));
-                 ex_r_yp=(ex_r[l][1]); //*(1-ex_rbuf[l]));
-                 ex_r_zp=(ex_r[l][2]);
+                 ex_r_xp=(ex_r[l][0]*(1-ex_rbuf[l]));
+                 ex_r_yp=(ex_r[l][1]*(1-ex_rbuf[l]));
+                 ex_r_zp=(ex_r[l][2]*(1-ex_rbuf[l]));
 
 //                 printf("xp=%lf,yp=%lf,zp=%lf\n",xp,yp,zp);
 //                 printf("ex_r_xp=%lf,ex_r_yp=%lf,ex_r_zp=%lf\n",ex_r_xp,ex_r_yp,ex_r_zp);
