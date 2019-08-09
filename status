@@ -6,3 +6,7 @@ Convergence at t=0 is good as expected for analytic Schwarzschild-AdS initial da
 The solver of Hamiltonian constraint has been generalised to 3+1, so it is now possible to use static initial data that solves the Hamiltonian constraint with a non-vanishing scalar field.
 Convergence and stability at later times, higher resolutions and different values of the parameters needs to be tested.
 In this branch we want to implement the calculation of the quasi-local stress energy tensor at the boundary in spherical polar coordinates, by using the metric solution obtained in the code.
+The machinery for the output fo the quasi-local stress energy tensor at the boundary and the coordinate values of the corresponding boundary points is implemented.
+THINGS TO DO:
+1. test the expressions of the qs local stress tensor: compare with analytic values for analytic initial data at t=0, tracelessness,conservation of stress-energy tensor.
+2. calculation of AdS mass by using Balasubramanian and Krauss's prescription.
