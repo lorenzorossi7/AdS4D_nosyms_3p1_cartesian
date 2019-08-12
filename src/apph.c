@@ -394,7 +394,7 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
          prev_resid=resid;
 
          // print out AH_R(middle), |Theta|, Theta(middle), (xc,yc,zc)
-         if (ltrace>1 && my_rank==0) printf("   iter %i: AH_R(mid)[%i]=%lf ... |Theta|=%lf, Theta(mid)=%lf, (xc,yc)=(%lf,%lf) \n",iter,(np+1)/2,AH_R[c_AH][(np+1)/2],resid,AH_theta[c_AH][(np+1)/2],AH_xc[c_AH][0],AH_xc[c_AH][1]);
+         if (ltrace>1 && my_rank==0) printf("   iter %i: AH_R(mid)[%i]=%lf ... |Theta|=%lf, Theta(mid)=%lf, (xc,yc,zc)=(%lf,%lf,%lf) \n",iter,(np+1)/2,AH_R[c_AH][(np+1)/2],resid,AH_theta[c_AH][(np+1)/2],AH_xc[c_AH][0],AH_xc[c_AH][1],AH_xc[c_AH][2]);
 
          // checks for not-allowed negative AH_R 
          for (i=0; i<np; i++)

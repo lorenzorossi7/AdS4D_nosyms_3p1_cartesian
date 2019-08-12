@@ -1934,9 +1934,9 @@ void AdS4D_pre_tstep(int L)
 {
    char name[256];
    int AH[MAX_BHS];
-   int AH_shape[1],got_an_AH,do_reinit_ex,do_repop;
+   int AH_shape[2],got_an_AH,do_reinit_ex,do_repop;
    real M,J,c_equat,c_polar;
-   real AH_bbox[2],AH_min_resid0,AH_min_resid1,AH_min_resid2;
+   real AH_bbox[4],AH_min_resid0,AH_min_resid1,AH_min_resid2;
    real ex_r0[3],ex_xc0[3],dt;
 
    real ct;
