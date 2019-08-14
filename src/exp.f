@@ -1036,26 +1036,30 @@ c-----------------------------------------------------------------------
           end if
         end if
 
+        if (AH_R(i0,j0).lt.1.5*dx) is_bad=1 !stop ahfinder when AH_R gets too small
+
         if (is_bad.eq.1) then
-!           write(*,*) '--------------------------------------------'
-!           write(*,*) 'WARNING!!! theta set to 100 at i0,j0=',i0,j0
-!           write(*,*) 'and regularity will *not* take care of it!'
-!           write(*,*) '(AH points too bunched up near i0 or j0 endpts)'
-!           write(*,*) '(... reduce AH_Nchi or AH_Nphi)'
+           write(*,*) '--------------------------------------------'
+           write(*,*) 'WARNING!!! theta set to 100 at i0,j0=',i0,j0
+           write(*,*) 'and regularity will *not* take care of it!'
+           write(*,*) '(AH points too bunched up near i0 or j0 endpts)'
+           write(*,*) '(... reduce AH_Nchi,AH_Nphi or increase res)'
 !           write(*,*) ' i0,j0=',i0,j0
 !           write(*,*) ' AH_R,AH_chi,AH_phi=',AH_R(i0,j0),AH_chi,AH_phi
-!           write(*,*) ' xc(1),xc(2)=',AH_xc(1),AH_xc(2)
-!           write(*,*) ' i,j=',i,j
-!           write(*,*) ' x0,y0=',x0,y0
-!           write(*,*) ' x(1),y(1)=',x(1),y(1)
-!           write(*,*) ' dx,dy=',dx,dy
+!           write(*,*) ' xc(1),xc(2),xc(3)=',AH_xc(1),AH_xc(2),AH_xc(3)
+!           write(*,*) ' i,j,k=',i,j,k
+!           write(*,*) ' x0,y0,z0=',x0,y0,z0
+!           write(*,*) ' x(1),y(1),z(1)=',x(1),y(1),z(1)
+!           write(*,*) ' dx,dy,dz=',dx,dy,dz
 !           write(*,*) ' dahchi,dahphi=',dahchi,dahphi
 !           write(*,*) '--------------------------------------------'
            AH_theta(i0,j0)=100
+           return
         end if
 
         if (fill_later.eq.1) then
             AH_theta(i0,j0)=0
+            return
         else
 
           is=max(1,i-2)
