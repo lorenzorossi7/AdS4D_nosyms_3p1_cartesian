@@ -1036,7 +1036,7 @@ c-----------------------------------------------------------------------
           end if
         end if
 
-        if (AH_R(i0,j0).lt.1.5*dx) is_bad=1 !stop ahfinder when AH_R gets too small
+        if (AH_R(i0,j0).lt.1.5*dx) is_bad=1 !stops ahfinder when AH_R gets too small
 
         if (is_bad.eq.1) then
            write(*,*) '--------------------------------------------'
