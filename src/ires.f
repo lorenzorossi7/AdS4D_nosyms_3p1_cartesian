@@ -11,6 +11,7 @@ c----------------------------------------------------------------------
      &                  efe_psi_ires,
      &                  kretsch,
      &                  relkretsch,
+     &                  relkretschcentregrid,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -76,6 +77,7 @@ c----------------------------------------------------------------------
         integer is,ie,js,je,ks,ke
 
         integer i1,j1,k1,a,b,c,d,e,f,g,h
+        integer ic,jc,kc
         real*8 efe_ires(4,4)
 
         real*8 PI
@@ -122,6 +124,7 @@ c----------------------------------------------------------------------
 
         real*8 kretsch(Nx,Ny,Nz),relkretsch(Nx,Ny,Nz)
         real*8 kretschpureads
+        real*8 relkretschcentregrid
 
 !!!!!!!DEBUGGING!!!!!!
         integer max_i,max_j,max_k
@@ -130,6 +133,7 @@ c----------------------------------------------------------------------
 
         ! initialize fixed-size variables
         data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
+        data ic,jc,kc/-1,-1,-1/
         data i1,j1,k1,a,b,c,d,e/0,0,0,0,0,0,0,0/
 
         data dx,dy,dz/0.0,0.0,0.0/
@@ -160,10 +164,11 @@ c----------------------------------------------------------------------
         data phi10_x/4*0.0/
         data phi10_xx/16*0.0/
 
-        data boxx_u,boxx_l/4*0.0,4*0.0/ 
+        data boxx_u,boxx_l/4*0.0,4*0.0/
 
 !----------------------------------------------------------------------
-        
+
+
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
         dz=(z(2)-z(1))
@@ -520,10 +525,24 @@ c----------------------------------------------------------------------
                relkretsch(i,j,k)=(kretsch(i,j,k))/kretschpureads-1
 
             end if
+
+!find the indices denoting the point at the centre of the grid. Needed to compute relkretschcentregrid
+               if ((x0.eq.0.0d0).and.(y0.eq.0.0d0)
+     &             .and.(z0.eq.0.0d0)) then
+                  ic=i
+                  jc=j
+                  kc=k
+               end if
            end do
           end do
         end do
 
+        if (ic.ge.0) then !this condition is activated only if the processor calling ires contains the centre of the grid (where ic is set to a positive number by the cycle above)
+             relkretschcentregrid=relkretsch(ic,jc,kc)
+        else
+             relkretschcentregrid=0.0d0
+        end if
+ 
 !!!!!DEBUGGING!!!!!!!
 !        max_efe_all_ires=0.0d0
 !        max_i=0

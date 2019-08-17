@@ -63,7 +63,7 @@ int ex_max_repop,ex_repop_buf,ex_repop_io;
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
-int output_ires,output_quasiset;
+int output_ires,output_quasiset,output_relkretschcentregrid;
 
 // new parameters in rtfile
 int interptype,i_shift,regtype,stype;
@@ -146,6 +146,7 @@ real *quasiset_psi;
 real *quasiset_mass;
 real *kretsch;
 real *relkretsch;
+real *relkretschcentregrid, *lrelkretschcentregrid0, *maxrelkretschcentregrid0,*minrelkretschcentregrid0,*relkretschcentregrid0;
 
 real *tfunction,*test1,*test2,*test3,*test4;
 real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*irespsi;
@@ -220,6 +221,7 @@ int quasiset_psi_gfn;
 int quasiset_mass_gfn;
 int kretsch_gfn;
 int relkretsch_gfn;
+int relkretschcentregrid_gfn;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
 int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
@@ -407,6 +409,7 @@ void set_gfns(void)
     if ((quasiset_mass_gfn    = PAMR_get_gfn("quasiset_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((kretsch_gfn    = PAMR_get_gfn("kretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((relkretsch_gfn    = PAMR_get_gfn("relkretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((relkretschcentregrid_gfn    = PAMR_get_gfn("relkretschcentregrid",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_t_res_gfn  = PAMR_get_gfn("hb_t_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_i_res_gfn  = PAMR_get_gfn("hb_i_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_0_gfn  = PAMR_get_gfn("Hb_t_0",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -675,6 +678,7 @@ void ldptr(void)
    quasiset_mass  = gfs[quasiset_mass_gfn-1];
    kretsch  = gfs[kretsch_gfn-1];
    relkretsch  = gfs[relkretsch_gfn-1];
+   relkretschcentregrid = gfs[relkretschcentregrid_gfn-1];
    hb_t_res  = gfs[hb_t_res_gfn-1];
    hb_i_res  = gfs[hb_i_res_gfn-1];
    Hb_t_0  = gfs[Hb_t_0_gfn-1];
@@ -1022,6 +1026,13 @@ void AdS4D_var_post_init(char *pfile)
    rhod=1; AMRD_real_param(pfile,"rhod",&rhod,1);
 
    ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
+   output_relkretschcentregrid=0; AMRD_int_param(pfile,"output_relkretschcentregrid",&output_relkretschcentregrid,1);
+
+   //allocate memory for relative Kretschmann scalar at the centre of the grid
+   lrelkretschcentregrid0= malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
+   maxrelkretschcentregrid0= malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
+   minrelkretschcentregrid0= malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
+   relkretschcentregrid0= malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
 
    // set fraction, 1-ex_rbuf, of AH radius to be excised
    for (j=0; j<MAX_BHS; j++)
@@ -1486,6 +1497,8 @@ void AdS4D_pre_io_calc(void)
 
    int i,j,k,ind;
    int j_shift;
+   int n;
+   int Lf,Lc;
    real ct,rho;
 
    dx=x[1]-x[0]; dy=y[1]-y[0]; dz=z[1]-z[0];
@@ -1494,6 +1507,13 @@ void AdS4D_pre_io_calc(void)
    if (regtype==6) j_shift=3;
    if (regtype==5 || regtype==4 || regtype==3) j_shift=2;
    if (regtype==2 || regtype==1) j_shift=1;
+
+   Lf=PAMR_get_max_lev(PAMR_AMRH);
+   Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
+
+   int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+   int lsteps=AMRD_lsteps[Lc-1];
+ 
 
    // output independent residual
    if (output_ires)
@@ -1515,6 +1535,7 @@ void AdS4D_pre_io_calc(void)
          efe_psi_ires,
          kretsch,
          relkretsch,
+         relkretschcentregrid,
          gb_tt_n,gb_tt_nm1,gb_tt_np1,
          gb_tx_n,gb_tx_nm1,gb_tx_np1,
          gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -1531,6 +1552,8 @@ void AdS4D_pre_io_calc(void)
          Hb_z_n,Hb_z_nm1,Hb_z_np1,
          phi1_n,phi1_nm1,phi1_np1,
          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+
       }
       else
       {
@@ -1547,6 +1570,7 @@ void AdS4D_pre_io_calc(void)
          efe_psi_ires,
          kretsch,
          relkretsch,
+         relkretschcentregrid,
          gb_tt_np1,gb_tt_n,gb_tt_nm1,
          gb_tx_np1,gb_tx_n,gb_tx_nm1,
          gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -1563,6 +1587,17 @@ void AdS4D_pre_io_calc(void)
          Hb_z_np1,Hb_z_n,Hb_z_nm1,
          phi1_np1,phi1_n,phi1_nm1,
          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+//we save here the initial value of the Kretschmann scalar at the centre of the grid.
+//The values of the Kretschmann scalar at the centre of the grid at later times are saved in post_tstep.
+       for (n=0; n<ivecNt; n++)
+       {
+        if (n==0) 
+        {
+          lrelkretschcentregrid0[n]= *relkretschcentregrid;
+        }
+       }
+
       }
 
       // fill in independent residual evaluator test functions
@@ -1607,6 +1642,7 @@ void AdS4D_pre_io_calc(void)
           }
          } 
       }
+
 
    }
 
@@ -1947,7 +1983,8 @@ void AdS4D_pre_tstep(int L)
 
    int n,i,j,k,l,Lf,Lc;
 
-   int is,ie,js,je;
+   int is,ie,js,je,ks,ke;
+   int ic,jc,kc;
 
    real rh,mh,rhoh;
 
@@ -1963,6 +2000,7 @@ void AdS4D_pre_tstep(int L)
       for (l=0; l<MAX_BHS; l++) { AH_count[l]=found_AH[l]=found_count_AH[l]=0; freq0[l]=AH_freq[l]; }
       pre_tstep_global_first=0;
    }
+
 
    // search for AHs at t>0
    do_repop=do_reinit_ex=got_an_AH=0;
@@ -2151,6 +2189,8 @@ void AdS4D_pre_tstep(int L)
         }
      }
 
+
+
    return;
 }
 
@@ -2165,16 +2205,91 @@ void AdS4D_post_tstep(int L)
    static int local_first = 1;
 
    real ct;
-   int n,i,j,Lf,Lc;
+   int n,i,j,k,Lf,Lc;
 
-   int is,ie,js,je;
+   int is,ie,js,je,ks,ke;
 
    ct = PAMR_get_time(L);
 
    Lf=PAMR_get_max_lev(PAMR_AMRH);
    Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
 
+   if (L==Lc)
+   {
+     int lsteps=AMRD_lsteps[Lc-1];
+     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+
+     valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
+     while(valid)
+     {
+       ldptr();
+
+       ires_(efe_all_ires,
+          efe_tt_ires,efe_tx_ires,efe_ty_ires,
+          efe_tz_ires,
+          efe_xx_ires,efe_xy_ires,
+          efe_xz_ires,
+          efe_yy_ires,
+          efe_yz_ires,
+          efe_psi_ires,
+          kretsch,
+          relkretsch, 
+          relkretschcentregrid,
+          gb_tt_n,gb_tt_nm1,gb_tt_np1,
+          gb_tx_n,gb_tx_nm1,gb_tx_np1,
+          gb_ty_n,gb_ty_nm1,gb_ty_np1,
+          gb_tz_n,gb_tz_nm1,gb_tz_np1,
+          gb_xx_n,gb_xx_nm1,gb_xx_np1,
+          gb_xy_n,gb_xy_nm1,gb_xy_np1,
+          gb_xz_n,gb_xz_nm1,gb_xz_np1,
+          gb_yy_n,gb_yy_nm1,gb_yy_np1,
+          gb_yz_n,gb_yz_nm1,gb_yz_np1,
+          psi_n,psi_nm1,psi_np1,
+          Hb_t_n,Hb_t_nm1,Hb_t_np1,
+          Hb_x_n,Hb_x_nm1,Hb_x_np1,
+          Hb_y_n,Hb_y_nm1,Hb_y_np1,
+          Hb_z_n,Hb_z_nm1,Hb_z_np1,
+          phi1_n,phi1_nm1,phi1_np1,     
+          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+
+//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
+//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
+       for (n=0; n<ivecNt; n++)
+       {
+        if (n*AMRD_save_ivec0[3]==lsteps)
+        {
+         lrelkretschcentregrid0[n]= *relkretschcentregrid;
+        }
+       }
+       valid=PAMR_next_g();
+     }
+
+
+     if (lsteps==AMRD_steps && output_relkretschcentregrid)
+     {
+      for( n = 0; n<ivecNt; n++ )
+      {
+        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(maxrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(minrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+
+        relkretschcentregrid0[n]=maxrelkretschcentregrid0[n]+minrelkretschcentregrid0[n];
+      }
+
+        // save relkretschcentregrid as ascii
+        FILE * fp;
+        fp = fopen ("ascii_t_relkretschcentregrid", "w+");
+        for( n = 0; n<ivecNt; n++ )
+        {
+              fprintf(fp,"%24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,relkretschcentregrid0[n]);
+        }
+     }
+
+   }
+
+
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
+
 
    return;
 }
