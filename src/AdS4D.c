@@ -2185,7 +2185,8 @@ void AdS4D_pre_tstep(int L)
          mh=ief_bh_r0/2;
          rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
          ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
-         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius smaller than rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
+         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. \n",mh,rh,rhoh);
+//         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius smaller than rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
         }
      }
 
