@@ -7,6 +7,6 @@ The solver of Hamiltonian constraint has been generalised to 3+1, so it is now p
 Convergence and stability at later times, higher resolutions and different values of the parameters needs to be tested.
 In this branch we want to implement the calculation of the quasi-local stress energy tensor at the boundary in spherical polar coordinates, by using the metric solution obtained in the code.
 The machinery for the output fo the quasi-local stress energy tensor at the boundary and the coordinate values of the corresponding boundary points is implemented.
+Debugged the quasi-local boundary stress-energy tensor by comparing with expected values for analyitc Schwarzschild-AdS initial data
 THINGS TO DO:
-1. test the expressions of the qs local stress tensor: compare with analytic values for analytic initial data at t=0, tracelessness,conservation of stress-energy tensor.
-2. calculation of AdS mass by using Balasubramanian and Krauss's prescription.
+1. calculation of AdS mass by using Balasubramanian and Krauss's prescription.
