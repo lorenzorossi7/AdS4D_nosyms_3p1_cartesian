@@ -6,3 +6,6 @@ The solver of Hamiltonian constraint has been generalised to 3+1, so it is now p
 Convergence and stability at later times, higher resolutions and different values of the parameters needs to be tested.
 The AH finder has been implemented and tested by checking that the finder gives the expected position of the AH for analytic Schwarzschild-AdS BH initial data.
 We implemented the possibility of producing an ascii file with the value of the relative kretschmann scalar (i.e. kretschmann-kretschmann_pureAdS -1) at the centre of the grid at the corresponding time of evolution.
+We implemented the quasilocal boundary stress-energy tensor and tested that it gives the expected value in the case of analytic Schwarzschild initial data. We produce an ascii file with the time of evolution, the x,y,z coordinates at the boundary point, the values of the components of the stress-energy tensor at that point.
+We still need to:
+1. compute the AdS mass

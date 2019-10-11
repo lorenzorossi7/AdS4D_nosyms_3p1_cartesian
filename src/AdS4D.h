@@ -135,9 +135,8 @@ extern real *efe_tz_ires;
 extern real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires;
 extern real *efe_xz_ires,*efe_yz_ires;
 extern real *efe_psi_ires;
-extern real *quasiset_tt,*quasiset_tx,*quasiset_ty;
-extern real *quasiset_xx,*quasiset_xy,*quasiset_yy;
-extern real *quasiset_psi;
+extern real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
+extern real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
 extern real *quasiset_mass;
 
 extern real *einstein_ll, *set_ll, *gamma_ull, *ricci_ll, *ricci;
@@ -471,5 +470,23 @@ void approx_qb_(real *phi_r, real *phi_i, real *phi_r_dot, real *phi_i_dot,
 void dmdiss3d_ex_gen_(real *f,real *work,real *eps,int *do_bdy,int *phys_bdy_type, int *even,
                       int *odd,int *nx,int *ny,
                       int *nz, real *chr, real *ex, int *do_ex, int *ind_sweeps, int *kmax);
+
+void nexttobdypoints_(real *chrbdy, int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
+
+void quasiset_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
+                   real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
+                   real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
+                   real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
+                   real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
+                   real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
+                   real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
+                   real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
+                   real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
+                   real *psi_np1, real *psi_n, real *psi_nm1,
+                   real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, real *quasiset_chichi, real *quasiset_chixi,
+                   real *quasiset_xixi,
+                   real *xextrap, real *yextrap, real *zextrap,
+                   real *chrbdy, int *numbdypoints,
+                   real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
 
 #endif

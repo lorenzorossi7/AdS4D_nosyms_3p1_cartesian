@@ -5,7 +5,7 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 2.0
+phi1_amp_1 := 0.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
@@ -18,7 +18,7 @@ rhod := 0.8
 stype := 0
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 0.0
+ief_bh_r0 := 0.6
 
 #AH-finder#
 AH_Lmin := 1
@@ -49,7 +49,7 @@ AH_tmin := 0
 #        (also, skip_constraints=1 && ief_bh_r0!=0 for adsbh initial data) 
  
 background := 0
-skip_constraints := 0
+skip_constraints := 1
 output_ires := 1
 output_quasiset := 1
 
