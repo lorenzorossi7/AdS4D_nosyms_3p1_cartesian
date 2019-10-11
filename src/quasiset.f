@@ -46,6 +46,7 @@ c----------------------------------------------------------------------
         real*8 quasiset_mass(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
+        integer a,b,c,d
 
         integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
         integer ix,jy,kz
@@ -164,6 +165,15 @@ c----------------------------------------------------------------------
         real*8 psi_yz
         real*8 psi_zz
 
+        real*8 dtdt,dtdrho,dtdchi,dtdxi
+        real*8 dxdt,dxdrho,dxdchi,dxdxi
+        real*8 dydt,dydrho,dydchi,dydxi
+        real*8 dzdt,dzdrho,dzdchi,dzdxi
+
+        real*8 dxcar_dxsph(4,4)
+        real*8 hcar_n(4,4)
+        real*8 hsph_n(4,4),gbsph_n(4,4)
+
 !----------------------------------------------------------------------
 
         dx=(x(2)-x(1))
@@ -201,112 +211,122 @@ c----------------------------------------------------------------------
              rho0=sqrt(x0**2+y0**2+z0**2)
              q=1-rho0
 
-             quasiset_tt_ll(i,j,k)=(2*(1+3*(z0**2+y0**2)
-     &                          -(-x0**2+z0**2+y0**2)/rho0**2)
-     &                           *(gb_xx_n(i,j,k)/q)
-     &                          +(4*x0*z0*(-3+2/rho0**2)
-     &                           -(3*rho0**2*y0)/sqrt(z0**2+y0**2))
-     &                           *(gb_xz_n(i,j,k)/q)
-     &                          -12*x0*y0*(gb_xy_n(i,j,k)/q)
-     &                          +(8*x0*y0
-     &                           *(gb_xy_n(i,j,k)/q))/rho0**2
-     &                          +(3*z0*rho0**2
-     &                           *(gb_xy_n(i,j,k)/q))/sqrt(z0**2+y0**2)
-     &                          +(4*z0**2*(psi_n(i,j,k)/q))/rho0**2
-     &                          +(6*x0**2*z0**2
-     &                           *(psi_n(i,j,k)/q))/(z0**2+y0**2)
-     &                          +(3*x0*z0*rho0**2*y0
-     &                           *(psi_n(i,j,k)/q))
-     &                           /(sqrt(-x0**2+rho0**2)
-     &                           *(z0**2+y0**2))
-     &                          +(8*z0*y0
-     &                           *(gb_yz_n(i,j,k)/q))/rho0**2
-     &                          -(3*x0*z0**2*rho0**2
-     &                           *(gb_yz_n(i,j,k)/q))
-     &                           /(sqrt(-x0**2+rho0**2)*(z0**2+y0**2))
-     &                          +(12*x0**2*z0*y0
-     &                           *(gb_yz_n(i,j,k)/q))/(z0**2+y0**2)
-     &                          +(3*x0*rho0**2*y0**2
-     &                           *(gb_yz_n(i,j,k)/q))
-     &                           /(sqrt(-x0**2+rho0**2)*(z0**2+y0**2))
-     &                          +(y0*(-((3*x0*z0*rho0**2)
-     &                           /sqrt(-x0**2+rho0**2))
-     &                           +6*x0**2*y0
-     &                           +(4*y0*(z0**2+y0**2))/rho0**2)
-     &                           *(gb_yy_n(i,j,k)/q))
-     &                           /(z0**2+y0**2))/(32*PI)
+!calculate regularized metric components in spherical coordinates in terms of regularized metric components in Cartesian coordinates
+! we use the following coordinate transformation (notice that the angles are rescaled w.r.t. the usual spherical coordinates): x=rho*cos(PI*chi),y=rho*sin(PI*chi)*cos(2*PI*xi),z=rho*sin(PI*chi)*sin(2*PI*xi)
 
-             quasiset_tchi_ll(i,j,k)  = (3*(-(z0**2+y0**2)
-     &                              *(gb_tx_n(i,j,k)/q)
-     &                              +x0*(z0*(gb_tz_n(i,j,k)/q)
-     &                               +y0*(gb_ty_n(i,j,k)/q))))
-     &                              /(16*sqrt(z0**2+y0**2))
+!transformation matrix
 
-             quasiset_txi_ll(i,j,k)   =(3.0d0/8.0d0)
-     &                               *(y0*(gb_tz_n(i,j,k)/q)
-     &                               -z0*(gb_ty_n(i,j,k)/q))
+        dtdt=1
+        dtdrho=0
+        dtdchi=0
+        dtdxi=0
+        dxdt=0
+        dxdrho=x0/rho0
+        dxdchi=-PI*sqrt(y0**2+z0**2)
+        dxdxi=0
+        dydt=0
+        dydrho=y0/rho0
+        dydchi=PI*x0*y0/(sqrt(y0**2+z0**2))
+        dydxi=-2*PI*z0
+        dzdt=0
+        dzdrho=z0/rho0
+        dzdchi=PI*x0*z0/(sqrt(y0**2+z0**2))
+        dzdxi=2*PI*y0
 
-             quasiset_chichi_ll(i,j,k)=(1.0d0/64.0d0)*PI
-     &                              *(12*(gb_tt_n(i,j,k)/q)
-     &                              +(2*(-4*x0**2*(gb_xx_n(i,j,k)/q)
-     &                              +(-8*x0*z0+(3*rho0**4*y0)
-     &                               /sqrt(z0**2+y0**2))
-     &                               *(gb_xz_n(i,j,k)/q)
-     &                              -8*x0*y0*(gb_xy_n(i,j,k)/q)
-     &                              -(3*z0*rho0**4*(gb_xy_n(i,j,k)/q))
-     &                               /sqrt(z0**2+y0**2)
-     &                              -4*z0**2*(psi_n(i,j,k)/q)
-     &                              -(3*x0*z0*rho0**4*y0
-     &                               *(psi_n(i,j,k)/q))
-     &                               /(sqrt(-x0**2+rho0**2)
-     &                                *(z0**2+y0**2))
-     &                              -8*z0*y0*(gb_yz_n(i,j,k)/q)
-     &                              +(3*x0*z0**2*rho0**4
-     &                               *(gb_yz_n(i,j,k)/q))
-     &                               /(sqrt(-x0**2+rho0**2)
-     &                                *(z0**2+y0**2))
-     &                              -(3*x0*rho0**4*y0**2
-     &                               *(gb_yz_n(i,j,k)/q))
-     &                               /(sqrt(-x0**2+rho0**2)
-     &                                *(z0**2+y0**2))
-     &                              -4*y0**2*(gb_yy_n(i,j,k)/q)
-     &                              +(3*x0*z0*rho0**4*y0
-     &                               *(gb_yy_n(i,j,k)/q))
-     &                               /(sqrt(-x0**2+rho0**2)
-     &                                *(z0**2+y0**2))))/rho0**2)
+        dxcar_dxsph(1,1)=dtdt
+        dxcar_dxsph(1,2)=dtdrho
+        dxcar_dxsph(1,3)=dtdchi
+        dxcar_dxsph(1,4)=dtdxi
+        dxcar_dxsph(2,1)=dxdt
+        dxcar_dxsph(2,2)=dxdrho
+        dxcar_dxsph(2,3)=dxdchi
+        dxcar_dxsph(2,4)=dxdxi
+        dxcar_dxsph(3,1)=dydt
+        dxcar_dxsph(3,2)=dydrho
+        dxcar_dxsph(3,3)=dydchi
+        dxcar_dxsph(3,4)=dydxi
+        dxcar_dxsph(4,1)=dzdt
+        dxcar_dxsph(4,2)=dzdrho
+        dxcar_dxsph(4,3)=dzdchi
+        dxcar_dxsph(4,4)=dzdxi
+
+        hcar_n(1,1)=gb_tt_n(i,j,k)
+        hcar_n(1,2)=gb_tx_n(i,j,k)
+        hcar_n(1,3)=gb_ty_n(i,j,k)
+        hcar_n(1,4)=gb_tz_n(i,j,k)
+        hcar_n(2,2)=gb_xx_n(i,j,k)
+        hcar_n(2,3)=gb_xy_n(i,j,k)
+        hcar_n(2,4)=gb_xz_n(i,j,k)
+        hcar_n(3,3)=gb_yy_n(i,j,k)
+        hcar_n(3,4)=gb_yz_n(i,j,k)
+        hcar_n(4,4)=psi_n(i,j,k)
+
+       do a=1,3
+          do b=a+1,4
+            hcar_n(b,a)=hcar_n(a,b)
+          end do
+        end do
+
+        do a=1,4
+          do b=1,4
+           hsph_n(a,b)=0.0d0
+           do c=1,4
+            do d=1,4
+             hsph_n(a,b)=hsph_n(a,b)
+     &                   +dxcar_dxsph(c,a)*dxcar_dxsph(d,b)*hcar_n(c,d)
+            end do
+           end do
+          end do
+        end do
 
 
-             quasiset_chixi_ll(i,j,k) =(3*PI*(-y0*(z0**2+y0**2)
-     &                               *(gb_xz_n(i,j,k)/q)
-     &                              +z0*(z0**2+y0**2)
-     &                               *(gb_xy_n(i,j,k)/q)
-     &                              +x0*(z0*y0*(psi_n(i,j,k)/q)
-     &                              +(-z0**2+y0**2)*(gb_yz_n(i,j,k)/q)
-     &                              -z0*y0*(gb_yy_n(i,j,k)/q))))
-     &                               /(8*sqrt(z0**2+y0**2))
+        gbsph_n(1,1)=hsph_n(1,1)
+        gbsph_n(1,2)=hsph_n(1,2)/(1-rho0**2)
+        gbsph_n(1,3)=hsph_n(1,3)
+        gbsph_n(1,4)=hsph_n(1,4)
+        gbsph_n(2,2)=hsph_n(2,2)
+        gbsph_n(2,3)=hsph_n(2,3)/(1-rho0**2)
+        gbsph_n(2,4)=hsph_n(2,4)/(1-rho0**2)
+        gbsph_n(3,3)=hsph_n(3,3)
+        gbsph_n(3,4)=hsph_n(3,4)
+        gbsph_n(4,4)=hsph_n(4,4)
 
-             quasiset_xixi_ll(i,j,k)  =-((PI*(z0**2+y0**2)
-     &                              *(-6*(gb_tt_n(i,j,k)/q)
-     &                              +(2*(x0**2+rho0**2
-     &                               +z0**2*(-1+3*rho0**2)
-     &                               +(-1+3*rho0**2)*y0**2)
-     &                               *(gb_xx_n(i,j,k)/q))/rho0**2
-     &                              +(4*x0*z0*(2-3*rho0**2)
-     &                               *(gb_xz_n(i,j,k)/q))/rho0**2
-     &                              +(4*x0*(2-3*rho0**2)*y0
-     &                               *(gb_xy_n(i,j,k)/q))/rho0**2
-     &                              +((2+3*rho0**2)*(z0**2
-     &                               *(psi_n(i,j,k)/q)
-     &                              +y0*(2*z0*(gb_yz_n(i,j,k)/q)
-     &                               +y0*(gb_yy_n(i,j,k)/q))))
-     &                               /(z0**2+y0**2)
-     &                              +((-2+3*rho0**2)
-     &                              *(x0**2-z0**2-y0**2)
-     &                              *(z0**2*(psi_n(i,j,k)/q)
-     &                               +y0*(2*z0* (gb_yz_n(i,j,k)/q)
-     &                               +y0*(gb_yy_n(i,j,k)/q))))
-     &                               /(rho0**2*(z0**2+y0**2))))
-     &                              /(8*rho0**2))
+       do a=1,3
+          do b=a+1,4
+            gbsph_n(b,a)=gbsph_n(a,b)
+          end do
+        end do
+
+
+        quasiset_tt_ll(i,j,k)=(12*(gbsph_n(3,3)/q)
+     &                        + 8*PI**2*(gbsph_n(2,2)/q)
+     &                        +  (3*rho0**2*(gbsph_n(4,4)/q))
+     &                          /(z0**2+y0**2)
+     &                        )/(64*PI**3)
+
+
+             quasiset_tchi_ll(i,j,k)  = (3*(gbsph_n(1,3)/q))/(16*PI)
+
+
+             quasiset_txi_ll(i,j,k)   = (3*(gbsph_n(1,4)/q))/(16*PI)
+
+             quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
+     &                                  *(gbsph_n(1,1)/q)
+     &                                 -(1.0d0/8.0d0)*PI
+     &                                  *(gbsph_n(2,2)/q)
+     &                                 -(3*rho0**2*(gbsph_n(4,4)/q))
+     &                                  /(64*PI*(z0**2+y0**2))
+
+
+             quasiset_chixi_ll(i,j,k) =(3*(gbsph_n(3,4)/q))/(16*PI)
+
+
+             quasiset_xixi_ll(i,j,k)  =( (z0**2+y0**2)*(-3
+     &                                  *(gbsph_n(3,3)/q)
+     &                                 +PI**2*(3*(gbsph_n(1,1)/q)
+     &                                 -2*(gbsph_n(2,2)/q)))
+     &                                 )/(4*PI*rho0**2)
+
 
             else
 
@@ -472,6 +492,7 @@ c-------------------------------------------------------------------------------
             lind=lind+1
              if (maxxyzp1.eq.abs(xp1)) then
               if (xp1.gt.0) then
+
                  xextrap(lind)=sqrt(1-yp1**2-zp1**2)
                  yextrap(lind)=yp1
                  zextrap(lind)=zp1
@@ -607,7 +628,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                  quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
                  zex=zextrap(lind)
-                quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
+                 quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
                  quasiset_tchi(lind)=extrapalongz(quasiset_tchi_p1
      &                         ,quasiset_tchi_p2,zp1,zp2,zex)

@@ -67,10 +67,6 @@ c----------------------------------------------------------------------
            z0=z(k)
            rho0=sqrt(x0**2+y0**2+z0**2)
 
-!           write(*,*) 'ex=',ex
-
-!           chrbdy(i,j,k)=0
-
 !           !chrql(i,j,k) is not ex for points near the boundary
            if ((chr(i,j,k).ne.ex).and.(rho0.ge.(1.0d0-3*dx/2))) then
               chrbdy(i,j,k)=ex-1
@@ -79,9 +75,9 @@ c----------------------------------------------------------------------
            end if
 
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
-! 
-!!           !chrql(i,j,k) is not ex only for points near the boundary AND next to excised points   
-!
+
+!           !chrql(i,j,k) is not ex only for points near the boundary AND next to excised points   
+
            if (chrbdy(i,j,k).ne.ex) then
             if (maxxyzp1.eq.abs(xp1)) then
              if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
@@ -100,26 +96,12 @@ c----------------------------------------------------------------------
            
            if (chrbdy(i,j,k).ne.ex) then
              numbdypoints=numbdypoints+1
-!!             write(*,*) "chrql is not ex"
-!!             write(*,*) "QUASISET :i,j,k,Nx,Ny,Nz=",i,j,k,Nx,Ny,Nz
-!!             write(*,*) "x0,y0,z0,rho0=",x0,y0,z0,rho0
-!!             write(*,*) "dx,dy,dz=",dx,dy,dz
-!!             write(*,*) "x(i-1),y(j-1),z(k-1),
-!!     &       sqrt((x(i-1))**2+(y(j-1))**2+(z(k-1))**2)="
-!!     &       ,x(i-1),y(j-1),z(k-1),
-!!     &       sqrt((x(i-1))**2+(y(j-1))**2+(z(k-1))**2)
-!!             write(*,*) "acos(x0/rho0),
-!!     &        acos((x(i-1))/sqrt((x(i-1))**2+(y(j-1))**2+(z(k-1))**2))="
-!!     &         ,acos(x0/rho0),
-!!     &         acos((x(i-1))/sqrt((x(i-1))**2+(y(j-1))**2+(z(k-1))**2))
            end if
-!
-!
+
            end do
          end do
         end do
 
-!            write(*,*) "numbdypoints=",numbdypoints
 
 
         return

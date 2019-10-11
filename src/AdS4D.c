@@ -1049,38 +1049,6 @@ void AdS4D_var_post_init(char *pfile)
 
    output_quasiset=0; AMRD_int_param(pfile,"output_quasiset",&output_quasiset,1);
 
-//   lquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   lquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   maxquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   minquasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_txi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_tchi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_chichi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_chixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_xixi0  = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
-//   quasiset_mass0 = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
    chrbdy = malloc((AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2])*sizeof(real));
 
    ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
@@ -2116,7 +2084,7 @@ void AdS4D_pre_tstep(int L)
    //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywher except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution.
        for (n=0; n<ivecNt; n++)
        {
-         if (n==0) // && (phys_bdy[0]==1 || phys_bdy[1]==1 || phys_bdy[2]==1 || phys_bdy[3]==1|| phys_bdy[4]==1 ||phys_bdy[5]==1))    //paste in post_tstep
+         if (n==0)   //paste in post_tstep
          {
            for (i=is; i<ie; i++)
            {
@@ -2359,6 +2327,7 @@ void AdS4D_post_tstep(int L)
        //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
        MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
 
+
        quasiset_(gb_tt_n,gb_tt_nm1,gb_tt_np1,
                  gb_tx_n,gb_tx_nm1,gb_tx_np1,
                  gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -2418,7 +2387,7 @@ void AdS4D_post_tstep(int L)
        for (n=0; n<ivecNt; n++)
        {
          // check ownership if this proc is responsible for x=1
-         if (n*AMRD_save_ivec0[3]==lsteps) // && (phys_bdy[0]==1 || phys_bdy[1]==1 || phys_bdy[2]==1 || phys_bdy[3]==1|| phys_bdy[4]==1 ||phys_bdy[5]==1))    //paste in post_tstep
+         if (n*AMRD_save_ivec0[3]==lsteps)    //paste in post_tstep
          {
            for (i=is; i<ie; i++)
            {
@@ -2453,14 +2422,29 @@ void AdS4D_post_tstep(int L)
         MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
 
-        for (i=0; i<ivecNt*basenumbdypoints; i++)
+        if (uniSize>1)
         {
-          quasiset_tt0[i]=maxquasiset_tt0[i]+minquasiset_tt0[i];
-          quasiset_tchi0[i]=maxquasiset_tchi0[i]+minquasiset_tchi0[i];
-          quasiset_txi0[i]=maxquasiset_txi0[i]+minquasiset_txi0[i];
-          quasiset_chichi0[i]=maxquasiset_chichi0[i]+minquasiset_chichi0[i];
-          quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
-          quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
+         for (i=0; i<ivecNt*basenumbdypoints; i++)
+         {
+           quasiset_tt0[i]=maxquasiset_tt0[i]+minquasiset_tt0[i];
+           quasiset_tchi0[i]=maxquasiset_tchi0[i]+minquasiset_tchi0[i];
+           quasiset_txi0[i]=maxquasiset_txi0[i]+minquasiset_txi0[i];
+           quasiset_chichi0[i]=maxquasiset_chichi0[i]+minquasiset_chichi0[i];
+           quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
+           quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
+         }
+        }
+        else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+        {
+         for (i=0; i<ivecNt*basenumbdypoints; i++)
+         {
+           quasiset_tt0[i]=maxquasiset_tt0[i];
+           quasiset_tchi0[i]=maxquasiset_tchi0[i];
+           quasiset_txi0[i]=maxquasiset_txi0[i];
+           quasiset_chichi0[i]=maxquasiset_chichi0[i];
+           quasiset_chixi0[i]=maxquasiset_chixi0[i];
+           quasiset_xixi0[i]=maxquasiset_xixi0[i];
+         }
         }
 
         // save quasiset_ll as ascii
