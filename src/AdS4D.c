@@ -147,7 +147,7 @@ int *vecbdypoints, *dsplsbdypoints;
 int uniSize;
 real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
 real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
-real *quasiset_mass;
+real *quasiset_massdensity;
 real *xextrap,*yextrap,*zextrap;
 real *kretsch;
 real *relkretsch;
@@ -222,7 +222,7 @@ int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_psi_ires_gfn;
 int efe_xz_ires_gfn,efe_yz_ires_gfn;
 int quasiset_tt_gfn,quasiset_tchi_gfn,quasiset_txi_gfn;
 int quasiset_chichi_gfn,quasiset_chixi_gfn,quasiset_xixi_gfn;
-int quasiset_mass_gfn;
+int quasiset_massdensity_gfn;
 int xextrap_gfn,yextrap_gfn,zextrap_gfn;
 int kretsch_gfn;
 int relkretsch_gfn;
@@ -262,16 +262,16 @@ int *AH_lev[MAX_BHS],*AH_own[MAX_BHS];
 //=============================================================================
 real *lquasiset_tt0,*lquasiset_tchi0,*lquasiset_txi0;
 real *lquasiset_chichi0,*lquasiset_chixi0,*lquasiset_xixi0;
-real *lquasiset_mass0;
+real *lquasiset_massdensity0;
 real *maxquasiset_tt0,*maxquasiset_tchi0,*maxquasiset_txi0;
 real *maxquasiset_chichi0,*maxquasiset_chixi0,*maxquasiset_xixi0;
-real *maxquasiset_mass0;
+real *maxquasiset_massdensity0;
 real *minquasiset_tt0,*minquasiset_tchi0,*minquasiset_txi0;
 real *minquasiset_chichi0,*minquasiset_chixi0,*minquasiset_xixi0;
-real *minquasiset_mass0;
+real *minquasiset_massdensity0;
 real *quasiset_tt0,*quasiset_tchi0,*quasiset_txi0;
 real *quasiset_chichi0,*quasiset_chixi0,*quasiset_xixi0;
-real *quasiset_mass0;
+real *quasiset_massdensity0;
 
 real *xextrap0,*yextrap0,*zextrap0;
 
@@ -428,7 +428,7 @@ void set_gfns(void)
     if ((quasiset_chichi_gfn    = PAMR_get_gfn("quasiset_chichi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_chixi_gfn    = PAMR_get_gfn("quasiset_chixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_xixi_gfn    = PAMR_get_gfn("quasiset_xixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_mass_gfn    = PAMR_get_gfn("quasiset_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_massdensity_gfn    = PAMR_get_gfn("quasiset_massdensity",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((xextrap_gfn    = PAMR_get_gfn("xextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((yextrap_gfn    = PAMR_get_gfn("yextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((zextrap_gfn    = PAMR_get_gfn("zextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -699,7 +699,7 @@ void ldptr(void)
    quasiset_chichi  = gfs[quasiset_chichi_gfn-1];
    quasiset_chixi  = gfs[quasiset_chixi_gfn-1];
    quasiset_xixi  = gfs[quasiset_xixi_gfn-1];
-   quasiset_mass  = gfs[quasiset_mass_gfn-1];
+   quasiset_massdensity  = gfs[quasiset_massdensity_gfn-1];
    xextrap  = gfs[xextrap_gfn-1];
    yextrap  = gfs[yextrap_gfn-1];
    zextrap  = gfs[zextrap_gfn-1];
@@ -1082,24 +1082,28 @@ void AdS4D_var_post_init(char *pfile)
    lquasiset_chichi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    lquasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    lquasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   lquasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_tchi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_txi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_chichi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   maxquasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_tchi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_txi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_chichi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    minquasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   minquasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_tchi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_txi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_chichi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   quasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
 
    xextrap0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    yextrap0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
@@ -2101,6 +2105,7 @@ void AdS4D_pre_tstep(int L)
                  quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
+                 quasiset_massdensity,
                  xextrap,yextrap,zextrap,
                  chrbdy,&numbdypoints,
                  x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
@@ -2155,6 +2160,7 @@ void AdS4D_pre_tstep(int L)
                lquasiset_chichi0[n+ivecNt*i]=quasiset_chichi[i-is];
                lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
                lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
+               lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
            }
          }
        }
@@ -2484,6 +2490,7 @@ void AdS4D_post_tstep(int L)
                  quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
+                 quasiset_massdensity,
                  xextrap,yextrap,zextrap,
                  chrbdy,&numbdypoints,
                  x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
@@ -2540,6 +2547,7 @@ void AdS4D_post_tstep(int L)
                lquasiset_chichi0[n+ivecNt*i]=quasiset_chichi[i-is];
                lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
                lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
+               lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
            }
          }
        }
@@ -2558,12 +2566,14 @@ void AdS4D_post_tstep(int L)
         MPI_Allreduce(lquasiset_chichi0,maxquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+        MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_txi0,minquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_chichi0,minquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+        MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
 
         if (uniSize>1)
         {
@@ -2575,6 +2585,7 @@ void AdS4D_post_tstep(int L)
            quasiset_chichi0[i]=maxquasiset_chichi0[i]+minquasiset_chichi0[i];
            quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
            quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
+           quasiset_massdensity0[i]=maxquasiset_massdensity0[i]+minquasiset_massdensity0[i];
          }
         }
         else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
@@ -2587,16 +2598,17 @@ void AdS4D_post_tstep(int L)
            quasiset_chichi0[i]=maxquasiset_chichi0[i];
            quasiset_chixi0[i]=maxquasiset_chixi0[i];
            quasiset_xixi0[i]=maxquasiset_xixi0[i];
+           quasiset_massdensity0[i]=maxquasiset_massdensity0[i];
          }
         }
 
         // save quasiset_ll as ascii
         FILE * fp;
-        fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll", "w+");
+        fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll_AdSmassdensity", "w+");
         for( n = 0; n<ivecNt; n++ )
          for( j = 0; j < basenumbdypoints; j++ )
            {
-              fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[n+ivecNt*j],quasiset_tchi0[n+ivecNt*j],quasiset_txi0[n+ivecNt*j],quasiset_chichi0[n+ivecNt*j],quasiset_chixi0[n+ivecNt*j],quasiset_xixi0[n+ivecNt*j]);
+              fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[n+ivecNt*j],quasiset_tchi0[n+ivecNt*j],quasiset_txi0[n+ivecNt*j],quasiset_chichi0[n+ivecNt*j],quasiset_chixi0[n+ivecNt*j],quasiset_xixi0[n+ivecNt*j],quasiset_massdensity0[n+ivecNt*j]);
            }
 
      }

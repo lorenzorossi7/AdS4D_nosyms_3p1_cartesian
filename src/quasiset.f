@@ -20,6 +20,7 @@ c----------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
+     &                  quasiset_massdensityll,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
         implicit none
@@ -43,7 +44,7 @@ c----------------------------------------------------------------------
         real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
-        real*8 quasiset_mass(Nx,Ny,Nz)
+        real*8 quasiset_massdensityll(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
         integer a,b,c,d
@@ -327,6 +328,13 @@ c----------------------------------------------------------------------
      &                                 -2*(gbsph_n(2,2)/q)))
      &                                 )/(4*PI*rho0**2)
 
+             quasiset_massdensityll(i,j,k)=(sqrt(y0**2+z0**2)
+     &                                   *(12*(gbsph_n(3,3)/q)
+     &                                   +8*PI**2*(gbsph_n(2,2)/q)
+     &                                   +(3*rho0**2*(gbsph_n(4,4)/q))
+     &                                   /(y0**2+z0**2)))
+     &                                   /(32*PI*rho0)
+
 
             else
 
@@ -336,6 +344,7 @@ c----------------------------------------------------------------------
              quasiset_chichi_ll(i,j,k)=0
              quasiset_chixi_ll(i,j,k)=0
              quasiset_xixi_ll(i,j,k)=0
+             quasiset_massdensityll(i,j,k)=0
 
 
             end if
@@ -373,6 +382,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_tt,quasiset_tchi,quasiset_txi,
      &                  quasiset_chichi,quasiset_chixi,
      &                  quasiset_xixi,
+     &                  quasiset_massdensity,
      &                  xextrap,yextrap,zextrap,
      &                  chrbdy,numbdypoints,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
@@ -401,19 +411,22 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
+        real*8 quasiset_massdensityll(Nx,Ny,Nz)
 
         real*8 quasiset_tt_p1,quasiset_tchi_p1
         real*8 quasiset_txi_p1,quasiset_chichi_p1
         real*8 quasiset_chixi_p1,quasiset_xixi_p1
+        real*8 quasiset_massdensity_p1
 
         real*8 quasiset_tt_p2,quasiset_tchi_p2
         real*8 quasiset_txi_p2,quasiset_chichi_p2
         real*8 quasiset_chixi_p2,quasiset_xixi_p2
+        real*8 quasiset_massdensity_p2
 
         real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
         real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
         real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
-        real*8 quasiset_mass(numbdypoints)
+        real*8 quasiset_massdensity(numbdypoints)
 
         real*8 xextrap(numbdypoints)
         real*8 yextrap(numbdypoints)
@@ -448,6 +461,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
+     &                  quasiset_massdensityll,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 
@@ -486,6 +500,7 @@ c-------------------------------------------------------------------------------
            quasiset_chichi_p1=quasiset_chichi_ll(i,j,k)
            quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
            quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
+           quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
             if (chrbdy(i,j,k).ne.ex) then
@@ -503,6 +518,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i-1,j,k)
                  quasiset_chixi_p2=quasiset_chixi_ll(i-1,j,k)
                  quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
+                quasiset_massdensity_p2=quasiset_massdensityll(i-1,j,k)
                  xex=xextrap(lind)
                  quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
@@ -516,6 +532,10 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,xp1,xp2,xex)
                  quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,xp1,xp2,xex)
+         quasiset_massdensity(lind)=extrapalongx(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
+
+
              else
                  xextrap(lind)=-sqrt(1-yp1**2-zp1**2)
                  yextrap(lind)=yp1
@@ -527,6 +547,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i+1,j,k)
                  quasiset_chixi_p2=quasiset_chixi_ll(i+1,j,k)
                  quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
+                quasiset_massdensity_p2=quasiset_massdensityll(i+1,j,k)
                  xex=xextrap(lind)
                  quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
@@ -540,6 +561,8 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,xp1,xp2,xex)
                  quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,xp1,xp2,xex)
+         quasiset_massdensity(lind)=extrapalongx(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
              end if
             else if (maxxyzp1.eq.abs(yp1)) then
              if (yp1.gt.0) then
@@ -553,6 +576,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i,j-1,k)
                  quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
                  quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
+                quasiset_massdensity_p2=quasiset_massdensityll(i,j-1,k)
                  yex=yextrap(lind)
                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
      &                         ,quasiset_tt_p2,yp1,yp2,yex)
@@ -566,6 +590,8 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,yp1,yp2,yex)
                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,yp1,yp2,yex)
+         quasiset_massdensity(lind)=extrapalongy(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
              else
                  yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
                  xextrap(lind)=xp1
@@ -577,6 +603,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
                  quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
                  quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
+                quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
                  yex=yextrap(lind)
                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
      &                         ,quasiset_tt_p2,yp1,yp2,yex)
@@ -590,6 +617,8 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,yp1,yp2,yex)
                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,yp1,yp2,yex)
+         quasiset_massdensity(lind)=extrapalongy(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
              end if             
             else
                 if (zp1.gt.0) then
@@ -603,6 +632,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i,j,k-1)
                  quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
                  quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
+               quasiset_massdensity_p2=quasiset_massdensityll(i,j,k-1)
                  zex=zextrap(lind)
                 quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
@@ -616,6 +646,8 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,zp1,zp2,zex)
                  quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,zp1,zp2,zex)
+         quasiset_massdensity(lind)=extrapalongz(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
              else
                  zextrap(lind)=-sqrt(1-yp1**2-xp1**2)
                  yextrap(lind)=yp1
@@ -627,6 +659,7 @@ c-------------------------------------------------------------------------------
                  quasiset_chichi_p2=quasiset_chichi_ll(i,j,k+1)
                  quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                  quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
+                quasiset_massdensity_p2=quasiset_massdensityll(i,j,k+1)
                  zex=zextrap(lind)
                  quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
@@ -640,6 +673,8 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,zp1,zp2,zex)
                  quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,zp1,zp2,zex)
+         quasiset_massdensity(lind)=extrapalongz(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
               end if
              end if
             end if

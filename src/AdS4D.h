@@ -137,7 +137,7 @@ extern real *efe_xz_ires,*efe_yz_ires;
 extern real *efe_psi_ires;
 extern real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
 extern real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
-extern real *quasiset_mass;
+extern real *quasiset_massdensity;
 
 extern real *einstein_ll, *set_ll, *gamma_ull, *ricci_ll, *ricci;
 extern real *phi1_x, *phi4_r_x, *phi4_i_x, *g_ll, *g_uu;
@@ -485,6 +485,7 @@ void quasiset_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                    real *psi_np1, real *psi_n, real *psi_nm1,
                    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, real *quasiset_chichi, real *quasiset_chixi,
                    real *quasiset_xixi,
+                   real *quasiset_massdensity,
                    real *xextrap, real *yextrap, real *zextrap,
                    real *chrbdy, int *numbdypoints,
                    real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
