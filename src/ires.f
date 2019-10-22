@@ -133,7 +133,7 @@ c----------------------------------------------------------------------
 
         ! initialize fixed-size variables
         data i,j,k,is,ie,js,je,ks,ke/0,0,0,0,0,0,0,0,0/
-        data ic,jc,kc/-1,-1,-1/
+        data ic,jc,kc/0,0,0/
         data i1,j1,k1,a,b,c,d,e/0,0,0,0,0,0,0,0/
 
         data dx,dy,dz/0.0,0.0,0.0/
@@ -524,6 +524,10 @@ c----------------------------------------------------------------------
 
                relkretsch(i,j,k)=(kretsch(i,j,k))/kretschpureads-1
 
+
+            else
+               kretsch(i,j,k)=0.0d0
+               relkretsch(i,j,k)=0.0d0
             end if
 
 !find the indices denoting the point at the centre of the grid. Needed to compute relkretschcentregrid
@@ -537,11 +541,15 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        if (ic.ge.0) then !this condition is activated only if the processor calling ires contains the centre of the grid (where ic is set to a positive number by the cycle above)
+        if ((ic.gt.0).and.(jc.gt.0).and.(kc.gt.0)) then !this condition is activated only if the processor calling ires contains the centre of the grid (where ic,jc and kc are set to a positive number by the cycle above)
              relkretschcentregrid=relkretsch(ic,jc,kc)
         else
              relkretschcentregrid=0.0d0
         end if
+
+!           write(*,*) "ex,chr(ic,jc,kc)",ex,chr(ic,jc,kc)
+!           write(*,*) "ic,jc,kc=",ic,jc,kc
+!           write(*,*) "relkretschcentregrid=",relkretschcentregrid
  
 !!!!!DEBUGGING!!!!!!!
 !        max_efe_all_ires=0.0d0

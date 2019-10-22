@@ -147,7 +147,7 @@ int *vecbdypoints, *dsplsbdypoints;
 int uniSize;
 real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
 real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
-real *quasiset_massdensity;
+real *quasiset_massdensity, *AdS_mass;
 real *xextrap,*yextrap,*zextrap;
 real *kretsch;
 real *relkretsch;
@@ -222,7 +222,7 @@ int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_psi_ires_gfn;
 int efe_xz_ires_gfn,efe_yz_ires_gfn;
 int quasiset_tt_gfn,quasiset_tchi_gfn,quasiset_txi_gfn;
 int quasiset_chichi_gfn,quasiset_chixi_gfn,quasiset_xixi_gfn;
-int quasiset_massdensity_gfn;
+int quasiset_massdensity_gfn,AdS_mass_gfn;
 int xextrap_gfn,yextrap_gfn,zextrap_gfn;
 int kretsch_gfn;
 int relkretsch_gfn;
@@ -262,7 +262,7 @@ int *AH_lev[MAX_BHS],*AH_own[MAX_BHS];
 //=============================================================================
 real *lquasiset_tt0,*lquasiset_tchi0,*lquasiset_txi0;
 real *lquasiset_chichi0,*lquasiset_chixi0,*lquasiset_xixi0;
-real *lquasiset_massdensity0;
+real *lquasiset_massdensity0,*lAdS_mass0;
 real *maxquasiset_tt0,*maxquasiset_tchi0,*maxquasiset_txi0;
 real *maxquasiset_chichi0,*maxquasiset_chixi0,*maxquasiset_xixi0;
 real *maxquasiset_massdensity0;
@@ -271,7 +271,7 @@ real *minquasiset_chichi0,*minquasiset_chixi0,*minquasiset_xixi0;
 real *minquasiset_massdensity0;
 real *quasiset_tt0,*quasiset_tchi0,*quasiset_txi0;
 real *quasiset_chichi0,*quasiset_chixi0,*quasiset_xixi0;
-real *quasiset_massdensity0;
+real *quasiset_massdensity0,*AdS_mass0;
 
 real *xextrap0,*yextrap0,*zextrap0;
 
@@ -429,6 +429,7 @@ void set_gfns(void)
     if ((quasiset_chixi_gfn    = PAMR_get_gfn("quasiset_chixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_xixi_gfn    = PAMR_get_gfn("quasiset_xixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_massdensity_gfn    = PAMR_get_gfn("quasiset_massdensity",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((AdS_mass_gfn    = PAMR_get_gfn("AdS_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((xextrap_gfn    = PAMR_get_gfn("xextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((yextrap_gfn    = PAMR_get_gfn("yextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((zextrap_gfn    = PAMR_get_gfn("zextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -700,6 +701,7 @@ void ldptr(void)
    quasiset_chixi  = gfs[quasiset_chixi_gfn-1];
    quasiset_xixi  = gfs[quasiset_xixi_gfn-1];
    quasiset_massdensity  = gfs[quasiset_massdensity_gfn-1];
+   AdS_mass  = gfs[AdS_mass_gfn-1];
    xextrap  = gfs[xextrap_gfn-1];
    yextrap  = gfs[yextrap_gfn-1];
    zextrap  = gfs[zextrap_gfn-1];
@@ -1083,6 +1085,7 @@ void AdS4D_var_post_init(char *pfile)
    lquasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    lquasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    lquasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   lAdS_mass0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
    maxquasiset_tt0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_tchi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    maxquasiset_txi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
@@ -1104,6 +1107,7 @@ void AdS4D_var_post_init(char *pfile)
    quasiset_chixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_xixi0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    quasiset_massdensity0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
+   AdS_mass0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1))*sizeof(real));
 
    xextrap0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
    yextrap0   = malloc(((AMRD_steps/AMRD_save_ivec0[3]+1)*basenumbdypoints)*sizeof(real));
@@ -1670,6 +1674,7 @@ void AdS4D_pre_io_calc(void)
         if (n==0) 
         {
           lrelkretschcentregrid0[n]= *relkretschcentregrid;
+//          printf("PREIOCALC....relkretschcentregrid=%lf\n",*relkretschcentregrid);
         }
        }
 
@@ -2076,6 +2081,7 @@ void AdS4D_pre_tstep(int L)
       pre_tstep_global_first=0;
    }
 
+
    // initialize qs objects at t=0, when at coarsest level L=Lc
    if (L==Lc && ct==0)
    {
@@ -2083,13 +2089,46 @@ void AdS4D_pre_tstep(int L)
      int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
      real lmass,mass;
 
+     //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
+
      valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
      while(valid)
      {
        ldptr();
 
-       //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
-       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
+       ires_(efe_all_ires,
+          efe_tt_ires,efe_tx_ires,efe_ty_ires,
+          efe_tz_ires,
+          efe_xx_ires,efe_xy_ires,
+          efe_xz_ires,
+          efe_yy_ires,
+          efe_yz_ires,
+          efe_psi_ires,
+          kretsch,
+          relkretsch,
+          relkretschcentregrid,
+          gb_tt_n,gb_tt_nm1,gb_tt_np1,
+          gb_tx_n,gb_tx_nm1,gb_tx_np1,
+          gb_ty_n,gb_ty_nm1,gb_ty_np1,
+          gb_tz_n,gb_tz_nm1,gb_tz_np1,
+          gb_xx_n,gb_xx_nm1,gb_xx_np1,
+          gb_xy_n,gb_xy_nm1,gb_xy_np1,
+          gb_xz_n,gb_xz_nm1,gb_xz_np1,
+          gb_yy_n,gb_yy_nm1,gb_yy_np1,
+          gb_yz_n,gb_yz_nm1,gb_yz_np1,
+          psi_n,psi_nm1,psi_np1,
+          Hb_t_n,Hb_t_nm1,Hb_t_np1,
+          Hb_x_n,Hb_x_nm1,Hb_x_np1,
+          Hb_y_n,Hb_y_nm1,Hb_y_np1,
+          Hb_z_n,Hb_z_nm1,Hb_z_np1,
+          phi1_n,phi1_nm1,phi1_np1,    
+          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+//          printf("PRETSTEP....relkretschcentregrid=%lf\n",*relkretschcentregrid);
+
+//     //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+//       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
 
        //routine that extrapolates the values of the component of the stress energy tensor at points at the boundary and the coordinates of the points at the boundary (i.e. xextrap[i]*xextrap[i]+yextrap[i]*yextrap[i]+zextrap[i]*zextrap[i]=1)
        quasiset_(gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -2105,10 +2144,13 @@ void AdS4D_pre_tstep(int L)
                  quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
-                 quasiset_massdensity,
+                 quasiset_massdensity,AdS_mass,
                  xextrap,yextrap,zextrap,
                  chrbdy,&numbdypoints,
                  x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+       valid=PAMR_next_g();
+     }
 
    //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
    is=0;
@@ -2161,12 +2203,13 @@ void AdS4D_pre_tstep(int L)
                lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
                lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
                lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
+               lAdS_mass0[n]=*AdS_mass;
            }
          }
        }
 
-       valid=PAMR_next_g();
-     }
+//       valid=PAMR_next_g();
+//     }
 
    }
 
@@ -2382,12 +2425,16 @@ void AdS4D_post_tstep(int L)
    ct = PAMR_get_time(L);
 
    Lf=PAMR_get_max_lev(PAMR_AMRH);
-   Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
+   Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; elise Lc=1;
 
+   // qs objects at t>0, when at coarsest level L=Lc
    if (L==Lc)
    {
      int lsteps=AMRD_lsteps[Lc-1];
      int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+
+       //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
 
      valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
      while(valid)
@@ -2422,61 +2469,6 @@ void AdS4D_post_tstep(int L)
           phi1_n,phi1_nm1,phi1_np1,     
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-
-//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
-//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
-       for (n=0; n<ivecNt; n++)
-       {
-        if (n*AMRD_save_ivec0[3]==lsteps)
-        {
-         lrelkretschcentregrid0[n]= *relkretschcentregrid;
-        }
-       }
-       valid=PAMR_next_g();
-     }
-
-
-     if (lsteps==AMRD_steps && output_relkretschcentregrid)
-     {
-      for( n = 0; n<ivecNt; n++ )
-      {
-        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(maxrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(minrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-
-        relkretschcentregrid0[n]=maxrelkretschcentregrid0[n]+minrelkretschcentregrid0[n];
-      }
-
-        // save relkretschcentregrid as ascii
-        FILE * fp;
-        fp = fopen ("ascii_t_relkretschcentregrid", "w+");
-        for( n = 0; n<ivecNt; n++ )
-        {
-              fprintf(fp,"%24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,relkretschcentregrid0[n]);
-        }
-     }
-
-   }
-
-
-
-
-
-   // qs objects at t>0, when at coarsest level L=Lc
-   if (L==Lc)
-   {
-     int lsteps=AMRD_lsteps[Lc-1];
-     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
-     real lmass,mass;
-
-     valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
-     while(valid)
-     {
-       ldptr();
-
-       //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
-       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
-
-
        quasiset_(gb_tt_n,gb_tt_nm1,gb_tt_np1,
                  gb_tx_n,gb_tx_nm1,gb_tx_np1,
                  gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -2490,95 +2482,143 @@ void AdS4D_post_tstep(int L)
                  quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
-                 quasiset_massdensity,
+                 quasiset_massdensity,AdS_mass,
                  xextrap,yextrap,zextrap,
                  chrbdy,&numbdypoints,
                  x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
 
-   //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
-   is=0;
-   if (my_rank==0)
-   {
-    ie=vecbdypoints[0];
-   }
-   else
-   {
-    for (j=0; j<my_rank; j++)
-    {
-     is=is+vecbdypoints[j];
-    }
-     ie=is+vecbdypoints[my_rank];
-   }
-
-   //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
-   for (i=0; i<uniSize; i++)
-   {
-    dsplsbdypoints[i]=0;
-   }
-
-   for (i=0; i<uniSize; i++)
-   {
-    if (i!=0) 
-    {
-     for (j=0; j<i; j++)
-     {
-      dsplsbdypoints[i]=dsplsbdypoints[i]+vecbdypoints[j];
-     }
-    }
-   }
-
-   //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
-   MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-   MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-   MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-
-   //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywher except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution.
-       for (n=0; n<ivecNt; n++)
-       {
-         // check ownership if this proc is responsible for x=1
-         if (n*AMRD_save_ivec0[3]==lsteps)    //paste in post_tstep
-         {
-           for (i=is; i<ie; i++)
-           {
-               lquasiset_tt0[n+ivecNt*i]=quasiset_tt[i-is];
-               lquasiset_tchi0[n+ivecNt*i]=quasiset_tchi[i-is];
-               lquasiset_txi0[n+ivecNt*i]=quasiset_txi[i-is];
-               lquasiset_chichi0[n+ivecNt*i]=quasiset_chichi[i-is];
-               lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
-               lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
-               lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
-           }
-         }
-       }
-
+////we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
+////The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
+//       for (n=0; n<ivecNt; n++)
+//       {
+//        if (n*AMRD_save_ivec0[3]==lsteps)
+//        {
+//         lrelkretschcentregrid0[n]= *relkretschcentregrid;
+//        }
+//       }
        valid=PAMR_next_g();
      }
 
+//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
+//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
+       for (n=0; n<ivecNt; n++)
+       {
+        if (n*AMRD_save_ivec0[3]==lsteps)
+        {
+         lrelkretschcentregrid0[n]= *relkretschcentregrid;
+        }
+       }
 
-     if (lsteps==AMRD_steps && output_quasiset)
+     if (lsteps==AMRD_steps && output_relkretschcentregrid)
      {
-        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
-        //basenumbdypoints is set in AdS4D_post_init
-        MPI_Allreduce(lquasiset_tt0,maxquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_tchi0,maxquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_txi0,maxquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_chichi0,maxquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_txi0,minquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_chichi0,minquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-
+      for( n = 0; n<ivecNt; n++ )
+      {
+        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(maxrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+        MPI_Allreduce(&(lrelkretschcentregrid0[n]),&(minrelkretschcentregrid0[n]),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         if (uniSize>1)
         {
+         relkretschcentregrid0[n]=maxrelkretschcentregrid0[n]+minrelkretschcentregrid0[n];
+        }
+        else
+        {
+         relkretschcentregrid0[n]=maxrelkretschcentregrid0[n];
+        }
+      }
+
+        // save relkretschcentregrid as ascii
+        FILE * fp;
+        fp = fopen ("ascii_t_relkretschcentregrid", "w+");
+        for( n = 0; n<ivecNt; n++ )
+        {
+              fprintf(fp,"%24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,relkretschcentregrid0[n]);
+        }
+        fclose(fp);
+     }
+
+     //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+     is=0;
+     if (my_rank==0)
+     {
+      ie=vecbdypoints[0];
+     }
+     else
+     {
+      for (j=0; j<my_rank; j++)
+      {
+       is=is+vecbdypoints[j];
+      }
+       ie=is+vecbdypoints[my_rank];
+     }
+  
+     //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+     for (i=0; i<uniSize; i++)
+     {
+      dsplsbdypoints[i]=0;
+     }
+  
+     for (i=0; i<uniSize; i++)
+     {
+      if (i!=0)
+      {
+       for (j=0; j<i; j++)
+       {
+        dsplsbdypoints[i]=dsplsbdypoints[i]+vecbdypoints[j];
+       }
+      }
+     }
+
+     //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+     MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+     MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+     MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+  
+     //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywher except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution.
+         for (n=0; n<ivecNt; n++)
+         {
+           // check ownership if this proc is responsible for x=1
+           if (n*AMRD_save_ivec0[3]==lsteps)    //paste in post_tstep
+           {
+             for (i=is; i<ie; i++)
+             {
+                 lquasiset_tt0[n+ivecNt*i]=quasiset_tt[i-is];
+                 lquasiset_tchi0[n+ivecNt*i]=quasiset_tchi[i-is];
+                 lquasiset_txi0[n+ivecNt*i]=quasiset_txi[i-is];
+                 lquasiset_chichi0[n+ivecNt*i]=quasiset_chichi[i-is];
+                 lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
+                 lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
+                 lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
+                 lAdS_mass0[n]=*AdS_mass;
+             }
+           }
+         }
+  
+  
+       if (lsteps==AMRD_steps && output_quasiset)
+       {
+          // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+          //basenumbdypoints is set in AdS4D_post_init
+          MPI_Allreduce(lquasiset_tt0,maxquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_tchi0,maxquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_txi0,maxquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_chichi0,maxquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+
+          MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_txi0,minquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_chichi0,minquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+          MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+  
+
          for (i=0; i<ivecNt*basenumbdypoints; i++)
          {
+          if (uniSize>1)
+          {
            quasiset_tt0[i]=maxquasiset_tt0[i]+minquasiset_tt0[i];
            quasiset_tchi0[i]=maxquasiset_tchi0[i]+minquasiset_tchi0[i];
            quasiset_txi0[i]=maxquasiset_txi0[i]+minquasiset_txi0[i];
@@ -2586,12 +2626,9 @@ void AdS4D_post_tstep(int L)
            quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
            quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
            quasiset_massdensity0[i]=maxquasiset_massdensity0[i]+minquasiset_massdensity0[i];
-         }
-        }
-        else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
-        {
-         for (i=0; i<ivecNt*basenumbdypoints; i++)
-         {
+          }
+          else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+          {
            quasiset_tt0[i]=maxquasiset_tt0[i];
            quasiset_tchi0[i]=maxquasiset_tchi0[i];
            quasiset_txi0[i]=maxquasiset_txi0[i];
@@ -2599,20 +2636,193 @@ void AdS4D_post_tstep(int L)
            quasiset_chixi0[i]=maxquasiset_chixi0[i];
            quasiset_xixi0[i]=maxquasiset_xixi0[i];
            quasiset_massdensity0[i]=maxquasiset_massdensity0[i];
+          }
          }
-        }
+
+         for ( n = 0; n<ivecNt; n++ )
+         {
+           MPI_Allreduce(&(lAdS_mass0[n]),&(AdS_mass0[n]),1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+         }
+
 
         // save quasiset_ll as ascii
         FILE * fp;
         fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll_AdSmassdensity", "w+");
         for( n = 0; n<ivecNt; n++ )
+        {
          for( j = 0; j < basenumbdypoints; j++ )
            {
               fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[n+ivecNt*j],quasiset_tchi0[n+ivecNt*j],quasiset_txi0[n+ivecNt*j],quasiset_chichi0[n+ivecNt*j],quasiset_chixi0[n+ivecNt*j],quasiset_xixi0[n+ivecNt*j],quasiset_massdensity0[n+ivecNt*j]);
            }
+        }
+        fclose(fp);
+        
+        fp = fopen ("ascii_t_AdSmass", "w+");
+        for( n = 0; n<ivecNt; n++ )
+        {
+              fprintf(fp,"%24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,AdS_mass0[n]);
+        }
+        fclose(fp);
 
-     }
-   }
+      }
+   } 
+
+
+
+//   // qs objects at t>0, when at coarsest level L=Lc
+//   if (L==Lc)
+//   {
+//     int lsteps=AMRD_lsteps[Lc-1];
+//     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+//     real lmass,mass;
+//
+//     valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
+//     while(valid)
+//     {
+//       ldptr();
+//
+//       //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+//       MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
+//
+//
+//       quasiset_(gb_tt_n,gb_tt_nm1,gb_tt_np1,
+//                 gb_tx_n,gb_tx_nm1,gb_tx_np1,
+//                 gb_ty_n,gb_ty_nm1,gb_ty_np1,
+//                 gb_tz_n,gb_tz_nm1,gb_tz_np1,
+//                 gb_xx_n,gb_xx_nm1,gb_xx_np1,
+//                 gb_xy_n,gb_xy_nm1,gb_xy_np1,
+//                 gb_xz_n,gb_xz_nm1,gb_xz_np1,
+//                 gb_yy_n,gb_yy_nm1,gb_yy_np1,
+//                 gb_yz_n,gb_yz_nm1,gb_yz_np1,
+//                 psi_n,psi_nm1,psi_np1,
+//                 quasiset_tt,quasiset_tchi,quasiset_txi,
+//                 quasiset_chichi,quasiset_chixi,
+//                 quasiset_xixi,
+//                 quasiset_massdensity,AdS_mass,
+//                 xextrap,yextrap,zextrap,
+//                 chrbdy,&numbdypoints,
+//                 x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//
+//
+//   //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+//   is=0;
+//   if (my_rank==0)
+//   {
+//    ie=vecbdypoints[0];
+//   }
+//   else
+//   {
+//    for (j=0; j<my_rank; j++)
+//    {
+//     is=is+vecbdypoints[j];
+//    }
+//     ie=is+vecbdypoints[my_rank];
+//   }
+//
+//   //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+//   for (i=0; i<uniSize; i++)
+//   {
+//    dsplsbdypoints[i]=0;
+//   }
+//
+//   for (i=0; i<uniSize; i++)
+//   {
+//    if (i!=0) 
+//    {
+//     for (j=0; j<i; j++)
+//     {
+//      dsplsbdypoints[i]=dsplsbdypoints[i]+vecbdypoints[j];
+//     }
+//    }
+//   }
+//
+//   //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+//   MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+//   MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+//   MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+//
+//   //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywher except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution.
+//       for (n=0; n<ivecNt; n++)
+//       {
+//         // check ownership if this proc is responsible for x=1
+//         if (n*AMRD_save_ivec0[3]==lsteps)    //paste in post_tstep
+//         {
+//           for (i=is; i<ie; i++)
+//           {
+//               lquasiset_tt0[n+ivecNt*i]=quasiset_tt[i-is];
+//               lquasiset_tchi0[n+ivecNt*i]=quasiset_tchi[i-is];
+//               lquasiset_txi0[n+ivecNt*i]=quasiset_txi[i-is];
+//               lquasiset_chichi0[n+ivecNt*i]=quasiset_chichi[i-is];
+//               lquasiset_chixi0[n+ivecNt*i]=quasiset_chixi[i-is];
+//               lquasiset_xixi0[n+ivecNt*i]=quasiset_xixi[i-is];
+//               lquasiset_massdensity0[n+ivecNt*i]=quasiset_massdensity[i-is];
+//           }
+//         }
+//       }
+//
+//       valid=PAMR_next_g();
+//     }
+//
+//
+//     if (lsteps==AMRD_steps && output_quasiset)
+//     {
+//        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+//        //basenumbdypoints is set in AdS4D_post_init
+//        MPI_Allreduce(lquasiset_tt0,maxquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_tchi0,maxquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_txi0,maxquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_chichi0,maxquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_txi0,minquasiset_txi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_chichi0,minquasiset_chichi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//        MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,ivecNt*basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//
+//        if (uniSize>1)
+//        {
+//         for (i=0; i<ivecNt*basenumbdypoints; i++)
+//         {
+//           quasiset_tt0[i]=maxquasiset_tt0[i]+minquasiset_tt0[i];
+//           quasiset_tchi0[i]=maxquasiset_tchi0[i]+minquasiset_tchi0[i];
+//           quasiset_txi0[i]=maxquasiset_txi0[i]+minquasiset_txi0[i];
+//           quasiset_chichi0[i]=maxquasiset_chichi0[i]+minquasiset_chichi0[i];
+//           quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
+//           quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
+//           quasiset_massdensity0[i]=maxquasiset_massdensity0[i]+minquasiset_massdensity0[i];
+//         }
+//        }
+//        else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+//        {
+//         for (i=0; i<ivecNt*basenumbdypoints; i++)
+//         {
+//           quasiset_tt0[i]=maxquasiset_tt0[i];
+//           quasiset_tchi0[i]=maxquasiset_tchi0[i];
+//           quasiset_txi0[i]=maxquasiset_txi0[i];
+//           quasiset_chichi0[i]=maxquasiset_chichi0[i];
+//           quasiset_chixi0[i]=maxquasiset_chixi0[i];
+//           quasiset_xixi0[i]=maxquasiset_xixi0[i];
+//           quasiset_massdensity0[i]=maxquasiset_massdensity0[i];
+//         }
+//        }
+//
+//        // save quasiset_ll as ascii
+//        FILE * fp;
+//        fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll_AdSmassdensity", "w+");
+//        for( n = 0; n<ivecNt; n++ )
+//        {
+//         for( j = 0; j < basenumbdypoints; j++ )
+//           {
+//              fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",n*AMRD_save_ivec0[3]*dt,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[n+ivecNt*j],quasiset_tchi0[n+ivecNt*j],quasiset_txi0[n+ivecNt*j],quasiset_chichi0[n+ivecNt*j],quasiset_chixi0[n+ivecNt*j],quasiset_xixi0[n+ivecNt*j],quasiset_massdensity0[n+ivecNt*j]);
+//           }
+//        }
+//
+//     }
+//   }
 
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
