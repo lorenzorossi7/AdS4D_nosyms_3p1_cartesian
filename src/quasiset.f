@@ -189,13 +189,14 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-        ! adjust index bounds to compensate for ghost_width
-        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!!!!ghost_width not needed as lons as we don't use derivatives
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         do i=is,ie
          do j=js,je
@@ -513,13 +514,13 @@ c-------------------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-        ! adjust index bounds to compensate for ghost_width
-        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
        
 !!!!!!!!!DEBUG!!!!!!!!
 !        do lind=1,numbdypoints
@@ -754,10 +755,10 @@ c-------------------------------------------------------------------------------
      &                  numbdypoints,
      &                  chiextrap,xiextrap,
      &                  bdy_Nchi,bdy_Nxi)
-
+!        write(*,*) "bdy_Nchi,bdy_Nxi=",bdy_Nchi,bdy_Nxi
 
 !compute the double integral in chi and xi of the massdensity
-        AdS_mass=0
+        AdS_mass=0.0d0
         call doubleintegralonsphere(quasiset_massdensity,
      &                  xextrap,yextrap,zextrap,numbdypoints,
      &                  chiextrap,xiextrap,
@@ -818,7 +819,7 @@ c----------------------------------------------------------------------
 c--------------------------------------------------------------------------------------
 
 c-----------------------------------------------------------------------------------
-c The following routine performs the double integral on the S^2 boundary
+c The following routine performs the double integral on the S^2 boundary. We approximate the integrals via the trapezoidal rule
 c-----------------------------------------------------------------------------------
 
         subroutine doubleintegralonsphere(f,
@@ -850,6 +851,7 @@ c-------------------------------------------------------------------------------
         integer e,i,j,lind
         integer lind_chipxip,lind_chipxipp1
         integer lind_chipp1xip,lind_chipp1xipp1
+        integer additions
 
         real*8 rhoextrap,rho2
 
@@ -884,13 +886,13 @@ c-------------------------------------------------------------------------------
         rhobdy=1.0d0
 
 !obtain the arrays chibdy(bdy_Nchi) and xibdy(bdy_Nxi) containing the values of chi and xi at the boundary points, in increasing order
-
-        call chibdy_xibdy(
-     &                  xextrap,yextrap,zextrap,numbdypoints,
+        call chibdy_xibdy(xextrap,yextrap,zextrap,numbdypoints,
      &                  chiextrap,xiextrap,
      &                  bdy_Nchi,bdy_Nxi,
      &                  chibdy,xibdy)
 
+
+        additions=0
         integral=0.0d0
         do i=1,bdy_Nchi-1
          do j=1,bdy_Nxi-1
@@ -965,14 +967,17 @@ c-------------------------------------------------------------------------------
               end if
             end do
 
-          integral=integral
-     &             +(chibdy(i+1)-chibdy(i))/2 * (xibdy(j+1)-xibdy(j))/2
-     &             *(f(lind_chipxip)+f(lind_chipxipp1)
-     &              +f(lind_chipp1xip)+f(lind_chipp1xipp1))
+!          additions=additions+1
 
+              integral=integral+
+     &              (chibdy(i+1)-chibdy(i))/2 * (xibdy(j+1)-xibdy(j))/2
+     &              *(f(lind_chipxip)+f(lind_chipxipp1)
+     &              +f(lind_chipp1xip)+f(lind_chipp1xipp1))
 
          end do
         end do
+ 
+!        write(*,*) "additions=",additions
 
 
         return
@@ -1077,11 +1082,13 @@ c-------------------------------------------------------------------------------
             chiextrap_min=
      &                minval(chiextrap,mask=chiextrap.gt.chiextrap_min)
             chibdy(i)=chiextrap_min
+!            write(*,*) "i,chibdy(i)=",i,chibdy(i)
         end do
 
         do j=1,bdy_Nxi 
             xiextrap_min=minval(xiextrap,mask=xiextrap.gt.xiextrap_min)
             xibdy(j)=xiextrap_min
+!            write(*,*) "j,xibdy(j)=",j,xibdy(j)
         end do
 
         return

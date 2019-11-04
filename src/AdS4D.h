@@ -471,7 +471,8 @@ void dmdiss3d_ex_gen_(real *f,real *work,real *eps,int *do_bdy,int *phys_bdy_typ
                       int *odd,int *nx,int *ny,
                       int *nz, real *chr, real *ex, int *do_ex, int *ind_sweeps, int *kmax);
 
-void nexttobdypoints_(real *chrbdy, int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
+void nexttobdypoints_(real *chrbdy, 
+                      int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *ghost_width);
 
 void quasiset_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                    real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,

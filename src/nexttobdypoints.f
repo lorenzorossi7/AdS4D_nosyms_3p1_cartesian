@@ -7,8 +7,9 @@ c spherical polar coordinates.
 c----------------------------------------------------------------------
 
         subroutine nexttobdypoints(
-     &                  chrbdy,numbdypoints,
-     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+     &                  chrbdy,
+     &                  numbdypoints,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,ghost_width)
 
         implicit none
 
@@ -56,7 +57,8 @@ c----------------------------------------------------------------------
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
-          numbdypoints=0
+        numbdypoints=0
+
         do i=is,ie
          do j=js,je
            do k=ks,ke
@@ -67,7 +69,7 @@ c----------------------------------------------------------------------
            z0=z(k)
            rho0=sqrt(x0**2+y0**2+z0**2)
 
-!           !chrql(i,j,k) is not ex for points near the boundary
+!           !chrbdy(i,j,k) is not ex for points near the boundary
            if ((chr(i,j,k).ne.ex).and.(rho0.ge.(1.0d0-3*dx/2))) then
               chrbdy(i,j,k)=ex-1
            else
@@ -76,7 +78,7 @@ c----------------------------------------------------------------------
 
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-!           !chrql(i,j,k) is not ex only for points near the boundary AND next to excised points   
+!           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
 
            if (chrbdy(i,j,k).ne.ex) then
             if (maxxyzp1.eq.abs(xp1)) then
@@ -101,7 +103,6 @@ c----------------------------------------------------------------------
            end do
          end do
         end do
-
 
 
         return

@@ -34,7 +34,7 @@ AH_Nchi := 9
 AH_Nphi := 17
 AH_freq := 1
 AH_freq_aft := 1
-#excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary is there is no BH) is
+#excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
 ex_rbuf := 0.3
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
