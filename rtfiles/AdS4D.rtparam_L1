@@ -63,6 +63,7 @@ background := 0
 skip_constraints := 1
 output_ires := 1
 output_quasiset := 1
+output_AdS_mass := 1
 output_relkretschcentregrid := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------

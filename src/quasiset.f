@@ -176,7 +176,6 @@ c-------------------------------------------------------------------------------
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
               if (maxxyzp1.eq.abs(xp1)) then
-!               write(*,*) "EXTRAP ALONG x"
                if (xp1.gt.0) then
                   xextrap(lind)=sqrt(1-yp1**2-zp1**2)
                   yextrap(lind)=yp1
@@ -187,7 +186,6 @@ c-------------------------------------------------------------------------------
                   zextrap(lind)=zp1
               end if
              else if (maxxyzp1.eq.abs(yp1)) then
-!               write(*,*) "EXTRAP ALONG x"
               if (yp1.gt.0) then
                   yextrap(lind)=sqrt(1-xp1**2-zp1**2)
                   xextrap(lind)=xp1
@@ -199,7 +197,6 @@ c-------------------------------------------------------------------------------
               end if
              else
                  if (zp1.gt.0) then
-!               write(*,*) "EXTRAP ALONG z"
                   zextrap(lind)=sqrt(1-yp1**2-xp1**2)
                   yextrap(lind)=yp1
                   xextrap(lind)=xp1
@@ -219,8 +216,6 @@ c-------------------------------------------------------------------------------
 c--------------------------------------------------------------------------------------
 
 
-
-
 c----------------------------------------------------------------------
 c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
 c
@@ -234,6 +229,7 @@ c----------------------------------------------------------------------
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
      &                  quasiset_massdensityll,
+     &                  quasiset_tracell,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -245,6 +241,7 @@ c----------------------------------------------------------------------
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
 
         implicit none
 
@@ -268,6 +265,7 @@ c----------------------------------------------------------------------
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
         real*8 quasiset_massdensityll(Nx,Ny,Nz)
+        real*8 quasiset_tracell(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
         integer a,b,c,d
@@ -275,7 +273,8 @@ c----------------------------------------------------------------------
         integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
         integer ix,jy,kz
 
-        real*8 x0,y0,z0,rho0,q
+
+        real*8 x0,y0,z0,rho0,q,chi0,xi0
 
         real*8 dx,dy,dz
 
@@ -298,6 +297,7 @@ c----------------------------------------------------------------------
         real*8 gb_tt_yy
         real*8 gb_tt_yz
         real*8 gb_tt_zz
+
 
         real*8 gb_tx_t, gb_tx_x, gb_tx_y
         real*8 gb_tx_z
@@ -328,6 +328,7 @@ c----------------------------------------------------------------------
         real*8 gb_tz_yy
         real*8 gb_tz_yz
         real*8 gb_tz_zz
+
 
         real*8 gb_xx_t, gb_xx_x, gb_xx_y
         real*8 gb_xx_z
@@ -389,14 +390,22 @@ c----------------------------------------------------------------------
         real*8 psi_yz
         real*8 psi_zz
 
+
         real*8 dtdt,dtdrho,dtdchi,dtdxi
         real*8 dxdt,dxdrho,dxdchi,dxdxi
         real*8 dydt,dydrho,dydchi,dydxi
         real*8 dzdt,dzdrho,dzdchi,dzdxi
 
+        real*8 g0_tt_ads0,g0_xx_ads0
+        real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
+        real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
+        real*8 g0_xz_ads0,g0_yz_ads0
+
         real*8 dxcar_dxsph(4,4)
-        real*8 hcar_n(4,4)
-        real*8 hsph_n(4,4),gbsph_n(4,4)
+        real*8 hcar_n(4,4),g0car_n(4,4)
+        real*8 hsph_n(4,4),gbsph_n(4,4),g0sph_n(4,4)
+        real*8 gamma0sph_ll(4,4),gamma0sph_uu(4,4)
+        real*8 detgamma3
 
 !----------------------------------------------------------------------
 
@@ -412,6 +421,7 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
+
 !!!!ghost_width not needed as lons as we don't use derivatives
 !        ! adjust index bounds to compensate for ghost_width
 !        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
@@ -426,15 +436,18 @@ c----------------------------------------------------------------------
           do k=ks,ke
             if ( chr(i,j,k).ne.ex) then
 
-
-                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
-                ! identified with the bdy CFT stress-energy tensor one-point function
-                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
              x0=x(i)
              y0=y(j)
              z0=z(k)
              rho0=sqrt(x0**2+y0**2+z0**2)
              q=1-rho0
+             chi0=(1/PI)*acos(x0/rho0)
+             if (z0.lt.0) then
+                xi0=(1/(2*PI))*(atan2(z0,y0)+2*PI)
+             else
+                xi0=(1/(2*PI))*atan2(z0,y0)
+             end if
+
 
 !calculate regularized metric components in spherical coordinates in terms of regularized metric components in Cartesian coordinates
 ! we use the following coordinate transformation (notice that the angles are rescaled w.r.t. the usual spherical coordinates): x=rho*cos(PI*chi),y=rho*sin(PI*chi)*cos(2*PI*xi),z=rho*sin(PI*chi)*sin(2*PI*xi)
@@ -446,17 +459,17 @@ c----------------------------------------------------------------------
         dtdchi=0
         dtdxi=0
         dxdt=0
-        dxdrho=x0/rho0
-        dxdchi=-PI*sqrt(y0**2+z0**2)
+        dxdrho=cos(PI*chi0)
+        dxdchi=-PI*rho0*sin(PI*chi0)
         dxdxi=0
         dydt=0
-        dydrho=y0/rho0
-        dydchi=PI*x0*y0/(sqrt(y0**2+z0**2))
-        dydxi=-2*PI*z0
+        dydrho=sin(PI*chi0)*cos(2*PI*xi0)
+        dydchi=PI*rho0*cos(PI*chi0)*cos(2*PI*xi0)
+        dydxi=-2*PI*rho0*sin(PI*chi0)*sin(2*PI*xi0)
         dzdt=0
-        dzdrho=z0/rho0
-        dzdchi=PI*x0*z0/(sqrt(y0**2+z0**2))
-        dzdxi=2*PI*y0
+        dzdrho=sin(PI*chi0)*sin(2*PI*xi0)
+        dzdchi=PI*rho0*cos(PI*chi0)*sin(2*PI*xi0)
+        dzdxi=2*PI*rho0*sin(PI*chi0)*cos(2*PI*xi0)
 
         dxcar_dxsph(1,1)=dtdt
         dxcar_dxsph(1,2)=dtdrho
@@ -475,6 +488,36 @@ c----------------------------------------------------------------------
         dxcar_dxsph(4,3)=dzdchi
         dxcar_dxsph(4,4)=dzdxi
 
+        !metric components of pure AdS in Cartesian coordinates
+
+        g0_tt_ads0 =-(4*rho0**2+L**2*(-1+rho0**2)**2)
+     &               /L**2/(-1+rho0**2)**2
+        g0_tx_ads0 =0
+        g0_ty_ads0 =0
+        g0_tz_ads0 =0
+        g0_xx_ads0 =(8*(-1+L**2)*(x0**2-y0**2-z0**2)
+     &              +8*rho0**2+4*L**2*(1+rho0**4))
+     &              /(-1+rho0**2)**2/(4*rho0**2+L**2*(-1+rho0**2)**2)
+        g0_xy_ads0 =(16 *(-1 + L**2) *x0* y0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_xz_ads0 =(16 *(-1 + L**2) *x0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_yy_ads0 =(4*(4*(x0**2+z0**2)+L**2*(x0**4+(1+y0**2)**2
+     &              +2*(-1+y0**2)*z0**2+z0**4
+     &              +2*x0**2*(-1+y0**2+z0**2))))
+     &              /(L**2*(-1+rho0**2)**4+4*(-1+rho0**2)**2*(rho0**2))
+        g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+     &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
+     &              /(L**2*(-1+rho0**2)**4
+     &              +4*(-1+rho0**2)**2*(rho0**2))
+
+      !deviation from pure AdS in Cartesian coordinates
+
         hcar_n(1,1)=gb_tt_n(i,j,k)
         hcar_n(1,2)=gb_tx_n(i,j,k)
         hcar_n(1,3)=gb_ty_n(i,j,k)
@@ -492,6 +535,26 @@ c----------------------------------------------------------------------
           end do
         end do
 
+       !full metric in Cartesian coordinates
+        g0car_n(1,1)=g0_tt_ads0+hcar_n(1,1)
+        g0car_n(1,2)=g0_tx_ads0+hcar_n(1,2)
+        g0car_n(1,3)=g0_ty_ads0+hcar_n(1,3)
+        g0car_n(1,4)=g0_tz_ads0+hcar_n(1,4)
+        g0car_n(2,2)=g0_xx_ads0+hcar_n(2,2)
+        g0car_n(2,3)=g0_xy_ads0+hcar_n(2,3)
+        g0car_n(2,4)=g0_xz_ads0+hcar_n(2,4)
+        g0car_n(3,3)=g0_yy_ads0+hcar_n(3,3)
+        g0car_n(3,4)=g0_yz_ads0+hcar_n(3,4)
+        g0car_n(4,4)=g0_psi_ads0+hcar_n(4,4)
+
+       do a=1,3
+          do b=a+1,4
+            g0car_n(b,a)=g0car_n(a,b)
+          end do
+        end do
+
+
+       !deviation from pure AdS in (rescaled) spherical coordinates
         do a=1,4
           do b=1,4
            hsph_n(a,b)=0.0d0
@@ -504,7 +567,7 @@ c----------------------------------------------------------------------
           end do
         end do
 
-
+        !regularised metric components in (rescaled) spherical coordinates
         gbsph_n(1,1)=hsph_n(1,1)
         gbsph_n(1,2)=hsph_n(1,2)/(1-rho0**2)
         gbsph_n(1,3)=hsph_n(1,3)
@@ -516,63 +579,194 @@ c----------------------------------------------------------------------
         gbsph_n(3,4)=hsph_n(3,4)
         gbsph_n(4,4)=hsph_n(4,4)
 
-       do a=1,3
+        do a=1,3
           do b=a+1,4
             gbsph_n(b,a)=gbsph_n(a,b)
           end do
         end do
 
+        !full metric in (rescaled) spherical coordinates
+        do a=1,4
+          do b=1,4
+           g0sph_n(a,b)=0.0d0
+           do c=1,4
+            do d=1,4
+             g0sph_n(a,b)=g0sph_n(a,b)
+     &                   +dxcar_dxsph(c,a)*dxcar_dxsph(d,b)*g0car_n(c,d)
+            end do
+           end do
+          end do
+        end do
+
+        !induced metric on hypersurface at constant rho
+        gamma0sph_ll(1,1)=g0sph_n(1,1)
+        gamma0sph_ll(1,2)=0
+        gamma0sph_ll(1,3)=g0sph_n(1,3)
+        gamma0sph_ll(1,4)=g0sph_n(1,4)
+        gamma0sph_ll(2,2)=0
+        gamma0sph_ll(2,3)=0
+        gamma0sph_ll(2,4)=0
+        gamma0sph_ll(3,3)=g0sph_n(3,3)
+        gamma0sph_ll(3,4)=g0sph_n(3,4)
+        gamma0sph_ll(4,4)=g0sph_n(4,4)
+
+        do a=1,3
+          do b=a+1,4
+            gamma0sph_ll(b,a)=gamma0sph_ll(a,b)
+          end do
+        end do
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) 'gamma0sph_ll(1,1)=',gamma0sph_ll(1,1)
+!       write (*,*) 'gamma0sph_ll(1,2)=',gamma0sph_ll(1,2)
+!       write (*,*) 'gamma0sph_ll(1,3)=',gamma0sph_ll(1,3)
+!       write (*,*) 'gamma0sph_ll(1,4)=',gamma0sph_ll(1,4)
+!       write (*,*) 'gamma0sph_ll(2,2)=',gamma0sph_ll(2,2)
+!       write (*,*) 'gamma0sph_ll(2,3)=',gamma0sph_ll(2,3)
+!       write (*,*) 'gamma0sph_ll(2,4)=',gamma0sph_ll(2,4)
+!       write (*,*) 'gamma0sph_ll(3,3)=',gamma0sph_ll(3,3)
+!       write (*,*) 'gamma0sph_ll(3,4)=',gamma0sph_ll(3,4)
+!       write (*,*) 'gamma0sph_ll(4,4)=',gamma0sph_ll(4,4)
+
+      !determinant of induced metric on hypersurface at constant rho in 3-D form
+        detgamma3=-g0sph_n(1,4)**2*g0sph_n(3,3)
+     &            +2*g0sph_n(1,3)*g0sph_n(1,4)*g0sph_n(3,4)
+     &            -g0sph_n(1,3)**2*g0sph_n(4,4)
+     &            +g0sph_n(1,1)*(-g0sph_n(3,4)**2
+     &              +g0sph_n(3,3)*g0sph_n(4,4))
+
+      !induced inverse metric on hypersurface at constant rho
+        gamma0sph_uu(1,1)=-(g0sph_n(3,4)**2 -g0sph_n(3,3)*g0sph_n(4,4))
+     &                    /detgamma3
+        gamma0sph_uu(1,2)=0
+        gamma0sph_uu(1,3)=-(-g0sph_n(1,4)*g0sph_n(3,4)
+     &                      +g0sph_n(1,3)*g0sph_n(4,4))
+     &                      /detgamma3
+        gamma0sph_uu(1,4)=-(g0sph_n(1,4)*g0sph_n(3,3)
+     &                      -g0sph_n(1,3)*g0sph_n(3,4))
+     &                      /detgamma3
+        gamma0sph_uu(2,2)=0
+        gamma0sph_uu(2,3)=0
+        gamma0sph_uu(2,4)=0
+        gamma0sph_uu(3,3)=-(g0sph_n(1,4)**2 -g0sph_n(1,1)*g0sph_n(4,4))
+     &                    /detgamma3
+        gamma0sph_uu(3,4)=-(-g0sph_n(1,3)*g0sph_n(1,4)
+     &                      +g0sph_n(1,1)*g0sph_n(3,4))
+     &                      /detgamma3
+        gamma0sph_uu(4,4)=-(g0sph_n(1,3)**2 -g0sph_n(1,1)*g0sph_n(3,3))
+     &                    /detgamma3
+
+        do a=1,3
+          do b=a+1,4
+            gamma0sph_uu(b,a)=gamma0sph_uu(a,b)
+          end do
+        end do
+
+!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!       write (*,*) 'gamma0sph_uu(1,1)=',gamma0sph_uu(1,1)
+!       write (*,*) 'gamma0sph_uu(1,2)=',gamma0sph_uu(1,2)
+!       write (*,*) 'gamma0sph_uu(1,3)=',gamma0sph_uu(1,3)
+!       write (*,*) 'gamma0sph_uu(1,4)=',gamma0sph_uu(1,4)
+!       write (*,*) 'gamma0sph_uu(2,2)=',gamma0sph_uu(2,2) 
+!       write (*,*) 'gamma0sph_uu(2,3)=',gamma0sph_uu(2,3) 
+!       write (*,*) 'gamma0sph_uu(2,4)=',gamma0sph_uu(2,4) 
+!       write (*,*) 'gamma0sph_uu(3,3)=',gamma0sph_uu(3,3) 
+!       write (*,*) 'gamma0sph_uu(3,4)=',gamma0sph_uu(3,4) 
+!       write (*,*) 'gamma0sph_uu(4,4)=',gamma0sph_uu(4,4)
+
+                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
+                ! identified with the bdy CFT stress-energy tensor one-point function
+                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
+
              if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
-             quasiset_tt_ll(i,j,k)=(12*(gbsph_n(3,3)/q)
-     &                        + 8*PI**2*(gbsph_n(2,2)/q)
-     &                        +  (3*rho0**2*(gbsph_n(4,4)/q))
-     &                          /(z0**2+y0**2)
-     &                        )/(64*PI**3)
+
+              quasiset_tt_ll(i,j,k)=(12*(gbsph_n(3,3)/q)
+     &                         + 8*PI**2*(gbsph_n(2,2)/q)
+     &                         +  (3*(gbsph_n(4,4)/q)/(sin(PI*chi0))**2)
+     &                         )/(64*PI**3)
 
 
-             quasiset_tchi_ll(i,j,k)  = (3*(gbsph_n(1,3)/q))/(16*PI)
+              quasiset_tchi_ll(i,j,k)  = (3*(gbsph_n(1,3)/q))/(16*PI)
 
 
-             quasiset_txi_ll(i,j,k)   = (3*(gbsph_n(1,4)/q))/(16*PI)
+              quasiset_txi_ll(i,j,k)   = (3*(gbsph_n(1,4)/q))/(16*PI)
 
-             quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
-     &                                  *(gbsph_n(1,1)/q)
-     &                                 -(1.0d0/8.0d0)*PI
-     &                                  *(gbsph_n(2,2)/q)
-     &                                 -(3*rho0**2*(gbsph_n(4,4)/q))
-     &                                  /(64*PI*(z0**2+y0**2))
-
-
-             quasiset_chixi_ll(i,j,k) =(3*(gbsph_n(3,4)/q))/(16*PI)
+              quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
+     &                                   *(gbsph_n(1,1)/q)
+     &                                  -(1.0d0/8.0d0)*PI
+     &                                   *(gbsph_n(2,2)/q)
+     &                           -(3*(gbsph_n(4,4)/q)/(sin(PI*chi0))**2)
+     &                                   /(64*PI)
 
 
-             quasiset_xixi_ll(i,j,k)  =( (z0**2+y0**2)*(-3
-     &                                  *(gbsph_n(3,3)/q)
-     &                                 +PI**2*(3*(gbsph_n(1,1)/q)
-     &                                 -2*(gbsph_n(2,2)/q)))
-     &                                 )/(4*PI*rho0**2)
+              quasiset_chixi_ll(i,j,k) =(3*(gbsph_n(3,4)/q))/(16*PI)
 
-             quasiset_massdensityll(i,j,k)=(sqrt(y0**2+z0**2)
-     &                                   *(12*(gbsph_n(3,3)/q)
-     &                                   +8*PI**2*(gbsph_n(2,2)/q)
-     &                                   +(3*rho0**2*(gbsph_n(4,4)/q))
-     &                                   /(y0**2+z0**2)))
-     &                                   /(32*PI*rho0)
+
+              quasiset_xixi_ll(i,j,k)  =((sin(PI*chi0))**2*(-3
+     &                                   *(gbsph_n(3,3)/q)
+     &                                  +PI**2*(3*(gbsph_n(1,1)/q)
+     &                                  -2*(gbsph_n(2,2)/q)))
+     &                                  )/(4*PI)
+
+              quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
+     &                                    *(
+     &                                     12*(gbsph_n(3,3)/q)
+     &                                    +8*PI**2*(gbsph_n(2,2)/q)
+     &                                    +3*(gbsph_n(4,4)/q)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
+
+       !trace of quasi local stress-tensor from definition of trace
+             quasiset_tracell(i,j,k)=(1/(q**2))*(
+     &                      gamma0sph_uu(1,1)*quasiset_tt_ll(i,j,k)
+     &                   +2*gamma0sph_uu(1,3)*quasiset_tchi_ll(i,j,k)
+     &                   +2*gamma0sph_uu(1,4)*quasiset_txi_ll(i,j,k)
+     &                     +gamma0sph_uu(3,3)*quasiset_chichi_ll(i,j,k)
+     &                   +2*gamma0sph_uu(3,4)*quasiset_chixi_ll(i,j,k)
+     &                     +gamma0sph_uu(4,4)*quasiset_xixi_ll(i,j,k)
+     &                    )
+
+!        write(*,*) "i,j,k,x(i),y(j),z(k),rho0="
+!     &             ,i,j,k,x(i),y(j),z(k),rho0
+!        write(*,*) "TRACE: quasiset_tracell(i,j,k)="
+!     &             ,quasiset_tracell(i,j,k)
+!        write(*,*) "TRACE: quasiset_tt_ll(i,j,k)="
+!     &             ,quasiset_tt_ll(i,j,k) 
+!
+!
+!       !trace of quasi local stress-tensor in terms of regularised metric components (this should be the same as the one above, within numerical error)
+!              quasiset_tracell(i,j,k)=
+!     &                               -(3/(8*PI))*(-(gbsph_n(1,1)/q)
+!     &                               +(gbsph_n(2,2)/q)
+!     &                               +(gbsph_n(3,3)/q)
+!     &                               +(gbsph_n(4,4)/q)/(sin(PI*chi0)**2)
+!     &                               )
+!
+!        write(*,*) "EXPANSION: quasiset_tracell(i,j,k)="
+!     &             ,quasiset_tracell(i,j,k)
+
+
              else
-             quasiset_tt_ll(i,j,k)=0
-
-             quasiset_tchi_ll(i,j,k)  =0
-
-
-             quasiset_txi_ll(i,j,k)   =0
-
-             quasiset_chichi_ll(i,j,k)=0
-
-             quasiset_chixi_ll(i,j,k) =0
-
-             quasiset_xixi_ll(i,j,k)  =0
-
-             quasiset_massdensityll(i,j,k)=0
+              quasiset_tt_ll(i,j,k)= (x0**2*(2*(gb_xx_n(i,j,k)/q)
+     &                                +3*rho0**2*(psi_n(i,j,k)/q))
+     &                                +3*rho0**4*(gb_yy_n(i,j,k)/q) )
+     &                               /(16*PI*rho0**2)
+              quasiset_tchi_ll(i,j,k)  =(3/16)*x0*(gb_tz_n(i,j,k)/q)
+              quasiset_txi_ll(i,j,k)   =0
+           quasiset_chichi_ll(i,j,k)=-PI*(-3*rho0**2*(gb_tt_n(i,j,k)/q)
+     &                                   +2*x0**2*(gb_xx_n(i,j,k)/q)
+     &                                   +3*rho0**4*(gb_yy_n(i,j,k)/q))
+     &                                   /(16*rho0**2)
+              quasiset_chixi_ll(i,j,k) =0
+              quasiset_xixi_ll(i,j,k)  =0
+              quasiset_massdensityll(i,j,k)=0
+              quasiset_tracell(i,j,k)=-((3*(-rho0**2*(gb_tt_n(i,j,k)/q)
+     &                                +x0**2*((gb_xx_n(i,j,k)/q)
+     &                                  +PI**2*rho0**2*(psi_n(i,j,k)/q))
+     &                                  +4*(PI**2)*(rho0**4)
+     &                                   *(gb_yy_n(i,j,k)/q)))
+     &                                 /(8*PI*rho0**2))
              end if
 
 
@@ -585,6 +779,7 @@ c----------------------------------------------------------------------
              quasiset_chixi_ll(i,j,k)=0
              quasiset_xixi_ll(i,j,k)=0
              quasiset_massdensityll(i,j,k)=0
+             quasiset_tracell(i,j,k)=0
 
 
             end if
@@ -656,21 +851,25 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
         real*8 quasiset_massdensityll(Nx,Ny,Nz)
+        real*8 quasiset_tracell(Nx,Ny,Nz)
 
         real*8 quasiset_tt_p1,quasiset_tchi_p1
         real*8 quasiset_txi_p1,quasiset_chichi_p1
         real*8 quasiset_chixi_p1,quasiset_xixi_p1
         real*8 quasiset_massdensity_p1
+        real*8 quasiset_trace_p1
 
         real*8 quasiset_tt_p2,quasiset_tchi_p2
         real*8 quasiset_txi_p2,quasiset_chichi_p2
         real*8 quasiset_chixi_p2,quasiset_xixi_p2
         real*8 quasiset_massdensity_p2
+        real*8 quasiset_trace_p2
 
         real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
         real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
         real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
         real*8 quasiset_massdensity(numbdypoints)
+        real*8 quasiset_trace(numbdypoints)
 
         real*8 xextrap(numbdypoints)
         real*8 yextrap(numbdypoints)
@@ -716,6 +915,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
      &                  quasiset_massdensityll,
+     &                  quasiset_tracell,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -745,11 +945,6 @@ c-------------------------------------------------------------------------------
 !        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
 !        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
        
-!!!!!!!!!DEBUG!!!!!!!!
-!        do lind=1,numbdypoints
-!         quasiset_tt(lind)=3
-!        end do
-!!!!!!!!!!!!!!!!!!
  
         lind=0
         do i=is,ie
@@ -765,12 +960,13 @@ c-------------------------------------------------------------------------------
            quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
            quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
            quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
+           quasiset_trace_p1=quasiset_tracell(i,j,k)
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
               if (maxxyzp1.eq.abs(xp1)) then
-               if (xp1.gt.0) then
+                if (xp1.gt.0) then
  
 !                  xextrap(lind)=sqrt(1-yp1**2-zp1**2)
 !                  yextrap(lind)=yp1
@@ -784,6 +980,8 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
                   quasiset_massdensity_p2=
      &                           quasiset_massdensityll(i-1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i-1,j,k)
+
                   xex=xextrap(lind)
                   quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
@@ -800,6 +998,9 @@ c-------------------------------------------------------------------------------
           quasiset_massdensity(lind)=
      &                         extrapalongx(quasiset_massdensity_p1
      &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
+          quasiset_trace(lind)=
+     &                         extrapalongx(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,xp1,xp2,xex)
  
  
               else
@@ -815,6 +1016,8 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
                   quasiset_massdensity_p2=
      &                                 quasiset_massdensityll(i+1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i+1,j,k)
+
                   xex=xextrap(lind)
                   quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
@@ -831,9 +1034,12 @@ c-------------------------------------------------------------------------------
           quasiset_massdensity(lind)=
      &                         extrapalongx(quasiset_massdensity_p1
      &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
+          quasiset_trace(lind)=
+     &                         extrapalongx(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,xp1,xp2,xex)
  
  
-              end if
+               end if
              else if (maxxyzp1.eq.abs(yp1)) then
               if (yp1.gt.0) then
 !                  yextrap(lind)=sqrt(1-xp1**2-zp1**2)
@@ -847,36 +1053,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
                  quasiset_massdensity_p2=quasiset_massdensityll(i,j-1,k)
-                  yex=yextrap(lind)
-                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,yp1,yp2,yex)
-                  quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,yp1,yp2,yex)
-                  quasiset_txi(lind)=extrapalongy(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,yp1,yp2,yex)
-                  quasiset_chichi(lind)=extrapalongy(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,yp1,yp2,yex)
-                  quasiset_chixi(lind)=extrapalongy(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,yp1,yp2,yex)
-                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,yp1,yp2,yex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongy(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)   
- 
- 
-              else
-!                  yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
-!                  xextrap(lind)=xp1
-!                  zextrap(lind)=zp1
-                  yp2=y(j+1)
-                  quasiset_tt_p2=quasiset_tt_ll(i,j+1,k)
-                  quasiset_tchi_p2=quasiset_tchi_ll(i,j+1,k)
-                  quasiset_txi_p2=quasiset_txi_ll(i,j+1,k)
-                  quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
-                  quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
-                  quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j-1,k)
                   yex=yextrap(lind)
                  quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
      &                         ,quasiset_tt_p2,yp1,yp2,yex)
@@ -893,6 +1070,44 @@ c-------------------------------------------------------------------------------
           quasiset_massdensity(lind)=
      &                         extrapalongy(quasiset_massdensity_p1
      &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
+          quasiset_trace(lind)=
+     &                         extrapalongy(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,yp1,yp2,yex)
+ 
+ 
+              else
+!                  yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
+!                  xextrap(lind)=xp1
+!                  zextrap(lind)=zp1
+                  yp2=y(j+1)
+                  quasiset_tt_p2=quasiset_tt_ll(i,j+1,k)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i,j+1,k)
+                  quasiset_txi_p2=quasiset_txi_ll(i,j+1,k)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
+                 quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j+1,k)
+
+                  yex=yextrap(lind)
+                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
+     &                         ,quasiset_tt_p2,yp1,yp2,yex)
+                  quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
+     &                         ,quasiset_tchi_p2,yp1,yp2,yex)
+                  quasiset_txi(lind)=extrapalongy(quasiset_txi_p1
+     &                         ,quasiset_txi_p2,yp1,yp2,yex)
+                  quasiset_chichi(lind)=extrapalongy(quasiset_chichi_p1
+     &                         ,quasiset_chichi_p2,yp1,yp2,yex)
+                  quasiset_chixi(lind)=extrapalongy(quasiset_chixi_p1
+     &                         ,quasiset_chixi_p2,yp1,yp2,yex)
+                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
+     &                         ,quasiset_xixi_p2,yp1,yp2,yex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongy(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
+          quasiset_trace(lind)=
+     &                         extrapalongy(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,yp1,yp2,yex)
  
  
               end if             
@@ -909,6 +1124,8 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
                 quasiset_massdensity_p2=quasiset_massdensityll(i,j,k-1)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k-1)
+
                   zex=zextrap(lind)
                  quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
@@ -925,6 +1142,9 @@ c-------------------------------------------------------------------------------
           quasiset_massdensity(lind)=
      &                         extrapalongz(quasiset_massdensity_p1
      &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
+          quasiset_trace(lind)=
+     &                         extrapalongz(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,zp1,zp2,zex)
  
               else
 !                  zextrap(lind)=-sqrt(1-yp1**2-xp1**2)
@@ -938,6 +1158,8 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
                  quasiset_massdensity_p2=quasiset_massdensityll(i,j,k+1)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k+1)
+
                   zex=zextrap(lind)
                   quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
@@ -954,6 +1176,9 @@ c-------------------------------------------------------------------------------
           quasiset_massdensity(lind)=
      &                         extrapalongz(quasiset_massdensity_p1
      &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
+          quasiset_trace(lind)=
+     &                         extrapalongz(quasiset_trace_p1
+     &                         ,quasiset_trace_p2,zp1,zp2,zex)
  
                end if
               end if
@@ -962,39 +1187,15 @@ c-------------------------------------------------------------------------------
          end do
         end do
 
-!!calculate the value of angular coordinates chi and xi at the boundary points where we extrapolate the quasi-local stress energy tensor
-!        rhoextrap=1.0d0
-!        do e=1,numbdypoints
-!         chiextrap(e)=(1/PI)*acos(xextrap(e)/rhoextrap)
-!         if (zextrap(e).lt.0) then
-!             xiextrap(e)=(1/(2*PI))*(atan2(zextrap(e),yextrap(e))+2*PI)
-!         else
-!             xiextrap(e)=(1/(2*PI))*atan2(zextrap(e),yextrap(e))
-!         end if
+!        do lind=1,numbdypoints
+!         write(*,*) "lind,xextrap(lind),yextrap(lind),zextrap(lind)="
+!     &              ,lind,xextrap(lind),yextrap(lind),zextrap(lind)
+!         write(*,*) "quasiset_trace(lind)=",quasiset_trace(lind)
 !        end do
-!
-!!calculate the number of different values taken by chi and xi at the boundary points
-!        call bdy_N(
-!     &                  numbdypoints,
-!     &                  chiextrap,xiextrap,
-!     &                  bdy_Nchi,bdy_Nxi)
-!!        write(*,*) "bdy_Nchi,bdy_Nxi=",bdy_Nchi,bdy_Nxi
-!
-!!compute the double integral in chi and xi of the massdensity
-!        AdS_mass=0.0d0
-!        call doubleintegralonsphere(quasiset_massdensity,
-!     &                  xextrap,yextrap,zextrap,numbdypoints,
-!     &                  chiextrap,xiextrap,
-!     &                  bdy_Nchi,bdy_Nxi,
-!     &                  AdS_mass)
-!
-!!       write(*,*) "AdS_mass=",AdS_mass
-
 
         return
         end
 c--------------------------------------------------------------------------------------
-
 
 c----------------------------------------------------------------------
 c 2-point extrapolation along x axis function using values Txp1,Txp2 at xp1,xp2
@@ -1097,24 +1298,6 @@ c-------------------------------------------------------------------------------
 
         !-----------------------------------------------------------------------
 
-!        do i=1,bdy_Nchi
-!            chibdy(i)=0
-!        end do
-!
-!        do j=1,bdy_Nxi
-!            xibdy(j)=0
-!        end do
-!
-!        rhobdy=1.0d0
-!
-!!obtain the arrays chibdy(bdy_Nchi) and xibdy(bdy_Nxi) containing the values of chi and xi at the boundary points, in increasing order
-!        call chibdy_xibdy(xextrap,yextrap,zextrap,numbdypoints,
-!     &                  chiextrap,xiextrap,
-!     &                  bdy_Nchi,bdy_Nxi,
-!     &                  chibdy,xibdy)
-
-
-!        additions=0
         integral=0.0d0
         do i=1,bdy_Nchi-1
          do j=1,bdy_Nxi-1
@@ -1189,8 +1372,6 @@ c-------------------------------------------------------------------------------
               end if
             end do
 
-!          additions=additions+1
-
               integral=integral+
      &              (chibdy(i+1)-chibdy(i))/2 * (xibdy(j+1)-xibdy(j))/2
      &              *(density(lind_chipxip)+density(lind_chipxipp1)
@@ -1199,12 +1380,50 @@ c-------------------------------------------------------------------------------
          end do
         end do
  
-!        write(*,*) "additions=",additions
+        return
+        end
+!----------------------------------------------------------------------
 
+c--------------------------------------------------------------------------------------
+c Routine to calculate the value of angular coordinates chi and xi at the boundary points where we extrapolate the quasi-local stress energy tensor
+c--------------------------------------------------------------------------------------
+
+        subroutine chixiextrap(
+     &                         rhoextrap,chiextrap,xiextrap,
+     &                         xextrap,yextrap,zextrap,
+     &                         numbdypoints)
+
+        integer numbdypoints
+
+        real*8 xextrap(numbdypoints)
+        real*8 yextrap(numbdypoints)
+        real*8 zextrap(numbdypoints)
+
+        real*8 rhoextrap
+        real*8 chiextrap(numbdypoints)
+        real*8 xiextrap(numbdypoints)
+
+        real*8 PI
+        parameter (PI=3.141592653589793d0)
+
+        integer e
+
+                !--------------------------------------------------------------
+
+        rhoextrap=1.0d0
+        do e=1,numbdypoints
+         chiextrap(e)=(1/PI)*acos(xextrap(e)/rhoextrap)
+         if (zextrap(e).lt.0) then
+             xiextrap(e)=(1/(2*PI))*(atan2(zextrap(e),yextrap(e))+2*PI)
+         else
+             xiextrap(e)=(1/(2*PI))*atan2(zextrap(e),yextrap(e))
+         end if
+        end do
 
         return
         end
 !----------------------------------------------------------------------
+
 
 c---------------------------------------------------------------------------------------------------------------------------------------------------------
 c The following routine calculate the number of different values taken by chi and xi at the boundary points where the stress-energy tensor is extrapolated

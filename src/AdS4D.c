@@ -63,7 +63,7 @@ int ex_max_repop,ex_repop_buf,ex_repop_io;
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
-int output_ires,output_quasiset,output_relkretschcentregrid;
+int output_ires,output_quasiset,output_AdS_mass,output_relkretschcentregrid;
 
 // new parameters in rtfile
 int interptype,i_shift,regtype,stype;
@@ -1027,6 +1027,7 @@ void AdS4D_var_post_init(char *pfile)
    skip_constraints=0; AMRD_int_param(pfile,"skip_constraints",&skip_constraints,1);
    output_ires=0; AMRD_int_param(pfile,"output_ires",&output_ires,1);
    output_quasiset=0; AMRD_int_param(pfile,"output_quasiset",&output_quasiset,1);
+   output_AdS_mass=0; AMRD_int_param(pfile,"output_AdS_mass",&output_AdS_mass,1);
 
    harmonize=0; AMRD_int_param(pfile,"harmonize",&harmonize,1);
 
@@ -2173,37 +2174,35 @@ void AdS4D_pre_tstep(int L)
           MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
           MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
 
-//the following bit, performed only on the rank=0 process, is necessary to compute the AdS_mass0 (see below)
-          if (my_rank==0)
+//the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
+         if (output_AdS_mass)
+         {
+          if (uniSize>1)
           {
+           if (my_rank==0) printf("THE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT TRUSTWORTHY...\n NOT ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS\n");
+          }
+          else //i.e. we're running on only 1 process
+          {
+           printf("RUNNING ON ONLY 1 PROCESS...ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS ON ONLY 1 PROCESS\n");
            rhoextrap0 = malloc(sizeof(real));
            chiextrap0 = malloc((basenumbdypoints)*sizeof(real));
            xiextrap0  = malloc((basenumbdypoints)*sizeof(real));
 
-           for (e=0; e<basenumbdypoints; e++)
-           {
-            *rhoextrap0=1;
-            chiextrap0[e]=(1/M_PI)*acos(xextrap0[e]/(*rhoextrap0));
-//            printf("e=%i,chiextrap0[e]=%lf\n",e,chiextrap0[e]);
-            if (zextrap0[e]<0) { xiextrap0[e]=(1/(2*M_PI))*(atan2(zextrap0[e],yextrap0[e])+2*M_PI);}
-            else {xiextrap0[e]=(1/(2*M_PI))*atan2(zextrap0[e],yextrap0[e]);}
-//            printf("e=%i,xiextrap0[e]=%lf\n",e,xiextrap0[e]);
-           }
-   
+            chixiextrap_(rhoextrap0,chiextrap0,xiextrap0,xextrap0,yextrap0,zextrap0,&basenumbdypoints);
+
             basebdy_Nchi=0;//initialize
             basebdy_Nxi=0; //initialize
-//            printf("basenumbdypoints=%i",basenumbdypoints);
             bdyn_(&basebdy_Nchi,&basebdy_Nxi,&basenumbdypoints,chiextrap0,xiextrap0);
 
-//            printf("basebdy_Nchi=%i,basebdy_Nxi=%i",basebdy_Nchi,basebdy_Nxi);
-
-           rhobdy0=malloc(sizeof(real));
-           chibdy0= malloc(basebdy_Nchi*sizeof(real));
-           xibdy0= malloc(basebdy_Nxi*sizeof(real));
+           rhobdy0 = malloc(sizeof(real));
+           chibdy0 = malloc(basebdy_Nchi*sizeof(real));
+           xibdy0  = malloc(basebdy_Nxi*sizeof(real));
 
           }
-
+         }
+        
         }
+
 
          valid=PAMR_next_g();
        }
@@ -2293,11 +2292,6 @@ void AdS4D_pre_tstep(int L)
 
          if ((lsteps==0)&& output_quasiset)   //paste in post_tstep
          {
-//           //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
-//           MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-//           MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-//           MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
-
            // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
            //basenumbdypoints is set in AdS4D_post_init
            MPI_Allreduce(lquasiset_tt0,maxquasiset_tt0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
@@ -2351,19 +2345,32 @@ void AdS4D_pre_tstep(int L)
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j]);
               }
            fclose(fp);
-
- //compute and print AdS_mass on the rank=0 process. We use only 1 process to have a better accuracy for the value of AdS_mass. Recall:we have allocated memory for these pointers only in the rank=0 process.
-          *rhobdy0=1;
-          chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);    
-          doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi); 
-   
-           fp = fopen ("ascii_t_AdSmass", "a+");
-                 fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
-           fclose(fp);
           }
-         }
 
-   }
+//the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+          if (output_AdS_mass)
+          { 
+           if (uniSize>1)
+           {
+            if (my_rank==0) printf("\nTHE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT RELIABLE...NOT COMPUTING AdS MASS\n");
+           }
+           else //i.e. we're running on only 1 process
+           {
+            printf("\nRUNNING ON ONLY 1 PROCESS...THE NUMERICAL APPROXIMATION OF AdS MASS IS RELIABLE ON 1 PROCESS...COMPUTING AdS MASS\n");
+
+            *rhobdy0=1;
+            chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);    
+            doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi); 
+   
+            FILE * fp;
+            fp = fopen ("ascii_t_AdSmass", "a+");
+                 fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
+            fclose(fp);
+           }
+          }
+
+        }
+    }
 
 
    // search for AHs at t>0
@@ -2556,7 +2563,6 @@ void AdS4D_pre_tstep(int L)
 //         ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
          printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. \n",mh,rh,rhoh);
          printf("Excision buffer (i.e. size of the evolved region within the AH) ex_rbuf[0]=%lf\n",ex_rbuf[0]);
-//         printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. We excise, AT ALL TIME STEPS, points with compactified radius smaller than rhoh*(1-ex_rbuf[0])=%lf ... \n",mh,rh,rhoh,rhoh*(1-ex_rbuf[0]));
         }
      }
 
@@ -2743,14 +2749,36 @@ void AdS4D_post_tstep(int L)
               }
            fclose(fp);
  
-//           fp = fopen ("ascii_t_AdSmass", "a+");
-//                 fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
-//           fclose(fp);
           }
+
+//the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+          if (output_AdS_mass)
+          {
+           if (uniSize>1)
+           {
+            if (my_rank==0) printf("\nrunning on more than 1 process...not computing AdS mass\n");
+           }
+           else //i.e. we're running on only 1 process
+           {
+            printf("\nrunning on 1 process...computing AdS mass\n");
+
+            *rhobdy0=1;
+            chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);
+            doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi);
+
+            FILE * fp;
+            fp = fopen ("ascii_t_AdSmass", "a+");
+                 fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
+            fclose(fp);
+           }
+          }
+
+
          }
 
    } 
 
+   if (my_rank==0) printf("===================================================================\n");
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 

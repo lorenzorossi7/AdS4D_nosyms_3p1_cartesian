@@ -476,6 +476,8 @@ void nexttobdypoints_(real *chrbdy,
 
 void xyzextrap_(real *xextrap, real *yextrap, real *zextrap, real *chrbdy, int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *ghost_width);
 
+void chixiextrap_(real *rhoextrap0,real *chiextrap0,real *xiextrap0,real *xextrap0,real *yextrap0,real *zextrap0,int *basenumbdypoints);
+
 void bdyn_(int *basebdy_Nchi, int *basebdy_Nxi, int *basenumbdypoints, real *chiextrap0, real *xiextrap0);
 
 void chibdy_xibdy_(real *chibdy0,real *xibdy0,real *xextrap0, real *yextrap0, real *zextrap0, int *basenumbdypoints, real *chiextrap0, real *xiextrap0, int *basebdy_Nchi, int *basebdy_Nxi);
