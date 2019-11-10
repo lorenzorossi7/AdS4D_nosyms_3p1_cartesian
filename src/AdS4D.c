@@ -2760,7 +2760,7 @@ void AdS4D_post_tstep(int L)
            }
            else //i.e. we're running on only 1 process
            {
-            printf("\nrunning on 1 process...computing AdS mass\n");
+            printf("\nrunning on 1 process...computing AdS mass");
 
             *rhobdy0=1;
             chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);
@@ -2778,7 +2778,7 @@ void AdS4D_post_tstep(int L)
 
    } 
 
-   if (my_rank==0) printf("===================================================================\n");
+   if (my_rank==0) printf("\n===================================================================\n");
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 
