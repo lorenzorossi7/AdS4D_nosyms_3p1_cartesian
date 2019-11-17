@@ -405,7 +405,9 @@ c----------------------------------------------------------------------
         real*8 hcar_n(4,4),g0car_n(4,4)
         real*8 hsph_n(4,4),gbsph_n(4,4),g0sph_n(4,4)
         real*8 gamma0sph_ll(4,4),gamma0sph_uu(4,4)
+        real*8 gamma0sphbdy_ll(3,3),gamma0sphbdy_uu(3,3)
         real*8 detgamma3
+        real*8 detgamma0sphbdy
 
 !----------------------------------------------------------------------
 
@@ -616,18 +618,32 @@ c----------------------------------------------------------------------
           end do
         end do
 
-!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
-!       write (*,*) 'gamma0sph_ll(1,1)=',gamma0sph_ll(1,1)
-!       write (*,*) 'gamma0sph_ll(1,2)=',gamma0sph_ll(1,2)
-!       write (*,*) 'gamma0sph_ll(1,3)=',gamma0sph_ll(1,3)
-!       write (*,*) 'gamma0sph_ll(1,4)=',gamma0sph_ll(1,4)
-!       write (*,*) 'gamma0sph_ll(2,2)=',gamma0sph_ll(2,2)
-!       write (*,*) 'gamma0sph_ll(2,3)=',gamma0sph_ll(2,3)
-!       write (*,*) 'gamma0sph_ll(2,4)=',gamma0sph_ll(2,4)
-!       write (*,*) 'gamma0sph_ll(3,3)=',gamma0sph_ll(3,3)
-!       write (*,*) 'gamma0sph_ll(3,4)=',gamma0sph_ll(3,4)
-!       write (*,*) 'gamma0sph_ll(4,4)=',gamma0sph_ll(4,4)
+        !metric on conformal AdS boundary at rho=1
+        gamma0sphbdy_ll(1,1)=g0sph_n(1,1)*q**2
+        gamma0sphbdy_ll(1,2)=g0sph_n(1,3)*q**2
+        gamma0sphbdy_ll(1,3)=g0sph_n(1,4)*q**2
+        gamma0sphbdy_ll(2,2)=g0sph_n(3,3)*q**2
+        gamma0sphbdy_ll(2,3)=g0sph_n(3,4)*q**2
+        gamma0sphbdy_ll(3,3)=g0sph_n(4,4)*q**2
 
+        do a=1,2
+          do b=a+1,3
+            gamma0sphbdy_ll(b,a)=gamma0sphbdy_ll(a,b)
+          end do
+        end do
+!
+!!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!!       write (*,*) 'gamma0sph_ll(1,1)=',gamma0sph_ll(1,1)
+!!       write (*,*) 'gamma0sph_ll(1,2)=',gamma0sph_ll(1,2)
+!!       write (*,*) 'gamma0sph_ll(1,3)=',gamma0sph_ll(1,3)
+!!       write (*,*) 'gamma0sph_ll(1,4)=',gamma0sph_ll(1,4)
+!!       write (*,*) 'gamma0sph_ll(2,2)=',gamma0sph_ll(2,2)
+!!       write (*,*) 'gamma0sph_ll(2,3)=',gamma0sph_ll(2,3)
+!!       write (*,*) 'gamma0sph_ll(2,4)=',gamma0sph_ll(2,4)
+!!       write (*,*) 'gamma0sph_ll(3,3)=',gamma0sph_ll(3,3)
+!!       write (*,*) 'gamma0sph_ll(3,4)=',gamma0sph_ll(3,4)
+!!       write (*,*) 'gamma0sph_ll(4,4)=',gamma0sph_ll(4,4)
+!
       !determinant of induced metric on hypersurface at constant rho in 3-D form
         detgamma3=-g0sph_n(1,4)**2*g0sph_n(3,3)
      &            +2*g0sph_n(1,3)*g0sph_n(1,4)*g0sph_n(3,4)
@@ -636,7 +652,7 @@ c----------------------------------------------------------------------
      &              +g0sph_n(3,3)*g0sph_n(4,4))
 
       !induced inverse metric on hypersurface at constant rho
-        gamma0sph_uu(1,1)=-(g0sph_n(3,4)**2 -g0sph_n(3,3)*g0sph_n(4,4))
+        gamma0sph_uu(1,1)=-(g0sph_n(3,4)**2-g0sph_n(3,3)*g0sph_n(4,4))
      &                    /detgamma3
         gamma0sph_uu(1,2)=0
         gamma0sph_uu(1,3)=-(-g0sph_n(1,4)*g0sph_n(3,4)
@@ -648,35 +664,72 @@ c----------------------------------------------------------------------
         gamma0sph_uu(2,2)=0
         gamma0sph_uu(2,3)=0
         gamma0sph_uu(2,4)=0
-        gamma0sph_uu(3,3)=-(g0sph_n(1,4)**2 -g0sph_n(1,1)*g0sph_n(4,4))
+        gamma0sph_uu(3,3)=-(g0sph_n(1,4)**2-g0sph_n(1,1)*g0sph_n(4,4))
      &                    /detgamma3
         gamma0sph_uu(3,4)=-(-g0sph_n(1,3)*g0sph_n(1,4)
      &                      +g0sph_n(1,1)*g0sph_n(3,4))
      &                      /detgamma3
-        gamma0sph_uu(4,4)=-(g0sph_n(1,3)**2 -g0sph_n(1,1)*g0sph_n(3,3))
+        gamma0sph_uu(4,4)=-(g0sph_n(1,3)**2-g0sph_n(1,1)*g0sph_n(3,3))
      &                    /detgamma3
 
-        do a=1,3
-          do b=a+1,4
-            gamma0sph_uu(b,a)=gamma0sph_uu(a,b)
-          end do
-        end do
+         do a=1,3
+           do b=a+1,4
+             gamma0sph_uu(b,a)=gamma0sph_uu(a,b)
+           end do
+         end do
 
-!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
-!       write (*,*) 'gamma0sph_uu(1,1)=',gamma0sph_uu(1,1)
-!       write (*,*) 'gamma0sph_uu(1,2)=',gamma0sph_uu(1,2)
-!       write (*,*) 'gamma0sph_uu(1,3)=',gamma0sph_uu(1,3)
-!       write (*,*) 'gamma0sph_uu(1,4)=',gamma0sph_uu(1,4)
-!       write (*,*) 'gamma0sph_uu(2,2)=',gamma0sph_uu(2,2) 
-!       write (*,*) 'gamma0sph_uu(2,3)=',gamma0sph_uu(2,3) 
-!       write (*,*) 'gamma0sph_uu(2,4)=',gamma0sph_uu(2,4) 
-!       write (*,*) 'gamma0sph_uu(3,3)=',gamma0sph_uu(3,3) 
-!       write (*,*) 'gamma0sph_uu(3,4)=',gamma0sph_uu(3,4) 
-!       write (*,*) 'gamma0sph_uu(4,4)=',gamma0sph_uu(4,4)
+!!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!!       write (*,*) 'gamma0sph_uu(1,1)=',gamma0sph_uu(1,1)
+!!       write (*,*) 'gamma0sph_uu(1,2)=',gamma0sph_uu(1,2)
+!!       write (*,*) 'gamma0sph_uu(1,3)=',gamma0sph_uu(1,3)
+!!       write (*,*) 'gamma0sph_uu(1,4)=',gamma0sph_uu(1,4)
+!!       write (*,*) 'gamma0sph_uu(2,2)=',gamma0sph_uu(2,2) 
+!!       write (*,*) 'gamma0sph_uu(2,3)=',gamma0sph_uu(2,3) 
+!!       write (*,*) 'gamma0sph_uu(2,4)=',gamma0sph_uu(2,4) 
+!!       write (*,*) 'gamma0sph_uu(3,3)=',gamma0sph_uu(3,3) 
+!!       write (*,*) 'gamma0sph_uu(3,4)=',gamma0sph_uu(3,4) 
+!!       write (*,*) 'gamma0sph_uu(4,4)=',gamma0sph_uu(4,4)
+!!
 
-                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
-                ! identified with the bdy CFT stress-energy tensor one-point function
-                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
+!     !determinant of metric on conformal AdS boundary at rho=1
+       detgamma0sphbdy=
+     &            -gamma0sphbdy_ll(1,3)**2*gamma0sphbdy_ll(2,2)
+     &            +2*gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(1,3)
+     &                *gamma0sphbdy_ll(2,3)
+     &            -gamma0sphbdy_ll(1,2)**2*gamma0sphbdy_ll(3,3)
+     &            +gamma0sphbdy_ll(1,1)*(-gamma0sphbdy_ll(2,3)**2
+     &              +gamma0sphbdy_ll(2,2)*gamma0sphbdy_ll(3,3))
+
+!     !inverse of metric on conformal AdS boundary at rho=1
+       gamma0sphbdy_uu(1,1)=-(gamma0sphbdy_ll(2,3)**2 
+     &                       -gamma0sphbdy_ll(2,2)*gamma0sphbdy_ll(3,3))
+     &                     /detgamma0sphbdy
+       gamma0sphbdy_uu(1,2)=-(-gamma0sphbdy_ll(1,3)*gamma0sphbdy_ll(2,3)
+     &                      +gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(3,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(1,3)=-(gamma0sphbdy_ll(1,3)*gamma0sphbdy_ll(2,2)
+     &                      -gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(2,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(2,2)=-(gamma0sphbdy_ll(1,3)**2
+     &                       -gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(3,3))
+     &                    /detgamma0sphbdy
+       gamma0sphbdy_uu(2,3)=-(-gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(1,3)
+     &                      +gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(2,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(3,3)=-(gamma0sphbdy_ll(1,2)**2
+     &                       -gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(2,2))
+     &                    /detgamma0sphbdy
+
+         do a=1,2
+           do b=a+1,3
+             gamma0sphbdy_uu(b,a)=gamma0sphbdy_uu(a,b)
+           end do
+         end do
+
+
+!                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
+!                ! identified with the bdy CFT stress-energy tensor one-point function
+!                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
 
              if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
 
@@ -718,35 +771,40 @@ c----------------------------------------------------------------------
      &                                    /(32*PI)
 
        !trace of quasi local stress-tensor from definition of trace
-             quasiset_tracell(i,j,k)=(1/(q**2))*(
-     &                      gamma0sph_uu(1,1)*quasiset_tt_ll(i,j,k)
-     &                   +2*gamma0sph_uu(1,3)*quasiset_tchi_ll(i,j,k)
-     &                   +2*gamma0sph_uu(1,4)*quasiset_txi_ll(i,j,k)
-     &                     +gamma0sph_uu(3,3)*quasiset_chichi_ll(i,j,k)
-     &                   +2*gamma0sph_uu(3,4)*quasiset_chixi_ll(i,j,k)
-     &                     +gamma0sph_uu(4,4)*quasiset_xixi_ll(i,j,k)
-     &                    )
+             quasiset_tracell(i,j,k)=(
+     &                   gamma0sphbdy_uu(1,1)*quasiset_tt_ll(i,j,k)
+     &                +2*gamma0sphbdy_uu(1,2)*quasiset_tchi_ll(i,j,k)
+     &                +2*gamma0sphbdy_uu(1,3)*quasiset_txi_ll(i,j,k)
+     &                  +gamma0sphbdy_uu(2,2)*quasiset_chichi_ll(i,j,k)
+     &                +2*gamma0sphbdy_uu(2,3)*quasiset_chixi_ll(i,j,k)
+     &                  +gamma0sphbdy_uu(3,3)*quasiset_xixi_ll(i,j,k)
+     &                   )
 
 !        write(*,*) "i,j,k,x(i),y(j),z(k),rho0="
 !     &             ,i,j,k,x(i),y(j),z(k),rho0
 !        write(*,*) "TRACE: quasiset_tracell(i,j,k)="
 !     &             ,quasiset_tracell(i,j,k)
-!        write(*,*) "TRACE: quasiset_tt_ll(i,j,k)="
-!     &             ,quasiset_tt_ll(i,j,k) 
+!
+!!        write(*,*) "i,j,k,x(i),y(j),z(k),rho0="
+!!     &             ,i,j,k,x(i),y(j),z(k),rho0
+!!        write(*,*) "TRACE: quasiset_tracell(i,j,k)="
+!!     &             ,quasiset_tracell(i,j,k)
+!!        write(*,*) "TRACE: quasiset_tt_ll(i,j,k)="
+!!     &             ,quasiset_tt_ll(i,j,k) 
+!!
+!!
+!!       !trace of quasi local stress-tensor in terms of regularised metric components (this should be the same as the one above, within numerical error)
+!!              quasiset_tracell(i,j,k)=
+!!     &                               -(3/(8*PI))*(-(gbsph_n(1,1)/q)
+!!     &                               +(gbsph_n(2,2)/q)
+!!     &                               +(gbsph_n(3,3)/q)
+!!     &                               +(gbsph_n(4,4)/q)/(sin(PI*chi0)**2)
+!!     &                               )
+!!
+!!        write(*,*) "EXPANSION: quasiset_tracell(i,j,k)="
+!!     &             ,quasiset_tracell(i,j,k)
 !
 !
-!       !trace of quasi local stress-tensor in terms of regularised metric components (this should be the same as the one above, within numerical error)
-!              quasiset_tracell(i,j,k)=
-!     &                               -(3/(8*PI))*(-(gbsph_n(1,1)/q)
-!     &                               +(gbsph_n(2,2)/q)
-!     &                               +(gbsph_n(3,3)/q)
-!     &                               +(gbsph_n(4,4)/q)/(sin(PI*chi0)**2)
-!     &                               )
-!
-!        write(*,*) "EXPANSION: quasiset_tracell(i,j,k)="
-!     &             ,quasiset_tracell(i,j,k)
-
-
              else
               quasiset_tt_ll(i,j,k)= (x0**2*(2*(gb_xx_n(i,j,k)/q)
      &                                +3*rho0**2*(psi_n(i,j,k)/q))

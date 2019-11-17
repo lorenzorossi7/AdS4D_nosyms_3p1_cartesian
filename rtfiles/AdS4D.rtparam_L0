@@ -24,7 +24,7 @@ ief_bh_r0 := 0.6
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 10000
+AH_max_iter := 0000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -173,7 +173,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 10
+steps := 3
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -202,8 +202,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 5
-save_1_vars := [ "iresall" "gb_res" "kretsch" "relkretsch" "chr" ]
+num_save_1_vars := 2
+save_1_vars := [ "iresall" "gb_res" ]
 
 num_save_2_vars := 15
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]

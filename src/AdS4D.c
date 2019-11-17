@@ -2339,10 +2339,10 @@ void AdS4D_pre_tstep(int L)
           {
            // save quasiset_ll as ascii
            FILE * fp;
-           fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll_AdSmassdensity", "a+");
+           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_AdSmassdensity_indbdypoint_basenumbdypoints", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j]);
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j],j,basenumbdypoints);
               }
            fclose(fp);
           }
@@ -2742,10 +2742,10 @@ void AdS4D_post_tstep(int L)
           {
            // save quasiset_ll as ascii
            FILE * fp;
-           fp = fopen ("ascii_t_xext_yext_zext_quasiset_ll_AdSmassdensity", "a+");
+           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_AdSmassdensity_indbdypoint_basenumbdypoints", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j]);  
+                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j],j,basenumbdypoints);  
               }
            fclose(fp);
  
