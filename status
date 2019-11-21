@@ -2,7 +2,7 @@ STATUS OF THIS BRANCH:
 3+1 Cartesian code.
 New derivative stencils in z have been tested.
 Convergence at t=0 is good as expected for analytic Schwarzschild-AdS initial data. For BH Schwarzschild radius=0.6, ex_rbuf=0.1, Nans form too early in the evolution of runs with gauge 3 and L0/L1 resolution near the excision surface. For BH Schwarzschild radius=5.0, ex_rbuf=0.35, L0 resolution and gauge 3, runs last until T=12.487500 without stopping.
-The solver of Hamiltonian constraint has been generalised to 3+1, so it is now possible to use static initial data that solves the Hamiltonian constraint with a non-vanishing scalar field.
+The solver of Hamiltonian constraint has been generalised to 3+1, so it is now possible to use static initial data that solves the Hamiltonian constraint with a non-vanishing scalar field. Convergence at t=0 has been tested for this type of data.
 Convergence and stability at later times, higher resolutions and different values of the parameters needs to be tested.
 The AH finder has been implemented and tested by checking that the finder gives the expected position of the AH for analytic Schwarzschild-AdS BH initial data.
 It is possible to deactivate the AH finder and have fixed excision radius by just setting a value for ex_rbuf.

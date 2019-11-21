@@ -1466,25 +1466,6 @@ void AdS4D_t0_cnst_data(void)
                Hb_z,
                &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);
 
-     if (gb_xx_nm1) //"np1,n,nm1" variables only allocated on finest MG level
-     {
-       init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
-                 gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
-                 gb_ty_np1,gb_ty_n,gb_ty_nm1,gb_ty_t_n,
-                 gb_tz_np1,gb_tz_n,gb_tz_nm1,gb_tz_t_n,
-                 gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
-                 gb_xy_np1,gb_xy_n,gb_xy_nm1,gb_xy_t_n,
-                 gb_xz_np1,gb_xz_n,gb_xz_nm1,gb_xz_t_n,
-                 gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
-                 gb_yz_np1,gb_yz_n,gb_yz_nm1,gb_yz_t_n,
-                 psi_np1,psi_n,psi_nm1,psi_t_n,
-                 Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
-                 Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
-                 Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
-                 Hb_z_np1,Hb_z_n,Hb_z_nm1,Hb_z_t_n,
-                 phi1_np1,phi1_n,phi1_nm1,phi1_t_n,tfunction,
-                 &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
-     }
    }
 
    // initialize hbars 
@@ -1504,6 +1485,23 @@ void AdS4D_t0_cnst_data(void)
               Hb_t_n,Hb_x_n,Hb_y_n,
               Hb_z_n,
               &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+       init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
+                 gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
+                 gb_ty_np1,gb_ty_n,gb_ty_nm1,gb_ty_t_n,
+                 gb_tz_np1,gb_tz_n,gb_tz_nm1,gb_tz_t_n,
+                 gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
+                 gb_xy_np1,gb_xy_n,gb_xy_nm1,gb_xy_t_n,
+                 gb_xz_np1,gb_xz_n,gb_xz_nm1,gb_xz_t_n,
+                 gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
+                 gb_yz_np1,gb_yz_n,gb_yz_nm1,gb_yz_t_n,
+                 psi_np1,psi_n,psi_nm1,psi_t_n,
+                 Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
+                 Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
+                 Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
+                 Hb_z_np1,Hb_z_n,Hb_z_nm1,Hb_z_t_n,
+                 phi1_np1,phi1_n,phi1_nm1,phi1_t_n,tfunction,
+                 &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
    }
 
    // store initial source functions 
