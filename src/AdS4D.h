@@ -484,9 +484,16 @@ void chibdy_xibdy_(real *chibdy0,real *xibdy0,real *xextrap0, real *yextrap0, re
 
 void doubleintegralonsphere_(real *AdS_mass0, real *quasiset_massdensity0, real *xextrap0, real *yextrap0, real *zextrap0, int *basenumbdypoints, real *rhobdy0, real *chibdy0, real *xibdy0, int *basebdy_Nchi, int *basebdy_Nxi);
 
+void calc_locoeffphi1_(real *locoeffphi1,
+                           real *phi1_np1,real *phi1_n,real *phi1_nm1,
+                           real *xextrap,real *yextrap,real *zextrap,
+                           real *chrbdy,int *numbdypoints,
+                           real *x,real *y,real *z,real *dt,real *chr,real *AdS_L,real *ex,int *Nx,int *Ny,int *Nz,int *phys_bdy,int *ghost_width);
+
 void quasiset_(    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, real *quasiset_chichi, real *quasiset_chixi,
                    real *quasiset_xixi,
                    real *quasiset_massdensity,
+                   real *quasiset_trace,
                    real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                    real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                    real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,

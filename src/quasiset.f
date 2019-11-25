@@ -215,11 +215,222 @@ c-------------------------------------------------------------------------------
         end
 c--------------------------------------------------------------------------------------
 
+c----------------------------------------------------------------------
+c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
+c
+c routine for computing the leading order coefficient of the scalar field phi1 in the near bdy expansion
+c in powers of q=1-rho about  q=0.
+c----------------------------------------------------------------------
+
+        subroutine calc_locoeffphi1_nearbdy(locoeffphi1_nearbdy,
+     &                  phi1_np1,phi1_n,phi1_nm1,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+        implicit none
+
+        integer Nx,Ny,Nz
+        integer phys_bdy(6),ghost_width(6)
+        integer numbdypoints
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 L
+        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+
+        real*8 locoeffphi1_nearbdy(Nx,Ny,Nz)
+
+        integer i,j,k,is,ie,js,je,ks,ke
+        integer a,b,c,d
+
+        integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
+        integer ix,jy,kz
+
+
+        real*8 x0,y0,z0,rho0,q,chi0,xi0
+
+        real*8 dx,dy,dz
+
+        real*8 PI
+        parameter (PI=3.141592653589793d0)
+!----------------------------------------------------------------------
+
+        ! set index bounds for main loop
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
+
+        do i=is,ie
+         do j=js,je
+          do k=ks,ke
+            if ( chr(i,j,k).ne.ex) then
+             x0=x(i)
+             y0=y(j)
+             z0=z(k)
+             rho0=sqrt(x0**2+y0**2+z0**2)
+             q=1-rho0
+              locoeffphi1_nearbdy(i,j,k)=phi1_n(i,j,k)/q
+            else
+              locoeffphi1_nearbdy(i,j,k)=0
+            end if
+          end do
+         end do
+        end do
+
+        return
+        end
+c-----------------------------------------------------------------------------------
+
 
 c----------------------------------------------------------------------
 c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
 c
-c routine for computing the asymptotic quasilocal stress-energy of AdS4D_polar  
+c routine for computing the leading order coefficient of the scalar field phi1 at the boundary
+c----------------------------------------------------------------------
+
+        subroutine calc_locoeffphi1(locoeffphi1,
+     &                  phi1_np1,phi1_n,phi1_nm1,
+     &                  xextrap,yextrap,zextrap,
+     &                  chrbdy,numbdypoints,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+        implicit none
+
+        integer Nx,Ny,Nz
+        integer phys_bdy(6),ghost_width(6)
+        integer numbdypoints
+        real*8 chrbdy(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 L
+        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+
+        integer i,j,k,is,ie,js,je,ks,ke,lind
+        integer a,b,c,d
+
+        integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
+        integer ix,jy,kz
+
+
+        real*8 x0,y0,z0,rho0,q,chi0,xi0
+
+        real*8 dx,dy,dz
+
+        real*8 PI
+        parameter (PI=3.141592653589793d0)
+
+        real*8 locoeffphi1_nearbdy(Nx,Ny,Nz)
+        real*8 locoeffphi1_nearbdy_p1
+        real*8 locoeffphi1_nearbdy_p2
+        real*8 locoeffphi1(numbdypoints)
+
+        real*8 xextrap(numbdypoints)
+        real*8 yextrap(numbdypoints)
+        real*8 zextrap(numbdypoints)
+
+        real*8 xp1,yp1,zp1,xp2,yp2,zp2
+        real*8 xex,yex,zex
+        real*8 maxxyzp1
+
+        real*8 extrapalongx,extrapalongy,extrapalongz
+!----------------------------------------------------------------------
+
+        dx=x(2)-x(1)
+        dy=y(2)-y(1)
+        dz=z(2)-z(1)
+
+        call calc_locoeffphi1_nearbdy(locoeffphi1_nearbdy,
+     &                  phi1_np1,phi1_n,phi1_nm1,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+        ! set index bounds for main loop
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
+
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+
+        lind=0
+        do i=is,ie
+         do j=js,je
+          do k=ks,ke
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+
+           locoeffphi1_nearbdy_p1=locoeffphi1_nearbdy(i,j,k)
+           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+
+            if (chrbdy(i,j,k).ne.ex) then
+              lind=lind+1
+              if (maxxyzp1.eq.abs(xp1)) then
+                if (xp1.gt.0) then
+                  xp2=x(i-1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i-1,j,k)
+                  xex=xextrap(lind)
+                  locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
+              else
+                  xp2=x(i+1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i+1,j,k)
+                  xex=xextrap(lind)
+                  locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
+               end if
+             else if (maxxyzp1.eq.abs(yp1)) then
+              if (yp1.gt.0) then
+                  yp2=y(j-1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j-1,k)
+                  yex=yextrap(lind)
+                  locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
+              else
+                  yp2=y(j+1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j+1,k)
+                  yex=yextrap(lind)
+                  locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
+              end if
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k-1)
+                  zex=zextrap(lind)
+                  locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
+                 else
+                  zp2=z(k+1)
+                  locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k+1)
+                  zex=zextrap(lind)
+                  locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
+     &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
+               end if
+              end if
+            end if
+          end do
+         end do
+        end do
+
+
+        return
+        end
+c--------------------------------------------------------------------------------------
+
+        
+
+
+c----------------------------------------------------------------------
+c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
+c
+c routine for computing the asymptotic quasilocal stress-energy of AdS4D
 c using a 1-rho expansion about rho=1 at points near the boundary. 
 c The tensor components are given in spherical polar coordinates.
 c----------------------------------------------------------------------
@@ -258,6 +469,7 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
         real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 L
         real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
 
@@ -866,6 +1078,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_chichi,quasiset_chixi,
      &                  quasiset_xixi,
      &                  quasiset_massdensity,
+     &                  quasiset_trace,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,

@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.8
+phi1_amp_1 := 1.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.8 0.2 0.5]
+phi1_ecc_1 := [0.2 0.2 0.2]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -25,7 +25,7 @@ AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
 #delta_ex_rbuf := 0.0
-AH_max_iter := 10000
+AH_max_iter := 0000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -33,9 +33,9 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 17
 AH_freq := 1
-AH_freq_aft := 20
+AH_freq_aft := 10
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.5
+ex_rbuf := 1.0
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_lambda_2 := 0.0000001
@@ -51,7 +51,7 @@ AH_reset_scale_2 := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
 AH_max_iter_4 := 0
-AH_tmin := 0.49
+AH_tmin := 0.0
 
 #general (set skip_constraints=1 to make sure Hb_a=0 set to zero;#
 #         otherwise init_hb.f will set Hb_a=-C_a not exactly zero)#
@@ -62,9 +62,11 @@ AH_tmin := 0.49
 background := 0
 skip_constraints := 0
 output_ires := 1
-output_quasiset := 1
+output_bdyquantities := 1
 output_AdS_mass := 0
 output_relkretschcentregrid := 1
+reduced_ascii := 1
+reduction_factor := 2
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
 
@@ -179,12 +181,12 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 0
-cp_save_fname := "cp_L0"
-cp_restore_fname := "cp_L0_A"
+cp_save_fname := "cp_L1"
+cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 5
+steps := 3
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -213,8 +215,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 3
+save_1_vars := [ "iresall" "gb_res" "relkretsch" ]
 
 num_save_2_vars := 15
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]

@@ -63,7 +63,8 @@ int ex_max_repop,ex_repop_buf,ex_repop_io;
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
-int output_ires,output_quasiset,output_AdS_mass,output_relkretschcentregrid;
+int output_ires,output_bdyquantities,output_AdS_mass,output_relkretschcentregrid;
+int reduced_ascii,reduction_factor;
 
 // new parameters in rtfile
 int interptype,i_shift,regtype,stype;
@@ -148,7 +149,8 @@ int *vecbdypoints, *dsplsbdypoints;
 int uniSize;
 real *quasiset_tt,*quasiset_tchi,*quasiset_txi;
 real *quasiset_chichi,*quasiset_chixi,*quasiset_xixi;
-real *quasiset_massdensity, *AdS_mass;
+real *quasiset_massdensity, *quasiset_trace, *AdS_mass;
+real *locoeffphi1;
 real *xextrap,*yextrap,*zextrap;
 real *kretsch;
 real *relkretsch;
@@ -223,7 +225,8 @@ int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_psi_ires_gfn;
 int efe_xz_ires_gfn,efe_yz_ires_gfn;
 int quasiset_tt_gfn,quasiset_tchi_gfn,quasiset_txi_gfn;
 int quasiset_chichi_gfn,quasiset_chixi_gfn,quasiset_xixi_gfn;
-int quasiset_massdensity_gfn,AdS_mass_gfn;
+int quasiset_massdensity_gfn,quasiset_trace_gfn,AdS_mass_gfn;
+int locoeffphi1_gfn;
 int xextrap_gfn,yextrap_gfn,zextrap_gfn;
 int kretsch_gfn;
 int relkretsch_gfn;
@@ -263,16 +266,20 @@ int *AH_lev[MAX_BHS],*AH_own[MAX_BHS];
 //=============================================================================
 real *lquasiset_tt0,*lquasiset_tchi0,*lquasiset_txi0;
 real *lquasiset_chichi0,*lquasiset_chixi0,*lquasiset_xixi0;
-real *lquasiset_massdensity0,*lAdS_mass0;
+real *lquasiset_massdensity0,*lquasiset_trace0,*lAdS_mass0;
+real *llocoeffphi10;
 real *maxquasiset_tt0,*maxquasiset_tchi0,*maxquasiset_txi0;
 real *maxquasiset_chichi0,*maxquasiset_chixi0,*maxquasiset_xixi0;
-real *maxquasiset_massdensity0;
+real *maxquasiset_massdensity0,*maxquasiset_trace0;
+real *maxlocoeffphi10;
 real *minquasiset_tt0,*minquasiset_tchi0,*minquasiset_txi0;
 real *minquasiset_chichi0,*minquasiset_chixi0,*minquasiset_xixi0;
-real *minquasiset_massdensity0;
+real *minquasiset_massdensity0,*minquasiset_trace0;
+real *minlocoeffphi10;
 real *quasiset_tt0,*quasiset_tchi0,*quasiset_txi0;
 real *quasiset_chichi0,*quasiset_chixi0,*quasiset_xixi0;
-real *quasiset_massdensity0,*AdS_mass0;
+real *quasiset_massdensity0,*quasiset_trace0,*AdS_mass0;
+real *locoeffphi10;
 
 real *xextrap0,*yextrap0,*zextrap0;
 real *rhoextrap0,*chiextrap0,*xiextrap0;
@@ -432,6 +439,8 @@ void set_gfns(void)
     if ((quasiset_chixi_gfn    = PAMR_get_gfn("quasiset_chixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_xixi_gfn    = PAMR_get_gfn("quasiset_xixi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_massdensity_gfn    = PAMR_get_gfn("quasiset_massdensity",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_trace_gfn    = PAMR_get_gfn("quasiset_trace",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((locoeffphi1_gfn    = PAMR_get_gfn("locoeffphi1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((AdS_mass_gfn    = PAMR_get_gfn("AdS_mass",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((xextrap_gfn    = PAMR_get_gfn("xextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((yextrap_gfn    = PAMR_get_gfn("yextrap",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -704,6 +713,8 @@ void ldptr(void)
    quasiset_chixi  = gfs[quasiset_chixi_gfn-1];
    quasiset_xixi  = gfs[quasiset_xixi_gfn-1];
    quasiset_massdensity  = gfs[quasiset_massdensity_gfn-1];
+   quasiset_trace  = gfs[quasiset_trace_gfn-1];
+   locoeffphi1  = gfs[locoeffphi1_gfn-1];
    AdS_mass  = gfs[AdS_mass_gfn-1];
    xextrap  = gfs[xextrap_gfn-1];
    yextrap  = gfs[yextrap_gfn-1];
@@ -1026,8 +1037,10 @@ void AdS4D_var_post_init(char *pfile)
    background=0; AMRD_int_param(pfile,"background",&background,1);
    skip_constraints=0; AMRD_int_param(pfile,"skip_constraints",&skip_constraints,1);
    output_ires=0; AMRD_int_param(pfile,"output_ires",&output_ires,1);
-   output_quasiset=0; AMRD_int_param(pfile,"output_quasiset",&output_quasiset,1);
+   output_bdyquantities=0; AMRD_int_param(pfile,"output_bdyquantities",&output_bdyquantities,1);
    output_AdS_mass=0; AMRD_int_param(pfile,"output_AdS_mass",&output_AdS_mass,1);
+   reduced_ascii=0; AMRD_int_param(pfile,"reduced_ascii",&reduced_ascii,1);
+   reduction_factor=1; AMRD_int_param(pfile,"reduction_factor",&reduction_factor,1);
 
    harmonize=0; AMRD_int_param(pfile,"harmonize",&harmonize,1);
 
@@ -2029,7 +2042,7 @@ int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
 int found_count_AH[MAX_BHS];
 int pre_tstep_global_first=1,valid;
 
-int mem_alloc_quasiset_first=1;
+int mem_alloc_bdyquantities_first=1;
 int is,ie;
 
 void AdS4D_pre_tstep(int L)
@@ -2047,7 +2060,7 @@ void AdS4D_pre_tstep(int L)
 
    int omt;
 
-   int n,i,j,k,l,e,Lf,Lc;
+   int n,i,j,k,j_red,l,e,Lf,Lc;
 
    real rh,mh,rhoh;
 
@@ -2067,15 +2080,15 @@ void AdS4D_pre_tstep(int L)
      //allocate memory for quasi-local boundary stress-energy tensor before the first time step of every run. Reallocate if restarting from checkpoint
      if (L==Lc)
      {
-      if (output_quasiset)
+      if (output_bdyquantities)
       {
        valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
        while(valid)
        {
 
-        if (mem_alloc_quasiset_first)
+        if (mem_alloc_bdyquantities_first)
         {
-         mem_alloc_quasiset_first=0;
+         mem_alloc_bdyquantities_first=0;
          ldptr();
 
          MPI_Comm_size(MPI_COMM_WORLD,&uniSize);
@@ -2104,7 +2117,9 @@ void AdS4D_pre_tstep(int L)
           lquasiset_chixi0   = malloc((basenumbdypoints)*sizeof(real));
           lquasiset_xixi0   = malloc((basenumbdypoints)*sizeof(real));
           lquasiset_massdensity0   = malloc((basenumbdypoints)*sizeof(real));
+          lquasiset_trace0   = malloc((basenumbdypoints)*sizeof(real));
           lAdS_mass0   = malloc(sizeof(real));
+          llocoeffphi10   = malloc((basenumbdypoints)*sizeof(real));
           maxquasiset_tt0   = malloc((basenumbdypoints)*sizeof(real));
           maxquasiset_tchi0   = malloc((basenumbdypoints)*sizeof(real));
           maxquasiset_txi0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2112,6 +2127,8 @@ void AdS4D_pre_tstep(int L)
           maxquasiset_chixi0   = malloc((basenumbdypoints)*sizeof(real));
           maxquasiset_xixi0   = malloc((basenumbdypoints)*sizeof(real));
           maxquasiset_massdensity0   = malloc((basenumbdypoints)*sizeof(real));
+          maxquasiset_trace0   = malloc((basenumbdypoints)*sizeof(real));
+          maxlocoeffphi10   = malloc((basenumbdypoints)*sizeof(real));
           minquasiset_tt0   = malloc((basenumbdypoints)*sizeof(real));
           minquasiset_tchi0   = malloc((basenumbdypoints)*sizeof(real));
           minquasiset_txi0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2119,6 +2136,8 @@ void AdS4D_pre_tstep(int L)
           minquasiset_chixi0   = malloc((basenumbdypoints)*sizeof(real));
           minquasiset_xixi0   = malloc((basenumbdypoints)*sizeof(real));
           minquasiset_massdensity0   = malloc((basenumbdypoints)*sizeof(real));
+          minquasiset_trace0   = malloc((basenumbdypoints)*sizeof(real));
+          minlocoeffphi10   = malloc((basenumbdypoints)*sizeof(real));
           quasiset_tt0   = malloc((basenumbdypoints)*sizeof(real));
           quasiset_tchi0   = malloc((basenumbdypoints)*sizeof(real));
           quasiset_txi0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2126,7 +2145,9 @@ void AdS4D_pre_tstep(int L)
           quasiset_chixi0   = malloc((basenumbdypoints)*sizeof(real));
           quasiset_xixi0   = malloc((basenumbdypoints)*sizeof(real));
           quasiset_massdensity0   = malloc((basenumbdypoints)*sizeof(real));
+          quasiset_trace0   = malloc((basenumbdypoints)*sizeof(real));
           AdS_mass0   = malloc(sizeof(real));
+          locoeffphi10   = malloc((basenumbdypoints)*sizeof(real));
  
           xextrap0   = malloc((basenumbdypoints)*sizeof(real));
           yextrap0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2249,14 +2270,21 @@ void AdS4D_pre_tstep(int L)
           phi1_n,phi1_nm1,phi1_np1,    
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-     if (output_quasiset)
+     if (output_bdyquantities)
      {
+
+          calc_locoeffphi1_(locoeffphi1,
+                           phi1_np1,phi1_n,phi1_nm1,
+                           xextrap,yextrap,zextrap,
+                           chrbdy,&numbdypoints,
+                           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
   
          //routine that extrapolates the values of the component of the stress energy tensor at points at the boundary and the coordinates of the points at the boundary (i.e. xextrap[i]*xextrap[i]+yextrap[i]*yextrap[i]+zextrap[i]*zextrap[i]=1)
          quasiset_(quasiset_tt,quasiset_tchi,quasiset_txi,
                    quasiset_chichi,quasiset_chixi,
                    quasiset_xixi,
                    quasiset_massdensity,
+                   quasiset_trace,
                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -2281,6 +2309,8 @@ void AdS4D_pre_tstep(int L)
              lquasiset_chixi0[i]=quasiset_chixi[i-is];
              lquasiset_xixi0[i]=quasiset_xixi[i-is];
              lquasiset_massdensity0[i]=quasiset_massdensity[i-is];
+             lquasiset_trace0[i]=quasiset_trace[i-is];
+             llocoeffphi10[i]=locoeffphi1[i-is];
 //             *lAdS_mass0=*AdS_mass;
          }
        }
@@ -2288,7 +2318,7 @@ void AdS4D_pre_tstep(int L)
        valid=PAMR_next_g();
      }
 
-         if ((lsteps==0)&& output_quasiset)   //paste in post_tstep
+         if ((lsteps==0)&& output_bdyquantities)   //paste in post_tstep
          {
            // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
            //basenumbdypoints is set in AdS4D_post_init
@@ -2299,6 +2329,8 @@ void AdS4D_pre_tstep(int L)
            MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+           MPI_Allreduce(lquasiset_trace0,maxquasiset_trace0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+           MPI_Allreduce(llocoeffphi10,maxlocoeffphi10,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
  
            MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
@@ -2307,6 +2339,8 @@ void AdS4D_pre_tstep(int L)
            MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+           MPI_Allreduce(lquasiset_trace0,minquasiset_trace0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+           MPI_Allreduce(llocoeffphi10,minlocoeffphi10,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
  
           for (i=0; i<basenumbdypoints; i++)
           { 
@@ -2319,6 +2353,8 @@ void AdS4D_pre_tstep(int L)
             quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
             quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
             quasiset_massdensity0[i]=maxquasiset_massdensity0[i]+minquasiset_massdensity0[i];
+            quasiset_trace0[i]=maxquasiset_trace0[i]+minquasiset_trace0[i];
+            locoeffphi10[i]=maxlocoeffphi10[i]+minlocoeffphi10[i];
            }
            else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
            {
@@ -2329,21 +2365,92 @@ void AdS4D_pre_tstep(int L)
             quasiset_chixi0[i]=maxquasiset_chixi0[i];
             quasiset_xixi0[i]=maxquasiset_xixi0[i];
             quasiset_massdensity0[i]=maxquasiset_massdensity0[i];
+            quasiset_trace0[i]=maxquasiset_trace0[i];
+            locoeffphi10[i]=maxlocoeffphi10[i];
            }
           }
 //            MPI_Allreduce((lAdS_mass0),(AdS_mass0),1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
 
           if (my_rank==0)
           {
-           // save quasiset_ll as ascii
+
            FILE * fp;
-           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_AdSmassdensity_indbdypoint_basenumbdypoints", "a+");
+           fp = fopen ("ascii_xext_yext_zext_indbdypoint", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j],j,basenumbdypoints);
+                fprintf(fp,"%24.16e %24.16e %24.16e %i \n",
+                            xextrap0[j],yextrap0[j],zextrap0[j],j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen ("ascii_reduced_xext_yext_zext_indbdypoint", "a+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if (j%reduction_factor==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0[j],yextrap0[j],zextrap0[j],j_red);
+                j_red=j_red+1;
+               }
               }
            fclose(fp);
           }
+
+           fp = fopen ("ascii_t_bdyphi1_indbdypoint", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,locoeffphi10[j],j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint", "a+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if (j%reduction_factor==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+           // save quasiset_ll as ascii
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],
+                            j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint", "a+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if (j%reduction_factor==0) 
+               {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],
+                            j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+         }
 
 //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
           if (output_AdS_mass)
@@ -2580,7 +2687,7 @@ void AdS4D_post_tstep(int L)
    static int local_first = 1;
 
    real ct;
-   int n,i,j,k,Lf,Lc;
+   int n,i,j,k,j_red,Lf,Lc;
 
    ct = PAMR_get_time(L);
 
@@ -2627,13 +2734,20 @@ void AdS4D_post_tstep(int L)
           phi1_n,phi1_nm1,phi1_np1,     
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-      if (output_quasiset)
+      if (output_bdyquantities)
       {
+
+       calc_locoeffphi1_(locoeffphi1,
+                           phi1_np1,phi1_n,phi1_nm1,
+                           xextrap,yextrap,zextrap,
+                           chrbdy,&numbdypoints,
+                           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
        quasiset_(quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
                  quasiset_massdensity,
+                 quasiset_trace,
                  gb_tt_n,gb_tt_nm1,gb_tt_np1,
                  gb_tx_n,gb_tx_nm1,gb_tx_np1,
                  gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -2658,6 +2772,8 @@ void AdS4D_post_tstep(int L)
              lquasiset_chixi0[i]=quasiset_chixi[i-is];
              lquasiset_xixi0[i]=quasiset_xixi[i-is];
              lquasiset_massdensity0[i]=quasiset_massdensity[i-is];
+             lquasiset_trace0[i]=quasiset_trace[i-is];
+             llocoeffphi10[i]=locoeffphi1[i-is];
 //             *lAdS_mass0=*AdS_mass;
          }
        }
@@ -2690,7 +2806,7 @@ void AdS4D_post_tstep(int L)
           }
         }
   
-         if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0)&& output_quasiset)   //paste in post_tstep
+         if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0)&& output_bdyquantities)   //paste in post_tstep
          {
 
            // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
@@ -2702,6 +2818,8 @@ void AdS4D_post_tstep(int L)
            MPI_Allreduce(lquasiset_chixi0,maxquasiset_chixi0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_xixi0,maxquasiset_xixi0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_massdensity0,maxquasiset_massdensity0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+           MPI_Allreduce(lquasiset_trace0,maxquasiset_trace0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+           MPI_Allreduce(llocoeffphi10,maxlocoeffphi10,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
 
            MPI_Allreduce(lquasiset_tt0,minquasiset_tt0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_tchi0,minquasiset_tchi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
@@ -2710,6 +2828,8 @@ void AdS4D_post_tstep(int L)
            MPI_Allreduce(lquasiset_chixi0,minquasiset_chixi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_xixi0,minquasiset_xixi0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
            MPI_Allreduce(lquasiset_massdensity0,minquasiset_massdensity0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+           MPI_Allreduce(lquasiset_trace0,minquasiset_trace0,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+           MPI_Allreduce(llocoeffphi10,minlocoeffphi10,basenumbdypoints,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
 
           for (i=0; i<basenumbdypoints; i++)
           {
@@ -2722,6 +2842,8 @@ void AdS4D_post_tstep(int L)
             quasiset_chixi0[i]=maxquasiset_chixi0[i]+minquasiset_chixi0[i];
             quasiset_xixi0[i]=maxquasiset_xixi0[i]+minquasiset_xixi0[i];
             quasiset_massdensity0[i]=maxquasiset_massdensity0[i]+minquasiset_massdensity0[i];
+            quasiset_trace0[i]=maxquasiset_trace0[i]+minquasiset_trace0[i];
+            locoeffphi10[i]=maxlocoeffphi10[i]+minlocoeffphi10[i];
            }
            else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
            {
@@ -2732,20 +2854,87 @@ void AdS4D_post_tstep(int L)
             quasiset_chixi0[i]=maxquasiset_chixi0[i];
             quasiset_xixi0[i]=maxquasiset_xixi0[i];
             quasiset_massdensity0[i]=maxquasiset_massdensity0[i];
+            quasiset_trace0[i]=maxquasiset_trace0[i];
+            locoeffphi10[i]=maxlocoeffphi10[i];
            }
           }
 //            MPI_Allreduce((lAdS_mass0),(AdS_mass0),1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
 
           if (my_rank==0)
           {
-           // save quasiset_ll as ascii
+
            FILE * fp;
-           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_AdSmassdensity_indbdypoint_basenumbdypoints", "a+");
+           fp = fopen ("ascii_t_bdyphi1_indbdypoint", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
-              {
-                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_massdensity0[j],j,basenumbdypoints);  
+              { 
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,locoeffphi10[j],j);
               }
            fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint", "a+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if (j%reduction_factor==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+           
+           // save quasiset_ll as ascii
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              { 
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],
+                            j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint", "a+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if (j%reduction_factor==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],
+                            j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+
+
+//           fp = fopen ("ascii_t_xext_yext_zext_bdyphi1", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e \n",
+//                            ct,xextrap0[j],yextrap0[j],zextrap0[j],
+//                            locoeffphi10[j]);
+//              }
+//           fclose(fp);
+//
+//           // save quasiset_ll as ascii
+//           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_trace", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_trace0[j]);  
+//              }
+//           fclose(fp);
  
           }
 

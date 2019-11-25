@@ -51,9 +51,11 @@ AH_tmin := 0
 background := 0
 skip_constraints := 1
 output_ires := 1
-output_quasiset := 1
+output_bdyquantities := 1
 output_AdS_mass := 1
 output_relkretschcentregrid := 1
+reduced_ascii := 1
+reduction_factor := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
 
@@ -202,8 +204,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 3
+save_1_vars := [ "iresall" "gb_res" "relkretsch" ]
 
 num_save_2_vars := 15
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
