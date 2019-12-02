@@ -1668,7 +1668,7 @@ void AdS4D_pre_io_calc(void)
            {
             // save relkretschcentregrid as ascii
             FILE * fp;
-            fp = fopen ("ascii_t_relkretschcentregrid", "a+");
+            fp = fopen ("ascii_t_relkretschcentregrid.txt", "a+");
                 fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
             fclose(fp);
            }
@@ -2375,21 +2375,20 @@ void AdS4D_pre_tstep(int L)
           {
 
            FILE * fp;
-           fp = fopen ("ascii_xext_yext_zext_indbdypoint", "a+");
+           fp = fopen ("ascii_xext_yext_zext_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %i \n",
-                            xextrap0[j],yextrap0[j],zextrap0[j],j);
+                fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0[j],yextrap0[j],zextrap0[j],j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_xext_yext_zext_indbdypoint", "a+");
+           fp = fopen ("ascii_reduced_xext_yext_zext_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
-               if (j%reduction_factor==0)
+               if ((j%reduction_factor)==0)
                {
                 fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0[j],yextrap0[j],zextrap0[j],j_red);
                 j_red=j_red+1;
@@ -2398,21 +2397,20 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
 
-           fp = fopen ("ascii_t_bdyphi1_indbdypoint", "a+");
+           fp = fopen ("ascii_t_bdyphi1_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %i \n",
-                            ct,locoeffphi10[j],j);
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint", "a+");
+           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
-               if (j%reduction_factor==0)
+               if ((j%reduction_factor)==0)
                {
                 fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
                 j_red=j_red+1;
@@ -2421,7 +2419,7 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
            // save quasiset_ll as ascii
-           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint", "a+");
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -2434,11 +2432,11 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
-               if (j%reduction_factor==0) 
+               if ((j%reduction_factor)==0) 
                {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
@@ -2450,6 +2448,33 @@ void AdS4D_pre_tstep(int L)
               }
            fclose(fp);
           }
+
+
+
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",
+//                            ct,xextrap0[j],yextrap0[j],zextrap0[j],
+//                            locoeffphi10[j],j,basenumbdypoints);
+//              }
+//           fclose(fp);
+//
+//           // save quasiset_ll as ascii
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_quasisetll_trace_indbdypoint_basenumbdypoints", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_trace0[j],j,basenumbdypoints);  
+//              }
+//           fclose(fp);
+
+
+
+
+
+
+
+
          }
 
 //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
@@ -2468,7 +2493,7 @@ void AdS4D_pre_tstep(int L)
             doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi); 
    
             FILE * fp;
-            fp = fopen ("ascii_t_AdSmass", "a+");
+            fp = fopen ("ascii_t_AdSmass.txt", "a+");
                  fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
             fclose(fp);
            }
@@ -2800,7 +2825,7 @@ void AdS4D_post_tstep(int L)
           {
           // save relkretschcentregrid as ascii
           FILE * fp;
-          fp = fopen ("ascii_t_relkretschcentregrid", "a+");
+          fp = fopen ("ascii_t_relkretschcentregrid.txt", "a+");
                 fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
           fclose(fp);
           }
@@ -2864,7 +2889,7 @@ void AdS4D_post_tstep(int L)
           {
 
            FILE * fp;
-           fp = fopen ("ascii_t_bdyphi1_indbdypoint", "a+");
+           fp = fopen ("ascii_t_bdyphi1_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               { 
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -2874,7 +2899,7 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint", "a+");
+           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -2888,7 +2913,7 @@ void AdS4D_post_tstep(int L)
           }
            
            // save quasiset_ll as ascii
-           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint", "a+");
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               { 
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -2901,7 +2926,7 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -2919,20 +2944,21 @@ void AdS4D_post_tstep(int L)
           }
 
 
-//           fp = fopen ("ascii_t_xext_yext_zext_bdyphi1", "a+");
+
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");
 //            for( j = 0; j < basenumbdypoints; j++ )
 //              {
-//                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e \n",
+//                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",
 //                            ct,xextrap0[j],yextrap0[j],zextrap0[j],
-//                            locoeffphi10[j]);
+//                            locoeffphi10[j],j,basenumbdypoints);
 //              }
 //           fclose(fp);
 //
 //           // save quasiset_ll as ascii
-//           fp = fopen ("ascii_t_xext_yext_zext_quasisetll_trace", "a+");
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_quasisetll_trace_indbdypoint_basenumbdypoints", "a+");
 //            for( j = 0; j < basenumbdypoints; j++ )
 //              {
-//                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_trace0[j]);  
+//                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_trace0[j],j,basenumbdypoints);  
 //              }
 //           fclose(fp);
  
@@ -2954,7 +2980,7 @@ void AdS4D_post_tstep(int L)
             doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi);
 
             FILE * fp;
-            fp = fopen ("ascii_t_AdSmass", "a+");
+            fp = fopen ("ascii_t_AdSmass.txt", "a+");
                  fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
             fclose(fp);
            }
