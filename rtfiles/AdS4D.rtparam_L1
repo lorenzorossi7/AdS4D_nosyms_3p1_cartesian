@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.8
+phi1_amp_1 := 1.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.8 0.2 0.5]
+phi1_ecc_1 := [0.2 0.2 0.2]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -33,7 +33,7 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 17
 AH_freq := 1
-AH_freq_aft := 20
+AH_freq_aft := 10
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
 ex_rbuf := 1.0
 AH_reset_scale := 1.1
@@ -66,7 +66,7 @@ output_bdyquantities := 1
 output_AdS_mass := 0
 output_relkretschcentregrid := 1
 reduced_ascii := 1
-reduction_factor := 4
+reduction_factor := 2
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
 
@@ -186,7 +186,7 @@ cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 3
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10

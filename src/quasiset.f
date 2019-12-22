@@ -7,7 +7,7 @@ c----------------------------------------------------------------------
         subroutine nexttobdypoints(
      &                  chrbdy,
      &                  numbdypoints,
-     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,ghost_width)
 
         implicit none
 
@@ -27,7 +27,7 @@ c----------------------------------------------------------------------
 
         real*8 dx,dy,dz
         real*8 xp1,yp1,zp1
-        real*8 maxxyz0
+        real*8 maxxyzp1
         integer numbdypoints
 
         real*8 PI
@@ -47,14 +47,6 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! set index bounds for main loop
-!        is=1
-!        ie=Nx
-!        js=1
-!        je=Ny
-!        ks=1
-!        ke=Nz
-
         ! adjust index bounds to compensate for ghost_width
         if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
         if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
@@ -62,56 +54,6 @@ c----------------------------------------------------------------------
         if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
-
-
-        ! zero all outer boundary points
-        if (phys_bdy(1).eq.1) then
-          do j=1,Ny
-           do k=1,Nz
-            chrbdy(1,j,k) = ex
-           end do
-          end do
-        end if
-
-        if (phys_bdy(2).eq.1) then
-          do j=1,Ny
-           do k=1,Nz
-            chrbdy(Nx,j,k) = ex
-           end do
-          end do
-        end if
-
-        if (phys_bdy(3).eq.1) then
-          do i=1,Nx
-           do k=1,Nz
-            chrbdy(i,1,k) = ex
-           end do
-          end do
-        end if
-
-        if (phys_bdy(4).eq.1) then
-          do i=1,Nx
-           do k=1,Nz
-            chrbdy(i,Ny,k) = ex
-           end do
-          end do
-        end if
-
-        if (phys_bdy(5).eq.1) then
-          do i=1,Nx
-           do j=1,Ny
-            chrbdy(i,j,1) = ex
-           end do
-          end do
-        end if
-
-        if (phys_bdy(6).eq.1) then
-          do i=1,Nx
-           do j=1,Ny
-            chrbdy(i,j,Nz) = ex
-           end do
-          end do
-        end if
 
         numbdypoints=0
 
@@ -126,37 +68,31 @@ c----------------------------------------------------------------------
            rho0=sqrt(x0**2+y0**2+z0**2)
 
 !           !chrbdy(i,j,k) is not ex for points near the boundary
-           if ((chr(i,j,k).eq.ex).or.(rho0.lt.(0.9d0))) then
-              chrbdy(i,j,k)=ex
-           else
+           if ((chr(i,j,k).ne.ex).and.(rho0.ge.(1.0d0-3*dx/2))) then
               chrbdy(i,j,k)=ex-1
+           else
+              chrbdy(i,j,k)=ex
            end if
 
-!           maxxyz0=max(abs(x0),abs(y0),abs(z0))
+           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
 !           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
 
-!           if (chrbdy(i,j,k).ne.ex) then
-!            if (maxxyz0.eq.abs(x0)) then
-!             if (
-!     &           (chr(i+1,j,k).ne.ex)
-!     &           .and.(chr(i-1,j,k).ne.ex)) then
-!               chrbdy(i,j,k)=ex
-!             end if
-!            else if (maxxyz0.eq.abs(y0)) then
-!             if (
-!     &           (chr(i,j+1,k).ne.ex)
-!     &           .and.(chr(i,j-1,k).ne.ex)) then
-!               chrbdy(i,j,k)=ex
-!             end if
-!            else
-!             if (
-!     &           (chr(i,j,k+1).ne.ex)
-!     &           .and.(chr(i,j,k-1).ne.ex)) then
-!               chrbdy(i,j,k)=ex
-!             end if
-!            end if
-!           end if
+           if (chrbdy(i,j,k).ne.ex) then
+            if (maxxyzp1.eq.abs(xp1)) then
+             if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
+            else if (maxxyzp1.eq.abs(yp1)) then
+             if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
+            else
+             if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
+            end if
+           end if
 
 ! do not include points with y0=z0=0, which give a singular conformal boundary metric
            if (chrbdy(i,j,k).ne.ex) then
@@ -166,15 +102,8 @@ c----------------------------------------------------------------------
            end if
 
            if (chrbdy(i,j,k).ne.ex) then
-             if (numbdypoints.le.3000) then  !TEST
-!             write(*,*) "i,j,k,Nx,Ny,Nz=",i,j,k,Nx,Ny,Nz
-!             write(*,*) "x0,y0,z0,rho0=",x0,y0,z0,rho0
-              numbdypoints=numbdypoints+1
-             else  !TEST
-              chrbdy(i,j,k)=ex !TEST
-             end if  !TEST
+             numbdypoints=numbdypoints+1
            end if
-
 
            end do
          end do
@@ -242,22 +171,6 @@ c-------------------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! set index bounds for main loop
-!        is=1
-!        ie=Nx
-!        js=1
-!        je=Ny
-!        ks=1
-!        ke=Nz
-
-        ! adjust index bounds to compensate for ghost_width
-        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
-
         lind=0
         do i=is,ie
          do j=js,je
@@ -274,84 +187,32 @@ c-------------------------------------------------------------------------------
                   xextrap(lind)=sqrt(1-yp1**2-zp1**2)
                   yextrap(lind)=yp1
                   zextrap(lind)=zp1
-!                 write(*,*) "extrap along x"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
               else
                   xextrap(lind)=-sqrt(1-yp1**2-zp1**2)
                   yextrap(lind)=yp1
                   zextrap(lind)=zp1
-!                 write(*,*) "extrap along x"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
               end if
              else if (maxxyzp1.eq.abs(yp1)) then
               if (yp1.gt.0) then
                   yextrap(lind)=sqrt(1-xp1**2-zp1**2)
                   xextrap(lind)=xp1
                   zextrap(lind)=zp1
-!                 write(*,*) "extrap along y"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
               else
                   yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
                   xextrap(lind)=xp1
                   zextrap(lind)=zp1
-!                 write(*,*) "extrap along y"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
               end if
              else
                  if (zp1.gt.0) then
                   zextrap(lind)=sqrt(1-yp1**2-xp1**2)
                   yextrap(lind)=yp1
                   xextrap(lind)=xp1
-!                 write(*,*) "extrap along z"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
               else
                   zextrap(lind)=-sqrt(1-yp1**2-xp1**2)
                   yextrap(lind)=yp1
                   xextrap(lind)=xp1
-!                 write(*,*) "extrap along z"
-!                 write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &                      ,xextrap(lind),yextrap(lind),zextrap(lind)
-!                 write(*,*) "xp1,yp1,zp1,chr(i,j,k)="
-!     &                      ,xp1,yp1,zp1,chr(i,j,k)
-!                 write(*,*) "chrbdy(i,j,k),ex=",chrbdy(i,j,k),ex
                end if
               end if
-
-              if (abs((xextrap(lind)**2
-     &            +yextrap(lind)**2
-     &            +zextrap(lind)**2)-1.0d0).gt.dx/2) then
-                write(*,*) "ERROR: extrapolating at non-boundary point"
-                write(*,*) "xextrap(lind),yextrap(lind),zextrap(lind)="
-     &                     ,xextrap(lind),yextrap(lind),zextrap(lind)
-                write(*,*) "rhoextrap(lind)=",(xextrap(lind)**2
-     &            +yextrap(lind)**2
-     &            +zextrap(lind)**2)
-              end if
-
-               xextrap(lind)=xp1   !TEST
-               yextrap(lind)=yp1   !TEST
-               zextrap(lind)=zp1   !TEST
-
             end if
           end do
          end do
@@ -398,7 +259,7 @@ c----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0)
 
         logical no_derivatives
-        data no_derivatives/.false./
+        data no_derivatives/.true./
 
         real*8 df_drho
 
@@ -406,26 +267,13 @@ c----------------------------------------------------------------------
         real*8 dtest1_drho
 !----------------------------------------------------------------------
 
-
-        dx=x(2)-x(1)
-        dy=y(2)-y(1)
-        dz=z(2)-z(1)
-
-!        ! set index bounds for main loop
-!        is=2
-!        ie=Nx-1
-!        js=2
-!        je=Ny-1
-!        ks=2
-!        ke=Nz-1
-
         ! set index bounds for main loop
-        is=1
-        ie=Nx
-        js=1
-        je=Ny
-        ks=1
-        ke=Nz
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
 
 !        ! adjust index bounds to compensate for ghost_width
 !        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
@@ -453,14 +301,7 @@ c----------------------------------------------------------------------
         do i=is,ie
          do j=js,je
           do k=ks,ke
-!            if ((chr(i,j,k).ne.ex)
-!     &          .and.(i.ne.1).and.(i.ne.Nx)
-!     &          .and.(j.ne.1).and.(j.ne.Ny)
-!     &          .and.(k.ne.1).and.(k.ne.Nz)
-!     &          .and.((chr(i-1,j,k).ne.ex).or.(chr(i+1,j,k).ne.ex))
-!     &          .and.((chr(i,j-1,k).ne.ex).or.(chr(i,j+1,k).ne.ex))
-!     &          .and.((chr(i,j,k-1).ne.ex).or.(chr(i,j,k+1).ne.ex)))
-!     &            then
+            if ( chr(i,j,k).ne.ex) then
              x0=x(i)
              y0=y(j)
              z0=z(k)
@@ -472,24 +313,13 @@ c----------------------------------------------------------------------
 !            write(*,*) "dtest1_drho=",dtest1_drho
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!            if (chr(i,j,k).ne.ex) then
-!                   write(*,*) "i,j,k,x0,y0,z0,rho0,1.0d0-7*dx/2,dx/2="
-!     &       ,i,j,k,x0,y0,z0,sqrt(x0**2+y0**2+z0**2),1.0d0-7*dx/2,dx/2 
-!               write(*,*) "chr(i,j,k),ex=",chr(i,j,k),ex 
-!            end if
-
-           if ((chr(i,j,k).ne.ex).and.(rho0.ge.(0.5d0))) then
               if (no_derivatives) then
                locoeffphi1_nearbdy(i,j,k)=phi1_n(i,j,k)/q
               else
                locoeffphi1_nearbdy(i,j,k)=
      &                  -df_drho(phi1_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-!              write(*,*) "i,j,k,x0,y0,z0,rho0,1.0d0-9*dx/2,dx/2="
-!     &       ,i,j,k,x0,y0,z0,sqrt(x0**2+y0**2+z0**2),1.0d0-9*dx/2,dx/2 
-!              write(*,*) "locoeffphi1_nearbdy(i,j,k)="
-!     &                   ,locoeffphi1_nearbdy(i,j,k)
               end if
-            else !i.e. points excised or too far from AdS boundary at rho0=1
+            else
               locoeffphi1_nearbdy(i,j,k)=0
             end if
           end do
@@ -569,22 +399,13 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! set index bounds for main loop
-!        is=1
-!        ie=Nx
-!        js=1
-!        je=Ny
-!        ks=1
-!        ke=Nz
-
-
-        ! adjust index bounds to compensate for ghost_width
-        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         lind=0
         do i=is,ie
@@ -603,24 +424,12 @@ c----------------------------------------------------------------------
                 if (xp1.gt.0) then
                   xp2=x(i-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i-1,j,k)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &       ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   xex=xextrap(lind)
                   locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
               else
                   xp2=x(i+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i+1,j,k)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &         ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   xex=xextrap(lind)
                   locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
@@ -629,24 +438,12 @@ c----------------------------------------------------------------------
               if (yp1.gt.0) then
                   yp2=y(j-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j-1,k)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &         ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   yex=yextrap(lind)
                   locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
               else
                   yp2=y(j+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j+1,k)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &        ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   yex=yextrap(lind)
                   locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
@@ -655,32 +452,20 @@ c----------------------------------------------------------------------
                  if (zp1.gt.0) then
                   zp2=z(k-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k-1)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &          ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   zex=zextrap(lind)
                   locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
                  else
                   zp2=z(k+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k+1)
-!                  write(*,*) "lind,i,j,k,xp1,yp1,zp1,rhop1,dx/2="
-!     &           ,lind,i,j,k,xp1,yp1,zp1,sqrt(xp1**2+yp1**2+zp1**2),dx/2
-!                  write(*,*) "locoeffphi1_nearbdy_p1="
-!     &                       ,locoeffphi1_nearbdy_p1
-!                  write(*,*) "locoeffphi1_nearbdy_p2="
-!     &                       ,locoeffphi1_nearbdy_p2
                   zex=zextrap(lind)
                   locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
-                 end if
-             end if
+               end if
+              end if
 
-!                  locoeffphi1(lind)=locoeffphi1_nearbdy_p1
- 
+!              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
+!             write(*,*) "locoeffphi1(lind)=",locoeffphi1(lind)
 
             end if
           end do
@@ -876,9 +661,6 @@ c----------------------------------------------------------------------
         real*8 dydt,dydrho,dydchi,dydxi
         real*8 dzdt,dzdrho,dzdchi,dzdxi
 
-        real*8 gbsph_tt_x_n,gbsph_tt_y_n,gbsph_tt_z_n
-        real*8 gbsph_chichi_x_n,gbsph_chichi_y_n,gbsph_chichi_z_n
-
         real*8 g0_tt_ads0,g0_xx_ads0
         real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
         real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
@@ -893,7 +675,7 @@ c----------------------------------------------------------------------
         real*8 detgamma0sphbdy
 
         logical no_derivatives
-        data no_derivatives/.false./
+        data no_derivatives/.true./
  
         real*8 df_drho
         real*8 gbsph_tt_n(Nx,Ny,Nz),gbsph_trho_n(Nx,Ny,Nz)
@@ -924,21 +706,13 @@ c----------------------------------------------------------------------
         dz=(z(2)-z(1))
 
 
-!        ! set index bounds for main loop
-!        is=2
-!        ie=Nx-1
-!        js=2
-!        je=Ny-1
-!        ks=2
-!        ke=Nz-1
-
         ! set index bounds for main loop
-        is=1
-        ie=Nx
-        js=1
-        je=Ny
-        ks=1
-        ke=Nz
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
 
 
 !!!!ghost_width not needed as long as we don't use derivatives
@@ -953,16 +727,7 @@ c----------------------------------------------------------------------
         do i=is,ie
          do j=js,je
           do k=ks,ke
-!            if ((chr(i,j,k).ne.ex)
-!     &          .and.(i.ne.1).and.(i.ne.Nx)
-!     &          .and.(j.ne.1).and.(j.ne.Ny)
-!     &          .and.(k.ne.1).and.(k.ne.Nz)
-!     &             )  then
-!            if ((chr(i,j,k).ne.ex) 
-!!     &          .and.((chr(i-1,j,k).ne.ex).or.(chr(i+1,j,k).ne.ex))
-!!     &          .and.((chr(i,j-1,k).ne.ex).or.(chr(i,j+1,k).ne.ex))  
-!!     &          .and.((chr(i,j,k-1).ne.ex).or.(chr(i,j,k+1).ne.ex))  
-!     &           )  then
+            if ( chr(i,j,k).ne.ex) then
 
              x0=x(i)
              y0=y(j)
@@ -1107,7 +872,7 @@ c----------------------------------------------------------------------
         gbsph_n(3,4)=hsph_n(3,4)
         gbsph_n(4,4)=hsph_n(4,4)
 
-!        if (.not.no_derivatives) then
+        if (.not.no_derivatives) then
          gbsph_tt_n(i,j,k)    =gbsph_n(1,1)
          gbsph_trho_n(i,j,k)  =gbsph_n(1,2)
          gbsph_tchi_n(i,j,k)  =gbsph_n(1,3)
@@ -1118,7 +883,7 @@ c----------------------------------------------------------------------
          gbsph_chichi_n(i,j,k)=gbsph_n(3,3)
          gbsph_chixi_n(i,j,k) =gbsph_n(3,4)
          gbsph_xixi_n(i,j,k)  =gbsph_n(4,4)
-!        end if
+        end if
 
         do a=1,3
           do b=a+1,4
@@ -1269,14 +1034,14 @@ c----------------------------------------------------------------------
            end do
          end do
 
-!        if (.not.no_derivatives) then
+        if (.not.no_derivatives) then
           gamma0sphbdy_uu_tt(i,j,k)=gamma0sphbdy_uu(1,1)
           gamma0sphbdy_uu_tchi(i,j,k)=gamma0sphbdy_uu(1,2)
           gamma0sphbdy_uu_txi(i,j,k)=gamma0sphbdy_uu(1,3)
           gamma0sphbdy_uu_chichi(i,j,k)=gamma0sphbdy_uu(2,2)
           gamma0sphbdy_uu_chixi(i,j,k)=gamma0sphbdy_uu(2,3)
           gamma0sphbdy_uu_xixi(i,j,k)=gamma0sphbdy_uu(3,3)
-!         end if
+         end if
 
 
 !                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
@@ -1384,41 +1149,41 @@ c----------------------------------------------------------------------
             end if
 
 
-!            else !i.e. points excised
-!
-!             if (.not.no_derivatives) then
-!              gbsph_tt_n(i,j,k)    =0
-!              gbsph_trho_n(i,j,k)  =0
-!              gbsph_tchi_n(i,j,k)  =0
-!              gbsph_txi_n(i,j,k)   =0
-!              gbsph_rhorho_n(i,j,k)=0
-!              gbsph_rhochi_n(i,j,k)=0
-!              gbsph_rhoxi_n(i,j,k) =0
-!              gbsph_chichi_n(i,j,k)  =0
-!              gbsph_chixi_n(i,j,k) =0
-!              gbsph_xixi_n(i,j,k)=0
-!
-!              gamma0sphbdy_uu_tt(i,j,k)=0
-!              gamma0sphbdy_uu_tchi(i,j,k)=0
-!              gamma0sphbdy_uu_txi(i,j,k)=0
-!              gamma0sphbdy_uu_chichi(i,j,k)=0
-!              gamma0sphbdy_uu_chixi(i,j,k)=0
-!              gamma0sphbdy_uu_xixi(i,j,k)=0
-!             end if
-!            
-!             if (no_derivatives) then
-!              quasiset_tt_ll(i,j,k)=0
-!              quasiset_tchi_ll(i,j,k)=0
-!              quasiset_txi_ll(i,j,k)=0
-!              quasiset_chichi_ll(i,j,k)=0
-!              quasiset_chixi_ll(i,j,k)=0
-!              quasiset_xixi_ll(i,j,k)=0
-!              quasiset_massdensityll(i,j,k)=0
-!              quasiset_tracell(i,j,k)=0
-!             end if
-!
-!
-!            end if
+            else !excised points
+
+             if (.not.no_derivatives) then
+              gbsph_tt_n(i,j,k)    =0
+              gbsph_trho_n(i,j,k)  =0
+              gbsph_tchi_n(i,j,k)  =0
+              gbsph_txi_n(i,j,k)   =0
+              gbsph_rhorho_n(i,j,k)=0
+              gbsph_rhochi_n(i,j,k)=0
+              gbsph_rhoxi_n(i,j,k) =0
+              gbsph_chichi_n(i,j,k)  =0
+              gbsph_chixi_n(i,j,k) =0
+              gbsph_xixi_n(i,j,k)=0
+
+              gamma0sphbdy_uu_tt(i,j,k)=0
+              gamma0sphbdy_uu_tchi(i,j,k)=0
+              gamma0sphbdy_uu_txi(i,j,k)=0
+              gamma0sphbdy_uu_chichi(i,j,k)=0
+              gamma0sphbdy_uu_chixi(i,j,k)=0
+              gamma0sphbdy_uu_xixi(i,j,k)=0
+             end if
+            
+             if (no_derivatives) then
+              quasiset_tt_ll(i,j,k)=0
+              quasiset_tchi_ll(i,j,k)=0
+              quasiset_txi_ll(i,j,k)=0
+              quasiset_chichi_ll(i,j,k)=0
+              quasiset_chixi_ll(i,j,k)=0
+              quasiset_xixi_ll(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
+             end if
+
+
+            end if
 
           end do
          end do
@@ -1428,14 +1193,7 @@ c----------------------------------------------------------------------
         do i=is,ie
          do j=js,je
            do k=ks,ke
-!            if ((chr(i,j,k).ne.ex)
-!     &          .and.(i.ne.1).and.(i.ne.Nx)
-!     &          .and.(j.ne.1).and.(j.ne.Ny)
-!     &          .and.(k.ne.1).and.(k.ne.Nz)
-!     &          .and.((chr(i-1,j,k).ne.ex).or.(chr(i+1,j,k).ne.ex))
-!     &          .and.((chr(i,j-1,k).ne.ex).or.(chr(i,j+1,k).ne.ex))  
-!     &          .and.((chr(i,j,k-1).ne.ex).or.(chr(i,j,k+1).ne.ex)))  
-!     &            then
+            if (chr(i,j,k).ne.ex) then
 
              x0=x(i)
              y0=y(j)
@@ -1449,8 +1207,6 @@ c----------------------------------------------------------------------
                 xi0=(1/(2*PI))*atan2(z0,y0)
              end if
 
-            if ((chr(i,j,k).ne.ex).and.(rho0.ge.(0.5))) 
-     &            then
               dgbsph_tt_drho_n    =
      &             df_drho(gbsph_tt_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
               dgbsph_trho_drho_n  =
@@ -1473,87 +1229,62 @@ c----------------------------------------------------------------------
      &             df_drho(gbsph_xixi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
 
 !             if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
-!        dxdrho=cos(PI*chi0)
-!        dydrho=sin(PI*chi0)*cos(2*PI*xi0)
-!        dzdrho=sin(PI*chi0)*sin(2*PI*xi0)
-       call df1_int_x(gbsph_tt_n,gbsph_tt_x_n  !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
-       call df1_int_y(gbsph_tt_n,gbsph_tt_y_n   !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
-       call df1_int_z(gbsph_tt_n,gbsph_tt_z_n  !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)   !TEST
-       call df1_int_x(gbsph_chichi_n,gbsph_chichi_x_n  !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
-       call df1_int_y(gbsph_chichi_n,gbsph_chichi_y_n  !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
-       call df1_int_z(gbsph_chichi_n,gbsph_chichi_z_n  !TEST
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
+
+               quasiset_tt_ll(i,j,k)=(12*(-dgbsph_chichi_drho_n)
+     &                         + 8*PI**2*(-dgbsph_rhorho_drho_n)
+     &                         +  (3*(-dgbsph_xixi_drho_n)
+     &                               /(sin(PI*chi0))**2)
+     &                         )/(64*PI**3)
 
 
-               quasiset_tt_ll(i,j,k)=gbsph_tt_n(i,j,k)
-!(12*(-dgbsph_chichi_drho_n)
-!     &                         + 8*PI**2*(-dgbsph_rhorho_drho_n)
-!     &                         +  (3*(-dgbsph_xixi_drho_n)
-!     &                               /(sin(PI*chi0))**2)
-!     &                         )/(64*PI**3)
+               quasiset_tchi_ll(i,j,k)  = (3*(-dgbsph_tchi_drho_n))
+     &                                       /(16*PI)
 
 
-               quasiset_tchi_ll(i,j,k)  = gbsph_tt_x_n
-!(3*(-dgbsph_tchi_drho_n))
-!     &                                       /(16*PI)
+               quasiset_txi_ll(i,j,k)   = (3*(-dgbsph_txi_drho_n))
+     &                                       /(16*PI)
+
+               quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
+     &                                   *(-dgbsph_tt_drho_n)
+     &                                  -(1.0d0/8.0d0)*PI
+     &                                   *(-dgbsph_rhorho_drho_n)
+     &                           -(3*(-dgbsph_xixi_drho_n)
+     &                               /(sin(PI*chi0))**2)
+     &                                   /(64*PI)
 
 
-               quasiset_txi_ll(i,j,k)   = cos(PI*chi0)*gbsph_tt_x_n
-! (3*(-dgbsph_txi_drho_n))
-!     &                                       /(16*PI)
-
-               quasiset_chichi_ll(i,j,k)=cos(PI*chi0)*gbsph_tt_x_n
-     &              +sin(PI*chi0)*cos(2*PI*xi0)*gbsph_tt_y_n
-!(3.0d0/16.0d0)*PI
-!     &                                   *(-dgbsph_tt_drho_n)
-!     &                                  -(1.0d0/8.0d0)*PI
-!     &                                   *(-dgbsph_rhorho_drho_n)
-!     &                           -(3*(-dgbsph_xixi_drho_n)
-!     &                               /(sin(PI*chi0))**2)
-!     &                                   /(64*PI)
+               quasiset_chixi_ll(i,j,k) =(3*(-dgbsph_chixi_drho_n))
+     &                                      /(16*PI)
 
 
-               quasiset_chixi_ll(i,j,k) = gbsph_tt_n(i,j,k)
-!(3*(-dgbsph_chixi_drho_n))
-!     &                                      /(16*PI)
+               quasiset_xixi_ll(i,j,k)  =((sin(PI*chi0))**2*(-3
+     &                                   *(-dgbsph_chichi_drho_n)
+     &                                  +PI**2*(3*(-dgbsph_tt_drho_n)
+     &                                  -2*(-dgbsph_rhorho_drho_n)))
+     &                                  )/(4*PI)
 
-
-               quasiset_xixi_ll(i,j,k)  =gbsph_tt_x_n
-!((sin(PI*chi0))**2*(-3
-!     &                                   *(-dgbsph_chichi_drho_n)
-!     &                                  +PI**2*(3*(-dgbsph_tt_drho_n)
-!     &                                  -2*(-dgbsph_rhorho_drho_n)))
-!     &                                  )/(4*PI)
-
-               quasiset_massdensityll(i,j,k)= cos(PI*chi0)*gbsph_tt_x_n
-!(sin(PI*chi0))
-!     &                                    *(
-!     &                                     12*(-dgbsph_chichi_drho_n)
-!     &                                    +8*PI**2
-!     &                                        *(-dgbsph_rhorho_drho_n)
-!     &                                    +3*(-dgbsph_xixi_drho_n)
-!     &                                     /((sin(PI*chi0))**2)
-!     &                                    )
-!     &                                    /(32*PI)
+               quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
+     &                                    *(
+     &                                     12*(-dgbsph_chichi_drho_n)
+     &                                    +8*PI**2
+     &                                        *(-dgbsph_rhorho_drho_n)
+     &                                    +3*(-dgbsph_xixi_drho_n)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
 
 
        !trace of quasi local stress-tensor from definition of trace
-             quasiset_tracell(i,j,k)=dgbsph_tt_drho_n
-!(
-!     &           gamma0sphbdy_uu_tt(i,j,k)*quasiset_tt_ll(i,j,k)
-!     &        +2*gamma0sphbdy_uu_tchi(i,j,k)*quasiset_tchi_ll(i,j,k)
-!     &        +2*gamma0sphbdy_uu_txi(i,j,k)*quasiset_txi_ll(i,j,k)
-!     &          +gamma0sphbdy_uu_chichi(i,j,k)*quasiset_chichi_ll(i,j,k)
-!     &        +2*gamma0sphbdy_uu_chixi(i,j,k)*quasiset_chixi_ll(i,j,k)
-!     &          +gamma0sphbdy_uu_xixi(i,j,k)*quasiset_xixi_ll(i,j,k)
-!     &                   )
+             quasiset_tracell(i,j,k)=(
+     &           gamma0sphbdy_uu_tt(i,j,k)*quasiset_tt_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_tchi(i,j,k)*quasiset_tchi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_txi(i,j,k)*quasiset_txi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_chichi(i,j,k)*quasiset_chichi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_chixi(i,j,k)*quasiset_chixi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_xixi(i,j,k)*quasiset_xixi_ll(i,j,k)
+     &                   )
 
-           else  !i.e. points excised or too far from the AdS boundary at rho0=1
+           else
               quasiset_tt_ll(i,j,k)=0
               quasiset_tchi_ll(i,j,k)=0
               quasiset_txi_ll(i,j,k)=0
@@ -1678,7 +1409,6 @@ c-------------------------------------------------------------------------------
         real*8 x0,y0,z0,rho0,q
 
         real*8 xp1,yp1,zp1,xp2,yp2,zp2
-        real*8 rhop1,chip1,xip1
         real*8 xex,yex,zex
         real*8 maxxyzp1
 
@@ -1687,10 +1417,6 @@ c-------------------------------------------------------------------------------
         real*8 dp1p2
 
         real*8 AdS_mass
-
-        real*8 gb_xx_x_n,gb_xx_x_np1
-        real*8 gb_xx_y_n,gb_xx_y_np1
-        real*8 gb_xx_z_n,gb_xx_z_np1
 
 !!!!!!!!!!!!!!!!
 
@@ -1725,21 +1451,13 @@ c-------------------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! set index bounds for main loop
-!        is=1
-!        ie=Nx
-!        js=1
-!        je=Ny
-!        ks=1
-!        ke=Nz
-
-        ! adjust index bounds to compensate for ghost_width
-        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
        
  
         lind=0
@@ -1749,16 +1467,6 @@ c-------------------------------------------------------------------------------
            xp1=x(i)
            yp1=y(j)
            zp1=z(k)
-           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
-           q=1-rhop1
-           chip1=(1/PI)*acos(xp1/rhop1)
-           if (zp1.lt.0) then
-              xip1=(1/(2*PI))*(atan2(zp1,yp1)+2*PI)
-           else
-              xip1=(1/(2*PI))*atan2(zp1,yp1)
-           end if
-
-
            quasiset_tt_p1=quasiset_tt_ll(i,j,k)
            quasiset_tchi_p1=quasiset_tchi_ll(i,j,k)
            quasiset_txi_p1=quasiset_txi_ll(i,j,k)
@@ -1988,30 +1696,16 @@ c-------------------------------------------------------------------------------
  
                end if
               end if
-
-       call df1_int_x(gb_xx_n,gb_xx_x_n
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-       call df1_int_y(gb_xx_np1,gb_xx_x_np1
-     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-
-                  quasiset_tt(lind)=gb_xx_n(i,j,k)
-                  quasiset_tchi(lind)=gb_xx_np1(i,j,k)
-                  quasiset_txi(lind)=gb_xx_x_n
-                  quasiset_chichi(lind)=gb_xx_x_np1
-!                  quasiset_chixi(lind)=cos(PI*chip1)*gb_xx_x_n
-!     &              +sin(PI*chip1)*cos(2*PI*xip1)*gb_xx_y_n
-!     &              +sin(PI*chip1)*sin(2*PI*xip1)*gb_xx_z_n
-!                  quasiset_xixi(lind)=cos(PI*chip1)*gb_xx_x_np1
-!     &              +sin(PI*chip1)*cos(2*PI*xip1)*gb_xx_y_np1
-!     &              +sin(PI*chip1)*sin(2*PI*xip1)*gb_xx_z_np1
-!          quasiset_massdensity(lind)=gb_xx_n(i,j,k)
-!          quasiset_trace(lind)=gb_xx_np1(i,j,k)
-
             end if
           end do
          end do
         end do
 
+!        do lind=1,numbdypoints
+!         write(*,*) "lind,xextrap(lind),yextrap(lind),zextrap(lind)="
+!     &              ,lind,xextrap(lind),yextrap(lind),zextrap(lind)
+!         write(*,*) "quasiset_trace(lind)=",quasiset_trace(lind)
+!        end do
 
         return
         end

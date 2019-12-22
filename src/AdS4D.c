@@ -530,12 +530,6 @@ void ldptr_bbox(void)
    PAMR_get_g_shape(shape);
    PAMR_get_g_bbox(bbox);
    PAMR_get_g_ghost_width(ghost_width);
-//    printf("ghost_width[5]=%i,my_rank=%i\n",ghost_width[5],my_rank);
-//    printf("ghost_width[4]=%i,my_rank=%i\n",ghost_width[4],my_rank);
-//    printf("ghost_width[3]=%i,my_rank=%i\n",ghost_width[3],my_rank);
-//    printf("ghost_width[2]=%i,my_rank=%i\n",ghost_width[2],my_rank);
-//    printf("ghost_width[1]=%i,my_rank=%i\n",ghost_width[1],my_rank);
-//    printf("ghost_width[0]=%i,my_rank=%i\n",ghost_width[0],my_rank);
    PAMR_get_g_level(&g_L);
    PAMR_get_dxdt(g_L,dx0,&dt);
    dx=dx0[0];
@@ -1656,7 +1650,6 @@ void AdS4D_pre_io_calc(void)
          phi1_np1,phi1_n,phi1_nm1,
          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-
         if ((lsteps==0)&& output_relkretschcentregrid) 
         {
          *lrelkretschcentregrid0= *relkretschcentregrid;
@@ -2104,20 +2097,18 @@ void AdS4D_pre_tstep(int L)
          dsplsbdypoints = malloc(uniSize*sizeof(int));
  
          numbdypoints=0; //initialize
-         for (i=0; i<size; i++) //initialize chrbdy, this can probably be removed since chrbdy is initialised in nexttobdypoints_() below
+         for (i=0; i<size; i++)
          {
-          chrbdy[i]=AMRD_ex-1;
+          chrbdy[i]=AMRD_ex;
          }
          //routine that identifies points next to the boundary AND next to excised points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor. We call this number numbdypoints.
-         nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+         nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);
  
         //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
           MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
  
           //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
           MPI_Allreduce(&numbdypoints,&basenumbdypoints,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
-
-//           printf("basenumbdypoints=%i",basenumbdypoints);
  
           lquasiset_tt0   = malloc((basenumbdypoints)*sizeof(real));
           lquasiset_tchi0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2162,52 +2153,6 @@ void AdS4D_pre_tstep(int L)
           yextrap0   = malloc((basenumbdypoints)*sizeof(real));
           zextrap0   = malloc((basenumbdypoints)*sizeof(real));
 
-          //initialize
-          for (i=0;i<basenumbdypoints;i++)
-          {
-           lquasiset_tt0[i]           = 0;
-           lquasiset_tchi0[i]         = 0;
-           lquasiset_txi0[i]          = 0;
-           lquasiset_chichi0[i]       = 0;
-           lquasiset_chixi0[i]        = 0;
-           lquasiset_xixi0[i]         = 0;
-           lquasiset_massdensity0[i]  = 0;
-           lquasiset_trace0[i]        = 0;
-           *lAdS_mass0                = 0;
-           llocoeffphi10[i]           = 0;
-           maxquasiset_tt0[i]         = 0;
-           maxquasiset_tchi0[i]       = 0;
-           maxquasiset_txi0[i]        = 0;
-           maxquasiset_chichi0[i]     = 0;
-           maxquasiset_chixi0[i]      = 0;
-           maxquasiset_xixi0[i]       = 0;
-           maxquasiset_massdensity0[i]= 0;
-           maxquasiset_trace0[i]      = 0;
-           maxlocoeffphi10[i]         = 0;
-           minquasiset_tt0[i]         = 0;
-           minquasiset_tchi0[i]       = 0;
-           minquasiset_txi0[i]        = 0;
-           minquasiset_chichi0[i]     = 0;
-           minquasiset_chixi0[i]      = 0;
-           minquasiset_xixi0[i]       = 0;
-           minquasiset_massdensity0[i]= 0;
-           minquasiset_trace0[i]      = 0;
-           minlocoeffphi10[i]         = 0;
-           quasiset_tt0[i]            = 0;
-           quasiset_tchi0[i]          = 0;
-           quasiset_txi0[i]           = 0;
-           quasiset_chichi0[i]        = 0;
-           quasiset_chixi0[i]         = 0;
-           quasiset_xixi0[i]          = 0;
-           quasiset_massdensity0[i]   = 0;
-           quasiset_trace0[i]         = 0;
-           *AdS_mass0                 = 0;
-           locoeffphi10[i]            = 0;
-           xextrap0[i]                = 0;
-           yextrap0[i]                = 0;
-           zextrap0[i]                = 0; 
-          }
-
 
           //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
           is=0;
@@ -2243,12 +2188,6 @@ void AdS4D_pre_tstep(int L)
 
           xyzextrap_(xextrap,yextrap,zextrap,chrbdy,&numbdypoints,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);
 
-//           printf("numbdypoints=%i,my_rank=%i",numbdypoints,my_rank);
-//          for (i=0;i<numbdypoints;i++)
-//          {
-//           printf("xextrap[i]=%lf,yextrap[i]=%lf,zextrap[i]=%lf,my_rank=%i\n",xextrap[i],yextrap[i],zextrap[i],my_rank);
-//          }
-
           //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
           MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
           MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
@@ -2268,14 +2207,6 @@ void AdS4D_pre_tstep(int L)
            chiextrap0 = malloc((basenumbdypoints)*sizeof(real));
            xiextrap0  = malloc((basenumbdypoints)*sizeof(real));
 
-           //initialize
-          for (i=0;i<basenumbdypoints;i++)
-          {
-            *rhoextrap0   = 0;
-            chiextrap0[i] = 0;
-            xiextrap0[i]  = 0;
-          }
-
             chixiextrap_(rhoextrap0,chiextrap0,xiextrap0,xextrap0,yextrap0,zextrap0,&basenumbdypoints);
 
             basebdy_Nchi=0;//initialize
@@ -2285,18 +2216,6 @@ void AdS4D_pre_tstep(int L)
            rhobdy0 = malloc(sizeof(real));
            chibdy0 = malloc(basebdy_Nchi*sizeof(real));
            xibdy0  = malloc(basebdy_Nxi*sizeof(real));
-
-           //initialize
-           *rhobdy0=0;
-           for (i=0;i<basebdy_Nchi;i++)
-           {
-            chibdy0[i] = 0;
-           }
-           for (i=0;i<basebdy_Nxi;i++)
-           {
-            xibdy0[i]  = 0;
-           }
-
 
           }
          }
@@ -2323,9 +2242,6 @@ void AdS4D_pre_tstep(int L)
      {
        ldptr();
 
-
-////////CHECK ORDER OF n,nm1,np1 for t==0. It's probably wrong in ires_. It should probably be (np1,n,nm1) for t=0
-
        ires_(efe_all_ires,
           efe_tt_ires,efe_tx_ires,efe_ty_ires,
           efe_tz_ires,
@@ -2337,23 +2253,22 @@ void AdS4D_pre_tstep(int L)
           kretsch,
           relkretsch,
           relkretschcentregrid,
-          gb_tt_np1,gb_tt_n,gb_tt_nm1,
-          gb_tx_np1,gb_tx_n,gb_tx_nm1,
-          gb_ty_np1,gb_ty_n,gb_ty_nm1,
-          gb_tz_np1,gb_tz_n,gb_tz_nm1,
-          gb_xx_np1,gb_xx_n,gb_xx_nm1,
-          gb_xy_np1,gb_xy_n,gb_xy_nm1,
-          gb_xz_np1,gb_xz_n,gb_xz_nm1,
-          gb_yy_np1,gb_yy_n,gb_yy_nm1,
-          gb_yz_np1,gb_yz_n,gb_yz_nm1,
-          psi_np1,psi_n,psi_nm1,
-          Hb_t_np1,Hb_t_n,Hb_t_nm1,
-          Hb_x_np1,Hb_x_n,Hb_x_nm1,
-          Hb_y_np1,Hb_y_n,Hb_y_nm1,
-          Hb_z_np1,Hb_z_n,Hb_z_nm1,
-          phi1_np1,phi1_n,phi1_nm1,    
+          gb_tt_n,gb_tt_nm1,gb_tt_np1,
+          gb_tx_n,gb_tx_nm1,gb_tx_np1,
+          gb_ty_n,gb_ty_nm1,gb_ty_np1,
+          gb_tz_n,gb_tz_nm1,gb_tz_np1,
+          gb_xx_n,gb_xx_nm1,gb_xx_np1,
+          gb_xy_n,gb_xy_nm1,gb_xy_np1,
+          gb_xz_n,gb_xz_nm1,gb_xz_np1,
+          gb_yy_n,gb_yy_nm1,gb_yy_np1,
+          gb_yz_n,gb_yz_nm1,gb_yz_np1,
+          psi_n,psi_nm1,psi_np1,
+          Hb_t_n,Hb_t_nm1,Hb_t_np1,
+          Hb_x_n,Hb_x_nm1,Hb_x_np1,
+          Hb_y_n,Hb_y_nm1,Hb_y_np1,
+          Hb_z_n,Hb_z_nm1,Hb_z_np1,
+          phi1_n,phi1_nm1,phi1_np1,    
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
-
 
      if (output_bdyquantities)
      {
@@ -2405,7 +2320,6 @@ void AdS4D_pre_tstep(int L)
 
          if ((lsteps==0)&& output_bdyquantities)   //paste in post_tstep
          {
- 
            // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
            //basenumbdypoints is set in AdS4D_post_init
            MPI_Allreduce(lquasiset_tt0,maxquasiset_tt0,basenumbdypoints,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
@@ -2505,29 +2419,29 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
            // save quasiset_ll as ascii
-           fp = fopen ("ascii_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            quasiset_trace0[j],
                             j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
                if ((j%reduction_factor)==0) 
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            quasiset_trace0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -2536,9 +2450,34 @@ void AdS4D_pre_tstep(int L)
           }
 
 
+
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",
+//                            ct,xextrap0[j],yextrap0[j],zextrap0[j],
+//                            locoeffphi10[j],j,basenumbdypoints);
+//              }
+//           fclose(fp);
+//
+//           // save quasiset_ll as ascii
+//           fp = fopen ("version0_ascii_t_xext_yext_zext_quasisetll_trace_indbdypoint_basenumbdypoints", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i %i \n",ct,xextrap0[j],yextrap0[j],zextrap0[j],quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],quasiset_trace0[j],j,basenumbdypoints);  
+//              }
+//           fclose(fp);
+
+
+
+
+
+
+
+
          }
 
-//the following bit computes and prints AdS_mass0 if we're running on 1 process
+//the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
           if (output_AdS_mass)
           { 
            if (uniSize>1)
@@ -2820,12 +2759,11 @@ void AdS4D_post_tstep(int L)
           phi1_n,phi1_nm1,phi1_np1,     
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-
       if (output_bdyquantities)
       {
 
        calc_locoeffphi1_(locoeffphi1,
-                           phi1_n,phi1_nm1,phi1_np1,
+                           phi1_np1,phi1_n,phi1_nm1,
                            xextrap,yextrap,zextrap,
                            chrbdy,&numbdypoints,
                            x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
@@ -2974,31 +2912,30 @@ void AdS4D_post_tstep(int L)
            fclose(fp);
           }
            
-
            // save quasiset_ll as ascii
-           fp = fopen ("ascii_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_t_quasisetll_trace_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
-              {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+              { 
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            quasiset_trace0[j],
                             j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_trace_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
-               if ((j%reduction_factor)==0)
+               if (j%reduction_factor==0)
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            quasiset_trace0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -3027,7 +2964,7 @@ void AdS4D_post_tstep(int L)
  
           }
 
-//the following bit computes and prints AdS_mass0 if we're running on 1 process
+//the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
           if (output_AdS_mass)
           {
            if (uniSize>1)
@@ -3037,6 +2974,7 @@ void AdS4D_post_tstep(int L)
            else //i.e. we're running on only 1 process
            {
             printf("\nrunning on 1 process...computing AdS mass");
+
             *rhobdy0=1;
             chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);
             doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi);

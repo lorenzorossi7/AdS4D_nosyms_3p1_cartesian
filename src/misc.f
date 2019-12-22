@@ -594,10 +594,6 @@ c-----------------------------------------------------------------------
                      write(*,*) 'df1_int_y: error in chr stencil (G)'
                      write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
      &                                                   Nx,Ny,Nz,dy
-                     write(*,*) 'x(i),y(j),z(k),rho='
-     &                ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
-                     write(*,*) 'chr(i,j,k),chr(i,j-1,k)='
-     &                          ,chr(i,j,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                  end if
                    f_y=0
@@ -713,10 +709,6 @@ c-----------------------------------------------------------------------
                      write(*,*) 'df1_int_z: error in chr stencil (A)'
                      write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
      &                                                   Nx,Ny,Nz,dz
-                     write(*,*) 'x(i),y(j),z(k),rho='
-     &                ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
-                     write(*,*) 'chr(i,j,k),chr(i,j,k+1)='
-     &                          ,chr(i,j,k),chr(i,j,k+1)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0
@@ -930,10 +922,6 @@ c-----------------------------------------------------------------------
                      write(*,*) 'df1_int_z: error in chr stencil (G)'
                      write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
      &                                                   Nx,Ny,Nz,dz
-                     write(*,*) 'x(i),y(j),z(k),rho='
-     &                ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
-                     write(*,*) 'chr(i,j,k),chr(i,j,k-1)='
-     &                          ,chr(i,j,k),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0
@@ -3392,7 +3380,7 @@ c----------------------------------------------------------------------
 c calculates inverse of a 4x4 matrix with components g11,...,g44
 c----------------------------------------------------------------------
         subroutine calc_g0uu(g11,g12,g13,g14,g22,g23,g24,
-     &                       g33,g34,g44,g0_uu,x0,y0,z0,i,j,k)
+     &                       g33,g34,g44,g0_uu)
         implicit none
         real*8 g11,g12,g13,g14
         real*8 g22,g23,g24
@@ -3400,13 +3388,10 @@ c----------------------------------------------------------------------
         real*8 g44
         real*8 g0_uu(4,4)                        
 
-        real*8 x0,y0,z0,rho0
-        integer i,j,k
         real*8 invdenominator
 
         !--------------------------------------------------------------
 
-        rho0=sqrt(x0**2+y0**2+z0**2)
         invdenominator=
      &      g14**2*g23**2 - 2*g13*g14*g23*g24 + g13**2*g24**2 - 
      &      g14**2*g22*g33 + 2*g12*g14*g24*g33 - g11*g24**2*g33 + 
@@ -3478,7 +3463,7 @@ c----------------------------------------------------------------------
      &      /invdenominator
        else
         write(*,*) 'the metric g0 is singular, the determinant is 0 
-     &              at x0,y0,z0,i,j,k,rho0=',x0,y0,z0,i,j,k,rho0
+     &              at some point'
 !        g0_uu(1,1)=0
 !        g0_uu(1,2)=0
 !        g0_uu(1,3)=0
@@ -6189,7 +6174,7 @@ c----------------------------------------------------------------------
         ! give values to the metric inverse
         call calc_g0uu(g0_ll(1,1),g0_ll(1,2),g0_ll(1,3),g0_ll(1,4),
      &         g0_ll(2,2),g0_ll(2,3),g0_ll(2,4),
-     &         g0_ll(3,3),g0_ll(3,4),g0_ll(4,4),g0_uu,x0,y0,z0,i,j,k)
+     &         g0_ll(3,3),g0_ll(3,4),g0_ll(4,4),g0_uu)
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
 !       write (*,*) 'g0_uu(1,1)=',g0_uu(1,1)
