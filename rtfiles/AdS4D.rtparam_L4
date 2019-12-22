@@ -96,7 +96,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [65 65 65]
+base_shape := [513 513 513]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
@@ -181,12 +181,12 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 0
-cp_save_fname := "cp_L1"
-cp_restore_fname := "cp_L1_A"
+cp_save_fname := "cp_L4"
+cp_restore_fname := "cp_L4_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 8
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -215,17 +215,17 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 3
-save_1_vars := [ "iresall" "gb_res" "relkretsch" ]
+num_save_1_vars := 0
+save_1_vars := [ "iresall" ]
 
-num_save_2_vars := 15
+num_save_2_vars := 0
 save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_3p1_gauge3_L1_"
+save_tag := "AdS4D_3p1_gauge3_L8_"
 
-save_ivec := 1-*/1
+save_ivec := 1-*/8
 
 #-----------------------------------------------------

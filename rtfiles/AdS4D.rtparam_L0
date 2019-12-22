@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.0
+phi1_amp_1 := 2.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.2 0.3 0.4]
+phi1_ecc_1 := [0.8 0.2 0.5]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -18,29 +18,40 @@ rhod := 0.8
 stype := 0
 
 #AdS4D-Schwarzschild BH ID#
-ief_bh_r0 := 0.6
+ief_bh_r0 := 0.0
 
 #AH-finder#
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
+#delta_ex_rbuf := 0.0
 AH_max_iter := 0000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
 AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
-AH_Nchi := 9
-AH_Nphi := 17
+AH_Nchi := 17
 AH_freq := 1
-AH_freq_aft := 1
+AH_freq_aft := 20
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.3
+ex_rbuf := 0.8
 AH_reset_scale := 1.1
+AH_max_iter_2 := 0
+AH_lambda_2 := 0.0000001
+AH_tol_2 := 1e-2
+AH_r0_2 := 0.10
+AH_r1_2 := 0.20
+AH_xc_2 :=[0.0 0.0 0.0]
+AH_Nchi_2 := 17
+AH_freq_2 := 1
+AH_freq_aft_2 := 1
+ex_rbuf_2 := 0.1
+AH_reset_scale_2 := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
 AH_max_iter_4 := 0
-AH_tmin := 0
+AH_tmin := 0.0
 
 #general (set skip_constraints=1 to make sure Hb_a=0 set to zero;#
 #         otherwise init_hb.f will set Hb_a=-C_a not exactly zero)#
@@ -49,12 +60,12 @@ AH_tmin := 0
 #        (also, skip_constraints=1 && ief_bh_r0!=0 for adsbh initial data) 
  
 background := 0
-skip_constraints := 1
+skip_constraints := 0
 output_ires := 1
 output_bdyquantities := 1
-output_AdS_mass := 1
+output_AdS_mass := 0
 output_relkretschcentregrid := 1
-reduced_ascii := 1
+reduced_ascii := 0
 reduction_factor := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
@@ -169,13 +180,13 @@ diss_all := 1
 #------- check-pointing (off) ---------------------------------------------
 
 cp_restart := 0
-cp_delta_t_hrs := 0.0
+cp_delta_t_hrs := 0
 cp_save_fname := "cp_L0"
 cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 3
+steps := 1
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
