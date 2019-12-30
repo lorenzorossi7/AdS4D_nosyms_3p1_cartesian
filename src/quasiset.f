@@ -7,7 +7,7 @@ c----------------------------------------------------------------------
         subroutine nexttobdypoints(
      &                  chrbdy,
      &                  numbdypoints,
-     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,ghost_width)
+     &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
         implicit none
 
@@ -26,7 +26,7 @@ c----------------------------------------------------------------------
         real*8 x0,y0,z0,rho0,q
 
         real*8 dx,dy,dz
-        real*8 xp1,yp1,zp1
+        real*8 xp1,yp1,zp1,rhop1
         real*8 maxxyzp1
         integer numbdypoints
 
@@ -38,6 +38,14 @@ c----------------------------------------------------------------------
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
         dz=(z(2)-z(1))
+
+         do i=1,Nx
+          do j=1,Ny
+           do k=1,Nz
+            chrbdy(i,j,k) = ex
+           end do
+          end do
+         end do
 
         ! set index bounds for main loop
         is=2
@@ -62,21 +70,23 @@ c----------------------------------------------------------------------
            do k=ks,ke
 
            ! sets xp1,yp1,zp1 to values at i,j,k
-           x0=x(i)
-           y0=y(j)
-           z0=z(k)
-           rho0=sqrt(x0**2+y0**2+z0**2)
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
 
-!           !chrbdy(i,j,k) is not ex for points near the boundary
-           if ((chr(i,j,k).ne.ex).and.(rho0.ge.(1.0d0-3*dx/2))) then
-              chrbdy(i,j,k)=ex-1
-           else
-              chrbdy(i,j,k)=ex
+
+           !chrbdy(i,j,k) is not ex for points near the boundary
+           if ((chr(i,j,k).ne.ex).and.(rhop1.ge.(0.9))) then
+
+              chrbdy(i,j,k)=ex-1.0d0
+!           else
+!              chrbdy(i,j,k)=ex
            end if
 
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-!           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
+           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
 
            if (chrbdy(i,j,k).ne.ex) then
             if (maxxyzp1.eq.abs(xp1)) then
@@ -94,9 +104,10 @@ c----------------------------------------------------------------------
             end if
            end if
 
+
 ! do not include points with y0=z0=0, which give a singular conformal boundary metric
            if (chrbdy(i,j,k).ne.ex) then
-            if ((y0.eq.0.0d0).and.(z0.eq.0.0d0)) then
+            if ((yp1.eq.0.0d0).and.(zp1.eq.0.0d0)) then
              chrbdy(i,j,k)=ex
             end if
            end if
@@ -105,10 +116,10 @@ c----------------------------------------------------------------------
              numbdypoints=numbdypoints+1
            end if
 
+
            end do
          end do
         end do
-
 
         return
         end
@@ -171,6 +182,14 @@ c-------------------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+
         lind=0
         do i=is,ie
          do j=js,je
@@ -213,6 +232,11 @@ c-------------------------------------------------------------------------------
                   xextrap(lind)=xp1
                end if
               end if
+
+!               xextrap(lind)=xp1   !TEST
+!               yextrap(lind)=yp1   !TEST
+!               zextrap(lind)=zp1   !TEST
+
             end if
           end do
          end do
@@ -259,13 +283,21 @@ c----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0)
 
         logical no_derivatives
-        data no_derivatives/.true./
+        data no_derivatives/.false./
 
         real*8 df_drho
 
         real*8 test1(Nx,Ny,Nz)
         real*8 dtest1_drho
 !----------------------------------------------------------------------
+
+         do i=1,Nx
+          do j=1,Ny
+           do k=1,Nz
+            locoeffphi1_nearbdy(i,j,k)=0
+           end do
+          end do
+        end do
 
         ! set index bounds for main loop
         is=2
@@ -275,13 +307,13 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! adjust index bounds to compensate for ghost_width
-!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
 !!!!!!!testing rho derivatives
 !       do i=1,Nx
@@ -301,7 +333,6 @@ c----------------------------------------------------------------------
         do i=is,ie
          do j=js,je
           do k=ks,ke
-            if ( chr(i,j,k).ne.ex) then
              x0=x(i)
              y0=y(j)
              z0=z(k)
@@ -313,6 +344,7 @@ c----------------------------------------------------------------------
 !            write(*,*) "dtest1_drho=",dtest1_drho
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+            if ((chr(i,j,k).ne.ex).and.(rho0.gt.0.8)) then
               if (no_derivatives) then
                locoeffphi1_nearbdy(i,j,k)=phi1_n(i,j,k)/q
               else
@@ -399,13 +431,13 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! adjust index bounds to compensate for ghost_width
-!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         lind=0
         do i=is,ie
@@ -464,6 +496,8 @@ c----------------------------------------------------------------------
                end if
               end if
 
+
+                  locoeffphi1(lind)=locoeffphi1_nearbdy_p1  !TEST
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "locoeffphi1(lind)=",locoeffphi1(lind)
 
@@ -675,7 +709,7 @@ c----------------------------------------------------------------------
         real*8 detgamma0sphbdy
 
         logical no_derivatives
-        data no_derivatives/.true./
+        data no_derivatives/.false./
  
         real*8 df_drho
         real*8 gbsph_tt_n(Nx,Ny,Nz),gbsph_trho_n(Nx,Ny,Nz)
@@ -699,12 +733,48 @@ c----------------------------------------------------------------------
         real*8 gamma0sphbdy_uu_chixi(Nx,Ny,Nz)
         real*8 gamma0sphbdy_uu_xixi(Nx,Ny,Nz)
 
+        real*8 gb_tt_x_n,gbsph_tt_x_n
+
 !----------------------------------------------------------------------
 
         dx=(x(2)-x(1))
         dy=(y(2)-y(1))
         dz=(z(2)-z(1))
 
+        if (.not.no_derivatives) then
+         do i=1,Nx
+          do j=1,Ny
+           do k=1,Nz
+            gbsph_tt_n(i,j,k)    =0
+            gbsph_trho_n(i,j,k)  =0
+            gbsph_tchi_n(i,j,k)  =0
+            gbsph_txi_n(i,j,k)   =0
+            gbsph_rhorho_n(i,j,k)=0
+            gbsph_rhochi_n(i,j,k)=0
+            gbsph_rhoxi_n(i,j,k) =0
+            gbsph_chichi_n(i,j,k)=0
+            gbsph_chixi_n(i,j,k) =0
+            gbsph_xixi_n(i,j,k)  =0
+
+            gamma0sphbdy_uu_tt(i,j,k)=0
+            gamma0sphbdy_uu_tchi(i,j,k)=0
+            gamma0sphbdy_uu_txi(i,j,k)=0
+            gamma0sphbdy_uu_chichi(i,j,k)=0
+            gamma0sphbdy_uu_chixi(i,j,k)=0
+            gamma0sphbdy_uu_xixi(i,j,k)=0
+
+            quasiset_tt_ll(i,j,k)=0
+            quasiset_tchi_ll(i,j,k)=0
+            quasiset_txi_ll(i,j,k)=0
+            quasiset_chichi_ll(i,j,k)=0
+            quasiset_chixi_ll(i,j,k)=0
+            quasiset_xixi_ll(i,j,k)=0
+            quasiset_massdensityll(i,j,k)=0
+            quasiset_tracell(i,j,k)=0
+           end do
+          end do
+        end do
+       end if
 
         ! set index bounds for main loop
         is=2
@@ -715,14 +785,14 @@ c----------------------------------------------------------------------
         ke=Nz-1
 
 
-!!!!ghost_width not needed as long as we don't use derivatives
-!        ! adjust index bounds to compensate for ghost_width
-!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!!!ghost_width not needed as long as we don't use derivatives
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
         do i=is,ie
          do j=js,je
@@ -1193,8 +1263,6 @@ c----------------------------------------------------------------------
         do i=is,ie
          do j=js,je
            do k=ks,ke
-            if (chr(i,j,k).ne.ex) then
-
              x0=x(i)
              y0=y(j)
              z0=z(k)
@@ -1207,6 +1275,7 @@ c----------------------------------------------------------------------
                 xi0=(1/(2*PI))*atan2(z0,y0)
              end if
 
+            if ((chr(i,j,k).ne.ex).and.(rho0.gt.0.8)) then
               dgbsph_tt_drho_n    =
      &             df_drho(gbsph_tt_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
               dgbsph_trho_drho_n  =
@@ -1244,6 +1313,9 @@ c----------------------------------------------------------------------
                quasiset_txi_ll(i,j,k)   = (3*(-dgbsph_txi_drho_n))
      &                                       /(16*PI)
 
+!       call df1_int_x(gbsph_tt_n,gbsph_tt_x_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
+
                quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
      &                                   *(-dgbsph_tt_drho_n)
      &                                  -(1.0d0/8.0d0)*PI
@@ -1252,12 +1324,17 @@ c----------------------------------------------------------------------
      &                               /(sin(PI*chi0))**2)
      &                                   /(64*PI)
 
+!       call df1_int_y(gb_tt_n,gb_tt_y_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
 
                quasiset_chixi_ll(i,j,k) =(3*(-dgbsph_chixi_drho_n))
      &                                      /(16*PI)
 
+!       call df1_int_z(gb_tt_n,gb_tt_z_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
 
-               quasiset_xixi_ll(i,j,k)  =((sin(PI*chi0))**2*(-3
+
+               quasiset_xixi_ll(i,j,k)  = ((sin(PI*chi0))**2*(-3
      &                                   *(-dgbsph_chichi_drho_n)
      &                                  +PI**2*(3*(-dgbsph_tt_drho_n)
      &                                  -2*(-dgbsph_rhorho_drho_n)))
@@ -1451,13 +1528,13 @@ c-------------------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
-!        ! adjust index bounds to compensate for ghost_width
-!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
-!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
-!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
-!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
-!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
-!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
        
  
         lind=0
