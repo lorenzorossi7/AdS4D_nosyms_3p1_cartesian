@@ -202,7 +202,7 @@ c----------------------------------------------------------------------
         real*8 H0_t0,H0_x0,H0_y0
         real*8 H0_z0
 
-        real*8 x0,y0,z0
+        real*8 x0,y0,z0,rho0
 
         integer i,j,k,is,ie,js,je,ks,ke
         real*8 PI
@@ -384,6 +384,8 @@ c----------------------------------------------------------------------
            x0=x(i)
            y0=y(j)
            z0=z(k)
+           rho0=sqrt(x0**2+y0**2+z0**2)
+
 
            ! calculate all needed derivatives 
            call df1_int(gb_tt_n,gb_tt_n,gb_tt_n,gb_tt_t,gb_tt_x,

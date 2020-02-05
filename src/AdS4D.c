@@ -65,6 +65,7 @@ real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 int background,skip_constraints;
 int output_ires,output_bdyquantities,output_AdS_mass,output_relkretschcentregrid;
 int reduced_ascii,reduction_factor;
+int alltimes_ascii,timestep_ascii;
 
 // new parameters in rtfile
 int interptype,i_shift,regtype,stype;
@@ -126,6 +127,7 @@ real *Hb_t_t,*Hb_t_t_n;
 real *Hb_x_t,*Hb_x_t_n;
 real *Hb_y_t,*Hb_y_t_n;
 real *Hb_z_t,*Hb_z_t_n;
+
 
 real *w1,*mg_w1;
 real *w2,*mg_w2;
@@ -212,6 +214,7 @@ int Hb_t_t_gfn,Hb_t_t_n_gfn;
 int Hb_x_t_gfn,Hb_x_t_n_gfn;
 int Hb_y_t_gfn,Hb_y_t_n_gfn;
 int Hb_z_t_gfn,Hb_z_t_n_gfn;
+
 
 int mask_gfn,mask_mg_gfn,chr_gfn,chr_mg_gfn, chrbdy_gfn;
 real *gu_tt,*gu_tx,*gu_ty,*gu_tz,*gu_xx,*gu_xy,*gu_xz,*gu_yy,*gu_yz,*gu_psi,*m_g_det;
@@ -408,6 +411,7 @@ void set_gfns(void)
     if ((Hb_z_nm1_gfn  = PAMR_get_gfn("Hb_z",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_z_n_gfn    = PAMR_get_gfn("Hb_z",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_z_np1_gfn  = PAMR_get_gfn("Hb_z",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+
 
     if ((zeta_gfn     = PAMR_get_gfn("zeta",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((zeta_res_gfn = PAMR_get_gfn("zeta_res",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -1043,6 +1047,8 @@ void AdS4D_var_post_init(char *pfile)
    output_AdS_mass=0; AMRD_int_param(pfile,"output_AdS_mass",&output_AdS_mass,1);
    reduced_ascii=0; AMRD_int_param(pfile,"reduced_ascii",&reduced_ascii,1);
    reduction_factor=1; AMRD_int_param(pfile,"reduction_factor",&reduction_factor,1);
+   alltimes_ascii=0; AMRD_int_param(pfile,"alltimes_ascii",&alltimes_ascii,1);
+   timestep_ascii=0; AMRD_int_param(pfile,"timestep_ascii",&timestep_ascii,1);
 
    harmonize=0; AMRD_int_param(pfile,"harmonize",&harmonize,1);
 
@@ -1295,11 +1301,29 @@ void AdS4D_var_post_init(char *pfile)
 //=============================================================================
 void AdS4D_AMRH_var_clear(void)
 {
-   int i,j,ind;
+   int i,j,k,ind;
 
    ldptr();
 
    zero_f(phi1_n); 
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//         ind=i+Nx*(j+Ny*k);
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         printf("AdS4D_AMRH_var_clear-PRE init_ghb_ads\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
 
    init_ghb_ads_(gb_tt_n,gb_tx_n,gb_ty_n,
                  gb_tz_n,
@@ -1311,6 +1335,24 @@ void AdS4D_AMRH_var_clear(void)
                  Hb_t_n,Hb_x_n,Hb_y_n,
                  Hb_z_n,
                  &AdS_L,x,y,z,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        { 
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_ghb_ads\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
 
    return;
 }
@@ -1372,9 +1414,32 @@ void AdS4D_t0_cnst_data(void)
 
    ldptr_mg();
 
+//   printf("AdS4D_t0_cnst_data is called");
+
    // initialize time derivatives of gbars,hbars
    if (gb_xx_nm1)
    {
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-PRE init_ghbdot_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//         printf("gb_xx_nm1[ind]=%lf,gb_xx_n[ind]=%lf,gb_xx_np1[ind]=%lf\n",gb_xx_nm1[ind],gb_xx_n[ind],gb_xx_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
+
      init_ghbdot_(gb_tt_n,gb_tx_n,gb_ty_n,
                   gb_tz_n,
                   gb_xx_n,gb_xy_n,
@@ -1392,11 +1457,51 @@ void AdS4D_t0_cnst_data(void)
                   Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                   Hb_z_t_n,
                   &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_ghbdot_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
+
    }
+
 
    // initialize gbars and nm1, np1 time levels
    if ((background || skip_constraints) && ief_bh_r0==0)
    {
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-PRE init_ghb_ads_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
      init_ghb_ads_(gb_tt,gb_tx,gb_ty,
                    gb_tz,
                    gb_xx,gb_xy,
@@ -1406,6 +1511,25 @@ void AdS4D_t0_cnst_data(void)
                    psi,Hb_t,Hb_x,Hb_y,
                    Hb_z,
                    &AdS_L,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_ghb_ads_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
 
      for (i=0; i<size; i++)
      {
@@ -1430,6 +1554,25 @@ void AdS4D_t0_cnst_data(void)
    {
      if (gb_xx_nm1) //"np1,n,nm1" variables only allocated on finest MG level
      {
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-PRE init_ads4d_bh_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
        init_ads4d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,
                       gb_tz,
                       gb_xx,gb_xy,
@@ -1447,6 +1590,24 @@ void AdS4D_t0_cnst_data(void)
                       Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                       Hb_z_t_n,
                       phys_bdy,x,y,z,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_ads4d_bh_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
 
        for (i=0; i<size; i++)
        {
@@ -1470,6 +1631,29 @@ void AdS4D_t0_cnst_data(void)
    }
    else
    {
+
+    if (gb_xx_nm1) //"np1,n,nm1" variables only allocated on finest MG level //IT WAS NOT HERE IN PREVIOUS VERSIONS, ASK HANS
+    {
+
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-PRE init_ghb_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//         printf("gb_xx_nm1[ind]=%lf,gb_xx_n[ind]=%lf,gb_xx_np1[ind]=%lf\n",gb_xx_nm1[ind],gb_xx_n[ind],gb_xx_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
      init_ghb_(zeta,
                gb_tt,gb_tx,gb_ty,
                gb_tz,
@@ -1481,11 +1665,53 @@ void AdS4D_t0_cnst_data(void)
                Hb_z,
                &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);
 
+//   for (i=0; i<Nx; i++)
+//   {
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_ghb_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//         printf("gb_xx_nm1[ind]=%lf,gb_xx_n[ind]=%lf,gb_xx_np1[ind]=%lf\n",gb_xx_nm1[ind],gb_xx_n[ind],gb_xx_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
+
+
+
+    }
+
    }
 
    // initialize hbars 
    if (AMRD_id_pl_method==3 && gb_xx_nm1)
    {
+
+//   for (i=0; i<Nx; i++)
+//   {  
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-PRE init_hb_ AND init_nm1_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
 
      init_hb_(gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -1517,6 +1743,26 @@ void AdS4D_t0_cnst_data(void)
                  Hb_z_np1,Hb_z_n,Hb_z_nm1,Hb_z_t_n,
                  phi1_np1,phi1_n,phi1_nm1,phi1_t_n,tfunction,
                  &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
+
+
+//   for (i=0; i<Nx; i++)
+//   {  
+//      for (j=0; j<Ny; j++)
+//      {
+//       for (k=0; k<Nz; k++)
+//       {
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)
+//        {
+//         ind=i+Nx*(j+Ny*k);
+//         printf("AdS4D_AMRH_var_clear-POST init_hb_ AND init_nm1_\n");
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);
+//        }
+//       }
+//      }
+//   }
+
    }
 
    // store initial source functions 
@@ -1560,6 +1806,7 @@ void AdS4D_pre_io_calc(void)
    ldptr();
 
    int i,j,k,ind;
+   int i0,j0,k0;
    int j_shift;
    int n;
    int Lf,Lc;
@@ -1577,7 +1824,9 @@ void AdS4D_pre_io_calc(void)
 
    int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
    int lsteps=AMRD_lsteps[Lc-1];
- 
+
+//   printf("AdS4D_pre_io_calc is called");
+
 
    // output independent residual
    if (output_ires)
@@ -1678,6 +1927,10 @@ void AdS4D_pre_io_calc(void)
 
       }
 
+
+
+
+
       // fill in independent residual evaluator test functions
       for (i=0; i<Nx; i++)
       {
@@ -1688,7 +1941,7 @@ void AdS4D_pre_io_calc(void)
             ind=i+Nx*(j+Ny*k);
             rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
 
-            // excise rho=1-1.5*dx pts (pure AdS diverges at rho=1, so cannot use these pts in difference stencils) 
+            // excise rho>1-1.5*dx pts (pure AdS diverges at rho=1, so cannot use these pts in difference stencils) 
             if (chr[ind]==AMRD_ex || 1-rho<1.5*dx_Lc)
             {
               iresall[ind]=0;  
@@ -1723,6 +1976,12 @@ void AdS4D_pre_io_calc(void)
 
 
    }
+
+     if (output_bdyquantities) 
+     { 
+//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
+       nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+     }
 
    return;
 }
@@ -1973,6 +2232,8 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
    dy=(bbox[3]-bbox[2])/(shape[1]-1);
    dz=(bbox[5]-bbox[4])/(shape[2]-1);
 
+//   printf("AdS4D_fill_ex_mask is called");
+
    for (i=0; i<shape[0]; i++)
    {
       x=bbox[0]+i*dx;
@@ -2072,6 +2333,8 @@ void AdS4D_pre_tstep(int L)
    Lf=PAMR_get_max_lev(PAMR_AMRH);
    Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
 
+//   printf("AdS4D_pre_tstep is called");
+
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 
    if (pre_tstep_global_first)
@@ -2102,14 +2365,14 @@ void AdS4D_pre_tstep(int L)
  
 //         numbdypoints=0; //initialize
 //         for (i=0; i<size; i++)
-//         {
-//          chrbdy[i]= AMRD_ex;
+
 //         }
          //routine that identifies points next to the boundary AND next to excised points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor. We call this number numbdypoints.
-         nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//         nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-//reduce boundary points if needed
-//         if (numbdypoints*uniSize>10000) numbdypoints=roundl(10000/uniSize)+1;
+         //reduce boundary points if needed
+//         int reduced_numbdypoints=10000;
+//         if (numbdypoints*uniSize>reduced_numbdypoints) numbdypoints=roundl(reduced_numbdypoints/uniSize)+1;
  
           //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
           MPI_Allgather(&numbdypoints,1,MPI_INT,vecbdypoints,1,MPI_INT,MPI_COMM_WORLD);
@@ -2325,6 +2588,7 @@ void AdS4D_pre_tstep(int L)
           phi1_np1,phi1_n,phi1_nm1,    
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
+
      if (output_bdyquantities)
      {
 
@@ -2338,8 +2602,8 @@ void AdS4D_pre_tstep(int L)
          quasiset_(quasiset_tt,quasiset_tchi,quasiset_txi,
                    quasiset_chichi,quasiset_chixi,
                    quasiset_xixi,
-                   quasiset_massdensity,
                    quasiset_trace,
+                   quasiset_massdensity,
                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -2452,6 +2716,11 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
 
+
+        if (alltimes_ascii)
+        {
+
+
            fp = fopen ("ascii_t_bdyphi1_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -2505,6 +2774,69 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
 
+        } //closes if(alltimes_ascii) condition
+
+
+        if (timestep_ascii)
+        {
+           char filename[64];
+           sprintf(filename, "ascii_t_bdyphi1_indbdypoint_tstep%d.txt", lsteps);
+           fp = fopen (filename, "w+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen (filename, "w+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if ((j%reduction_factor)==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+
+           // save quasiset_ll as ascii
+           sprintf(filename, "ascii_t_quasisetll_trace_massdensity_indbdypoint_tstep%d.txt", lsteps);
+           fp = fopen (filename, "w+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen (filename, "w+");
+            j_red=0;
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if ((j%reduction_factor)==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+
+        } //closes if (timestep_ascii) condition
+
 
 //           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");
 //            for( j = 0; j < basenumbdypoints; j++ )
@@ -2530,7 +2862,7 @@ void AdS4D_pre_tstep(int L)
 
 
 
-         }
+         } //closes if (my_rank==0) condition
 
 //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
           if (output_AdS_mass)
@@ -2826,8 +3158,8 @@ void AdS4D_post_tstep(int L)
        quasiset_(quasiset_tt,quasiset_tchi,quasiset_txi,
                  quasiset_chichi,quasiset_chixi,
                  quasiset_xixi,
-                 quasiset_massdensity,
                  quasiset_trace,
+                 quasiset_massdensity,
                  gb_tt_n,gb_tt_nm1,gb_tt_np1,
                  gb_tx_n,gb_tx_nm1,gb_tx_np1,
                  gb_ty_n,gb_ty_nm1,gb_ty_np1,
@@ -2968,6 +3300,11 @@ void AdS4D_post_tstep(int L)
           }
            
            // save quasiset_ll as ascii
+
+        if (alltimes_ascii)
+        {
+
+
            fp = fopen ("ascii_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -2997,6 +3334,69 @@ void AdS4D_post_tstep(int L)
               }
            fclose(fp);
           }
+
+        }  //closes if (alltimes_ascii) condition
+
+        if (timestep_ascii)
+        {
+           char filename[64];
+           sprintf(filename, "ascii_t_bdyphi1_indbdypoint_tstep%d.txt", lsteps);
+           fp = fopen (filename, "w+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen (filename, "w+");
+            j_red=0; 
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if ((j%reduction_factor)==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+
+           // save quasiset_ll as ascii
+           sprintf(filename, "ascii_t_quasisetll_trace_massdensity_indbdypoint_tstep%d.txt", lsteps);
+           fp = fopen (filename, "w+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            j);
+              }
+           fclose(fp);
+
+          if (reduced_ascii)
+          {
+           fp = fopen (filename, "w+");
+            j_red=0; 
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+               if ((j%reduction_factor)==0)
+               {
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
+                            quasiset_trace0[j],quasiset_massdensity0[j],
+                            j_red);
+                j_red=j_red+1;
+               }
+              }
+           fclose(fp);
+          }
+
+        }  //closes if (timestep_ascii) condition 
+
 
 
 //           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");

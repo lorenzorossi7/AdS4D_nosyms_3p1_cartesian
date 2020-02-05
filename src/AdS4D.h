@@ -492,8 +492,8 @@ void calc_locoeffphi1_(real *locoeffphi1,
 
 void quasiset_(    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, real *quasiset_chichi, real *quasiset_chixi,
                    real *quasiset_xixi,
-                   real *quasiset_massdensity,
                    real *quasiset_trace,
+                   real *quasiset_massdensity,
                    real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                    real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                    real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
@@ -507,5 +507,7 @@ void quasiset_(    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, r
                    real *xextrap, real *yextrap, real *zextrap,
                    real *chrbdy, int *numbdypoints,
                    real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
+
+void df1_int_x_(real *gb_tt_n, real *dergb_tt_x_n, real *x, real *y, real *z, int *i, int *j, int *k, real *chr, real *ex,int *Nx, int *Ny, int *Nz);
 
 #endif

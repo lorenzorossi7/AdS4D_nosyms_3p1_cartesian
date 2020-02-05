@@ -1032,11 +1032,11 @@ c-----------------------------------------------------------------------
      &    then !these are allowed ... reg_ah_r() will fill it in 
             fill_later=1
           else
-            is_bad=1
+            is_bad=1 
           end if
         end if
 
-        if (AH_R(i0,j0).lt.1.5*dx) is_bad=1 !stops ahfinder when AH_R gets too small
+        if (AH_R(i0,j0).lt.(1.5d0*dx)) is_bad=1 !stops ahfinder when AH_R gets too small
 
         if (is_bad.eq.1) then
            write(*,*) '--------------------------------------------'
@@ -1084,7 +1084,7 @@ c-----------------------------------------------------------------------
                 do j1=js,je
                    do k1=ks,ke
                       if (chr(i1,j1,k1).eq.ex) then
-                         write(*,*) ' calc_exp0: pt i1,j1 is excised'
+                         write(*,*) ' calc_exp0: pt i1,j1,k1 is excised'
                          write(*,*) ' i0,j0=',i0,j0
                          write(*,*) ' AH_Nchi,AH_Nphi=',AH_Nchi,AH_Nphi
                          write(*,*) ' AH_chi,AH_phi=',AH_chi,AH_phi
@@ -1093,7 +1093,8 @@ c-----------------------------------------------------------------------
                          write(*,*) ' xi,yj,zk=',x(i),y(j),z(k)
                          write(*,*) ' chr(i,j,k)=',chr(i,j,k)
                          write(*,*) ' i1,j1,k1=',i1,j1,k1
-                         write(*,*) ' xi1,yj1,zk1=',x(i1),y(j1),z(k1)
+                         write(*,*) ' xi1,yj1,zk1,AH_R(i0,j0)='
+     &                               ,x(i1),y(j1),z(k1),AH_R(i0,j0)
                          write(*,*) ' chr(i1,j1,k1)=',chr(i1,j1,k1)
                     write(*,*) ' rho1=',sqrt(x(i1)**2+y(j1)**2+z(k1)**2)
                          write(*,*) ' Nx,Ny,Nz=',Nx,Ny,Nz

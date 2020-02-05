@@ -16,7 +16,7 @@ c----------------------------------------------------------------------
         real*8 L
         real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
 
-        real*8 chrbdy(Nx,Ny,Nz)
+        real*8 chrbdy(Nx,Ny,Nz),chrbdy2(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
 
@@ -39,13 +39,7 @@ c----------------------------------------------------------------------
         dy=(y(2)-y(1))
         dz=(z(2)-z(1))
 
-         do i=1,Nx
-          do j=1,Ny
-           do k=1,Nz
-            chrbdy(i,j,k) = ex
-           end do
-          end do
-         end do
+        numbdypoints=0
 
         ! set index bounds for main loop
         is=2
@@ -63,52 +57,64 @@ c----------------------------------------------------------------------
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
-        numbdypoints=0
-
-        do i=is,ie
-         do j=js,je
-           do k=ks,ke
-
-           ! sets xp1,yp1,zp1 to values at i,j,k
+         do i=1,Nx
+          do j=1,Ny
+           do k=1,Nz
            xp1=x(i)
            yp1=y(j)
            zp1=z(k)
            rhop1=sqrt(xp1**2+yp1**2+zp1**2)
 
-
-           !chrbdy(i,j,k) is not ex for points near the boundary
-           if ((chr(i,j,k).ne.ex).and.(rhop1.ge.(0.9))) then
-
-              chrbdy(i,j,k)=ex-1.0d0
-!           else
-!              chrbdy(i,j,k)=ex
-           end if
-
-           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
-
-           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
-
-           if (chrbdy(i,j,k).ne.ex) then
-            if (maxxyzp1.eq.abs(xp1)) then
-             if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
-               chrbdy(i,j,k)=ex
-             end if
-            else if (maxxyzp1.eq.abs(yp1)) then
-             if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
-               chrbdy(i,j,k)=ex
-             end if
+            if (rhop1.lt.(1-9*dx/2)) then
+!            if (rhop1.lt.0.8) then
+              chrbdy(i,j,k) =ex-1.0d0
+              chrbdy2(i,j,k)=ex-1.0d0
             else
-             if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
-               chrbdy(i,j,k)=ex
-             end if
+              chrbdy(i,j,k) =ex
+              chrbdy2(i,j,k)=ex
             end if
-           end if
-
 
 ! do not include points with y0=z0=0, which give a singular conformal boundary metric
            if (chrbdy(i,j,k).ne.ex) then
             if ((yp1.eq.0.0d0).and.(zp1.eq.0.0d0)) then
              chrbdy(i,j,k)=ex
+            end if
+           end if
+
+           end do
+          end do
+         end do
+
+
+         do i=is,ie
+          do j=js,je
+           do k=ks,ke
+
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+
+           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
+
+           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+
+           if (chrbdy(i,j,k).ne.ex) then
+            if (maxxyzp1.eq.abs(xp1)) then
+             if ((chrbdy2(i+1,j,k).ne.ex)
+     &          .and.(chrbdy2(i-1,j,k).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
+            else if (maxxyzp1.eq.abs(yp1)) then
+             if ((chrbdy2(i,j+1,k).ne.ex)
+     &           .and.(chrbdy2(i,j-1,k).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
+            else
+             if ((chrbdy2(i,j,k+1).ne.ex)
+     &           .and.(chrbdy2(i,j,k-1).ne.ex)) then
+               chrbdy(i,j,k)=ex
+             end if
             end if
            end if
 
@@ -120,6 +126,99 @@ c----------------------------------------------------------------------
            end do
          end do
         end do
+
+
+
+
+
+
+
+
+
+
+
+
+!         do i=1,Nx
+!          do j=1,Ny
+!           do k=1,Nz
+!            chrbdy(i,j,k) = ex
+!           end do
+!          end do
+!         end do
+!
+!        ! set index bounds for main loop
+!        is=2
+!        ie=Nx-1
+!        js=2
+!        je=Ny-1
+!        ks=2
+!        ke=Nz-1
+!
+!        ! adjust index bounds to compensate for ghost_width
+!        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+!        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+!        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+!        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+!        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+!        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+!
+!        numbdypoints=0
+!
+!        do i=is,ie
+!         do j=js,je
+!           do k=ks,ke
+!
+!           ! sets xp1,yp1,zp1 to values at i,j,k
+!           xp1=x(i)
+!           yp1=y(j)
+!           zp1=z(k)
+!           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+!
+!
+!           !chrbdy(i,j,k) is not ex for points near the boundary
+!           if ((chr(i,j,k).ne.ex).and.(rhop1.ge.(0.8))) then
+!
+!              chrbdy(i,j,k)=ex-1.0d0
+!!           else
+!!              chrbdy(i,j,k)=ex
+!           end if
+!
+!           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+!
+!           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
+!
+!           if (chrbdy(i,j,k).ne.ex) then
+!            if (maxxyzp1.eq.abs(xp1)) then
+!             if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+!               chrbdy(i,j,k)=ex
+!             end if
+!            else if (maxxyzp1.eq.abs(yp1)) then
+!             if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+!               chrbdy(i,j,k)=ex
+!             end if
+!            else
+!             if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+!               chrbdy(i,j,k)=ex
+!             end if
+!            end if
+!           end if
+!
+!
+!! do not include points with y0=z0=0, which give a singular conformal boundary metric
+!           if (chrbdy(i,j,k).ne.ex) then
+!            if ((yp1.eq.0.0d0).and.(zp1.eq.0.0d0)) then
+!             chrbdy(i,j,k)=ex
+!            end if
+!           end if
+!
+!           if (chrbdy(i,j,k).ne.ex) then
+!             numbdypoints=numbdypoints+1
+!           end if
+!
+!
+!           end do
+!         end do
+!        end do
 
         return
         end
@@ -344,7 +443,8 @@ c----------------------------------------------------------------------
 !            write(*,*) "dtest1_drho=",dtest1_drho
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            if ((chr(i,j,k).ne.ex).and.(rho0.gt.0.8)) then
+            if ((chr(i,j,k).ne.ex)!.and.(rho0.gt.0.8)
+     &         ) then
               if (no_derivatives) then
                locoeffphi1_nearbdy(i,j,k)=phi1_n(i,j,k)/q
               else
@@ -409,7 +509,7 @@ c----------------------------------------------------------------------
         real*8 zextrap(numbdypoints)
 
         real*8 xp1,yp1,zp1,xp2,yp2,zp2
-        real*8 xex,yex,zex
+        real*8 xex,yex,zex,rhoex,chiex,xiex
         real*8 maxxyzp1
 
         real*8 extrapalongx,extrapalongy,extrapalongz
@@ -452,17 +552,28 @@ c----------------------------------------------------------------------
 
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
+
+                   xex=xextrap(lind)
+                   yex=yextrap(lind)
+                   zex=zextrap(lind)
+                   rhoex=sqrt(xex**2+yex**2+zex**2)
+                   chiex=(1/PI)*acos(xex/rhoex)
+                if (zex.lt.0) then
+                   xiex=(1/(2*PI))*(atan2(zex,yex)+2*PI)
+                else
+                   xiex=(1/(2*PI))*atan2(zex,yex)
+                end if
+
+
               if (maxxyzp1.eq.abs(xp1)) then
                 if (xp1.gt.0) then
                   xp2=x(i-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i-1,j,k)
-                  xex=xextrap(lind)
                   locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
               else
                   xp2=x(i+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i+1,j,k)
-                  xex=xextrap(lind)
                   locoeffphi1(lind)=extrapalongx(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,xp1,xp2,xex)
                end if
@@ -470,13 +581,11 @@ c----------------------------------------------------------------------
               if (yp1.gt.0) then
                   yp2=y(j-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j-1,k)
-                  yex=yextrap(lind)
                   locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
               else
                   yp2=y(j+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j+1,k)
-                  yex=yextrap(lind)
                   locoeffphi1(lind)=extrapalongy(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,yp1,yp2,yex)
               end if
@@ -484,20 +593,18 @@ c----------------------------------------------------------------------
                  if (zp1.gt.0) then
                   zp2=z(k-1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k-1)
-                  zex=zextrap(lind)
                   locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
                  else
                   zp2=z(k+1)
                   locoeffphi1_nearbdy_p2=locoeffphi1_nearbdy(i,j,k+1)
-                  zex=zextrap(lind)
                   locoeffphi1(lind)=extrapalongz(locoeffphi1_nearbdy_p1
      &                         ,locoeffphi1_nearbdy_p2,zp1,zp2,zex)
                end if
               end if
 
 
-                  locoeffphi1(lind)=locoeffphi1_nearbdy_p1  !TEST
+!                  locoeffphi1(lind)=locoeffphi1_nearbdy_p1  !TEST
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "locoeffphi1(lind)=",locoeffphi1(lind)
 
@@ -526,8 +633,8 @@ c----------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
-     &                  quasiset_massdensityll,
      &                  quasiset_tracell,
+     &                  quasiset_massdensityll,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -733,7 +840,13 @@ c----------------------------------------------------------------------
         real*8 gamma0sphbdy_uu_chixi(Nx,Ny,Nz)
         real*8 gamma0sphbdy_uu_xixi(Nx,Ny,Nz)
 
-        real*8 gb_tt_x_n,gbsph_tt_x_n
+        real*8 dergb_tt_x_n,dergbsph_tt_x_n
+        real*8 dergb_tt_y_n,dergbsph_tt_y_n
+        real*8 dergb_tt_z_n,dergbsph_tt_z_n
+        real*8 dergb_xx_x_n
+        real*8 dergb_xx_y_n
+        real*8 dergb_xx_z_n
+        real*8 dergb_tt_x_np1,dergb_tt_y_np1,dergb_tt_z_np1
 
 !----------------------------------------------------------------------
 
@@ -1275,7 +1388,8 @@ c----------------------------------------------------------------------
                 xi0=(1/(2*PI))*atan2(z0,y0)
              end if
 
-            if ((chr(i,j,k).ne.ex).and.(rho0.gt.0.8)) then
+            if ((chr(i,j,k).ne.ex)!.and.(rho0.gt.0.8)
+     &          ) then
               dgbsph_tt_drho_n    =
      &             df_drho(gbsph_tt_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
               dgbsph_trho_drho_n  =
@@ -1299,18 +1413,40 @@ c----------------------------------------------------------------------
 
 !             if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
 
-               quasiset_tt_ll(i,j,k)=(12*(-dgbsph_chichi_drho_n)
+       call df1_int_x(gb_tt_np1,dergb_tt_x_np1,x,y,z,i,j,k,
+     &                 chr,ex,Nx,Ny,Nz)
+       call df1_int_y(gb_tt_np1,dergb_tt_y_np1,x,y,z,i,j,k,
+     &                 chr,ex,Nx,Ny,Nz)
+       call df1_int_z(gb_tt_np1,dergb_tt_z_np1,x,y,z,i,j,k,
+     &                   chr,ex,Nx,Ny,Nz)
+
+       call df1_int_x(gb_tt_n,dergb_tt_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+       call df1_int_y(gb_tt_n,dergb_tt_y_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+       call df1_int_z(gb_tt_n,dergb_tt_z_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+
+       call df1_int_x(gb_xx_n,dergb_xx_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+       call df1_int_y(gb_xx_n,dergb_xx_y_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+       call df1_int_z(gb_xx_n,dergb_xx_z_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+
+        dxdrho=cos(PI*chi0)
+        dydrho=sin(PI*chi0)*cos(2*PI*xi0)
+        dzdrho=sin(PI*chi0)*sin(2*PI*xi0)
+
+               quasiset_tt_ll(i,j,k)= !dergb_tt_x_n
+     &                         (12*(-dgbsph_chichi_drho_n)
      &                         + 8*PI**2*(-dgbsph_rhorho_drho_n)
      &                         +  (3*(-dgbsph_xixi_drho_n)
      &                               /(sin(PI*chi0))**2)
      &                         )/(64*PI**3)
 
 
-               quasiset_tchi_ll(i,j,k)  = (3*(-dgbsph_tchi_drho_n))
+               quasiset_tchi_ll(i,j,k)  = !dergb_xx_x_n
+     &                        (3*(-dgbsph_tchi_drho_n))
      &                                       /(16*PI)
 
 
-               quasiset_txi_ll(i,j,k)   = (3*(-dgbsph_txi_drho_n))
+               quasiset_txi_ll(i,j,k)   = !dgbsph_tt_drho_n
+     &                        (3*(-dgbsph_txi_drho_n))
      &                                       /(16*PI)
 
 !       call df1_int_x(gbsph_tt_n,gbsph_tt_x_n  !TEST
@@ -1334,7 +1470,8 @@ c----------------------------------------------------------------------
 !     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
 
 
-               quasiset_xixi_ll(i,j,k)  = ((sin(PI*chi0))**2*(-3
+               quasiset_xixi_ll(i,j,k)=
+     &                                  ((sin(PI*chi0))**2*(-3
      &                                   *(-dgbsph_chichi_drho_n)
      &                                  +PI**2*(3*(-dgbsph_tt_drho_n)
      &                                  -2*(-dgbsph_rhorho_drho_n)))
@@ -1485,8 +1622,8 @@ c-------------------------------------------------------------------------------
 
         real*8 x0,y0,z0,rho0,q
 
-        real*8 xp1,yp1,zp1,xp2,yp2,zp2
-        real*8 xex,yex,zex
+        real*8 xp1,yp1,zp1,rhop1,xp2,yp2,zp2
+        real*8 xex,yex,zex,rhoex,chiex,xiex
         real*8 maxxyzp1
 
         real*8 extrapalongx,extrapalongy,extrapalongz
@@ -1544,6 +1681,16 @@ c-------------------------------------------------------------------------------
            xp1=x(i)
            yp1=y(j)
            zp1=z(k)
+           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+
+!          write(*,*) "i,j,k,Nx,Ny,Nz="
+!     &               ,i,j,k,Nx,Ny,Nz
+!          write(*,*) "xp1,yp1,zp1,rhop1,dx="
+!     &               ,xp1,yp1,zp1,rhop1,dx
+!        write(*,*) "chr(i,j,k),chrbdy(i,j,k)=",chr(i,j,k),chrbdy(i,j,k)
+!          write(*,*) "gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)="
+!     &               ,gb_tt_np1(i,j,k),gb_tt_n(i,j,k),gb_tt_nm1(i,j,k)
+
            quasiset_tt_p1=quasiset_tt_ll(i,j,k)
            quasiset_tchi_p1=quasiset_tchi_ll(i,j,k)
            quasiset_txi_p1=quasiset_txi_ll(i,j,k)
@@ -1556,12 +1703,22 @@ c-------------------------------------------------------------------------------
 
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
+
+                  xex=xextrap(lind)
+                  yex=yextrap(lind)
+                  zex=zextrap(lind)
+                  rhoex=sqrt(xex**2+yex**2+zex**2)
+                  chiex=(1/PI)*acos(xex/rhoex)
+                  if (zex.lt.0) then
+                    xiex=(1/(2*PI))*(atan2(zex,yex)+2*PI)
+                  else
+                    xiex=(1/(2*PI))*atan2(zex,yex)
+                  end if
+
+
               if (maxxyzp1.eq.abs(xp1)) then
                 if (xp1.gt.0) then
  
-!                  xextrap(lind)=sqrt(1-yp1**2-zp1**2)
-!                  yextrap(lind)=yp1
-!                  zextrap(lind)=zp1
                   xp2=x(i-1)
                   quasiset_tt_p2=quasiset_tt_ll(i-1,j,k)
                   quasiset_tchi_p2=quasiset_tchi_ll(i-1,j,k)
@@ -1569,11 +1726,11 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i-1,j,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i-1,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i-1,j,k)
                   quasiset_massdensity_p2=
      &                           quasiset_massdensityll(i-1,j,k)
-                  quasiset_trace_p2=quasiset_tracell(i-1,j,k)
 
-                  xex=xextrap(lind)
+
                   quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
                   quasiset_tchi(lind)=extrapalongx(quasiset_tchi_p1
@@ -1586,18 +1743,15 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,xp1,xp2,xex)
                   quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,xp1,xp2,xex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongx(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
           quasiset_trace(lind)=
      &                         extrapalongx(quasiset_trace_p1
      &                         ,quasiset_trace_p2,xp1,xp2,xex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongx(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
  
  
               else
-!                  xextrap(lind)=-sqrt(1-yp1**2-zp1**2)
-!                  yextrap(lind)=yp1
-!                  zextrap(lind)=zp1
                   xp2=x(i+1)
                   quasiset_tt_p2=quasiset_tt_ll(i+1,j,k)
                   quasiset_tchi_p2=quasiset_tchi_ll(i+1,j,k)
@@ -1605,11 +1759,11 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i+1,j,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i+1,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i+1,j,k)
                   quasiset_massdensity_p2=
      &                                 quasiset_massdensityll(i+1,j,k)
-                  quasiset_trace_p2=quasiset_tracell(i+1,j,k)
 
-                  xex=xextrap(lind)
+
                   quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
      &                         ,quasiset_tt_p2,xp1,xp2,xex)
                   quasiset_tchi(lind)=extrapalongx(quasiset_tchi_p1
@@ -1622,20 +1776,17 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,xp1,xp2,xex)
                   quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,xp1,xp2,xex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongx(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
           quasiset_trace(lind)=
      &                         extrapalongx(quasiset_trace_p1
      &                         ,quasiset_trace_p2,xp1,xp2,xex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongx(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
  
  
                end if
              else if (maxxyzp1.eq.abs(yp1)) then
               if (yp1.gt.0) then
-!                  yextrap(lind)=sqrt(1-xp1**2-zp1**2)
-!                  xextrap(lind)=xp1
-!                  zextrap(lind)=zp1
                   yp2=y(j-1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j-1,k)
                   quasiset_tchi_p2=quasiset_tchi_ll(i,j-1,k)
@@ -1643,9 +1794,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j-1,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j-1,k)
                   quasiset_trace_p2=quasiset_tracell(i,j-1,k)
-                  yex=yextrap(lind)
+                 quasiset_massdensity_p2=quasiset_massdensityll(i,j-1,k)
+
+
                  quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
      &                         ,quasiset_tt_p2,yp1,yp2,yex)
                   quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
@@ -1658,18 +1810,15 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,yp1,yp2,yex)
                   quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,yp1,yp2,yex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongy(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
           quasiset_trace(lind)=
      &                         extrapalongy(quasiset_trace_p1
      &                         ,quasiset_trace_p2,yp1,yp2,yex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongy(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
  
  
               else
-!                  yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
-!                  xextrap(lind)=xp1
-!                  zextrap(lind)=zp1
                   yp2=y(j+1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j+1,k)
                   quasiset_tchi_p2=quasiset_tchi_ll(i,j+1,k)
@@ -1677,10 +1826,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
                   quasiset_trace_p2=quasiset_tracell(i,j+1,k)
+                 quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
 
-                  yex=yextrap(lind)
+
                  quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
      &                         ,quasiset_tt_p2,yp1,yp2,yex)
                   quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
@@ -1693,20 +1842,17 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,yp1,yp2,yex)
                   quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,yp1,yp2,yex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongy(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
           quasiset_trace(lind)=
      &                         extrapalongy(quasiset_trace_p1
      &                         ,quasiset_trace_p2,yp1,yp2,yex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongy(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
  
  
               end if             
              else
                  if (zp1.gt.0) then
-!                  zextrap(lind)=sqrt(1-yp1**2-xp1**2)
-!                  yextrap(lind)=yp1
-!                  xextrap(lind)=xp1
                   zp2=z(k-1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j,k-1)
                   quasiset_tchi_p2=quasiset_tchi_ll(i,j,k-1)
@@ -1714,10 +1860,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j,k-1)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
-                quasiset_massdensity_p2=quasiset_massdensityll(i,j,k-1)
                   quasiset_trace_p2=quasiset_tracell(i,j,k-1)
+                quasiset_massdensity_p2=quasiset_massdensityll(i,j,k-1)
 
-                  zex=zextrap(lind)
+
                  quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
                   quasiset_tchi(lind)=extrapalongz(quasiset_tchi_p1
@@ -1730,17 +1876,14 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,zp1,zp2,zex)
                   quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,zp1,zp2,zex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongz(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
           quasiset_trace(lind)=
      &                         extrapalongz(quasiset_trace_p1
      &                         ,quasiset_trace_p2,zp1,zp2,zex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongz(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
  
               else
-!                  zextrap(lind)=-sqrt(1-yp1**2-xp1**2)
-!                  yextrap(lind)=yp1
-!                  xextrap(lind)=xp1
                   zp2=z(k+1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j,k+1)
                   quasiset_tchi_p2=quasiset_tchi_ll(i,j,k+1)
@@ -1748,10 +1891,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j,k+1)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j,k+1)
                   quasiset_trace_p2=quasiset_tracell(i,j,k+1)
+                 quasiset_massdensity_p2=quasiset_massdensityll(i,j,k+1)
 
-                  zex=zextrap(lind)
+
                   quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
      &                         ,quasiset_tt_p2,zp1,zp2,zex)
                   quasiset_tchi(lind)=extrapalongz(quasiset_tchi_p1
@@ -1764,15 +1907,18 @@ c-------------------------------------------------------------------------------
      &                         ,quasiset_chixi_p2,zp1,zp2,zex)
                   quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
      &                         ,quasiset_xixi_p2,zp1,zp2,zex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongz(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
           quasiset_trace(lind)=
      &                         extrapalongz(quasiset_trace_p1
      &                         ,quasiset_trace_p2,zp1,zp2,zex)
+          quasiset_massdensity(lind)=
+     &                         extrapalongz(quasiset_massdensity_p1
+     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
  
                end if
               end if
+
+!               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
+
             end if
           end do
          end do

@@ -362,13 +362,13 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
          // compute theta values 
          resid=fill_theta(AH_theta[c_AH],eps0,&area,c_equat,c_polar,&is_ex);
       
-         if (my_rank==0 && 0)
-         {
-            printf("iter=%i:\n\n",iter);
-            for (i=0; i<AH_Nchi[c_AH]; i++)
-               for (j=0; j<AH_Nphi[c_AH]; j++) 
-                  printf("  i,j=%i,%i: theta=%lf, R=%lf\n",i,j,(AH_theta[c_AH])[i+j*AH_Nchi[c_AH]],(AH_R[c_AH])[i+j*AH_Nchi[c_AH]]);
-         }
+//         if (my_rank==0)
+//         {
+//            printf("iter=%i:\n\n",iter);
+//            for (i=0; i<AH_Nchi[c_AH]; i++)
+//               for (j=0; j<AH_Nphi[c_AH]; j++) 
+//                  printf("  i,j=%i,%i: theta=%lf, R=%lf\n",i,j,(AH_theta[c_AH])[i+j*AH_Nchi[c_AH]],(AH_R[c_AH])[i+j*AH_Nchi[c_AH]]);
+//         }
 
          if (is_ex)
          {

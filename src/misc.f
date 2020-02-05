@@ -28,6 +28,7 @@ c-----------------------------------------------------------------------
 
         dx=x(2)-x(1)
 
+
 !!!!!!!!!!!!MYVERSION
         if (i.eq.1) then
                if ((.not.extrap)
@@ -140,6 +141,14 @@ c-----------------------------------------------------------------------
      &                  -4*f(i+2,j,k)+f(i+3,j,k))/2/dx
                else if ((chr(i+1,j,k).ne.ex)
      &                 .and.(chr(i+2,j,k).ne.ex)) then
+!                 if (z(k).eq.0.0d0) then
+!                   write(*,*) "forward stencil at i,j,k,x(i),y(j),z(k)="
+!     &                                            ,i,j,k,x(i),y(j),z(k)
+!                   write(*,*) "chr(i,j,k),chr(i-1,j,k)="
+!     &                        ,chr(i,j,k),chr(i-1,j,k)
+!                   write(*,*) "f(i,j,k),f(i+1,j,k),f(i+2,j,k)="
+!     &                        ,f(i,j,k),f(i+1,j,k),f(i+2,j,k)
+!                 end if
                    f_x=(-3*f(i,j,k)+4*f(i+1,j,k)-f(i+2,j,k))/2/dx
                else if (chr(i+1,j,k).ne.ex) then
                    f_x=(-f(i,j,k)+f(i+1,j,k))/dx
@@ -271,6 +280,7 @@ c-----------------------------------------------------------------------
                  return
                end if
         end if
+
 !!!!!!!!!!!!!!!!!
 
 
