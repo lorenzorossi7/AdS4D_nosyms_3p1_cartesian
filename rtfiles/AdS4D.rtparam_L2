@@ -5,7 +5,7 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.8
+phi1_amp_1 := 0.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
@@ -24,7 +24,7 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 10000
+AH_max_iter := 0000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -35,7 +35,7 @@ AH_Nphi := 17
 AH_freq := 1
 AH_freq_aft := 20
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.55
+ex_rbuf := 1.0
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
@@ -146,7 +146,7 @@ c1_i := 20.0
 c2_i := 0.5
 c3_i := 1.0
 
-rhoa := 0.65
+rhoa := 0.5
 rhob := 0.95
 
 #------ dissipation --------------------------------------------------------
@@ -177,7 +177,7 @@ cp_restore_fname := "cp_L2_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 900
+steps := 1
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10

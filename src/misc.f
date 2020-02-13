@@ -1322,7 +1322,7 @@ c----------------------------------------------------------------------
                end if
          end if
 
-        else if ((i.ge.4).and.(i.le.(Nx-3))) then
+        else if ((i.ge.4).and.(i.le.(Nx-4))) then  !we need to impose i.le.Nx-4 so that chr(i+4,j,k) exists in the condition with .not.extrap. Therefore we will also need to add the case i.eq.Nx-3 below
          if ((chr(i-1,j,k).ne.ex).and.(chr(i+1,j,k).ne.ex)) then
                    f_xx=(f(i+1,j,k)-2*f(i,j,k)+f(i-1,j,k))/dx/dx
                    call df1_int_y(f,f_y_im1,x,y,z,
@@ -1423,6 +1423,104 @@ c----------------------------------------------------------------------
                    f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
                end if
          end if
+
+
+
+!NEW BIT: added to avoid going out of array boundaries when i=Nx-3 AND we extrap is false
+        else if (i.eq.(Nx-3)) then
+         if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
+                   f_xx=(f(i-1,j,k)-2*f(i,j,k)+f(i+1,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xy=(f_y_ip1-f_y_im1)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(f_z_ip1-f_z_im1)/2/dx
+         else if (chr(i+1,j,k).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i-1,j,k).ne.ex)
+     &            .and.(chr(i-2,j,k).ne.ex)
+     &            .and.(chr(i-3,j,k).ne.ex)
+     &            .and.(chr(i-4,j,k).ne.ex)) then
+                   f_xx=(3*f(i,j,k)-9*f(i-1,j,k)+
+     &                  10*f(i-2,j,k)-5*f(i-3,j,k)+
+     &                  f(i-4,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)
+     &                 .and.(chr(i-3,j,k).ne.ex)) then
+                   f_xx=(2*f(i,j,k)-5*f(i-1,j,k)+
+     &                   4*f(i-2,j,k)-f(i-3,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
+               else if ((chr(i-1,j,k).ne.ex)
+     &                 .and.(chr(i-2,j,k).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order i=1'
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
+                   f_xx=(f(i-2,j,k)-2*f(i-1,j,k)+f(i,j,k))/dx/dx
+                   call df1_int_y(f,f_y_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
+                   call df1_int_z(f,f_z_im1,x,y,z,
+     &                            i-1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_im2,x,y,z,
+     &                            i-2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(3*f_z-4*f_z_im1+f_z_im2)/2/dx
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (E)'
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i+1,j,k) is not excised and (i-1,j,k) is excised
+               if (chr(i+2,j,k).ne.ex) then
+                   f_xx=(f(i,j,k)-2*f(i+1,j,k)+f(i+2,j,k))/dx/dx
+                   call df1_int_y(f,f_y_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_y(f,f_y_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
+                   call df1_int_z(f,f_z_ip1,x,y,z,
+     &                            i+1,j,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_ip2,x,y,z,
+     &                            i+2,j,k,chr,ex,Nx,Ny,Nz)
+                   f_xz=(-3*f_z+4*f_z_ip1-f_z_ip2)/2/dx
+               end if
+         end if
+
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
 
         else if (i.eq.(Nx-2)) then
          if ((chr(i+1,j,k).ne.ex).and.(chr(i-1,j,k).ne.ex)) then
@@ -1810,7 +1908,7 @@ c----------------------------------------------------------------------
                end if
          end if
 
-        else if ((j.ge.4).and.(j.le.(Ny-3))) then
+        else if ((j.ge.4).and.(j.le.(Ny-4))) then !we need to impose j.le.Ny-4 so that chr(i,j+4,k) exists in the condition with .not.extrap. Therefore we will also need to add the case j.eq.Ny-3 below
          if ((chr(i,j-1,k).ne.ex).and.(chr(i,j+1,k).ne.ex)) then
                    f_yy=(f(i,j+1,k)-2*f(i,j,k)+f(i,j-1,k))/dy/dy
                    call df1_int_z(f,f_z_jm1,x,y,z,
@@ -1881,6 +1979,75 @@ c----------------------------------------------------------------------
                    f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
                end if
          end if
+
+!NEW BIT: added to avoid going out of array boundaries when j=Ny-3 AND we extrap is false
+
+        else if (j.eq.(Ny-3)) then
+         if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
+                   f_yy=(f(i,j-1,k)-2*f(i,j,k)+f(i,j+1,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(f_z_jp1-f_z_jm1)/2/dy
+         else if (chr(i,j+1,k).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j-1,k).ne.ex)
+     &            .and.(chr(i,j-2,k).ne.ex)
+     &            .and.(chr(i,j-3,k).ne.ex)
+     &            .and.(chr(i,j-4,k).ne.ex)) then
+                   f_yy=(3*f(i,j,k)-9*f(i,j-1,k)+
+     &                  10*f(i,j-2,k)-5*f(i,j-3,k)+
+     &                  f(i,j-4,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)
+     &                 .and.(chr(i,j-3,k).ne.ex)) then
+                   f_yy=(2*f(i,j,k)-5*f(i,j-1,k)+
+     &                   4*f(i,j-2,k)-f(i,j-3,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
+               else if ((chr(i,j-1,k).ne.ex)
+     &                 .and.(chr(i,j-2,k).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order j=1'
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,Nx,Ny,Nz,dy
+                   f_yy=(f(i,j-2,k)-2*f(i,j-1,k)+f(i,j,k))/dy/dy
+                   call df1_int_z(f,f_z_jm1,x,y,z,
+     &                            i,j-1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jm2,x,y,z,
+     &                            i,j-2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(3*f_z-4*f_z_jm1+f_z_jm2)/2/dy
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (L)'
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
+     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i,j+1,k) is not excised and (i,j-1,k) is excised
+               if (chr(i,j+2,k).ne.ex) then
+                   f_yy=(f(i,j,k)-2*f(i,j+1,k)+f(i,j+2,k))/dy/dy
+                   call df1_int_z(f,f_z_jp1,x,y,z,
+     &                            i,j+1,k,chr,ex,Nx,Ny,Nz)
+                   call df1_int_z(f,f_z_jp2,x,y,z,
+     &                            i,j+2,k,chr,ex,Nx,Ny,Nz)
+                   f_yz=(-3*f_z+4*f_z_jp1-f_z_jp2)/2/dy
+               end if
+         end if
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 
         else if (j.eq.(Ny-2)) then
          if ((chr(i,j+1,k).ne.ex).and.(chr(i,j-1,k).ne.ex)) then
@@ -2150,7 +2317,7 @@ c----------------------------------------------------------------------
                end if
          end if
 
-        else if ((k.ge.4).and.(k.le.(Nz-3))) then
+        else if ((k.ge.4).and.(k.le.(Nz-4))) then !we need to impose k.le.Nz-4 so that chr(i,j,k+4) exists in the condition with .not.extrap. Therefore we will also need to add the case k.eq.Nz-3 below
          if ((chr(i,j,k-1).ne.ex).and.(chr(i,j,k+1).ne.ex)) then
                    f_zz=(f(i,j,k+1)-2*f(i,j,k)+f(i,j,k-1))/dz/dz
          else if (chr(i,j,k-1).eq.ex) then
@@ -2189,6 +2356,47 @@ c----------------------------------------------------------------------
      &                   +4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
                else if (chr(i,j,k-2).ne.ex) then
                    f_zz=(f(i,j,k)-2*f(i,j,k-1)+f(i,j,k-2))/dz/dz
+               end if
+         end if
+
+
+!NEW BIT: added to avoid going out of array boundaries when k=Nz-3 AND we extrap is false
+
+        else if (k.eq.(Nz-3)) then
+         if ((chr(i,j,k+1).ne.ex).and.(chr(i,j,k-1).ne.ex)) then
+                   f_zz=(f(i,j,k-1)-2*f(i,j,k)+f(i,j,k+1))/dz/dz
+         else if (chr(i,j,k+1).eq.ex) then
+               if ((.not.extrap)
+     &            .and.(chr(i,j,k-1).ne.ex)
+     &            .and.(chr(i,j,k-2).ne.ex)
+     &            .and.(chr(i,j,k-3).ne.ex)
+     &            .and.(chr(i,j,k-4).ne.ex)) then
+                   f_zz=(3*f(i,j,k)-9*f(i,j,k-1)+
+     &                  10*f(i,j,k-2)-5*f(i,j,k-3)+
+     &                  f(i,j,k-4))/dz/dz
+               else if ((chr(i,j,k-1).ne.ex)
+     &                 .and.(chr(i,j,k-2).ne.ex)
+     &                 .and.(chr(i,j,k-3).ne.ex)) then
+                   f_zz=(2*f(i,j,k)-5*f(i,j,k-1)+
+     &                   4*f(i,j,k-2)-f(i,j,k-3))/dz/dz
+               else if ((chr(i,j,k-1).ne.ex)
+     &                 .and.(chr(i,j,k-2).ne.ex)) then
+              !    write(*,*) 'df2_int: warning ... first order k=1'
+              !    write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,Nx,Ny,Nz,dz
+                   f_zz=(f(i,j,k-2)-2*f(i,j,k-1)+f(i,j,k))/dz/dz
+               else
+                if (first) then
+                     first=.false.
+                     write(*,*) 'df2_int: error in chr stencil (S)'
+                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
+     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) '    (first error only)'
+                end if
+                   return
+               end if
+         else  !this is the case where (i,j,k+1) is not excised and (i,j,k-1) is excised
+               if (chr(i,j,k+2).ne.ex) then
+                   f_zz=(f(i,j,k)-2*f(i,j,k+1)+f(i,j,k+2))/dz/dz
                end if
          end if
 
