@@ -1268,12 +1268,34 @@ void AdS4D_var_post_init(char *pfile)
                             "Excision buffer (i.e. size of the evolved region within the AH) ex_rbuf[0]=%lf\n\n"
                             ,ief_bh_r0/AdS_L,rh/AdS_L,mh,rh,rhoh,ex_rbuf[0]);
      }
-     
+  
+       ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh;   
      if (ah_finder_is_off) 
      {
-       ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh;
+//       ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh;
        if (my_rank==0)   printf("\n ... AH finder is off so we excise, AT ALL TIME STEPS, points with compactified radius smaller than rhoh*(1-ex_rbuf[0])=%lf ... \n",rhoh*(1-ex_rbuf[0]));
      }
+     else //if we start from bh initial data and AH finder is not off
+     {
+      //we change AH_r0[l] to avoid looking for AH in the excised region
+      for (l=0; l<MAX_BHS; l++)
+      { 
+       if (rhoh*(1-ex_rbuf[0])>AH_r0[l]) AH_r0[l]=rhoh;  
+       if (rhoh*(1-ex_rbuf[0])>AH_r1[l]) AH_r1[l]=rhoh;
+      }
+     }
+//     else
+//     {
+//       for (l=0; l<MAX_BHS; l++) 
+//       {
+//        if (AH_max_iter[l]>0) 
+//        {
+//          for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[0][i]=rhoh; AH_R[1][i]=0; AH_R[2][i]=0; AH_R[3][i]=0;}
+//          for (i=0; i<3; i++) {AH_xc[0][i]=0; AH_xc[1][i]=0; AH_xc[2][i]=0; AH_xc[3][i]=0; }
+//        }
+//       }
+//     }
+
     }
     else
     {
@@ -1411,6 +1433,7 @@ void AdS4D_elliptic_vars_t0_init(void)
 void AdS4D_t0_cnst_data(void)
 {
    int i,j,k,ind;
+   real ct,rho;
 
    ldptr_mg();
 
@@ -1712,6 +1735,20 @@ void AdS4D_t0_cnst_data(void)
 //       }
 //      }
 //   }
+
+//      for (i=0; i<Nx; i++)
+//      {
+//         for (j=0; j<Ny; j++)
+//         {
+//          for (k=0; k<Nz; k++)
+//          {
+//            ind=i+Nx*(j+Ny*k);
+//            rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
+//            if ((chr[ind]==AMRD_ex)&&(rho<0.7))
+//            printf("PT EXCISED: i=%i,j=%i,k=%i,x=%lf,y=%lf,z=%lf,rho=%lf\n",i,j,k,x[i],y[j],z[k],rho);
+//          }
+//         }
+//       }
 
      init_hb_(gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,

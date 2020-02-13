@@ -194,6 +194,12 @@ c----------------------------------------------------------------------
             z0=z(k)
             rho0=sqrt(x0**2+y0**2+z0**2)
 
+!            if ((chr(i,j,k).eq.ex).and.(rho0.le.0.7)) then
+!                write(*,*) "EXCISION"
+!             write(*,*) "i,j,k,x0,y0,z0,dx=",i,j,k,x0,y0,z0,dx
+!             write(*,*) "rho0=",rho0
+!            end if
+
             if (chr(i,j,k).ne.ex) then
 !             write(*,*) "DEBUG from init_nm1"
 !             write(*,*) "i,j,k,x0,y0,z0,dx=",i,j,k,x0,y0,z0,dx
@@ -921,6 +927,7 @@ c----------------------------------------------------------------------
      &        .or.is_nan(h0_ll_tt(2,4))
      &        .or.is_nan(h0_ll_tt(3,3))
      &        .or.is_nan(h0_ll_tt(3,4)).or.is_nan(h0_ll_tt(4,4)) ) then
+!          write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
                 write(*,*) 'h0_ll_tt(1,1)=',h0_ll_tt(1,1)
                 write(*,*) 'h0_ll_tt(1,2)=',h0_ll_tt(1,2)
                 write(*,*) 'h0_ll_tt(1,3)=',h0_ll_tt(1,3)
