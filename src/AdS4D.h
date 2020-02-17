@@ -508,6 +508,22 @@ void quasiset_(    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, r
                    real *chrbdy, int *numbdypoints,
                    real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
 
-void df1_int_x_(real *gb_tt_n, real *dergb_tt_x_n, real *x, real *y, real *z, int *i, int *j, int *k, real *chr, real *ex,int *Nx, int *Ny, int *Nz);
-
+void calc_kretsch_(real *kretsch,real *relkretsch,
+                   real *relkretschcentregrid,
+                   real *gb_tt_np1,real *gb_tt_n,real *gb_tt_nm1,
+                   real *gb_tx_np1,real *gb_tx_n,real *gb_tx_nm1,
+                   real *gb_ty_np1,real *gb_ty_n,real *gb_ty_nm1,
+                   real *gb_tz_np1,real *gb_tz_n,real *gb_tz_nm1,
+                   real *gb_xx_np1,real *gb_xx_n,real *gb_xx_nm1,
+                   real *gb_xy_np1,real *gb_xy_n,real *gb_xy_nm1,
+                   real *gb_xz_np1,real *gb_xz_n,real *gb_xz_nm1,
+                   real *gb_yy_np1,real *gb_yy_n,real *gb_yy_nm1,
+                   real *gb_yz_np1,real *gb_yz_n,real *gb_yz_nm1,
+                   real *psi_np1,real *psi_n,real *psi_nm1,
+                   real *Hb_t_np1,real *Hb_t_n,real *Hb_t_nm1,
+                   real *Hb_x_np1,real *Hb_x_n,real *Hb_x_nm1,
+                   real *Hb_y_np1,real *Hb_y_n,real *Hb_y_nm1,
+                   real *Hb_z_np1,real *Hb_z_n,real *Hb_z_nm1,
+                   real *phi1_np1,real *phi1_n,real *phi1_nm1,
+                   real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
 #endif

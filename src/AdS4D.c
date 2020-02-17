@@ -63,7 +63,7 @@ int ex_max_repop,ex_repop_buf,ex_repop_io;
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
-int output_ires,output_bdyquantities,output_AdS_mass,output_relkretschcentregrid;
+int output_ires,output_bdyquantities,output_AdS_mass,output_relkretschcentregrid,output_kretsch,output_relkretsch;
 int reduced_ascii,reduction_factor;
 int alltimes_ascii,timestep_ascii;
 
@@ -157,6 +157,8 @@ real *xextrap,*yextrap,*zextrap;
 real *kretsch;
 real *relkretsch;
 real *relkretschcentregrid, *lrelkretschcentregrid0, *maxrelkretschcentregrid0,*minrelkretschcentregrid0,*relkretschcentregrid0;
+real *relkretsch, *lrelkretsch0, *maxrelkretsch0,*minrelkretsch0,*relkretsch0;
+real *kretsch, *lkretsch0, *maxkretsch0,*minkretsch0,*kretsch0;
 
 real *tfunction,*test1,*test2,*test3,*test4;
 real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*irespsi;
@@ -234,6 +236,16 @@ int xextrap_gfn,yextrap_gfn,zextrap_gfn;
 int kretsch_gfn;
 int relkretsch_gfn;
 int relkretschcentregrid_gfn;
+
+//for saving kretschmann related quantities as .sdf files
+char name[256];
+
+int kretsch_rank;
+int kretsch_shape[3];
+char kretsch_cnames[256];
+double *kretsch_coords;
+
+int baseNx,baseNy,baseNz;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
 int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
@@ -997,7 +1009,7 @@ void AdS4D_var_pre_init(char *pfile)
 
 void AdS4D_var_post_init(char *pfile)
 {
-   int i,j,l;
+   int i,j,k,ind,l;
    char buf[64];
    real rmin,deltar;
 
@@ -1008,6 +1020,7 @@ void AdS4D_var_post_init(char *pfile)
    {
       printf("===================================================================\n");
       printf("Reading AdS4D parameters:\n\n");
+      fflush(stdout);
    }
 
    phi1_amp_1=phi1_B_1=phi1_C_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_x0_1[2]=phi1_ecc_1[0]=phi1_ecc_1[1]=phi1_ecc_1[2]=0;
@@ -1084,6 +1097,8 @@ void AdS4D_var_post_init(char *pfile)
 
    ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
    output_relkretschcentregrid=0; AMRD_int_param(pfile,"output_relkretschcentregrid",&output_relkretschcentregrid,1);
+//   output_relkretsch=0; AMRD_int_param(pfile,"output_relkretsch",&output_relkretsch,1);
+   output_kretsch=0; AMRD_int_param(pfile,"output_kretsch",&output_kretsch,1);
 
   //allocate memory for relative Kretschmann scalar at the centre of the grid
   if (output_relkretschcentregrid)
@@ -1092,6 +1107,41 @@ void AdS4D_var_post_init(char *pfile)
       maxrelkretschcentregrid0= malloc(sizeof(real));
       minrelkretschcentregrid0= malloc(sizeof(real));
       relkretschcentregrid0= malloc(sizeof(real));
+  }
+  if (output_kretsch)
+  {  
+      lrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      maxrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      minrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      relkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+
+
+      lkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      maxkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      minkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+      kretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+
+           // save kretsch as .sdf
+//           char name[256];
+//
+//           int kretsch_rank;
+//           int kretsch_shape[3];
+//           char kretsch_cnames[256];
+//           double *kretsch_coords;
+
+           baseNx=AMRD_base_shape[0];
+           baseNy=AMRD_base_shape[1];
+           baseNz=AMRD_base_shape[2];
+
+           kretsch_rank=3;
+           kretsch_shape[0]=baseNx;
+           kretsch_shape[1]=baseNy;
+           kretsch_shape[2]=baseNz;
+           sprintf(kretsch_cnames,"x|y|z");
+           kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
   }
 
    // set fraction, 1-ex_rbuf, of AH radius to be excised
@@ -1284,17 +1334,6 @@ void AdS4D_var_post_init(char *pfile)
        if (rhoh*(1-ex_rbuf[0])>AH_r1[l]) AH_r1[l]=rhoh;
       }
      }
-//     else
-//     {
-//       for (l=0; l<MAX_BHS; l++) 
-//       {
-//        if (AH_max_iter[l]>0) 
-//        {
-//          for (i=0; i<AH_Nchi[l]*AH_Nphi[l]; i++) {AH_R[0][i]=rhoh; AH_R[1][i]=0; AH_R[2][i]=0; AH_R[3][i]=0;}
-//          for (i=0; i<3; i++) {AH_xc[0][i]=0; AH_xc[1][i]=0; AH_xc[2][i]=0; AH_xc[3][i]=0; }
-//        }
-//       }
-//     }
 
     }
     else
@@ -1313,6 +1352,7 @@ void AdS4D_var_post_init(char *pfile)
    if (AMRD_do_ex==0) AMRD_stop("require excision to be on","");
 
    PAMR_excision_on("chr",&AdS4D_fill_ex_mask,AMRD_ex,1);
+
 
    if (my_rank==0) printf("===================================================================\n");
    return;
@@ -1843,6 +1883,7 @@ void AdS4D_pre_io_calc(void)
    ldptr();
 
    int i,j,k,ind;
+   int is,ie,js,je,ks,ke;
    int i0,j0,k0;
    int j_shift;
    int n;
@@ -1861,19 +1902,30 @@ void AdS4D_pre_io_calc(void)
 
    int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
    int lsteps=AMRD_lsteps[Lc-1];
+//   int baseNx=AMRD_base_shape[0];
+//   int baseNy=AMRD_base_shape[1];
+//   int baseNz=AMRD_base_shape[2];
 
-//   printf("AdS4D_pre_io_calc is called");
+//   printf("AdS4D_pre_io_calc is called,lsteps=%i\n",lsteps);
+//           fflush(stdout);
 
 
-   // output independent residual
-   if (output_ires)
-   {
+         MPI_Comm_size(MPI_COMM_WORLD,&uniSize);
 
+//   // output independent residual
+//   if (output_ires)
+//   {
+//    if (gb_xx_nm1)
+//    {
       // compute independent residuals of the AdS4D system
-      if (ct!=0)
-      {
+    if (ct!=0)
+    {
       //(NOTE: for t>t0, have cycled time sequence np1,n,nm1 to time sequence n,nm1,np1,
       // so here, time level n is the most advanced time level)
+
+     // output independent residual
+     if ((output_ires)||(output_kretsch)||(output_relkretschcentregrid))
+     { 
 
       ires_(efe_all_ires,
          efe_tt_ires,efe_tx_ires,efe_ty_ires,
@@ -1903,12 +1955,14 @@ void AdS4D_pre_io_calc(void)
          phi1_n,phi1_nm1,phi1_np1,
          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-
-      }
-      else
-      {
+     } 
+    }
+    else
+    {
       //(NOTE: for t=t0, have *not* cycled time sequence, so still np1,n,nm1,
       // so here, time level np1 is the most advanced time level)
+     if ((output_ires)||(output_kretsch)||(output_relkretschcentregrid))
+     { 
 
       ires_(efe_all_ires,
          efe_tt_ires,efe_tx_ires,efe_ty_ires,
@@ -1938,12 +1992,92 @@ void AdS4D_pre_io_calc(void)
          phi1_np1,phi1_n,phi1_nm1,
          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
-        if ((lsteps==0)&& output_relkretschcentregrid) 
-        {
-         *lrelkretschcentregrid0= *relkretschcentregrid;
+      }
 
+//      for (i=0; i<Nx; i++)
+//      {
+//         for (j=0; j<Ny; j++)
+//         {
+//          for (k=0; k<Nz; k++)
+//          {
+//            ind=i+Nx*(j+Ny*k);
+//            rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
+//            if (chr[ind]!=AMRD_ex)    printf("x=%lf,y=%lf,z=%lf,rho=%lf,gb_xx_np1=%lf,kretsch=%lf\n",x[i],y[j],z[k],rho,gb_xx_np1[ind],kretsch[ind]);
+//          }
+//         }
+//      }
+//
+//      calc_kretsch_(
+//         kretsch,
+//         relkretsch,
+//         relkretschcentregrid,
+//         gb_tt_np1,gb_tt_n,gb_tt_nm1,
+//         gb_tx_np1,gb_tx_n,gb_tx_nm1,
+//         gb_ty_np1,gb_ty_n,gb_ty_nm1,
+//         gb_tz_np1,gb_tz_n,gb_tz_nm1,
+//         gb_xx_np1,gb_xx_n,gb_xx_nm1,
+//         gb_xy_np1,gb_xy_n,gb_xy_nm1,
+//         gb_xz_np1,gb_xz_n,gb_xz_nm1,
+//         gb_yy_np1,gb_yy_n,gb_yy_nm1,
+//         gb_yz_np1,gb_yz_n,gb_yz_nm1,
+//         psi_np1,psi_n,psi_nm1,
+//         Hb_t_np1,Hb_t_n,Hb_t_nm1,
+//         Hb_x_np1,Hb_x_n,Hb_x_nm1,
+//         Hb_y_np1,Hb_y_n,Hb_y_nm1,
+//         Hb_z_np1,Hb_z_n,Hb_z_nm1,
+//         phi1_np1,phi1_n,phi1_nm1,
+//         x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//
+//      for (i=0; i<Nx; i++)
+//      {
+//         for (j=0; j<Ny; j++)
+//         {
+//          for (k=0; k<Nz; k++)
+//          {
+//            ind=i+Nx*(j+Ny*k);
+//            rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
+//            kretsch[ind]=gb_xx_n[ind];
+//            relkretsch[ind]=3;
+//          }
+//         }
+//      }
+
+         if (output_relkretschcentregrid)
+         {
+          *lrelkretschcentregrid0= *relkretschcentregrid;
+         }
+
+         if (output_kretsch)
+         {
+
+          is=(bbox[0]-base_bbox[0])/dx;    // for "left-most"  processors, includes i=0
+          ie=(bbox[1]-base_bbox[0])/dx+1;  // for "right-most" processors, includes i=Nx
+          js=(bbox[2]-base_bbox[2])/dy;    // for "left-most"  processors, includes j=0
+          je=(bbox[3]-base_bbox[2])/dy+1;  // for "right-most" processors, includes j=Ny
+          ks=(bbox[4]-base_bbox[4])/dz;    // for "left-most"  processors, includes k=0
+          ke=(bbox[5]-base_bbox[4])/dz+1;  // for "right-most" processors, includes k=Ny
+
+           for (i=is; i<ie; i++)
+           {
+            for (j=js; j<je; j++)
+            {
+             for (k=ks; k<ke; k++)
+             {
+              lrelkretsch0[i+baseNx*(j+baseNy*k)]=relkretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+             }
+            }
+           }
+         }
+
+
+        if (lsteps==0) 
+        {
+         if (output_relkretschcentregrid)
+         {
           MPI_Allreduce((lrelkretschcentregrid0),(maxrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
           MPI_Allreduce((lrelkretschcentregrid0),(minrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+
           if (uniSize>1)
           {
            *relkretschcentregrid0=*maxrelkretschcentregrid0+*minrelkretschcentregrid0;
@@ -1960,12 +2094,61 @@ void AdS4D_pre_io_calc(void)
                 fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
             fclose(fp);
            }
-        }
+          }
 
-      }
+       if (output_kretsch)
+       {
+
+             MPI_Allreduce((lrelkretsch0),(maxrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+             MPI_Allreduce((lrelkretsch0),(minrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+             MPI_Allreduce((lkretsch0),(maxkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+             MPI_Allreduce((lkretsch0),(minkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+   
+             for (i=0; i<baseNx*baseNy*baseNz; i++)
+             {
+              if (uniSize>1)
+              {
+               relkretsch0[i]=maxrelkretsch0[i]+minrelkretsch0[i];
+               kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
+              }
+              else
+              {
+               relkretsch0[i]=maxrelkretsch0[i];
+               kretsch0[i]=maxkretsch0[i];
+              }
+             }
+   
+           // save kretsch as .sdf
+//           char name[256];
+//   
+//           int kretsch_rank;
+//           int kretsch_shape[3];
+//           char kretsch_cnames[256];
+//           double *kretsch_coords;
+//   
+//           kretsch_rank=3;
+//           kretsch_shape[0]=baseNx;
+//           kretsch_shape[1]=baseNy;
+//           kretsch_shape[2]=baseNz;
+//           sprintf(kretsch_cnames,"x|y|z");
+//           kretsch_coords = (double *) malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+//           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+//           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+//           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
+//           printf("SAVING KRETSCH at lsteps=%i\n",lsteps);
+//           fflush(stdout);
+
+           sprintf(name,"%srelkretsch0_tstep%d",AMRD_save_tag,lsteps);
+           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+           sprintf(name,"%skretsch0_tstep%d",AMRD_save_tag,lsteps);
+           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+   
+          } //closes condition on output_kretsch
 
 
+         } //closes condition on lsteps
 
+    } //closes condition on ct==0
 
 
       // fill in independent residual evaluator test functions
@@ -2011,14 +2194,11 @@ void AdS4D_pre_io_calc(void)
          } 
       }
 
+//    }
 
-   }
+//   }
 
-     if (output_bdyquantities) 
-     { 
-//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-       nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
-     }
+
 
    return;
 }
@@ -2344,7 +2524,7 @@ int found_count_AH[MAX_BHS];
 int pre_tstep_global_first=1,valid;
 
 int mem_alloc_bdyquantities_first=1;
-int is,ie;
+int is_bdy,ie_bdy;
 
 void AdS4D_pre_tstep(int L)
 {
@@ -2371,6 +2551,8 @@ void AdS4D_pre_tstep(int L)
    Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1;
 
 //   printf("AdS4D_pre_tstep is called");
+//           fflush(stdout);
+
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 
@@ -2380,11 +2562,13 @@ void AdS4D_pre_tstep(int L)
       pre_tstep_global_first=0;
    }
 
+
      //allocate memory for quasi-local boundary stress-energy tensor before the first time step of every run. Reallocate if restarting from checkpoint
      if (L==Lc)
      {
       if (output_bdyquantities)
       {
+
        valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
        while(valid)
        {
@@ -2395,7 +2579,10 @@ void AdS4D_pre_tstep(int L)
 
          ldptr();
 
-         MPI_Comm_size(MPI_COMM_WORLD,&uniSize);
+//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
+       nexttobdypoints_(chrbdy,&numbdypoints,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+
+         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
 //         chrbdy = malloc(size*sizeof(real)); //recall: size=Nx*Ny*Nz, where Nx/y/z are the number of grid points along x/y/z of the current process
          vecbdypoints = malloc(uniSize*sizeof(int));
          dsplsbdypoints = malloc(uniSize*sizeof(int));
@@ -2416,6 +2603,8 @@ void AdS4D_pre_tstep(int L)
 
           //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
           MPI_Allreduce(&numbdypoints,&basenumbdypoints,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+
+//          if (my_rank==0) {printf("basenumbdypoints=%i",basenumbdypoints); fflush(stdout);}
 
 
           lquasiset_tt0   = malloc((basenumbdypoints)*sizeof(real));
@@ -2510,18 +2699,18 @@ void AdS4D_pre_tstep(int L)
 
 
           //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
-          is=0;
+          is_bdy=0;
           if (my_rank==0)
           {
-           ie=vecbdypoints[0];
+           ie_bdy=vecbdypoints[0];
           }
           else
           {
            for (j=0; j<my_rank; j++)
            {
-            is=is+vecbdypoints[j];
+            is_bdy=is_bdy+vecbdypoints[j];
            }
-            ie=is+vecbdypoints[my_rank];
+            ie_bdy=is_bdy+vecbdypoints[my_rank];
           }
    
           //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
@@ -2543,10 +2732,14 @@ void AdS4D_pre_tstep(int L)
 
           xyzextrap_(xextrap,yextrap,zextrap,chrbdy,&numbdypoints,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);
 
+//          printf("after xyzextrap"); fflush(stdout);
+
           //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
           MPI_Allgatherv(xextrap,numbdypoints,MPI_DOUBLE,xextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
           MPI_Allgatherv(yextrap,numbdypoints,MPI_DOUBLE,yextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
           MPI_Allgatherv(zextrap,numbdypoints,MPI_DOUBLE,zextrap0,vecbdypoints,dsplsbdypoints,MPI_DOUBLE,MPI_COMM_WORLD);
+
+//          printf("after MPI_Allgatherv"); fflush(stdout);
 
 //the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
          if (output_AdS_mass)
@@ -2597,33 +2790,36 @@ void AdS4D_pre_tstep(int L)
      {
        ldptr();
 
-       ires_(efe_all_ires,
-          efe_tt_ires,efe_tx_ires,efe_ty_ires,
-          efe_tz_ires,
-          efe_xx_ires,efe_xy_ires,
-          efe_xz_ires,
-          efe_yy_ires,
-          efe_yz_ires,
-          efe_psi_ires,
-          kretsch,
-          relkretsch,
-          relkretschcentregrid,
-          gb_tt_np1,gb_tt_n,gb_tt_nm1,
-          gb_tx_np1,gb_tx_n,gb_tx_nm1,
-          gb_ty_np1,gb_ty_n,gb_ty_nm1,
-          gb_tz_np1,gb_tz_n,gb_tz_nm1,
-          gb_xx_np1,gb_xx_n,gb_xx_nm1,
-          gb_xy_np1,gb_xy_n,gb_xy_nm1,
-          gb_xz_np1,gb_xz_n,gb_xz_nm1,
-          gb_yy_np1,gb_yy_n,gb_yy_nm1,
-          gb_yz_np1,gb_yz_n,gb_yz_nm1,
-          psi_np1,psi_n,psi_nm1,
-          Hb_t_np1,Hb_t_n,Hb_t_nm1,
-          Hb_x_np1,Hb_x_n,Hb_x_nm1,
-          Hb_y_np1,Hb_y_n,Hb_y_nm1,
-          Hb_z_np1,Hb_z_n,Hb_z_nm1,
-          phi1_np1,phi1_n,phi1_nm1,    
-          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//     if ((output_ires)||(output_kretsch)||(output_relkretschcentregrid))
+//     {
+//       ires_(efe_all_ires,
+//          efe_tt_ires,efe_tx_ires,efe_ty_ires,
+//          efe_tz_ires,
+//          efe_xx_ires,efe_xy_ires,
+//          efe_xz_ires,
+//          efe_yy_ires,
+//          efe_yz_ires,
+//          efe_psi_ires,
+//          kretsch,
+//          relkretsch,
+//          relkretschcentregrid,
+//          gb_tt_np1,gb_tt_n,gb_tt_nm1,
+//          gb_tx_np1,gb_tx_n,gb_tx_nm1,
+//          gb_ty_np1,gb_ty_n,gb_ty_nm1,
+//          gb_tz_np1,gb_tz_n,gb_tz_nm1,
+//          gb_xx_np1,gb_xx_n,gb_xx_nm1,
+//          gb_xy_np1,gb_xy_n,gb_xy_nm1,
+//          gb_xz_np1,gb_xz_n,gb_xz_nm1,
+//          gb_yy_np1,gb_yy_n,gb_yy_nm1,
+//          gb_yz_np1,gb_yz_n,gb_yz_nm1,
+//          psi_np1,psi_n,psi_nm1,
+//          Hb_t_np1,Hb_t_n,Hb_t_nm1,
+//          Hb_x_np1,Hb_x_n,Hb_x_nm1,
+//          Hb_y_np1,Hb_y_n,Hb_y_nm1,
+//          Hb_z_np1,Hb_z_n,Hb_z_nm1,
+//          phi1_np1,phi1_n,phi1_nm1,    
+//          x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+//     }
 
 
      if (output_bdyquantities)
@@ -2656,17 +2852,17 @@ void AdS4D_pre_tstep(int L)
                    x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
     //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
-        for (i=is; i<ie; i++)
+        for (i=is_bdy; i<ie_bdy; i++)
         {
-             lquasiset_tt0[i]=quasiset_tt[i-is];
-             lquasiset_tchi0[i]=quasiset_tchi[i-is];
-             lquasiset_txi0[i]=quasiset_txi[i-is];
-             lquasiset_chichi0[i]=quasiset_chichi[i-is];
-             lquasiset_chixi0[i]=quasiset_chixi[i-is];
-             lquasiset_xixi0[i]=quasiset_xixi[i-is];
-             lquasiset_massdensity0[i]=quasiset_massdensity[i-is];
-             lquasiset_trace0[i]=quasiset_trace[i-is];
-             llocoeffphi10[i]=locoeffphi1[i-is];
+             lquasiset_tt0[i]=quasiset_tt[i-is_bdy];
+             lquasiset_tchi0[i]=quasiset_tchi[i-is_bdy];
+             lquasiset_txi0[i]=quasiset_txi[i-is_bdy];
+             lquasiset_chichi0[i]=quasiset_chichi[i-is_bdy];
+             lquasiset_chixi0[i]=quasiset_chixi[i-is_bdy];
+             lquasiset_xixi0[i]=quasiset_xixi[i-is_bdy];
+             lquasiset_massdensity0[i]=quasiset_massdensity[i-is_bdy];
+             lquasiset_trace0[i]=quasiset_trace[i-is_bdy];
+             llocoeffphi10[i]=locoeffphi1[i-is_bdy];
 //             *lAdS_mass0=*AdS_mass;
          }
        }
@@ -2781,29 +2977,27 @@ void AdS4D_pre_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           fp = fopen ("ascii_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_t_quasisetll_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
                if ((j%reduction_factor)==0)
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -2841,14 +3035,13 @@ void AdS4D_pre_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           sprintf(filename, "ascii_t_quasisetll_trace_massdensity_indbdypoint_tstep%d.txt", lsteps);
+           sprintf(filename, "ascii_t_quasisetll_indbdypoint_tstep%d.txt", lsteps);
            fp = fopen (filename, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j);
               }
            fclose(fp);
@@ -2861,10 +3054,9 @@ void AdS4D_pre_tstep(int L)
               {
                if ((j%reduction_factor)==0)
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -2873,6 +3065,26 @@ void AdS4D_pre_tstep(int L)
           }
 
         } //closes if (timestep_ascii) condition
+
+           fp = fopen ("ascii_t_trace_indbdypoint.txt", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_trace0[j],
+                            j);
+              }
+           fclose(fp);
+
+           fp = fopen ("ascii_t_massdensity_indbdypoint.txt", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_massdensity0[j],
+                            j);
+              }
+           fclose(fp);
 
 
 //           fp = fopen ("version0_ascii_t_xext_yext_zext_bdyphi1_indbdypoint_basenumbdypoints", "a+");
@@ -3137,6 +3349,7 @@ void AdS4D_post_tstep(int L)
 
    real ct;
    int n,i,j,k,j_red,Lf,Lc;
+   int is,ie,js,je,ks,ke;
 
    ct = PAMR_get_time(L);
 
@@ -3149,11 +3362,20 @@ void AdS4D_post_tstep(int L)
    {
      int lsteps=AMRD_lsteps[Lc-1];
      int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
+//     int baseNx=AMRD_base_shape[0];
+//     int baseNy=AMRD_base_shape[1];
+//     int baseNz=AMRD_base_shape[2];
+
+//   printf("post_tstep is called: lsteps=%i\n",lsteps);
+//           fflush(stdout);
 
      valid=PAMR_init_s_iter(L,PAMR_AMRH,0);
      while(valid)
      {
        ldptr();
+
+     if ((output_ires)||(output_kretsch)||(output_relkretschcentregrid))
+     {
 
        ires_(efe_all_ires,
           efe_tt_ires,efe_tx_ires,efe_ty_ires,
@@ -3182,6 +3404,43 @@ void AdS4D_post_tstep(int L)
           Hb_z_n,Hb_z_nm1,Hb_z_np1,
           phi1_n,phi1_nm1,phi1_np1,     
           x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+      }
+
+//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
+//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
+
+         if (output_relkretschcentregrid)
+         {
+          *lrelkretschcentregrid0= *relkretschcentregrid;
+         }
+
+         if (output_kretsch)
+         {
+
+          is=(bbox[0]-base_bbox[0])/dx;    // for "left-most"  processors, includes i=0
+          ie=(bbox[1]-base_bbox[0])/dx+1;  // for "right-most" processors, includes i=Nx
+          js=(bbox[2]-base_bbox[2])/dy;    // for "left-most"  processors, includes j=0
+          je=(bbox[3]-base_bbox[2])/dy+1;  // for "right-most" processors, includes j=Ny
+          ks=(bbox[4]-base_bbox[4])/dz;    // for "left-most"  processors, includes k=0
+          ke=(bbox[5]-base_bbox[4])/dz+1;  // for "right-most" processors, includes k=Ny
+
+           for (i=is; i<ie; i++)
+           {
+            for (j=js; j<je; j++)
+            {
+             for (k=ks; k<ke; k++)
+             {
+              lrelkretsch0[i+baseNx*(j+baseNy*k)]=relkretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+
+//            printf("lrelkretsch0[i+baseNx*(j+baseNy*k)]=%lf,lkretsch0[i+baseNx*(j+baseNy*k)]=%lf at lsteps=%i\n",lrelkretsch0[i+baseNx*(j+baseNy*k)],lkretsch0[i+baseNx*(j+baseNy*k)],lsteps);
+//              fflush(stdout);
+             }
+            }
+           }
+         }
+
+
 
       if (output_bdyquantities)
       {
@@ -3211,52 +3470,211 @@ void AdS4D_post_tstep(int L)
                  chrbdy,&numbdypoints,
                  x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 
+//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
+//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
+//        if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0))
+//        {
+//
+//         if (output_relkretschcentregrid)
+//         {
+//          *lrelkretschcentregrid0= *relkretschcentregrid;
+//          MPI_Allreduce((lrelkretschcentregrid0),(maxrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//          MPI_Allreduce((lrelkretschcentregrid0),(minrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//          if (uniSize>1)
+//          {
+//           *relkretschcentregrid0=*maxrelkretschcentregrid0+*minrelkretschcentregrid0;
+//          }
+//          else
+//          {
+//           *relkretschcentregrid0=*maxrelkretschcentregrid0;
+//          }
+//           if (my_rank==0)
+//           {
+//           // save relkretschcentregrid as ascii
+//           FILE * fp;
+//           fp = fopen ("ascii_t_relkretschcentregrid.txt", "a+");
+//                 fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
+//           fclose(fp);
+//           }
+
+
+//       if (output_kretsch)
+//       {
+//
+//         is=(bbox[0]-base_bbox[0])/dx;    // for "left-most"  processors, includes i=0
+//         ie=(bbox[1]-base_bbox[0])/dx+1;  // for "right-most" processors, includes i=Nx
+//         js=(bbox[2]-base_bbox[2])/dy;    // for "left-most"  processors, includes j=0
+//         je=(bbox[3]-base_bbox[2])/dy+1;  // for "right-most" processors, includes j=Ny
+//         ks=(bbox[4]-base_bbox[4])/dz;    // for "left-most"  processors, includes k=0
+//         ke=(bbox[5]-base_bbox[4])/dz+1;  // for "right-most" processors, includes k=Ny
+//
+//           for (i=is; i<ie; i++)
+//           {
+//            for (j=js; j<je; j++)
+//            {
+//             for (k=ks; k<ke; k++)
+//             {
+//              lrelkretsch0[i+baseNx*(j+baseNy*k)]=relkretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+//              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+//             }
+//            }
+//           }
+//
+//          MPI_Allreduce((lrelkretsch0),(maxrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//          MPI_Allreduce((lrelkretsch0),(minrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//          MPI_Allreduce((lkretsch0),(maxkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//          MPI_Allreduce((lkretsch0),(minkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//
+//          for (i=0; i<baseNx*baseNy*baseNz; i++)
+//          {
+//           if (uniSize>1)
+//           {
+//            relkretsch0[i]=maxrelkretsch0[i]+minrelkretsch0[i];
+//            kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
+//           }
+//           else
+//           {
+//            relkretsch0[i]=maxrelkretsch0[i];
+//            kretsch0[i]=maxkretsch0[i];
+//           }
+//          }
+//
+//           // save kretsch as .sdf
+//           char name[256];
+//
+//           int kretsch_rank;
+//           int kretsch_shape[3];
+//           char kretsch_cnames[256];
+//           double *kretsch_coords;
+//
+//           kretsch_rank=3;
+//           kretsch_shape[0]=baseNx;
+//           kretsch_shape[1]=baseNy;
+//           kretsch_shape[2]=baseNz;
+//           sprintf(kretsch_cnames,"x|y|z");
+//           kretsch_coords = (double *) malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+//           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+//           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+//           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
+//
+//           printf("BEFORE SAVING KRETSCH at lsteps=%i\n",lsteps);
+//           fflush(stdout);
+//
+//
+//           sprintf(name,"%srelkretsch0_tstep%d",AMRD_save_tag,lsteps);
+//           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+//           sprintf(name,"%skretsch0_tstep%d",AMRD_save_tag,lsteps);
+//           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+//
+//           printf("AFTER SAVING KRETSCH at lsteps=%i\n",lsteps);
+//           fflush(stdout);
+//
+//          } //closes condition on output_kretsch
+
+
+//        } //closes condition on lsteps
+
      //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywher except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution.
-         for (i=is; i<ie; i++)
+         for (i=is_bdy; i<ie_bdy; i++)
          {
-             lquasiset_tt0[i]=quasiset_tt[i-is];
-             lquasiset_tchi0[i]=quasiset_tchi[i-is];
-             lquasiset_txi0[i]=quasiset_txi[i-is];
-             lquasiset_chichi0[i]=quasiset_chichi[i-is];
-             lquasiset_chixi0[i]=quasiset_chixi[i-is];
-             lquasiset_xixi0[i]=quasiset_xixi[i-is];
-             lquasiset_massdensity0[i]=quasiset_massdensity[i-is];
-             lquasiset_trace0[i]=quasiset_trace[i-is];
-             llocoeffphi10[i]=locoeffphi1[i-is];
+             lquasiset_tt0[i]=quasiset_tt[i-is_bdy];
+             lquasiset_tchi0[i]=quasiset_tchi[i-is_bdy];
+             lquasiset_txi0[i]=quasiset_txi[i-is_bdy];
+             lquasiset_chichi0[i]=quasiset_chichi[i-is_bdy];
+             lquasiset_chixi0[i]=quasiset_chixi[i-is_bdy];
+             lquasiset_xixi0[i]=quasiset_xixi[i-is_bdy];
+             lquasiset_massdensity0[i]=quasiset_massdensity[i-is_bdy];
+             lquasiset_trace0[i]=quasiset_trace[i-is_bdy];
+             llocoeffphi10[i]=locoeffphi1[i-is_bdy];
 //             *lAdS_mass0=*AdS_mass;
          }
-       }
+
+      } //closes condition on output_bdyquantities
 
        valid=PAMR_next_g();
      }
 
-//we save here the values of the Kretschmann scalar at the centre of the grid at times greater than 0.
-//The value of the Kretschmann scalar at the centre of the grid at t=0 is saved in pre_io_calc.
-        if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0)&& output_relkretschcentregrid)
-        {
-         *lrelkretschcentregrid0= *relkretschcentregrid;
-         MPI_Allreduce((lrelkretschcentregrid0),(maxrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-         MPI_Allreduce((lrelkretschcentregrid0),(minrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-         if (uniSize>1)
-         {
-          *relkretschcentregrid0=*maxrelkretschcentregrid0+*minrelkretschcentregrid0;
-         }
-         else
-         {
-          *relkretschcentregrid0=*maxrelkretschcentregrid0;
-         }
-          if (my_rank==0)
-          {
-          // save relkretschcentregrid as ascii
-          FILE * fp;
-          fp = fopen ("ascii_t_relkretschcentregrid.txt", "a+");
-                fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
-          fclose(fp);
-          }
-        }
   
-         if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0)&& output_bdyquantities)   //paste in post_tstep
+         if ((lsteps%AMRD_save_ivec0[3]==0)&&(lsteps!=0))   //paste in post_tstep
          {
+
+          if (output_relkretschcentregrid)
+          {
+            MPI_Allreduce((lrelkretschcentregrid0),(maxrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+            MPI_Allreduce((lrelkretschcentregrid0),(minrelkretschcentregrid0),1,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+            if (uniSize>1)
+            {
+             *relkretschcentregrid0=*maxrelkretschcentregrid0+*minrelkretschcentregrid0;
+            }
+            else
+            {
+             *relkretschcentregrid0=*maxrelkretschcentregrid0;
+            }
+             if (my_rank==0)
+             {
+             // save relkretschcentregrid as ascii
+             FILE * fp;
+             fp = fopen ("ascii_t_relkretschcentregrid.txt", "a+");
+                   fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
+             fclose(fp);
+             }
+          }
+
+          if (output_kretsch)
+          {
+
+            MPI_Allreduce((lrelkretsch0),(maxrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+            MPI_Allreduce((lrelkretsch0),(minrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+            MPI_Allreduce((lkretsch0),(maxkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+            MPI_Allreduce((lkretsch0),(minkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+
+  
+            for (i=0; i<baseNx*baseNy*baseNz; i++)
+            {
+             if (uniSize>1)
+             {
+              relkretsch0[i]=maxrelkretsch0[i]+minrelkretsch0[i];
+              kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
+             }
+             else
+             {
+              relkretsch0[i]=maxrelkretsch0[i];
+              kretsch0[i]=maxkretsch0[i];
+//               printf("maxrelkretsch0[i]=%lf,relkretsch0[i]=%lf\n",maxrelkretsch0[i],relkretsch0[i]);
+//               printf("maxkretsch0[i]=%lf,kretsch0[i]=%lf\n",maxkretsch0[i],kretsch0[i]);
+//              fflush(stdout);
+             }
+            }
+
+//              printf("BEFORE SAVING KRETSCH at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+//
+             sprintf(name,"%srelkretsch0_tstep%d",AMRD_save_tag,lsteps);
+//            printf("name=%s\n",name);
+//            fflush(stdout);
+//            printf("ct=%lf\n",ct);
+//             fflush(stdout);
+//            printf("kretsch_shape[0]=%i,kretsch_shape[1]=%i,kretsch_shape[2]=%i\n",kretsch_shape[0],kretsch_shape[1],kretsch_shape[2]);
+//             fflush(stdout);
+//            printf("kretsch_cnames=%s\n",kretsch_cnames);
+//             fflush(stdout);
+//            for (i=0; i<baseNx+baseNy+baseNz;i++) {printf("kretsch_coords[i]=%lf\n",kretsch_coords[i]); fflush(stdout);}
+//            printf("kretsch_rank=%i",kretsch_rank);
+//             fflush(stdout);
+
+             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+             sprintf(name,"%skretsch0_tstep%d",AMRD_save_tag,lsteps);
+             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+
+
+          }
+
+//              printf("AFTER SAVING KRETSCH at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+
+
+          if (output_bdyquantities)
+          {
 
            // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
            //basenumbdypoints is set in AdS4D_post_init
@@ -3309,22 +3727,69 @@ void AdS4D_post_tstep(int L)
           }
 //            MPI_Allreduce((lAdS_mass0),(AdS_mass0),1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
 
+//              printf("BEFORE SAVING ASCII at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+
           if (my_rank==0)
           {
 
            FILE * fp;
+//              printf("BEFORE SAVING ascii_t_bdyphi1_indbdypoint.txt at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+//           fp = fopen ("ascii_t_bdyphi1_indbdypoint.txt", "a+");
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              { 
+//                fprintf(fp,"%24.16e %24.16e %i \n",
+//                            ct,locoeffphi10[j],j);
+//              }
+//           fclose(fp);
+//
+//              printf("AFTER SAVING ascii_t_bdyphi1_indbdypoint.txt at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+//
+//          if (reduced_ascii)
+//          {
+//           fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint.txt", "a+");
+//            j_red=0;
+//            for( j = 0; j < basenumbdypoints; j++ )
+//              {
+//               if (j%reduction_factor==0)
+//               {
+//                fprintf(fp,"%24.16e %24.16e %i \n",ct,locoeffphi10[j],j_red);
+//                j_red=j_red+1;
+//               }
+//              }
+//           fclose(fp);
+//          }
+           
+           // save quasiset_ll as ascii
+
+        if (alltimes_ascii)
+        {
+
+
+
+
            fp = fopen ("ascii_t_bdyphi1_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
-              { 
+              {
+//                printf("ct=%lf\n",ct);
+//                printf("locoeffphi10[j]=%lf\n",locoeffphi10[j]);
+//                printf("j=%i\n",j);
+//                fflush(stdout);
+
                 fprintf(fp,"%24.16e %24.16e %i \n",
                             ct,locoeffphi10[j],j);
               }
            fclose(fp);
 
+//              printf("AFTER SAVING ascii_t_bdyphi1_indbdypoint.txt at lsteps=%i\n",lsteps);
+//              fflush(stdout);
+
           if (reduced_ascii)
           {
            fp = fopen ("ascii_reduced_t_bdyphi1_indbdypoint.txt", "a+");
-            j_red=0;
+            j_red=0; 
             for( j = 0; j < basenumbdypoints; j++ )
               {
                if (j%reduction_factor==0)
@@ -3335,36 +3800,29 @@ void AdS4D_post_tstep(int L)
               }
            fclose(fp);
           }
-           
-           // save quasiset_ll as ascii
-
-        if (alltimes_ascii)
-        {
 
 
-           fp = fopen ("ascii_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_t_quasisetll_indbdypoint.txt", "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j);
               }
            fclose(fp);
 
           if (reduced_ascii)
           {
-           fp = fopen ("ascii_reduced_t_quasisetll_trace_massdensity_indbdypoint.txt", "a+");
+           fp = fopen ("ascii_reduced_t_quasisetll_indbdypoint.txt", "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
                if ((j%reduction_factor)==0)
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -3401,14 +3859,13 @@ void AdS4D_post_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           sprintf(filename, "ascii_t_quasisetll_trace_massdensity_indbdypoint_tstep%d.txt", lsteps);
+           sprintf(filename, "ascii_t_quasisetll_indbdypoint_tstep%d.txt", lsteps);
            fp = fopen (filename, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j);
               }
            fclose(fp);
@@ -3416,15 +3873,14 @@ void AdS4D_post_tstep(int L)
           if (reduced_ascii)
           {
            fp = fopen (filename, "w+");
-            j_red=0; 
+            j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
                if ((j%reduction_factor)==0)
                {
-                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
                             ct,
                             quasiset_tt0[j],quasiset_tchi0[j],quasiset_txi0[j],quasiset_chichi0[j],quasiset_chixi0[j],quasiset_xixi0[j],
-                            quasiset_trace0[j],quasiset_massdensity0[j],
                             j_red);
                 j_red=j_red+1;
                }
@@ -3433,6 +3889,26 @@ void AdS4D_post_tstep(int L)
           }
 
         }  //closes if (timestep_ascii) condition 
+
+           fp = fopen ("ascii_t_trace_indbdypoint.txt", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_trace0[j],
+                            j);
+              }
+           fclose(fp);
+
+           fp = fopen ("ascii_t_massdensity_indbdypoint.txt", "a+");
+            for( j = 0; j < basenumbdypoints; j++ )
+              {
+                fprintf(fp,"%24.16e %24.16e %i \n",
+                            ct,
+                            quasiset_massdensity0[j],
+                            j);
+              }
+           fclose(fp);
 
 
 
@@ -3453,7 +3929,7 @@ void AdS4D_post_tstep(int L)
 //              }
 //           fclose(fp);
  
-          }
+          }  //closes condition my_rank==0
 
 //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
           if (output_AdS_mass)
@@ -3477,12 +3953,17 @@ void AdS4D_post_tstep(int L)
            }
           }
 
+//              printf("END OF post_tstep at lsteps=%i\n",lsteps);
+//              fflush(stdout);
 
-         }
+         } //closes if condition on output_bdyquantities
+        } //closes if condition on lsteps
 
-   } 
+   } //closes if condition on L==Lc 
 
    if (my_rank==0) printf("\n===================================================================\n");
+
+//              fflush(stdout);
 
    if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below
 

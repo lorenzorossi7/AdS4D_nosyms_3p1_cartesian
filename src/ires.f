@@ -509,7 +509,8 @@ c----------------------------------------------------------------------
                      do g=1,4
                       do h=1,4
        
-                       kretsch(i,j,k)=kretsch(i,j,k)
+                       kretsch(i,j,k)=
+     &                         kretsch(i,j,k)
      &                         +riemann_ulll(a,b,c,d)
      &                         *g0_ll(a,e)*g0_uu(b,f)*g0_uu(c,g)
      &                         *g0_uu(d,h)*riemann_ulll(e,f,g,h)
@@ -545,6 +546,8 @@ c----------------------------------------------------------------------
            end do
           end do
         end do
+
+        relkretschcentregrid=0.0d0
 
         if ((ic.gt.0).and.(jc.gt.0).and.(kc.gt.0)) then !this condition is activated only if the processor calling ires contains the centre of the grid (where ic,jc and kc are set to a positive number by the cycle above)
              relkretschcentregrid=relkretsch(ic,jc,kc)
