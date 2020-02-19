@@ -2138,10 +2138,10 @@ void AdS4D_pre_io_calc(void)
 //           printf("SAVING KRETSCH at lsteps=%i\n",lsteps);
 //           fflush(stdout);
 
-           sprintf(name,"%srelkretsch0_tstep%d",AMRD_save_tag,lsteps);
-           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
-           sprintf(name,"%skretsch0_tstep%d",AMRD_save_tag,lsteps);
-           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+//           sprintf(name,"%srelkretsch0_tstep%d",AMRD_save_tag,lsteps);
+//           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+//           sprintf(name,"%skretsch0_tstep%d",AMRD_save_tag,lsteps);
+//           gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
    
           } //closes condition on output_kretsch
 
