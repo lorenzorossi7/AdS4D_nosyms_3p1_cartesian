@@ -526,7 +526,7 @@ c----------------------------------------------------------------------
 
                kretschpureads=24
 
-               relkretsch(i,j,k)=(kretsch(i,j,k))/kretschpureads-1
+               relkretsch(i,j,k)=(kretsch(i,j,k))/kretschpureads-1.0d0
 
 
             else
