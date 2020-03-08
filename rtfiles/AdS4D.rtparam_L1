@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 1.2
+phi1_amp_1 := 0.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.4 0.4 0.4]
+phi1_ecc_1 := [0.3 0.2 0.25]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -54,7 +54,7 @@ output_ires := 1
 output_bdyquantities := 1
 output_AdS_mass := 0
 output_relkretschcentregrid := 1
-output_kretsch := 0
+output_kretsch := 1
 reduced_ascii := 0
 reduction_factor := 1
 alltimes_ascii := 1
@@ -148,7 +148,7 @@ c2_i := 0.5
 c3_i := 1.0
 
 rhoa := 0.5
-rhob := 0.95
+rhob := 0.9
 
 #------ dissipation --------------------------------------------------------
 
@@ -178,7 +178,7 @@ cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 100
+steps := 6000
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -207,8 +207,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 3
+save_1_vars := [ "iresall" "gb_res" "chr" ]
 
 num_save_2_vars := 4
 save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]

@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.8
+phi1_amp_1 := 0.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.8 0.2 0.5]
+phi1_ecc_1 := [0.3 0.2 0.25]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -54,9 +54,10 @@ output_ires := 1
 output_bdyquantities := 1
 output_AdS_mass := 0
 output_relkretschcentregrid := 1
+output_kretsch := 1
 reduced_ascii := 0
 reduction_factor := 1
-alltimes_ascii := 0
+alltimes_ascii := 1
 timestep_ascii := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
@@ -177,7 +178,7 @@ cp_restore_fname := "cp_L3_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 4
+steps := 1
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -220,6 +221,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_3p1_gauge3_L3_"
 
-save_ivec := 1-*/4
+save_ivec := 1-*/1
 
 #-----------------------------------------------------

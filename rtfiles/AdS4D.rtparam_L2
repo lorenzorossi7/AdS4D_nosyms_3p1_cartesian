@@ -33,7 +33,7 @@ AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
 AH_freq := 1
-AH_freq_aft := 20
+AH_freq_aft := 1
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
 ex_rbuf := 1.0
 AH_reset_scale := 1.1
@@ -54,9 +54,10 @@ output_ires := 1
 output_bdyquantities := 1
 output_AdS_mass := 0
 output_relkretschcentregrid := 1
+output_kretsch := 1
 reduced_ascii := 0
 reduction_factor := 1
-alltimes_ascii := 0
+alltimes_ascii := 1
 timestep_ascii := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
@@ -177,7 +178,7 @@ cp_restore_fname := "cp_L2_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 16
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -209,8 +210,8 @@ max_t_interp_order := 3
 num_save_1_vars := 2
 save_1_vars := [ "iresall" "gb_res" ]
 
-num_save_2_vars := 15
-save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
+num_save_2_vars := 4
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]
 
 num_save_3_vars := 0
 save_3_vars := [ ]
@@ -220,6 +221,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_3p1_gauge3_L2_"
 
-save_ivec := 1-*/2
+save_ivec := 1-*/4
 
 #-----------------------------------------------------

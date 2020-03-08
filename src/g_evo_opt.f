@@ -530,6 +530,19 @@ c----------------------------------------------------------------------
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
+!        write(*,*) "Nx,Ny,Nz="
+!     &             ,Nx,Ny,Nz
+!        write(*,*) "ghost_width(1),ghost_width(2),ghost_width(3)
+!     &             ,ghost_width(4),ghost_width(5),ghost_width(6)="
+!     &             ,ghost_width(1),ghost_width(2),ghost_width(3)
+!     &             ,ghost_width(4),ghost_width(5),ghost_width(6)
+
+!       write(*,*) "is,ie,js,je,ks,ke,chr(is,js,ks-1)="
+!     &             ,is,ie,js,je,ks,ke,chr(9,9,ks-1)
+
+!        write(*,*) "2:gb_xx_n(is,js,ks)=",gb_xx_n(is,js,ks)
+!        write(*,*) "3:gb_xx_n(is,js,ks-1)=",gb_xx_n(9,9,ks-1)
+
         ! check kmax value against ghost_width
         max_ghost_width=max(ghost_width(1),ghost_width(2),
      &                      ghost_width(3),ghost_width(4),

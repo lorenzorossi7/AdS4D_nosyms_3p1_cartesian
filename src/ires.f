@@ -188,6 +188,14 @@ c----------------------------------------------------------------------
         ks=2
         ke=Nz-1
 
+!        write(*,*) "Nx,Ny,Nz="
+!     &             ,Nx,Ny,Nz
+!        write(*,*) "ghost_width(1),ghost_width(2),ghost_width(3)
+!     &             ,ghost_width(4),ghost_width(5),ghost_width(6)="
+!     &             ,ghost_width(1),ghost_width(2),ghost_width(3)
+!     &             ,ghost_width(4),ghost_width(5),ghost_width(6)
+!        write(*,*) "1:gb_xx_n(is,js,ks)=",gb_xx_n(is,js,ks)
+!
         ! adjust index bounds to compensate for ghost_width
         if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
         if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
@@ -195,6 +203,11 @@ c----------------------------------------------------------------------
         if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+
+!        write(*,*) "is,ie,js,je,ks,ke=",is,ie,js,je,ks,ke
+!
+!        write(*,*) "2:gb_xx_n(is,js,ks)=",gb_xx_n(is,js,ks)
+!        write(*,*) "3:gb_xx_n(is-1,js,ks)=",gb_xx_n(is-1,js-1,ks-1)
 
         ! (MAIN LOOP) loop through spacetime points x(i),y(j)
         do i=is,ie

@@ -231,10 +231,11 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
          AH_bbox[0]=0;
          AH_bbox[1]=M_PI;
          AH_bbox[2]=0;
-         if (AH_xc[c_AH][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;}
+         AH_bbox[3]=2*M_PI;
+//         if (AH_xc[c_AH][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;} //this line comes from codes where y in [0,1]
          rank=2; 
   
-         if (AH_xc[c_AH][0]<dx) {AH_bbox[0]=0; AH_bbox[1]=1; AH_bbox[2]=-1; AH_bbox[3]=1;} //planar BH 
+//         if (AH_xc[c_AH][0]<dx) {AH_bbox[0]=0; AH_bbox[1]=1; AH_bbox[2]=-1; AH_bbox[3]=1;} //planar BH //this line comes from codes where x in [0,1]
  
          sprintf(name,"%sAH_%i_R_iter",AMRD_save_tag,c_AH+1);
          gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_R[c_AH]);

@@ -2289,9 +2289,11 @@ real AdS4D_evo_residual(void)
 //=============================================================================
 void AdS4D_evolve(int iter)
 {
-   int i,zero_i=0;
+   int i,j,k,zero_i=0;
    int ltrace=0;
    real ct,zero=0;
+   int ind;
+   real rho;
 
    ldptr();
 
@@ -2374,6 +2376,19 @@ void AdS4D_evolve(int iter)
                 &background,&kappa_cd,&rho_cd,
                 &interptype,&i_shift,&regtype,
                 &diss_kmax,tfunction);
+
+//      for (i=0; i<Nx; i++)
+//      {
+//         for (j=0; j<Ny; j++)
+//         {
+//          for (k=0; k<Nz; k++)
+//          {
+//            ind=i+Nx*(j+Ny*k);
+//            rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
+//            if (rho<1) printf("AFTER g_evo_opt:my_rank=%i,i=%i,j=%i,k=%i,ct=%lf,x=%lf,y=%lf,z=%lf,gb_xx_n[ind]=%lf\n",my_rank,i,j,k,ct,x[i],y[j],z[k],gb_xx_n[ind]);
+//          }
+//         }
+//      }
    }
 
    return;
@@ -3290,7 +3305,8 @@ void AdS4D_pre_tstep(int L)
                AH_bbox[0]=0;
                AH_bbox[1]=M_PI;
                AH_bbox[2]=0;
-               if (AH_xc[l][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;}
+               AH_bbox[3]=2*M_PI;
+//               if (AH_xc[l][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;} //this line comes from codes where y in [0,1]
                int rank=2;
                sprintf(name,"%sAH_R_%i",AMRD_save_tag,l);
                gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_R[l]);

@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 1.2
+phi1_amp_1 := 1.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.3 0.3 0.3]
+phi1_ecc_1 := [0.3 0.2 0.25]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -35,7 +35,7 @@ AH_Nphi := 17
 AH_freq := 1
 AH_freq_aft := 1
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.7
+ex_rbuf := 1.0
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
@@ -147,7 +147,7 @@ c1_i := 20.0
 c2_i := 0.5
 c3_i := 1.0
 
-rhoa := 0.0
+rhoa := 0.5
 rhob := 0.95
 
 #------ dissipation --------------------------------------------------------
@@ -173,12 +173,12 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 0.0
-cp_save_fname := "cp_L0"
-cp_restore_fname := "cp_L0_A"
+cp_save_fname := "cp_L1"
+cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 100
+steps := 4
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -207,17 +207,14 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 6
-save_1_vars := [ "iresall" "gb_res" "chr" "chrbdy" "gb_tt" "gb_tt_x_np1" ]
+num_save_1_vars := 2
+save_1_vars := [ "iresall" "gb_res" ]
 
-num_save_2_vars := 1
-save_2_vars := [ "gb_tt" ]
+num_save_2_vars := 4
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]
 
-#num_save_2_vars := 15
-#save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
-
-num_save_3_vars := 1
-save_3_vars := [ "gb_tt" ]
+num_save_3_vars := 0
+save_3_vars := [ ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1

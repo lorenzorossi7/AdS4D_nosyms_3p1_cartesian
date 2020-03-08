@@ -854,51 +854,467 @@ c----------------------------------------------------------------------
         dy=(y(2)-y(1))
         dz=(z(2)-z(1))
 
-        if (.not.no_derivatives) then
-         do i=1,Nx
-          do j=1,Ny
-           do k=1,Nz
-            gbsph_tt_n(i,j,k)    =0
-            gbsph_trho_n(i,j,k)  =0
-            gbsph_tchi_n(i,j,k)  =0
-            gbsph_txi_n(i,j,k)   =0
-            gbsph_rhorho_n(i,j,k)=0
-            gbsph_rhochi_n(i,j,k)=0
-            gbsph_rhoxi_n(i,j,k) =0
-            gbsph_chichi_n(i,j,k)=0
-            gbsph_chixi_n(i,j,k) =0
-            gbsph_xixi_n(i,j,k)  =0
+! define quantities necessary to define the quasi local stress energy tensor over the whole grid
+       do i=1,Nx
+        do j=1,Ny
+         do k=1,Nz
 
-            gamma0sphbdy_uu_tt(i,j,k)=0
-            gamma0sphbdy_uu_tchi(i,j,k)=0
-            gamma0sphbdy_uu_txi(i,j,k)=0
-            gamma0sphbdy_uu_chichi(i,j,k)=0
-            gamma0sphbdy_uu_chixi(i,j,k)=0
-            gamma0sphbdy_uu_xixi(i,j,k)=0
+          if ( chr(i,j,k).ne.ex) then
+             x0=x(i)
+             y0=y(j)
+             z0=z(k)
+             rho0=sqrt(x0**2+y0**2+z0**2)
+             q=1-rho0
+             chi0=(1/PI)*acos(x0/rho0)
+             if (z0.lt.0) then
+                xi0=(1/(2*PI))*(atan2(z0,y0)+2*PI)
+             else
+                xi0=(1/(2*PI))*atan2(z0,y0)
+             end if
+!calculate regularized metric components in spherical coordinates in terms of regularized metric components in Cartesian coordinates
+! we use the following coordinate transformation (notice that the angles are rescaled w.r.t. the usual spherical coordinates): x=rho*cos(PI*chi),y=rho*sin(PI*chi)*cos(2*PI*xi),z=rho*sin(PI*chi)*sin(2*PI*xi)
 
-            quasiset_tt_ll(i,j,k)=0
-            quasiset_tchi_ll(i,j,k)=0
-            quasiset_txi_ll(i,j,k)=0
-            quasiset_chichi_ll(i,j,k)=0
-            quasiset_chixi_ll(i,j,k)=0
-            quasiset_xixi_ll(i,j,k)=0
-            quasiset_massdensityll(i,j,k)=0
-            quasiset_tracell(i,j,k)=0
+!transformation matrix
+
+             dtdt=1
+             dtdrho=0
+             dtdchi=0
+             dtdxi=0
+             dxdt=0
+             dxdrho=cos(PI*chi0)
+             dxdchi=-PI*rho0*sin(PI*chi0)
+             dxdxi=0
+             dydt=0
+             dydrho=sin(PI*chi0)*cos(2*PI*xi0)
+             dydchi=PI*rho0*cos(PI*chi0)*cos(2*PI*xi0)
+             dydxi=-2*PI*rho0*sin(PI*chi0)*sin(2*PI*xi0)
+             dzdt=0
+             dzdrho=sin(PI*chi0)*sin(2*PI*xi0)
+             dzdchi=PI*rho0*cos(PI*chi0)*sin(2*PI*xi0)
+             dzdxi=2*PI*rho0*sin(PI*chi0)*cos(2*PI*xi0)
+
+             dxcar_dxsph(1,1)=dtdt
+             dxcar_dxsph(1,2)=dtdrho
+             dxcar_dxsph(1,3)=dtdchi
+             dxcar_dxsph(1,4)=dtdxi
+             dxcar_dxsph(2,1)=dxdt
+             dxcar_dxsph(2,2)=dxdrho
+             dxcar_dxsph(2,3)=dxdchi
+             dxcar_dxsph(2,4)=dxdxi
+             dxcar_dxsph(3,1)=dydt
+             dxcar_dxsph(3,2)=dydrho
+             dxcar_dxsph(3,3)=dydchi
+             dxcar_dxsph(3,4)=dydxi
+             dxcar_dxsph(4,1)=dzdt
+             dxcar_dxsph(4,2)=dzdrho
+             dxcar_dxsph(4,3)=dzdchi
+             dxcar_dxsph(4,4)=dzdxi
+
+        !metric components of pure AdS in Cartesian coordinates
+        g0_tt_ads0 =-(4*rho0**2+L**2*(-1+rho0**2)**2)
+     &               /L**2/(-1+rho0**2)**2
+        g0_tx_ads0 =0
+        g0_ty_ads0 =0
+        g0_tz_ads0 =0
+        g0_xx_ads0 =(8*(-1+L**2)*(x0**2-y0**2-z0**2)
+     &              +8*rho0**2+4*L**2*(1+rho0**4))
+     &              /(-1+rho0**2)**2/(4*rho0**2+L**2*(-1+rho0**2)**2)
+        g0_xy_ads0 =(16 *(-1 + L**2) *x0* y0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_xz_ads0 =(16 *(-1 + L**2) *x0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_yy_ads0 =(4*(4*(x0**2+z0**2)+L**2*(x0**4+(1+y0**2)**2
+     &              +2*(-1+y0**2)*z0**2+z0**4
+     &              +2*x0**2*(-1+y0**2+z0**2))))
+     &              /(L**2*(-1+rho0**2)**4+4*(-1+rho0**2)**2*(rho0**2))
+        g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
+     &              /((-1 + rho0**2)**2
+     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
+        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+     &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
+     &              /(L**2*(-1+rho0**2)**4
+     &              +4*(-1+rho0**2)**2*(rho0**2))
+
+      !deviation from pure AdS in Cartesian coordinates
+
+        hcar_n(1,1)=gb_tt_n(i,j,k)
+        hcar_n(1,2)=gb_tx_n(i,j,k)
+        hcar_n(1,3)=gb_ty_n(i,j,k)
+        hcar_n(1,4)=gb_tz_n(i,j,k)
+        hcar_n(2,2)=gb_xx_n(i,j,k)
+        hcar_n(2,3)=gb_xy_n(i,j,k)
+        hcar_n(2,4)=gb_xz_n(i,j,k)
+        hcar_n(3,3)=gb_yy_n(i,j,k)
+        hcar_n(3,4)=gb_yz_n(i,j,k)
+        hcar_n(4,4)=psi_n(i,j,k)
+
+       do a=1,3
+          do b=a+1,4
+            hcar_n(b,a)=hcar_n(a,b)
+          end do
+        end do
+
+       !full metric in Cartesian coordinates
+        g0car_n(1,1)=g0_tt_ads0+hcar_n(1,1)
+        g0car_n(1,2)=g0_tx_ads0+hcar_n(1,2)
+        g0car_n(1,3)=g0_ty_ads0+hcar_n(1,3)
+        g0car_n(1,4)=g0_tz_ads0+hcar_n(1,4)
+        g0car_n(2,2)=g0_xx_ads0+hcar_n(2,2)
+        g0car_n(2,3)=g0_xy_ads0+hcar_n(2,3)
+        g0car_n(2,4)=g0_xz_ads0+hcar_n(2,4)
+        g0car_n(3,3)=g0_yy_ads0+hcar_n(3,3)
+        g0car_n(3,4)=g0_yz_ads0+hcar_n(3,4)
+        g0car_n(4,4)=g0_psi_ads0+hcar_n(4,4)
+
+       do a=1,3
+          do b=a+1,4
+            g0car_n(b,a)=g0car_n(a,b)
+          end do
+        end do
+
+
+       !deviation from pure AdS in (rescaled) spherical coordinates
+        do a=1,4
+          do b=1,4
+           hsph_n(a,b)=0.0d0
+           do c=1,4
+            do d=1,4
+             hsph_n(a,b)=hsph_n(a,b)
+     &                   +dxcar_dxsph(c,a)*dxcar_dxsph(d,b)*hcar_n(c,d)
+            end do
            end do
           end do
         end do
-       end if
 
-        ! set index bounds for main loop
+
+        !regularised metric components in (rescaled) spherical coordinates
+        gbsph_n(1,1)=hsph_n(1,1)
+        gbsph_n(1,2)=hsph_n(1,2)/(1-rho0**2)
+        gbsph_n(1,3)=hsph_n(1,3)
+        gbsph_n(1,4)=hsph_n(1,4)
+        gbsph_n(2,2)=hsph_n(2,2)
+        gbsph_n(2,3)=hsph_n(2,3)/(1-rho0**2)
+        gbsph_n(2,4)=hsph_n(2,4)/(1-rho0**2)
+        gbsph_n(3,3)=hsph_n(3,3)
+        gbsph_n(3,4)=hsph_n(3,4)
+        gbsph_n(4,4)=hsph_n(4,4)
+
+         gbsph_tt_n(i,j,k)    =gbsph_n(1,1)
+         gbsph_trho_n(i,j,k)  =gbsph_n(1,2)
+         gbsph_tchi_n(i,j,k)  =gbsph_n(1,3)
+         gbsph_txi_n(i,j,k)   =gbsph_n(1,4)
+         gbsph_rhorho_n(i,j,k)=gbsph_n(2,2)
+         gbsph_rhochi_n(i,j,k)=gbsph_n(2,3)
+         gbsph_rhoxi_n(i,j,k) =gbsph_n(2,4)
+         gbsph_chichi_n(i,j,k)=gbsph_n(3,3)
+         gbsph_chixi_n(i,j,k) =gbsph_n(3,4)
+         gbsph_xixi_n(i,j,k)  =gbsph_n(4,4)
+
+        do a=1,3
+          do b=a+1,4
+            gbsph_n(b,a)=gbsph_n(a,b)
+          end do
+        end do
+
+        !full metric in (rescaled) spherical coordinates
+        do a=1,4
+          do b=1,4
+           g0sph_n(a,b)=0.0d0
+           do c=1,4
+            do d=1,4
+             g0sph_n(a,b)=g0sph_n(a,b)
+     &                   +dxcar_dxsph(c,a)*dxcar_dxsph(d,b)*g0car_n(c,d)
+            end do
+           end do
+          end do
+        end do
+
+        !induced metric on hypersurface at constant rho
+        gamma0sph_ll(1,1)=g0sph_n(1,1)
+        gamma0sph_ll(1,2)=0
+        gamma0sph_ll(1,3)=g0sph_n(1,3)
+        gamma0sph_ll(1,4)=g0sph_n(1,4)
+        gamma0sph_ll(2,2)=0
+        gamma0sph_ll(2,3)=0
+        gamma0sph_ll(2,4)=0
+        gamma0sph_ll(3,3)=g0sph_n(3,3)
+        gamma0sph_ll(3,4)=g0sph_n(3,4)
+        gamma0sph_ll(4,4)=g0sph_n(4,4)
+
+        do a=1,3
+          do b=a+1,4
+            gamma0sph_ll(b,a)=gamma0sph_ll(a,b)
+          end do
+        end do
+
+        !metric on conformal AdS boundary at rho=1
+        gamma0sphbdy_ll(1,1)=g0sph_n(1,1)*q**2
+        gamma0sphbdy_ll(1,2)=g0sph_n(1,3)*q**2
+        gamma0sphbdy_ll(1,3)=g0sph_n(1,4)*q**2
+        gamma0sphbdy_ll(2,2)=g0sph_n(3,3)*q**2
+        gamma0sphbdy_ll(2,3)=g0sph_n(3,4)*q**2
+        gamma0sphbdy_ll(3,3)=g0sph_n(4,4)*q**2
+
+        do a=1,2
+          do b=a+1,3
+            gamma0sphbdy_ll(b,a)=gamma0sphbdy_ll(a,b)
+          end do
+        end do
+
+!
+!!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!!       write (*,*) 'gamma0sph_ll(1,1)=',gamma0sph_ll(1,1)
+!!       write (*,*) 'gamma0sph_ll(1,2)=',gamma0sph_ll(1,2)
+!!       write (*,*) 'gamma0sph_ll(1,3)=',gamma0sph_ll(1,3)
+!!       write (*,*) 'gamma0sph_ll(1,4)=',gamma0sph_ll(1,4)
+!!       write (*,*) 'gamma0sph_ll(2,2)=',gamma0sph_ll(2,2)
+!!       write (*,*) 'gamma0sph_ll(2,3)=',gamma0sph_ll(2,3)
+!!       write (*,*) 'gamma0sph_ll(2,4)=',gamma0sph_ll(2,4)
+!!       write (*,*) 'gamma0sph_ll(3,3)=',gamma0sph_ll(3,3)
+!!       write (*,*) 'gamma0sph_ll(3,4)=',gamma0sph_ll(3,4)
+!!       write (*,*) 'gamma0sph_ll(4,4)=',gamma0sph_ll(4,4)
+!
+      !determinant of induced metric on hypersurface at constant rho in 3-D form
+        detgamma3=-g0sph_n(1,4)**2*g0sph_n(3,3)
+     &            +2*g0sph_n(1,3)*g0sph_n(1,4)*g0sph_n(3,4)
+     &            -g0sph_n(1,3)**2*g0sph_n(4,4)
+     &            +g0sph_n(1,1)*(-g0sph_n(3,4)**2
+     &              +g0sph_n(3,3)*g0sph_n(4,4))
+
+      !induced inverse metric on hypersurface at constant rho
+        gamma0sph_uu(1,1)=-(g0sph_n(3,4)**2-g0sph_n(3,3)*g0sph_n(4,4))
+     &                    /detgamma3
+        gamma0sph_uu(1,2)=0
+        gamma0sph_uu(1,3)=-(-g0sph_n(1,4)*g0sph_n(3,4)
+     &                      +g0sph_n(1,3)*g0sph_n(4,4))
+     &                      /detgamma3
+        gamma0sph_uu(1,4)=-(g0sph_n(1,4)*g0sph_n(3,3)
+     &                      -g0sph_n(1,3)*g0sph_n(3,4))
+     &                      /detgamma3
+        gamma0sph_uu(2,2)=0
+        gamma0sph_uu(2,3)=0
+        gamma0sph_uu(2,4)=0
+        gamma0sph_uu(3,3)=-(g0sph_n(1,4)**2-g0sph_n(1,1)*g0sph_n(4,4))
+     &                    /detgamma3
+        gamma0sph_uu(3,4)=-(-g0sph_n(1,3)*g0sph_n(1,4)
+     &                      +g0sph_n(1,1)*g0sph_n(3,4))
+     &                      /detgamma3
+        gamma0sph_uu(4,4)=-(g0sph_n(1,3)**2-g0sph_n(1,1)*g0sph_n(3,3))
+     &                    /detgamma3
+
+         do a=1,3
+           do b=a+1,4
+             gamma0sph_uu(b,a)=gamma0sph_uu(a,b)
+           end do
+         end do
+
+!!       write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!!       write (*,*) 'gamma0sph_uu(1,1)=',gamma0sph_uu(1,1)
+!!       write (*,*) 'gamma0sph_uu(1,2)=',gamma0sph_uu(1,2)
+!!       write (*,*) 'gamma0sph_uu(1,3)=',gamma0sph_uu(1,3)
+!!       write (*,*) 'gamma0sph_uu(1,4)=',gamma0sph_uu(1,4)
+!!       write (*,*) 'gamma0sph_uu(2,2)=',gamma0sph_uu(2,2) 
+!!       write (*,*) 'gamma0sph_uu(2,3)=',gamma0sph_uu(2,3) 
+!!       write (*,*) 'gamma0sph_uu(2,4)=',gamma0sph_uu(2,4) 
+!!       write (*,*) 'gamma0sph_uu(3,3)=',gamma0sph_uu(3,3) 
+!!       write (*,*) 'gamma0sph_uu(3,4)=',gamma0sph_uu(3,4) 
+!!       write (*,*) 'gamma0sph_uu(4,4)=',gamma0sph_uu(4,4)
+!!
+
+!     !determinant of metric on conformal AdS boundary at rho=1
+       detgamma0sphbdy=
+     &            -gamma0sphbdy_ll(1,3)**2*gamma0sphbdy_ll(2,2)
+     &            +2*gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(1,3)
+     &                *gamma0sphbdy_ll(2,3)
+     &            -gamma0sphbdy_ll(1,2)**2*gamma0sphbdy_ll(3,3)
+     &            +gamma0sphbdy_ll(1,1)*(-gamma0sphbdy_ll(2,3)**2
+     &              +gamma0sphbdy_ll(2,2)*gamma0sphbdy_ll(3,3))
+
+!     !inverse of metric on conformal AdS boundary at rho=1
+       gamma0sphbdy_uu(1,1)=-(gamma0sphbdy_ll(2,3)**2
+     &                       -gamma0sphbdy_ll(2,2)*gamma0sphbdy_ll(3,3))
+     &                     /detgamma0sphbdy
+       gamma0sphbdy_uu(1,2)=
+     &                      -(-gamma0sphbdy_ll(1,3)*gamma0sphbdy_ll(2,3)
+     &                      +gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(3,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(1,3)=
+     &                      -(gamma0sphbdy_ll(1,3)*gamma0sphbdy_ll(2,2)
+     &                      -gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(2,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(2,2)=-(gamma0sphbdy_ll(1,3)**2
+     &                       -gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(3,3))
+     &                    /detgamma0sphbdy
+       gamma0sphbdy_uu(2,3)=
+     &                      -(-gamma0sphbdy_ll(1,2)*gamma0sphbdy_ll(1,3)
+     &                      +gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(2,3))
+     &                      /detgamma0sphbdy
+       gamma0sphbdy_uu(3,3)=
+     &                       -(gamma0sphbdy_ll(1,2)**2
+     &                       -gamma0sphbdy_ll(1,1)*gamma0sphbdy_ll(2,2))
+     &                    /detgamma0sphbdy
+
+         do a=1,2
+           do b=a+1,3
+             gamma0sphbdy_uu(b,a)=gamma0sphbdy_uu(a,b)
+           end do
+         end do
+
+          gamma0sphbdy_uu_tt(i,j,k)=gamma0sphbdy_uu(1,1)
+          gamma0sphbdy_uu_tchi(i,j,k)=gamma0sphbdy_uu(1,2)
+          gamma0sphbdy_uu_txi(i,j,k)=gamma0sphbdy_uu(1,3)
+          gamma0sphbdy_uu_chichi(i,j,k)=gamma0sphbdy_uu(2,2)
+          gamma0sphbdy_uu_chixi(i,j,k)=gamma0sphbdy_uu(2,3)
+          gamma0sphbdy_uu_xixi(i,j,k)=gamma0sphbdy_uu(3,3)
+
+!                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
+!                ! identified with the bdy CFT stress-energy tensor one-point function
+!                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
+            if (no_derivatives) then
+!             if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
+!
+               quasiset_tt_ll(i,j,k)=(12*(gbsph_n(3,3)/q)
+     &                         + 8*PI**2*(gbsph_n(2,2)/q)
+     &                         +  (3*(gbsph_n(4,4)/q)/(sin(PI*chi0))**2)
+     &                         )/(64*PI**3)
+
+
+               quasiset_tchi_ll(i,j,k)  = (3*(gbsph_n(1,3)/q))/(16*PI)
+
+
+               quasiset_txi_ll(i,j,k)   = (3*(gbsph_n(1,4)/q))/(16*PI)
+
+               quasiset_chichi_ll(i,j,k)=(3.0d0/16.0d0)*PI
+     &                                   *(gbsph_n(1,1)/q)
+     &                                  -(1.0d0/8.0d0)*PI
+     &                                   *(gbsph_n(2,2)/q)
+     &                           -(3*(gbsph_n(4,4)/q)/(sin(PI*chi0))**2)
+     &                                   /(64*PI)
+
+
+               quasiset_chixi_ll(i,j,k) =(3*(gbsph_n(3,4)/q))/(16*PI)
+
+
+               quasiset_xixi_ll(i,j,k)  =((sin(PI*chi0))**2*(-3
+     &                                   *(gbsph_n(3,3)/q)
+     &                                  +PI**2*(3*(gbsph_n(1,1)/q)
+     &                                  -2*(gbsph_n(2,2)/q)))
+     &                                  )/(4*PI)
+
+               quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
+     &                                    *(
+     &                                     12*(gbsph_n(3,3)/q)
+     &                                    +8*PI**2*(gbsph_n(2,2)/q)
+     &                                    +3*(gbsph_n(4,4)/q)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
+
+
+       !trace of quasi local stress-tensor from definition of trace
+             quasiset_tracell(i,j,k)=(
+     &           gamma0sphbdy_uu_tt(i,j,k)*quasiset_tt_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_tchi(i,j,k)*quasiset_tchi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_txi(i,j,k)*quasiset_txi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_chichi(i,j,k)*quasiset_chichi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_chixi(i,j,k)*quasiset_chixi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_xixi(i,j,k)*quasiset_xixi_ll(i,j,k)
+     &                   )
+!
+!!        write(*,*) "i,j,k,x(i),y(j),z(k),rho0="
+!!     &             ,i,j,k,x(i),y(j),z(k),rho0
+!!        write(*,*) "TRACE: quasiset_tracell(i,j,k)="
+!!     &             ,quasiset_tracell(i,j,k)
+!!
+!!!        write(*,*) "i,j,k,x(i),y(j),z(k),rho0="
+!!!     &             ,i,j,k,x(i),y(j),z(k),rho0
+!!!        write(*,*) "TRACE: quasiset_tracell(i,j,k)="
+!!!     &             ,quasiset_tracell(i,j,k)
+!!!        write(*,*) "TRACE: quasiset_tt_ll(i,j,k)="
+!!!     &             ,quasiset_tt_ll(i,j,k) 
+!!!
+!!!
+!!!       !trace of quasi local stress-tensor in terms of regularised metric components (this should be the same as the one above, within numerical error)
+!!!              quasiset_tracell(i,j,k)=
+!!!     &                               -(3/(8*PI))*(-(gbsph_n(1,1)/q)
+!!!     &                               +(gbsph_n(2,2)/q)
+!!!     &                               +(gbsph_n(3,3)/q)
+!!!     &                               +(gbsph_n(4,4)/q)/(sin(PI*chi0)**2)
+!!!     &                               )
+!!!
+!!!        write(*,*) "EXPANSION: quasiset_tracell(i,j,k)="
+!!!     &             ,quasiset_tracell(i,j,k)
+!
+!!!!!!!!!!case where y0=z0=0
+!!             else
+!!              quasiset_tt_ll(i,j,k)= (x0**2*(2*(gb_xx_n(i,j,k)/q)
+!!     &                                +3*rho0**2*(psi_n(i,j,k)/q))
+!!     &                                +3*rho0**4*(gb_yy_n(i,j,k)/q) )
+!!     &                               /(16*PI*rho0**2)
+!!              quasiset_tchi_ll(i,j,k)  =(3/16)*x0*(gb_tz_n(i,j,k)/q)
+!!              quasiset_txi_ll(i,j,k)   =0
+!!           quasiset_chichi_ll(i,j,k)=-PI*(-3*rho0**2*(gb_tt_n(i,j,k)/q)
+!!     &                                   +2*x0**2*(gb_xx_n(i,j,k)/q)
+!!     &                                   +3*rho0**4*(gb_yy_n(i,j,k)/q))
+!!     &                                   /(16*rho0**2)
+!!              quasiset_chixi_ll(i,j,k) =0
+!!              quasiset_xixi_ll(i,j,k)  =0
+!!              quasiset_massdensityll(i,j,k)=0
+!!              quasiset_tracell(i,j,k)=-((3*(-rho0**2*(gb_tt_n(i,j,k)/q)
+!!     &                                +x0**2*((gb_xx_n(i,j,k)/q)
+!!     &                                  +PI**2*rho0**2*(psi_n(i,j,k)/q))
+!!     &                                  +4*(PI**2)*(rho0**4)
+!!     &                                   *(gb_yy_n(i,j,k)/q)))
+!!     &                                 /(8*PI*rho0**2))
+!!             end if
+            end if
+
+          else  !excised points
+
+              gbsph_tt_n(i,j,k)    =0
+              gbsph_trho_n(i,j,k)  =0
+              gbsph_tchi_n(i,j,k)  =0
+              gbsph_txi_n(i,j,k)   =0
+              gbsph_rhorho_n(i,j,k)=0
+              gbsph_rhochi_n(i,j,k)=0
+              gbsph_rhoxi_n(i,j,k) =0
+              gbsph_chichi_n(i,j,k)  =0
+              gbsph_chixi_n(i,j,k) =0
+              gbsph_xixi_n(i,j,k)=0
+
+              gamma0sphbdy_uu_tt(i,j,k)=0
+              gamma0sphbdy_uu_tchi(i,j,k)=0
+              gamma0sphbdy_uu_txi(i,j,k)=0
+              gamma0sphbdy_uu_chichi(i,j,k)=0
+              gamma0sphbdy_uu_chixi(i,j,k)=0
+              gamma0sphbdy_uu_xixi(i,j,k)=0
+
+              quasiset_tt_ll(i,j,k)=0
+              quasiset_tchi_ll(i,j,k)=0
+              quasiset_txi_ll(i,j,k)=0
+              quasiset_chichi_ll(i,j,k)=0
+              quasiset_chixi_ll(i,j,k)=0
+              quasiset_xixi_ll(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
+
+          end if
+
+
+         end do
+        end do
+       end do
+
+
+      if (.not.no_derivatives) then !we need to restric the range of definition to points owned by only the current process (not any other process) if we want to use derivatives
         is=2
         ie=Nx-1
         js=2
         je=Ny-1
         ks=2
         ke=Nz-1
-
-!        write(*,*) "gb_tt_n(is,js,ks)=",gb_tt_n(17,17,17)
-!        write(*,*) "gb_xx_n(is,js,ks)=",gb_xx_n(is,js,ks)
 
 
 !!!ghost_width not needed as long as we don't use derivatives
@@ -910,7 +1326,162 @@ c----------------------------------------------------------------------
         if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
         if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
 
-!        write(*,*) "2:gb_xx_n(is,js,ks)=",gb_xx_n(is-1,9,ks-1)
+        do i=is,ie
+         do j=js,je
+          do k=ks,ke
+            if ( chr(i,j,k).ne.ex) then
+
+             x0=x(i)
+             y0=y(j)
+             z0=z(k)
+             rho0=sqrt(x0**2+y0**2+z0**2)
+             q=1-rho0
+             chi0=(1/PI)*acos(x0/rho0)
+             if (z0.lt.0) then
+                xi0=(1/(2*PI))*(atan2(z0,y0)+2*PI)
+             else
+                xi0=(1/(2*PI))*atan2(z0,y0)
+             end if
+
+!                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
+!                ! identified with the bdy CFT stress-energy tensor one-point function
+!                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
+              dgbsph_tt_drho_n    =
+     &             df_drho(gbsph_tt_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_trho_drho_n  =
+     &             df_drho(gbsph_trho_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_tchi_drho_n  =
+     &             df_drho(gbsph_tchi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_txi_drho_n   =
+     &             df_drho(gbsph_txi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_rhorho_drho_n=
+     &             df_drho(gbsph_rhorho_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_rhochi_drho_n=
+     &             df_drho(gbsph_rhochi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_rhoxi_drho_n =
+     &             df_drho(gbsph_rhoxi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_chichi_drho_n=
+     &             df_drho(gbsph_chichi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_chixi_drho_n =
+     &             df_drho(gbsph_chixi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+              dgbsph_xixi_drho_n  =
+     &             df_drho(gbsph_xixi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+
+!             if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
+
+!       call df1_int_x(gb_tt_np1,dergb_tt_x_np1,x,y,z,i,j,k,
+!     &                 chr,ex,Nx,Ny,Nz)
+!       call df1_int_y(gb_tt_np1,dergb_tt_y_np1,x,y,z,i,j,k,
+!     &                 chr,ex,Nx,Ny,Nz)
+!       call df1_int_z(gb_tt_np1,dergb_tt_z_np1,x,y,z,i,j,k,
+!     &                   chr,ex,Nx,Ny,Nz)
+!
+!       call df1_int_x(gb_tt_n,dergb_tt_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!       call df1_int_y(gb_tt_n,dergb_tt_y_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!       call df1_int_z(gb_tt_n,dergb_tt_z_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!
+!       call df1_int_x(gb_xx_n,dergb_xx_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!       call df1_int_y(gb_xx_n,dergb_xx_y_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!       call df1_int_z(gb_xx_n,dergb_xx_z_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
+!
+!        dxdrho=cos(PI*chi0)
+!        dydrho=sin(PI*chi0)*cos(2*PI*xi0)
+!        dzdrho=sin(PI*chi0)*sin(2*PI*xi0)
+
+               quasiset_tt_ll(i,j,k)=!dgbsph_tt_drho_n
+     &                         (12*(-dgbsph_chichi_drho_n)
+     &                         + 8*PI**2*(-dgbsph_rhorho_drho_n)
+     &                         +  (3*(-dgbsph_xixi_drho_n)
+     &                               /(sin(PI*chi0))**2)
+     &                         )/(64*PI**3)
+
+
+               quasiset_tchi_ll(i,j,k)  =!dgbsph_tchi_drho_n
+     &                        (3*(-dgbsph_tchi_drho_n))
+     &                                       /(16*PI)
+
+
+               quasiset_txi_ll(i,j,k)   =!dgbsph_txi_drho_n
+     &                        (3*(-dgbsph_txi_drho_n))
+     &                                       /(16*PI)
+
+!       call df1_int_x(gbsph_tt_n,gbsph_tt_x_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
+
+               quasiset_chichi_ll(i,j,k)=!dgbsph_chichi_drho_n
+     &                                   (3.0d0/16.0d0)*PI
+     &                                   *(-dgbsph_tt_drho_n)
+     &                                  -(1.0d0/8.0d0)*PI
+     &                                   *(-dgbsph_rhorho_drho_n)
+     &                           -(3*(-dgbsph_xixi_drho_n)
+     &                               /(sin(PI*chi0))**2)
+     &                                   /(64*PI)
+
+!       call df1_int_y(gb_tt_n,gb_tt_y_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
+
+               quasiset_chixi_ll(i,j,k) =!dgbsph_chixi_drho_n
+     &                                   (3*(-dgbsph_chixi_drho_n))
+     &                                      /(16*PI)
+
+!       call df1_int_z(gb_tt_n,gb_tt_z_n  !TEST
+!     &                   ,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)  !TEST
+
+
+               quasiset_xixi_ll(i,j,k)=!dgbsph_xixi_drho_n
+     &                                  ((sin(PI*chi0))**2*(-3
+     &                                   *(-dgbsph_chichi_drho_n)
+     &                                  +PI**2*(3*(-dgbsph_tt_drho_n)
+     &                                  -2*(-dgbsph_rhorho_drho_n)))
+     &                                  )/(4*PI)
+
+               quasiset_massdensityll(i,j,k)=!dgbsph_tt_drho_n
+     &                                     (sin(PI*chi0))
+     &                                    *(
+     &                                     12*(-dgbsph_chichi_drho_n)
+     &                                    +8*PI**2
+     &                                        *(-dgbsph_rhorho_drho_n)
+     &                                    +3*(-dgbsph_xixi_drho_n)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
+
+
+       !trace of quasi local stress-tensor from definition of trace
+             quasiset_tracell(i,j,k)=
+     &                               (
+     &           gamma0sphbdy_uu_tt(i,j,k)*quasiset_tt_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_tchi(i,j,k)*quasiset_tchi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_txi(i,j,k)*quasiset_txi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_chichi(i,j,k)*quasiset_chichi_ll(i,j,k)
+     &        +2*gamma0sphbdy_uu_chixi(i,j,k)*quasiset_chixi_ll(i,j,k)
+     &          +gamma0sphbdy_uu_xixi(i,j,k)*quasiset_xixi_ll(i,j,k)
+     &                   )
+
+
+           else !excised points
+
+              quasiset_tt_ll(i,j,k)=0
+              quasiset_tchi_ll(i,j,k)=0
+              quasiset_txi_ll(i,j,k)=0
+              quasiset_chichi_ll(i,j,k)=0
+              quasiset_chixi_ll(i,j,k)=0
+              quasiset_xixi_ll(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
+            end if
+
+          end do
+         end do
+        end do
+
+       end if
+
+
+
+
+
+
 
         do i=is,ie
          do j=js,je
