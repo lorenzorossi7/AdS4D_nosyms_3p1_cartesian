@@ -175,16 +175,18 @@ c----------------------------------------------------------------------
         !(lambda4=-(n-1)(n-2)/2/L^2) for n=4 dimensional AdS)
         lambda4=-3/L/L
 
-        is=2
-        js=2
-        ks=2
-        ie=Nx-1
-        je=Ny-1
-        ke=Nz-1
-!        if (phys_bdy(1).eq.1) is=2
-!        if (phys_bdy(3).eq.1) js=2
-!        if (phys_bdy(2).eq.1) ie=Nx-1
-!        if (phys_bdy(4).eq.1) je=Ny-1
+        is=1
+        js=1
+        ks=1
+        ie=Nx
+        je=Ny
+        ke=Nz
+        if (phys_bdy(1).eq.1) is=2
+        if (phys_bdy(3).eq.1) js=2
+        if (phys_bdy(5).eq.1) ks=2
+        if (phys_bdy(2).eq.1) ie=Nx-1
+        if (phys_bdy(4).eq.1) je=Ny-1
+        if (phys_bdy(6).eq.1) ke=Nz-1
 
         do i=is,ie
           do j=js,je

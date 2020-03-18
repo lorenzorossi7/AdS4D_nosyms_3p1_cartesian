@@ -5,7 +5,7 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 1.55
+phi1_amp_1 := 0.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
@@ -148,7 +148,7 @@ c2_i := 0.5
 c3_i := 1.0
 
 rhoa := 0.5
-rhob := 0.95
+rhob := 0.9
 
 #------ dissipation --------------------------------------------------------
 
@@ -178,7 +178,7 @@ cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 4
+steps := 1
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -219,7 +219,7 @@ save_3_vars := [ ]
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_3p1_gauge3_L0_"
+save_tag := "AdS4D_3p1_gauge3_L1_"
 
 save_ivec := 1-*/1
 

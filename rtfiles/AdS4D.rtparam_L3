@@ -147,8 +147,8 @@ c1_i := 20.0
 c2_i := 0.5
 c3_i := 1.0
 
-rhoa := 0.65
-rhob := 0.95
+rhoa := 0.5
+rhob := 0.9
 
 #------ dissipation --------------------------------------------------------
 
@@ -178,7 +178,7 @@ cp_restore_fname := "cp_L3_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 4
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -210,8 +210,8 @@ max_t_interp_order := 3
 num_save_1_vars := 2
 save_1_vars := [ "iresall" "gb_res" ]
 
-num_save_2_vars := 15
-save_2_vars := [ "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1" ]
+num_save_2_vars := 4
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]
 
 num_save_3_vars := 0
 save_3_vars := [ ]
@@ -221,6 +221,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_3p1_gauge3_L3_"
 
-save_ivec := 1-*/1
+save_ivec := 1-*/4
 
 #-----------------------------------------------------

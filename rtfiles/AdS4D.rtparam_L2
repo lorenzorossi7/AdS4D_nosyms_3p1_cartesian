@@ -148,7 +148,7 @@ c2_i := 0.5
 c3_i := 1.0
 
 rhoa := 0.5
-rhob := 0.95
+rhob := 0.9
 
 #------ dissipation --------------------------------------------------------
 
@@ -178,7 +178,7 @@ cp_restore_fname := "cp_L2_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 16
+steps := 2
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -221,6 +221,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_3p1_gauge3_L2_"
 
-save_ivec := 1-*/4
+save_ivec := 1-*/2
 
 #-----------------------------------------------------
