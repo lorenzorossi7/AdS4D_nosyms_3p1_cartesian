@@ -719,6 +719,8 @@ c-----------------------------------------------------------------------
                      write(*,*) 'df1_int_z: error in chr stencil (A)'
                      write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
      &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'x(i),y(j),z(k),rho0='
+     &                    ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0
@@ -932,6 +934,8 @@ c-----------------------------------------------------------------------
                      write(*,*) 'df1_int_z: error in chr stencil (G)'
                      write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
      &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'x(i),y(j),z(k),rho0='
+     &                    ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0

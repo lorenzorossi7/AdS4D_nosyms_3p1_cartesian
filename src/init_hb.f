@@ -16,7 +16,7 @@ c----------------------------------------------------------------------
      &                     L,phys_bdy,x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
         integer Nx,Ny,Nz
-        integer phys_bdy(6)
+        integer phys_bdy(6),ghost_width(6)
         integer regtype
         real*8 dt,ex,L
         real*8 chr(Nx,Ny,Nz)
@@ -115,18 +115,26 @@ c----------------------------------------------------------------------
          end do
         end do
 
-        is=1
-        js=1
-        ks=1
-        ie=Nx
-        je=Ny
-        ke=Nz
-        if (phys_bdy(1).eq.1) is=2
-        if (phys_bdy(3).eq.1) js=2
-        if (phys_bdy(5).eq.1) ks=2
-        if (phys_bdy(2).eq.1) ie=Nx-1
-        if (phys_bdy(4).eq.1) je=Ny-1
-        if (phys_bdy(6).eq.1) ke=Nz-1
+! if we use is=1,ie=Nx,etc. for some processes, we will get error from derivative stencils if we start with initial data with an excised region (e.g. Schwarzschild initial data). That's because the excised region will pass too close to some points of interior boundaries of bounding boxes, so we will have points at the boundary that have no unexcised neighbouring point to use to compute stencils. In principle we can ignore these errors because those points are taken into account by the neighbouring process anyway. If we use is=2,ie=Nx-1,etc. for all processes, we don't have these errors. The points that we are ignoring are those at the boundary of the entire grid (where grid functions are set to 0 anyway) and points next to interior boundaries of bounding boxes, which are again taken into account by nearby processes. So we can use is=2,ie=Nx-1,etc. for all processes without changing the output of the code and avoiding errors
+!        is=1
+!        js=1
+!        ks=1
+!        ie=Nx
+!        je=Ny
+!        ke=Nz
+!        if (phys_bdy(1).eq.1) is=2
+!        if (phys_bdy(3).eq.1) js=2
+!        if (phys_bdy(5).eq.1) ks=2
+!        if (phys_bdy(2).eq.1) ie=Nx-1
+!        if (phys_bdy(4).eq.1) je=Ny-1
+!        if (phys_bdy(6).eq.1) ke=Nz-1
+
+        is=2
+        js=2
+        ks=2
+        ie=Nx-1
+        je=Ny-1
+        ke=Nz-1
 
         do i=is,ie
           do j=js,je

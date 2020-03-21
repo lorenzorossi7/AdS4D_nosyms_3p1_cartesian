@@ -14,6 +14,28 @@ extern real AH_xc[MAX_BHS][3];
 extern int c_AH;
 
 extern real *AH_theta[MAX_BHS],*AH_R[MAX_BHS],*AH_w1[MAX_BHS],*AH_w2[MAX_BHS],*AH_w3[MAX_BHS];
+extern real *AH_g0_tt[MAX_BHS];
+extern real *AH_g0_tx[MAX_BHS];
+extern real *AH_g0_ty[MAX_BHS];
+extern real *AH_g0_tz[MAX_BHS];
+extern real *AH_g0_xx[MAX_BHS];
+extern real *AH_g0_xy[MAX_BHS];
+extern real *AH_g0_xz[MAX_BHS];
+extern real *AH_g0_yy[MAX_BHS];
+extern real *AH_g0_yz[MAX_BHS];
+extern real *AH_g0_psi[MAX_BHS];
+ 
+extern real *AH_wtt1[MAX_BHS];
+extern real *AH_wtx1[MAX_BHS];
+extern real *AH_wty1[MAX_BHS];
+extern real *AH_wtz1[MAX_BHS];
+extern real *AH_wxx1[MAX_BHS];
+extern real *AH_wxy1[MAX_BHS];
+extern real *AH_wxz1[MAX_BHS];
+extern real *AH_wyy1[MAX_BHS];
+extern real *AH_wyz1[MAX_BHS];
+extern real *AH_wpsi1[MAX_BHS];
+
 extern int *AH_lev[MAX_BHS],*AH_own[MAX_BHS];
 
 extern int AH_count[MAX_BHS],found_AH[MAX_BHS],freq0[MAX_BHS];
@@ -23,7 +45,7 @@ extern int found_count_AH[MAX_BHS];
 // functions
 //-----------------------------------------------------------------------------
 
-int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real *AH_min_resid);
+int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real *AH_min_resid, int output_metricatAH);
 
 //-----------------------------------------------------------------------------
 // related fotran routines
@@ -63,5 +85,26 @@ void reg_ah_r_(real *AH_R, int *AH_Nchi, int *AH_Nphi);
 void adjust_ah_xc_(real *AH_R, real *AH_xc, int *AH_Nchi, int *AH_Nphi, real *dx, real *dy, real *dz, int *axisym);
 
 void fill_ex_params_(real *AH_R, real *AH_xc, real *ex_r, real *ex_xc, int *AH_Nchi, int *AH_Nphi, real *dx, real *dy, real *dz, int *axisym);
+
+void calc_ahmetric0_(real *AH_R, real *AH_xc,
+                real *AH_g0_tt,
+                real *AH_g0_tx,real *AH_g0_ty,real *AH_g0_tz,
+                real *AH_g0_xx,real *AH_g0_xy,real *AH_g0_xz,
+                real *AH_g0_yy,real *AH_g0_yz,real *AH_g0_psi,
+                int *i0, int *j0, int *AH_Nchi,int *AH_Nphi,
+                real *gb_tt_n,
+                real *gb_tx_n,
+                real *gb_ty_n,
+                real *gb_tz_n,
+                real *gb_xx_n,
+                real *gb_xy_n,
+                real *gb_xz_n,
+                real *gb_yy_n,
+                real *gb_yz_n,
+                real *psi_n,
+                real *AdS_L, real *x, real *y, real *z, real *dt, real *chr,
+                real *ex, int *do_ex, int *Nx, int *Ny, int *Nz, int *axisym);
+
+
 
 #endif

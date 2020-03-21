@@ -251,11 +251,190 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
 }
 
 //-----------------------------------------------------------------------------
+// computes metric components at AH, assuming ownership calculated ... alters AH_wtt1,etc.
+// is_ex set to 1 if any point couldn't be calculated due to closeness
+// of excision zone ...
+//-----------------------------------------------------------------------------
+
+void fill_ahmetric( double *AH_g0_tt0,double *AH_g0_tx0,double *AH_g0_ty0,double *AH_g0_tz0,
+                    double *AH_g0_xx0,double *AH_g0_xy0,double *AH_g0_xz0,
+                    double *AH_g0_yy0,double *AH_g0_yz0,double *AH_g0_psi0,
+                    real eps0, int *is_ex)
+{
+
+   int i,np,valid,dvtrace=0,i0,j0,is_int;
+   static int num_trace=0;
+   char name[256];
+   int AH_shape[3],rank;
+   real AH_bbox[6],resid,da[3],area_owned[3],area_global[3];  // elements 2 & 3 for circumferences.
+
+   int k;
+   real tmp=1.0;
+
+   // outputs AH_*_iter gfns
+   dvtrace=1;
+
+   np=AH_Nchi[c_AH]*AH_Nphi[c_AH];
+
+   *is_ex=0;
+
+   for (i=0; i<np; i++)
+   {
+      AH_g0_tt0[i]=0;
+      AH_g0_tx0[i]=0;
+      AH_g0_ty0[i]=0;
+      AH_g0_tz0[i]=0;
+      AH_g0_xx0[i]=0;
+      AH_g0_xy0[i]=0;
+      AH_g0_xz0[i]=0;
+      AH_g0_yy0[i]=0;
+      AH_g0_yz0[i]=0;
+      AH_g0_psi0[i]=0;
+
+      if (AH_own[c_AH][i]==my_rank)
+      {
+         i0=i%AH_Nchi[c_AH]+1;
+         j0=i/AH_Nchi[c_AH]+1;
+         valid=PAMR_init_s_iter(AH_lev[c_AH][i],PAMR_AMRH,0);
+         while(valid)
+         {
+            ldptr_bbox();
+            ah_is_int_(&is_int,AH_R[c_AH],AH_xc[c_AH],&i0,&j0,bbox,&dx,&dy,&dz,&AH_Nchi[c_AH],&AH_Nphi[c_AH],&axisym);
+            if (is_int)
+            {
+               ldptr();
+
+               // compute full metric components at AH
+               //(NOTE: this is called in _pre_tstep, where we have cycled time sequence np1,n,nm1 to time sequence n,nm1,np1,
+               // so here, time level n is the most advanced time level)
+
+
+               calc_ahmetric0_(AH_R[c_AH],AH_xc[c_AH],
+                               AH_g0_tt0,
+                               AH_g0_tx0,AH_g0_ty0,AH_g0_tz0,
+                               AH_g0_xx0,AH_g0_xy0,AH_g0_xz0,
+                               AH_g0_yy0,AH_g0_yz0,AH_g0_psi0,
+                       &i0,&j0,&AH_Nchi[c_AH],&AH_Nphi[c_AH],
+                       gb_tt_nm1,
+                       gb_tx_nm1,
+                       gb_ty_nm1,
+                       gb_tz_nm1,
+                       gb_xx_nm1,
+                       gb_xy_nm1,
+                       gb_xz_nm1,
+                       gb_yy_nm1,
+                       gb_yz_nm1,
+                       psi_nm1,
+                       &AdS_L,x,y,z,&dt,chr,&AMRD_ex,&AMRD_do_ex,&Nx,&Ny,&Nz,&axisym);
+
+               valid=0;
+            }
+            else valid=PAMR_next_g();
+         }
+
+      }
+
+     }
+   // for each i point on the AH surface, save sum{AH_g0_tt0[i]}_allprocessors into AH_wtt1[i],etc.
+
+   MPI_Allreduce(AH_g0_tt0,AH_wtt1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_tx0,AH_wtx1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_ty0,AH_wty1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_tz0,AH_wtz1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_xx0,AH_wxx1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_xy0,AH_wxy1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_xz0,AH_wxz1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_yy0,AH_wyy1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_yz0,AH_wyz1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+   MPI_Allreduce(AH_g0_psi0,AH_wpsi1[c_AH],np,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+
+   // copy AH_wtt1,etc. into AH_g0_tt0,etc
+   for (i=0; i<np; i++)
+   {
+     AH_g0_tt0[i]=AH_wtt1[c_AH][i];
+     AH_g0_tx0[i]=AH_wtx1[c_AH][i];
+     AH_g0_ty0[i]=AH_wty1[c_AH][i];
+     AH_g0_tz0[i]=AH_wtz1[c_AH][i];
+     AH_g0_xx0[i]=AH_wxx1[c_AH][i];
+     AH_g0_xy0[i]=AH_wxy1[c_AH][i];
+     AH_g0_xz0[i]=AH_wxz1[c_AH][i];
+     AH_g0_yy0[i]=AH_wyy1[c_AH][i];
+     AH_g0_yz0[i]=AH_wyz1[c_AH][i];
+     AH_g0_psi0[i]=AH_wpsi1[c_AH][i];
+   }
+
+   //--------------------------------------------------------------------------
+   // regularity is essential on the axis, and we need to do it before
+   // smoothing as calc_exp0 does not fill in the axis, and afterwards
+   // again to make sure that theta and hence R is always exactly regular
+   //--------------------------------------------------------------------------
+   if (AH_xc[c_AH][1]==0)
+   {
+     reg_ah_r_(AH_g0_tt0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_tx0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_ty0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_tz0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_xx0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_xy0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_xz0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_yy0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_yz0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_psi0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+   }
+
+   if (!my_rank && dvtrace && num_trace<MAX_TRACE)
+   {
+      if (!((int)AH_ct[c_AH] % dvtrace))
+      {
+         num_trace++;
+         AH_shape[0]=AH_Nchi[c_AH];
+         AH_shape[1]=AH_Nphi[c_AH];
+         AH_bbox[0]=0;
+         AH_bbox[1]=M_PI;
+         AH_bbox[2]=0;
+         AH_bbox[3]=2*M_PI;
+//         if (AH_xc[c_AH][1]<dy) {AH_bbox[3]=M_PI;} else {AH_bbox[3]=2*M_PI;} //this line comes from codes where y in [0,1]
+         rank=2;
+
+//         if (AH_xc[c_AH][0]<dx) {AH_bbox[0]=0; AH_bbox[1]=1; AH_bbox[2]=-1; AH_bbox[3]=1;} //planar BH //this line comes from codes where x in [0,1]
+
+
+         sprintf(name,"%sAH_%i_g0_tt_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_tt0);
+         sprintf(name,"%sAH_%i_g0_tx_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_tx0);
+         sprintf(name,"%sAH_%i_g0_ty_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_ty0);
+         sprintf(name,"%sAH_%i_g0_tz_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_tz0);
+         sprintf(name,"%sAH_%i_g0_xx_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_xx0);
+         sprintf(name,"%sAH_%i_g0_xy_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_xy0);
+         sprintf(name,"%sAH_%i_g0_xz_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_xz0);
+         sprintf(name,"%sAH_%i_g0_yy_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_yy0);
+         sprintf(name,"%sAH_%i_g0_yz_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_yz0);
+         sprintf(name,"%sAH_%i_g0_psi_iter",AMRD_save_tag,c_AH+1);
+         gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_psi0);
+
+      }
+
+      AH_ct[c_AH]++;
+   }
+
+   return;
+
+}
+
+//-----------------------------------------------------------------------------
 // driver routine
 //-----------------------------------------------------------------------------
 #define SMOOTH_R 0
 #define SMOOTH_R_AFT 1
-int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real *AH_min_resid)
+int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real *AH_min_resid, int output_metricatAH)
 {
    int iter,i,j,l,np,Lmax,Lmax_AH,is_ex;
    real resid,prev_resid,min_resid,min_R,c_R;
@@ -267,6 +446,7 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
 
    *M=*J=0;
    *AH_min_resid=1e10;
+
 
    if (first_c) { for (l=0; l<MAX_BHS; l++) AH_ct[l]=0; first_c=0; }
 
@@ -303,6 +483,14 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
             // compute initial theta values
             if (!fill_own(Lmax,ltrace,&first)) return 0;
             resid=fill_theta(AH_theta[c_AH],eps0,&area,c_equat,c_polar,&is_ex);
+            if (output_metricatAH)
+            {
+//               for (i=0;i<np;i++) {printf("i=%i,AH_g0_tt[c_AH][i]=%lf\n",i,AH_g0_tt[c_AH][i]);}
+                  fill_ahmetric(AH_g0_tt[c_AH],AH_g0_tx[c_AH],AH_g0_ty[c_AH],AH_g0_tz[c_AH],
+                    AH_g0_xx[c_AH],AH_g0_xy[c_AH],AH_g0_xz[c_AH],
+                    AH_g0_yy[c_AH],AH_g0_yz[c_AH],AH_g0_psi[c_AH],
+                    eps0,&is_ex);
+            }
 
             if (is_ex)
             {
@@ -360,8 +548,15 @@ int find_apph(real *M, real *J, real *c_equat, real *c_polar, int use_R_ic, real
       if (!skip_rest)
       {
       
-         // compute theta values 
+         // compute theta values (and metric components at AH, OPTIONAL)
          resid=fill_theta(AH_theta[c_AH],eps0,&area,c_equat,c_polar,&is_ex);
+         if (output_metricatAH)
+         {
+               fill_ahmetric(AH_g0_tt[c_AH],AH_g0_tx[c_AH],AH_g0_ty[c_AH],AH_g0_tz[c_AH],
+                     AH_g0_xx[c_AH],AH_g0_xy[c_AH],AH_g0_xz[c_AH],
+                     AH_g0_yy[c_AH],AH_g0_yz[c_AH],AH_g0_psi[c_AH],
+                     eps0,&is_ex);
+         }
       
 //         if (my_rank==0)
 //         {

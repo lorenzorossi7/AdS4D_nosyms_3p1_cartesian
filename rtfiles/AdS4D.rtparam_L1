@@ -24,7 +24,7 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 0000
+AH_max_iter := 10000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -35,12 +35,13 @@ AH_Nphi := 17
 AH_freq := 1
 AH_freq_aft := 1
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 1.0
+ex_rbuf := 0.35
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
 AH_max_iter_4 := 0
 AH_tmin := 0
+output_metricatAH := 1
 
 #general (set skip_constraints=1 to make sure Hb_a=0 set to zero;#
 #         otherwise init_hb.f will set Hb_a=-C_a not exactly zero)#
@@ -207,14 +208,14 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 4
+save_1_vars := [ "iresall" "gb_res" "gb_xx" "Hb_x" ]
 
 num_save_2_vars := 4
 save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]
 
-num_save_3_vars := 0
-save_3_vars := [ ]
+num_save_3_vars := 2
+save_3_vars := [ "gb_xx" "Hb_x" ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1
