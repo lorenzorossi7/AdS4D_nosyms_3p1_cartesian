@@ -246,7 +246,7 @@ int kretsch_shape[3];
 char kretsch_cnames[256];
 double *kretsch_coords;
 
-int baseNx,baseNy,baseNz;
+int baseNx,baseNy,baseNz,basesize;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
 int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
@@ -1135,7 +1135,21 @@ void AdS4D_var_post_init(char *pfile)
       relkretschcentregrid0= malloc(sizeof(real));
   }
   if (output_kretsch)
-  {  
+  { 
+      baseNx=AMRD_base_shape[0];
+      baseNy=AMRD_base_shape[1];
+      baseNz=AMRD_base_shape[2]; 
+      basesize=baseNx*baseNy*baseNz;
+      kretsch_rank=3;
+      kretsch_shape[0]=baseNx;
+      kretsch_shape[1]=baseNy;
+      kretsch_shape[2]=baseNz;
+      sprintf(kretsch_cnames,"x|y|z");
+      kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+      for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+      for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+      for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
+
       lrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
       maxrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
       minrelkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
@@ -2058,9 +2072,9 @@ void AdS4D_pre_io_calc(void)
           ks=(bbox[4]-base_bbox[4])/dz;    // for "left-most"  processors, includes k=0
           ke=(bbox[5]-base_bbox[4])/dz+1;  // for "right-most" processors, includes k=Ny
 
-           baseNx=AMRD_base_shape[0];
-           baseNy=AMRD_base_shape[1];
-           baseNz=AMRD_base_shape[2];
+//           baseNx=AMRD_base_shape[0];
+//           baseNy=AMRD_base_shape[1];
+//           baseNz=AMRD_base_shape[2];
 
            for (i=is; i<ie; i++)
            {
@@ -2105,21 +2119,21 @@ void AdS4D_pre_io_calc(void)
        {
 
 
-           kretsch_rank=3;
-           kretsch_shape[0]=baseNx;
-           kretsch_shape[1]=baseNy;
-           kretsch_shape[2]=baseNz;
-           sprintf(kretsch_cnames,"x|y|z");
-           kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
-           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
-           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
-           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
+//           kretsch_rank=3;
+//           kretsch_shape[0]=baseNx;
+//           kretsch_shape[1]=baseNy;
+//           kretsch_shape[2]=baseNz;
+//           sprintf(kretsch_cnames,"x|y|z");
+//           kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+//           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+//           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+//           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
 
 
-             MPI_Allreduce((lrelkretsch0),(maxrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-             MPI_Allreduce((lrelkretsch0),(minrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-             MPI_Allreduce((lkretsch0),(maxkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-             MPI_Allreduce((lkretsch0),(minkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+             MPI_Allreduce(lrelkretsch0,maxrelkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+             MPI_Allreduce(lrelkretsch0,minrelkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+             MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+             MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
    
              for (i=0; i<baseNx*baseNy*baseNz; i++)
              {
@@ -2139,11 +2153,11 @@ void AdS4D_pre_io_calc(void)
            if (my_rank==0)
            {
             sprintf(name,"%srelkretsch",AMRD_save_tag);
-            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
-//            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
+//            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
             sprintf(name,"%skretsch",AMRD_save_tag);
-            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
-//            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
+//            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
            }
    
           } //closes condition on output_kretsch
@@ -3650,20 +3664,22 @@ void AdS4D_post_tstep(int L)
           {
 
 
-           kretsch_rank=3;
-           kretsch_shape[0]=baseNx;
-           kretsch_shape[1]=baseNy;
-           kretsch_shape[2]=baseNz;
-           sprintf(kretsch_cnames,"x|y|z");
-           kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
-           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
-           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
-           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
+//           kretsch_rank=3;
+//           kretsch_shape[0]=baseNx;
+//           kretsch_shape[1]=baseNy;
+//           kretsch_shape[2]=baseNz;
+//           sprintf(kretsch_cnames,"x|y|z");
+//           kretsch_coords = malloc(sizeof(double)*(baseNx+baseNy+baseNz));
+//           for (i=0;i<baseNx;i++) {kretsch_coords[i] = base_bbox[0]+i*dx;}
+//           for (j=0;j<baseNy;j++) {kretsch_coords[j+baseNx] = base_bbox[2]+j*dy;}
+//           for (k=0;k<baseNz;k++) {kretsch_coords[k+baseNx+baseNy] = base_bbox[4]+k*dz;}
 
-            MPI_Allreduce((lrelkretsch0),(maxrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-            MPI_Allreduce((lrelkretsch0),(minrelkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-            MPI_Allreduce((lkretsch0),(maxkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-            MPI_Allreduce((lkretsch0),(minkretsch0),baseNx*baseNy*baseNz,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//            printf("basesize=%i\n",basesize);
+
+            MPI_Allreduce(lrelkretsch0,maxrelkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+            MPI_Allreduce(lrelkretsch0,minrelkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+            MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+            MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
 
   
             for (i=0; i<baseNx*baseNy*baseNz; i++)
@@ -3683,11 +3699,11 @@ void AdS4D_post_tstep(int L)
             if (my_rank==0)
             {
              sprintf(name,"%srelkretsch",AMRD_save_tag);
-             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
-//             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
+//             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
+             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
              sprintf(name,"%skretsch",AMRD_save_tag);
-             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
-//             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
+//             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
+             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
 
             }
 
