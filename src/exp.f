@@ -1046,12 +1046,12 @@ c-----------------------------------------------------------------------
            write(*,*) '(AH points too bunched up near i0 or j0 endpts)'
            write(*,*) '(... reduce AH_Nchi,AH_Nphi or increase res)'
 !           write(*,*) ' i0,j0=',i0,j0
-!           write(*,*) ' AH_R,AH_chi,AH_phi=',AH_R(i0,j0),AH_chi,AH_phi
+           write(*,*) ' AH_R,AH_chi,AH_phi=',AH_R(i0,j0),AH_chi,AH_phi
 !           write(*,*) ' xc(1),xc(2),xc(3)=',AH_xc(1),AH_xc(2),AH_xc(3)
-!           write(*,*) ' i,j,k=',i,j,k
-!           write(*,*) ' x0,y0,z0=',x0,y0,z0
+           write(*,*) ' i,j,k=',i,j,k
+           write(*,*) ' x0,y0,z0=',x0,y0,z0
 !           write(*,*) ' x(1),y(1),z(1)=',x(1),y(1),z(1)
-!           write(*,*) ' dx,dy,dz=',dx,dy,dz
+           write(*,*) ' dx,dy,dz=',dx,dy,dz
 !           write(*,*) ' dahchi,dahphi=',dahchi,dahphi
 !           write(*,*) '--------------------------------------------'
            AH_theta(i0,j0)=100

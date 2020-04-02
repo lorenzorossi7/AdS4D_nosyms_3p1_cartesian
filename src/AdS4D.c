@@ -1156,10 +1156,10 @@ void AdS4D_var_post_init(char *pfile)
       relkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
 
 
-      lkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
-      maxkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
-      minkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
-      kretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+//      lkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+//      maxkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+//      minkretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
+//      kretsch0= malloc(AMRD_base_shape[0]*AMRD_base_shape[1]*AMRD_base_shape[2]*sizeof(real));
 
   }
 
@@ -2083,7 +2083,7 @@ void AdS4D_pre_io_calc(void)
              for (k=ks; k<ke; k++)
              {
               lrelkretsch0[i+baseNx*(j+baseNy*k)]=relkretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
-              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+//              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
              }
             }
            }
@@ -2132,20 +2132,20 @@ void AdS4D_pre_io_calc(void)
 
              MPI_Allreduce(lrelkretsch0,maxrelkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
              MPI_Allreduce(lrelkretsch0,minrelkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-             MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-             MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//             MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//             MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
    
              for (i=0; i<baseNx*baseNy*baseNz; i++)
              {
               if (uniSize>1)
               {
                relkretsch0[i]=maxrelkretsch0[i]+minrelkretsch0[i];
-               kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
+//               kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
               }
               else
               {
                relkretsch0[i]=maxrelkretsch0[i];
-               kretsch0[i]=maxkretsch0[i];
+//               kretsch0[i]=maxkretsch0[i];
               }
              }
    
@@ -2155,9 +2155,9 @@ void AdS4D_pre_io_calc(void)
             sprintf(name,"%srelkretsch",AMRD_save_tag);
 //            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
-            sprintf(name,"%skretsch",AMRD_save_tag);
+//            sprintf(name,"%skretsch",AMRD_save_tag);
 //            gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
-            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
+//            gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
            }
    
           } //closes condition on output_kretsch
@@ -3578,7 +3578,7 @@ void AdS4D_post_tstep(int L)
              for (k=ks; k<ke; k++)
              {
               lrelkretsch0[i+baseNx*(j+baseNy*k)]=relkretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
-              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
+//              lkretsch0[i+baseNx*(j+baseNy*k)]=kretsch[(i-is)+Nx*((j-js)+Ny*(k-ks))];
              }
             }
            }
@@ -3678,8 +3678,8 @@ void AdS4D_post_tstep(int L)
 
             MPI_Allreduce(lrelkretsch0,maxrelkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
             MPI_Allreduce(lrelkretsch0,minrelkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-            MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-            MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+//            MPI_Allreduce(lkretsch0,maxkretsch0,basesize,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+//            MPI_Allreduce(lkretsch0,minkretsch0,basesize,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
 
   
             for (i=0; i<baseNx*baseNy*baseNz; i++)
@@ -3687,12 +3687,12 @@ void AdS4D_post_tstep(int L)
              if (uniSize>1)
              {
               relkretsch0[i]=maxrelkretsch0[i]+minrelkretsch0[i];
-              kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
+//              kretsch0[i]=maxkretsch0[i]+minkretsch0[i];
              }
              else
              {
               relkretsch0[i]=maxrelkretsch0[i];
-              kretsch0[i]=maxkretsch0[i];
+//              kretsch0[i]=maxkretsch0[i];
              }
             }
 
@@ -3701,9 +3701,9 @@ void AdS4D_post_tstep(int L)
              sprintf(name,"%srelkretsch",AMRD_save_tag);
 //             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,relkretsch0);
              gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,relkretsch0);
-             sprintf(name,"%skretsch",AMRD_save_tag);
+//             sprintf(name,"%skretsch",AMRD_save_tag);
 //             gft_out_full(name,ct,kretsch_shape,kretsch_cnames,kretsch_rank,kretsch_coords,kretsch0);
-             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
+//             gft_out_bbox(name,ct,kretsch_shape,kretsch_rank,base_bbox,kretsch0);
 
             }
 
