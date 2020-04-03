@@ -9,6 +9,7 @@ c----------------------------------------------------------------------
      &                  efe_yy_ires,
      &                  efe_yz_ires,
      &                  efe_psi_ires,
+     &                  kg_ires,
      &                  kretsch,
      &                  relkretsch,
      &                  relkretschcentregrid,
@@ -42,6 +43,7 @@ c----------------------------------------------------------------------
         real*8 efe_yy_ires(Nx,Ny,Nz)
         real*8 efe_yz_ires(Nx,Ny,Nz)
         real*8 efe_psi_ires(Nx,Ny,Nz)
+        real*8 kg_ires(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
         real*8 lambda4
@@ -541,10 +543,27 @@ c----------------------------------------------------------------------
 
                relkretsch(i,j,k)=(kretsch(i,j,k))/kretschpureads-1.0d0
 
+                !--------------------------------------------------------------------------
+                ! phi1_res = phi1,ab g^ab + phi1,b g^ab,a + phi1,c g^cb gamma^a_ab
+                !         (= g^ab phi1,ab - g^ab gamma^c_ab phi1,c) 
+                !--------------------------------------------------------------------------
+               kg_ires(i,j,k)=0.0d0
+               do a=1,4
+                do b=1,4
+                 do c=1,4
+                   kg_ires(i,j,k)=
+     &                         kg_ires(i,j,k)
+     &                         +phi10_xx(a,b)*g0_uu(a,b)
+     &                         +phi10_x(b)*g0_uu_x(a,b,a)
+     &                         +phi10_x(c)*g0_uu(c,b)*gamma_ull(a,a,b)
+                 end do
+                end do
+               end do
 
             else
                kretsch(i,j,k)=0.0d0
                relkretsch(i,j,k)=0.0d0
+               kg_ires(i,j,k)=0.0d0
             end if
 
 !find the indices denoting the point at the centre of the grid. Needed to compute relkretschcentregrid
@@ -571,7 +590,7 @@ c----------------------------------------------------------------------
 !           write(*,*) "ex,chr(ic,jc,kc)",ex,chr(ic,jc,kc)
 !           write(*,*) "ic,jc,kc=",ic,jc,kc
 !           write(*,*) "relkretschcentregrid=",relkretschcentregrid
- 
+
 !!!!!DEBUGGING!!!!!!!
 !        max_efe_all_ires=0.0d0
 !        max_i=0

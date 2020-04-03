@@ -166,6 +166,7 @@ real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*irespsi;
 real *irestz;
 real *iresxz;
 real *iresyz;
+real *ireskg;
 real *qstt,*qstx,*qsty,*qsxx,*qsxy,*qsyy,*qspsi;
 real *qsmass;
 real *qsone;
@@ -250,6 +251,7 @@ int baseNx,baseNy,baseNz,basesize;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
 int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
+int ireskg_gfn;
 int qstt_gfn,qstx_gfn,qsty_gfn,qsxx_gfn,qsxy_gfn,qsyy_gfn,qspsi_gfn;
 int qsmass_gfn;
 int qsone_gfn;
@@ -520,6 +522,7 @@ void set_gfns(void)
     if ((iresyy_gfn  = PAMR_get_gfn("iresyy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((iresyz_gfn  = PAMR_get_gfn("iresyz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((irespsi_gfn  = PAMR_get_gfn("irespsi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((ireskg_gfn  = PAMR_get_gfn("ireskg",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((qstt_gfn  = PAMR_get_gfn("qstt",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((qstx_gfn  = PAMR_get_gfn("qstx",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((qsty_gfn  = PAMR_get_gfn("qsty",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -796,6 +799,7 @@ void ldptr(void)
    iresyy = gfs[iresyy_gfn-1];
    iresyz = gfs[iresyz_gfn-1];
    irespsi = gfs[irespsi_gfn-1];
+   ireskg = gfs[ireskg_gfn-1];
    qstt = gfs[qstt_gfn-1];
    qstx = gfs[qstx_gfn-1];
    qsty = gfs[qsty_gfn-1];
@@ -1984,6 +1988,7 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kg_ires,
          kretsch,
          relkretsch,
          relkretschcentregrid,
@@ -2021,6 +2026,7 @@ void AdS4D_pre_io_calc(void)
          efe_yy_ires,
          efe_yz_ires,
          efe_psi_ires,
+         kg_ires,
          kretsch,
          relkretsch,
          relkretschcentregrid,
@@ -2192,6 +2198,7 @@ void AdS4D_pre_io_calc(void)
               iresyy[ind]=0;  
               iresyz[ind]=0;
               irespsi[ind]=0;  
+              ireskg[ind]=0;
             }
             else
             {
@@ -2206,6 +2213,7 @@ void AdS4D_pre_io_calc(void)
               iresyy[ind]=efe_yy_ires[ind];
               iresyz[ind]=efe_yz_ires[ind];
               irespsi[ind]=efe_psi_ires[ind];
+              ireskg[ind]=kg_ires[ind];
             }
           }
          } 
@@ -2830,6 +2838,7 @@ void AdS4D_pre_tstep(int L)
           efe_yy_ires,
           efe_yz_ires,
           efe_psi_ires,
+          kg_ires,
           kretsch,
           relkretsch,
           relkretschcentregrid,
@@ -3528,6 +3537,7 @@ void AdS4D_post_tstep(int L)
           efe_yy_ires,
           efe_yz_ires,
           efe_psi_ires,
+          kg_ires,
           kretsch,
           relkretsch, 
           relkretschcentregrid,
