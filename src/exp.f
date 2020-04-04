@@ -493,9 +493,13 @@ c-----------------------------------------------------------------------
             ! AH_R,AH_chi: polar coordinates of point on AH, wrt center of AH
             ! AH_xc(1),AH_xc(2),AH_xc(3): cartesian coordinates of center of AH, wrt origin
             ! x,y,z cartesian coordinates of point on AH, wrt origin
-            x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-            y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-            z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+!            x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!            y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!            z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+
+            x=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
+            y=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+            z=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
 
             xmin=min(x,xmin)
             ymin=min(y,ymin)
@@ -661,9 +665,13 @@ c-----------------------------------------------------------------------
         ! AH_R,AH_chi: polar coordinates of point on AH, wrt center of AH
         ! AH_xc(1),AH_xc(2),AH_xc(3): cartesian coordinates of center of AH, wrt origin
         ! x,y,z cartesian coordinates of point on AH, wrt origin
-        x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-        y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-        z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+!        x=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!        y=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!        z=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+
+        x=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
+        y=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+        z=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
 
         if ((x-bbox(1)).gt.(2.5*dx).and.(bbox(2)-x).gt.(2.5*dx).and.
      &      (y-bbox(3)).gt.(2.5*dy).and.(bbox(4)-y).gt.(2.5*dy).and.
@@ -813,8 +821,12 @@ c-----------------------------------------------------------------------
                  r=sqrt( (xb-AH_xc(1))**2
      &                  +(yb-AH_xc(2))**2 
      &                  +(zb-AH_xc(3))**2 )
-                 AH_chi=acos( zb-AH_xc(3)/r )
-                 AH_phi=atan2( yb-AH_xc(2),xb-AH_xc(1) )
+!                 AH_chi=acos( zb-AH_xc(3)/r )
+!                 AH_phi=atan2( yb-AH_xc(2),xb-AH_xc(1) )
+
+                 AH_chi=acos( xb-AH_xc(1)/r )
+                 AH_phi=atan2( zb-AH_xc(3),yb-AH_xc(2) )
+
                  if (AH_phi.lt.0) AH_phi=AH_phi+2*PI
 
                  !-----------------------------------------------------
@@ -989,9 +1001,13 @@ c-----------------------------------------------------------------------
         !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
         !AH_xc(1),AH_xc(2),AH_xc(3) cartesian coordinates of center of AH, wrt origin
         !x0,y0,z0 cartesian coordinates of point on AH, wrt origin
-        x0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-        y0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-        z0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(3)
+!        x0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!        y0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!        z0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(3)
+
+        x0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(1)
+        y0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+        z0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
 
         da=0
         d_ceq=0
@@ -1512,9 +1528,13 @@ c-------------------------------------------------------------------------------
         !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
         !AH_xc(1),AH_xc(2),AH_xc(3) cartesian coordinates of center of AH, wrt origin
         !x0,y0,z0 cartesian coordinates of point on AH, wrt origin
-        x0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-        y0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-        z0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(3)
+!        x0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!        y0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!        z0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(3)
+
+        x0=AH_R(i0,j0)*cos(AH_chi)+AH_xc(1)
+        y0=AH_R(i0,j0)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+        z0=AH_R(i0,j0)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
 
         ! extract (i,j,z) cartesian grid point closest to x0,y0,z0
         i=(x0-x(1))/dx+1
@@ -2369,9 +2389,13 @@ c-----------------------------------------------------------------------
 
               !x0,y0,z0 cartesian coordinates of point on AH, wrt center of AH
               !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
-              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+!              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+
+              x0=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
+              y0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+              z0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
 
               xmin=min(xmin,x0)
               xmax=max(xmax,x0)
@@ -2417,9 +2441,14 @@ c-----------------------------------------------------------------------
 
               !x0,y0,z0 cartesian coordinates of point on AH, wrt center of AH
               !AH_R,AH_chi,AH_phi polar coordinates of point on AH, wrt center of AH
-              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
-              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
-              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+!              x0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(1)
+!              y0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(2)
+!              z0=AH_R(i,j)*cos(AH_chi)+AH_xc(3)
+
+              x0=AH_R(i,j)*cos(AH_chi)+AH_xc(1)
+              y0=AH_R(i,j)*sin(AH_chi)*cos(AH_phi)+AH_xc(2)
+              z0=AH_R(i,j)*sin(AH_chi)*sin(AH_phi)+AH_xc(3)
+
               csx=x0/AH_R(i,j)
               csy=y0/AH_R(i,j)
               csz=z0/AH_R(i,j)
