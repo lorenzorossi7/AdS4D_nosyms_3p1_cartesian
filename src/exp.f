@@ -15,25 +15,28 @@ c----------------------------------------------------------------------
         integer i,j,k,Nx,Ny,Nz
         real*8 chr(Nx,Ny,Nz),ex
 
-        integer i1,j1
+        integer i1,j1,k1
 
         ! initialize fixed-size variables
-        data i1,j1/0,0/
+        data i1,j1,k1/0,0,0/
 
         !--------------------------------------------------------------
 
         can_calc_ex=.true.
 
-        if (chr(i,j,k).ne.ex.and.(i.gt.2.and.i.lt.Nx-1.and.
-     &                          j.gt.2.and.j.lt.Ny-1)
+        if (chr(i,j,k).ne.ex.and.((i.gt.2.and.i.lt.Nx-1).and.
+     &                            (j.gt.2.and.j.lt.Ny-1).and.
+     &                            (k.gt.2.and.k.lt.Nz-1))
      &                         ) return
 
         do i1=max(1,min(Nx-2,i-1)),min(Nx,max(3,i+1))
            do j1=max(1,min(Ny-2,j-1)),min(Ny,max(3,j+1))
-              if (chr(i1,j1,k).eq.ex) then
+             do k1=max(1,min(Nz-2,k-1)),min(Nz,max(3,k+1))
+              if (chr(i1,j1,k1).eq.ex) then
                  can_calc_ex=.false.
                  return
               end if
+             end do
            end do
         end do
 
@@ -203,6 +206,7 @@ c----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
+        dz=z(2)-z(1)
 
         is=max(2,is0)
         ie=min(Nx-1,ie0)
@@ -214,19 +218,19 @@ c----------------------------------------------------------------------
         do i=is,ie
           do j=js,je
            do k=ks,ke 
-            if (ltrace) write(*,*) 'i,j:',i,j
+            if (ltrace) write(*,*) 'i,j,k:',i,j,k
 
             any_ex=.false.
 
             if (.not.(do_ex.eq.0.or.
      &          can_calc_ex(chr,i,j,k,Nx,Ny,Nz,ex))) then
-                write(*,*) ' can_calc_ex: i,j has excised neighbors,'
+                write(*,*) ' can_calc_ex: i,j,k has excised neighbors,'
                 write(*,*) '              so cannot be updated '
-                write(*,*) ' i,j=',i,j
-                write(*,*) ' x(i),y(j)=',x(i),y(j)
+                write(*,*) ' i,j,k=',i,j,k
+                write(*,*) ' x(i),y(j),z(k)=',x(i),y(j),z(k)
                 write(*,*) ' chr(i,j,k)=',chr(i,j,k)
-                write(*,*) ' Nx,Ny=',Nx,Ny
-                write(*,*) ' dx,dy=',dx,dy
+                write(*,*) ' Nx,Ny,Nz=',Nx,Ny,Nz
+                write(*,*) ' dx,dy,dz=',dx,dy,dz
                any_ex=.true.
                is_ex=1
             else
