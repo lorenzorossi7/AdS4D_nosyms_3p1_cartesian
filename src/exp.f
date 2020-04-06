@@ -2327,7 +2327,7 @@ c-----------------------------------------------------------------------
         ! set by zero-derivative extrapolation
         do i=1,AH_Nchi
            AH_R(i,1)=(AH_R(i,2)*4-AH_R(i,3))/3
-           AH_R(i,AH_Nphi)=(AH_R(i,AH_Nphi-1)*4-AH_R(i,AH_Nphi-1))/3
+           AH_R(i,AH_Nphi)=(AH_R(i,AH_Nphi-1)*4-AH_R(i,AH_Nphi-2))/3
         end do
         do j=1,AH_Nphi
            AH_R(1,j)=(AH_R(2,j)*4-AH_R(3,j))/3
