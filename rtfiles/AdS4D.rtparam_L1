@@ -5,11 +5,11 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 0.55
+phi1_amp_1 := 1.2
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
-phi1_ecc_1 := [0.3 0.2 0.25]
+phi1_ecc_1 := [0.22 0.2 0.21]
 phi1_B_1 := 0.0
 phi1_C_1 := 0.0
 
@@ -30,8 +30,8 @@ AH_tol := 1e-2
 AH_r0 := 0.10
 AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
-AH_Nchi := 9
-AH_Nphi := 17
+AH_Nchi := 17
+AH_Nphi := 33
 AH_freq := 1
 AH_freq_aft := 1
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
@@ -179,7 +179,7 @@ cp_restore_fname := "cp_L1_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 1
+steps := 2
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
