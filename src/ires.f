@@ -317,165 +317,165 @@ c----------------------------------------------------------------------
               z0=z(k)
               rho0=sqrt(x0**2+y0**2+z0**2)
 
-              ! calculate boxx^c at point i,j
-              ! (boxx^c = -g^ab gamma^c_ab)
-              do c=1,4
-                boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
-     &                       gamma_ull(c,2,2)*g0_uu(2,2)+
-     &                       gamma_ull(c,3,3)*g0_uu(3,3)+
-     &                       gamma_ull(c,4,4)*g0_uu(4,4)+
-     &                    2*(gamma_ull(c,1,2)*g0_uu(1,2)+
-     &                       gamma_ull(c,1,3)*g0_uu(1,3)+
-     &                       gamma_ull(c,1,4)*g0_uu(1,4)+
-     &                       gamma_ull(c,2,3)*g0_uu(2,3)+
-     &                       gamma_ull(c,2,4)*g0_uu(2,4)+
-     &                       gamma_ull(c,3,4)*g0_uu(3,4)) )
-              end do
-
-              ! calculate boxx_a at point i,j
-              ! (boxx_a = g_ab boxx^b)
-              do a=1,4
-                boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
-     &                    boxx_u(2)*g0_ll(a,2)+
-     &                    boxx_u(3)*g0_ll(a,3)+
-     &                    boxx_u(4)*g0_ll(a,4)
-              end do
-
-              ! define unit time-like vector n, normal to t=const
-              ! surfaces
-              n_l(1)=-1/sqrt(-g0_uu(1,1))
-              do a=1,4
-                n_u(a)=n_l(1)*g0_uu(a,1)+
-     &                 n_l(2)*g0_uu(a,2)+
-     &                 n_l(3)*g0_uu(a,3)+
-     &                 n_l(4)*g0_uu(a,4)
-              end do
-              do b=1,4
-                n_l_x(1,b)=-1/2.0d0/sqrt(-g0_uu(1,1))**3*g0_uu_x(1,1,b)
-              end do
-              do a=1,4
-                do b=1,4
-                  n_u_x(a,b)=n_l_x(1,b)*g0_uu(a,1)+
-     &                       n_l_x(2,b)*g0_uu(a,2)+
-     &                       n_l_x(3,b)*g0_uu(a,3)+
-     &                       n_l_x(4,b)*g0_uu(a,4)+
-     &                       n_l(1)*g0_uu_x(a,1,b)+
-     &                       n_l(2)*g0_uu_x(a,2,b)+
-     &                       n_l(3)*g0_uu_x(a,3,b)+
-     &                       n_l(4)*g0_uu_x(a,4,b)
-                end do
-              end do
-
-              ! define gradients of the flow field f=r-AH_R(chi,phi) 
-              ! NOTE: CHECK THESE WITH MATHEMATICA GIVEN
-              ! f(x,y)=sqrt(x^2+y^2)
-              f0_x(1)=0
-              f0_x(2)=x0/rho0
-              f0_x(3)=y0/rho0
-              f0_x(4)=z0/rho0
-              f0_xx(1,1)=0
-              f0_xx(1,2)=0
-              f0_xx(1,3)=0
-              f0_xx(1,4)=0
-              f0_xx(2,2)=(y0**2+z0**2)/rho0**3
-              f0_xx(2,3)=-x0*y0/rho0**3
-              f0_xx(2,4)=-x0*z0/rho0**3
-              f0_xx(3,3)=(x0**2+z0**2)/rho0**3
-              f0_xx(3,4)=-y0*z0/rho0**3
-              f0_xx(4,4)=(x0**2+y0**2)/rho0**3
-
-              do a=1,3
-                do b=a+1,4
-                  f0_xx(b,a)=f0_xx(a,b)
-                end do
-              end do
-
-              ! define metric on codimension-1 surfaces
-              do a=1,4
-                do b=1,4
-                  gam_uu(a,b)=g0_uu(a,b)+n_u(a)*n_u(b)
-                end do
-              end do
-              do a=1,4
-                do b=1,4
-                  do c=1,4
-                    gam_uu_x(a,b,c)=g0_uu_x(a,b,c)
-     &                             +n_u_x(a,c)*n_u(b)
-     &                             +n_u(a)*n_u_x(b,c)
-                  end do
-                end do
-              end do
-
-              ! define unit space-like vector s, orthogonal to n and
-              ! projected gradient of the flow field f
-              do a=1,4
-                s_u(a)=0.0d0
-                do b=1,4
-                  s_u(a)=s_u(a)+gam_uu(a,b)*f0_x(b)
-                end do
-              end do
-              normsusq=0.0d0
-              do a=1,4
-                do b=1,4
-                  normsusq=normsusq+gam_uu(a,b)*f0_x(a)*f0_x(b)
-                end do
-              end do
-              do a=1,4
-                s_u(a)=s_u(a)/sqrt(normsusq)
-              end do
-              do a=1,4
-                s_l(a)=s_u(1)*g0_ll(a,1)+
-     &                 s_u(2)*g0_ll(a,2)+
-     &                 s_u(3)*g0_ll(a,3)+
-     &                 s_u(4)*g0_ll(a,4)
-              end do
-
-              nufx=0
-              do a=1,4
-                nufx=nufx
-     &              +n_u(a)*f0_x(a)
-                nuxfx(a)=0
-                gamxfxfx(a)=0
-                do c=1,4
-                  nuxfx(a)=nuxfx(a)
-     &                    +n_u_x(c,a)*f0_x(c)
-                  do d=1,4
-                    gamxfxfx(a)=gamxfxfx(a)
-     &                        +gam_uu_x(c,d,a)*f0_x(c)*f0_x(d)
-     &                        +gam_uu(c,d)*f0_xx(c,a)*f0_x(d)
-     &                        +gam_uu(c,d)*f0_x(c)*f0_xx(d,a)
-                  end do
-                end do
-              end do
-              do a=1,4
-                do b=1,4
-                  s_l_x(a,b)=
-     &                     (f0_xx(a,b)+n_l_x(a,b)*nufx+n_l(a)*nuxfx(b))
-     &                     /sqrt(normsusq)
-     &                    -(f0_x(a)+n_l(a)*nufx)*gamxfxfx(b)
-     &                     /2.0d0/sqrt(normsusq)**3
-                end do
-              end do
-
-              ! define metric on codimension-2 surfaces
-              do a=1,4
-                do b=1,4
-                  sig_uu(a,b)=g0_uu(a,b)+n_u(a)*n_u(b)-s_u(a)*s_u(b)
-                end do
-              end do
-
-              ! for theta: outward null expansion
-              theta(i,j,k)=0.0d0
-              do c=1,4
-                do d=1,4
-                  theta(i,j,k)=theta(i,j,k)
-     &                   +sig_uu(c,d)*(n_l_x(c,d)+s_l_x(c,d))
-                  do e=1,4
-                    theta(i,j,k)=theta(i,j,k)
-     &                   -sig_uu(c,d)*gamma_ull(e,c,d)*(n_l(e)+s_l(e))
-                  end do
-                end do
-              end do
+!              ! calculate boxx^c at point i,j
+!              ! (boxx^c = -g^ab gamma^c_ab)
+!              do c=1,4
+!                boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
+!     &                       gamma_ull(c,2,2)*g0_uu(2,2)+
+!     &                       gamma_ull(c,3,3)*g0_uu(3,3)+
+!     &                       gamma_ull(c,4,4)*g0_uu(4,4)+
+!     &                    2*(gamma_ull(c,1,2)*g0_uu(1,2)+
+!     &                       gamma_ull(c,1,3)*g0_uu(1,3)+
+!     &                       gamma_ull(c,1,4)*g0_uu(1,4)+
+!     &                       gamma_ull(c,2,3)*g0_uu(2,3)+
+!     &                       gamma_ull(c,2,4)*g0_uu(2,4)+
+!     &                       gamma_ull(c,3,4)*g0_uu(3,4)) )
+!              end do
+!
+!              ! calculate boxx_a at point i,j
+!              ! (boxx_a = g_ab boxx^b)
+!              do a=1,4
+!                boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
+!     &                    boxx_u(2)*g0_ll(a,2)+
+!     &                    boxx_u(3)*g0_ll(a,3)+
+!     &                    boxx_u(4)*g0_ll(a,4)
+!              end do
+!
+!              ! define unit time-like vector n, normal to t=const
+!              ! surfaces
+!              n_l(1)=-1/sqrt(-g0_uu(1,1))
+!              do a=1,4
+!                n_u(a)=n_l(1)*g0_uu(a,1)+
+!     &                 n_l(2)*g0_uu(a,2)+
+!     &                 n_l(3)*g0_uu(a,3)+
+!     &                 n_l(4)*g0_uu(a,4)
+!              end do
+!              do b=1,4
+!                n_l_x(1,b)=-1/2.0d0/sqrt(-g0_uu(1,1))**3*g0_uu_x(1,1,b)
+!              end do
+!              do a=1,4
+!                do b=1,4
+!                  n_u_x(a,b)=n_l_x(1,b)*g0_uu(a,1)+
+!     &                       n_l_x(2,b)*g0_uu(a,2)+
+!     &                       n_l_x(3,b)*g0_uu(a,3)+
+!     &                       n_l_x(4,b)*g0_uu(a,4)+
+!     &                       n_l(1)*g0_uu_x(a,1,b)+
+!     &                       n_l(2)*g0_uu_x(a,2,b)+
+!     &                       n_l(3)*g0_uu_x(a,3,b)+
+!     &                       n_l(4)*g0_uu_x(a,4,b)
+!                end do
+!              end do
+!
+!              ! define gradients of the flow field f=r-AH_R(chi,phi) 
+!              ! NOTE: CHECK THESE WITH MATHEMATICA GIVEN
+!              ! f(x,y)=sqrt(x^2+y^2)
+!              f0_x(1)=0
+!              f0_x(2)=x0/rho0
+!              f0_x(3)=y0/rho0
+!              f0_x(4)=z0/rho0
+!              f0_xx(1,1)=0
+!              f0_xx(1,2)=0
+!              f0_xx(1,3)=0
+!              f0_xx(1,4)=0
+!              f0_xx(2,2)=(y0**2+z0**2)/rho0**3
+!              f0_xx(2,3)=-x0*y0/rho0**3
+!              f0_xx(2,4)=-x0*z0/rho0**3
+!              f0_xx(3,3)=(x0**2+z0**2)/rho0**3
+!              f0_xx(3,4)=-y0*z0/rho0**3
+!              f0_xx(4,4)=(x0**2+y0**2)/rho0**3
+!
+!              do a=1,3
+!                do b=a+1,4
+!                  f0_xx(b,a)=f0_xx(a,b)
+!                end do
+!              end do
+!
+!              ! define metric on codimension-1 surfaces
+!              do a=1,4
+!                do b=1,4
+!                  gam_uu(a,b)=g0_uu(a,b)+n_u(a)*n_u(b)
+!                end do
+!              end do
+!              do a=1,4
+!                do b=1,4
+!                  do c=1,4
+!                    gam_uu_x(a,b,c)=g0_uu_x(a,b,c)
+!     &                             +n_u_x(a,c)*n_u(b)
+!     &                             +n_u(a)*n_u_x(b,c)
+!                  end do
+!                end do
+!              end do
+!
+!              ! define unit space-like vector s, orthogonal to n and
+!              ! projected gradient of the flow field f
+!              do a=1,4
+!                s_u(a)=0.0d0
+!                do b=1,4
+!                  s_u(a)=s_u(a)+gam_uu(a,b)*f0_x(b)
+!                end do
+!              end do
+!              normsusq=0.0d0
+!              do a=1,4
+!                do b=1,4
+!                  normsusq=normsusq+gam_uu(a,b)*f0_x(a)*f0_x(b)
+!                end do
+!              end do
+!              do a=1,4
+!                s_u(a)=s_u(a)/sqrt(normsusq)
+!              end do
+!              do a=1,4
+!                s_l(a)=s_u(1)*g0_ll(a,1)+
+!     &                 s_u(2)*g0_ll(a,2)+
+!     &                 s_u(3)*g0_ll(a,3)+
+!     &                 s_u(4)*g0_ll(a,4)
+!              end do
+!
+!              nufx=0
+!              do a=1,4
+!                nufx=nufx
+!     &              +n_u(a)*f0_x(a)
+!                nuxfx(a)=0
+!                gamxfxfx(a)=0
+!                do c=1,4
+!                  nuxfx(a)=nuxfx(a)
+!     &                    +n_u_x(c,a)*f0_x(c)
+!                  do d=1,4
+!                    gamxfxfx(a)=gamxfxfx(a)
+!     &                        +gam_uu_x(c,d,a)*f0_x(c)*f0_x(d)
+!     &                        +gam_uu(c,d)*f0_xx(c,a)*f0_x(d)
+!     &                        +gam_uu(c,d)*f0_x(c)*f0_xx(d,a)
+!                  end do
+!                end do
+!              end do
+!              do a=1,4
+!                do b=1,4
+!                  s_l_x(a,b)=
+!     &                     (f0_xx(a,b)+n_l_x(a,b)*nufx+n_l(a)*nuxfx(b))
+!     &                     /sqrt(normsusq)
+!     &                    -(f0_x(a)+n_l(a)*nufx)*gamxfxfx(b)
+!     &                     /2.0d0/sqrt(normsusq)**3
+!                end do
+!              end do
+!
+!              ! define metric on codimension-2 surfaces
+!              do a=1,4
+!                do b=1,4
+!                  sig_uu(a,b)=g0_uu(a,b)+n_u(a)*n_u(b)-s_u(a)*s_u(b)
+!                end do
+!              end do
+!
+!              ! for theta: outward null expansion
+!              theta(i,j,k)=0.0d0
+!              do c=1,4
+!                do d=1,4
+!                  theta(i,j,k)=theta(i,j,k)
+!     &                   +sig_uu(c,d)*(n_l_x(c,d)+s_l_x(c,d))
+!                  do e=1,4
+!                    theta(i,j,k)=theta(i,j,k)
+!     &                   -sig_uu(c,d)*gamma_ull(e,c,d)*(n_l(e)+s_l(e))
+!                  end do
+!                end do
+!              end do
 
 !              efe_tt_ires(i,j,k)=!Hads_l(1)+A_l(1)-boxx_l(1)
 !     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j,k)**2+
