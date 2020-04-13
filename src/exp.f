@@ -2291,11 +2291,11 @@ c-----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         !HB!
-        if (AH_Nphi.eq.1) then ! for the phi=0 point on the chi=0,PI poles, set by zero-derivative extrapolation along phi
+        if (AH_Nphi.eq.1) then !set by zero-derivative extrapolation along phi (can do this because there is only one point, so can never be multivalued)
            AH_r(1,1)=(AH_r(2,1)*4-AH_r(3,1))/3
            AH_r(AH_Nchi,1)=(AH_r(AH_Nchi-1,1)*4-AH_r(AH_Nchi-2,1))/3
-        else ! for the rest of the phi points on the chi=0,PI poles, set by average value along phi
-           r0=0
+        else 
+           r0=0 
            r1=0
            do j=1,AH_Nphi
               r0=r0+AH_R(1,j)
@@ -2304,9 +2304,16 @@ c-----------------------------------------------------------------------
            r0=r0/AH_Nphi
            r1=r1/AH_Nphi
            do j=1,AH_Nphi
-              AH_r(1,j)=r0
+              AH_r(1,j)=r0       !set the chi=0,PI to their average value along the phi direction to ensure that they are all the same value
               AH_r(AH_Nchi,j)=r1
            end do
+
+           do j=1,AH_Nphi !set chi=dchi,PI-dchi by zero-derivative extrapolation along phi
+              AH_r(2,j)=(AH_r(1,j)+3*AH_r(3,j)-AH_r(4,j))/3
+              AH_r(AH_Nchi-1,j)=(AH_r(AH_Nchi,j)+
+     &           3*AH_r(AH_Nchi-2,j)-AH_r(AH_Nchi-3,j))/3
+           end do
+
         end if
 
         return 
