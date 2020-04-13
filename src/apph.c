@@ -90,7 +90,7 @@ int fill_own(int Lmax, int ltrace, int *first)
 // is_ex set to 1 if any point couldn't be calculated due to closeness
 // of excision zone ... returns theta average
 //-----------------------------------------------------------------------------
-#define USE_SMOOTH_A 1
+#define USE_SMOOTH_A 0 //HB//
 #define MAX_TRACE 5000
 real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c_polar, int *is_ex)
 {
@@ -174,14 +174,12 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
    for (i=0; i<np; i++) {AH_theta0[i]=AH_w1[c_AH][i];}
 
    //--------------------------------------------------------------------------
-   // regularity is essential on the axis, and we need to do it before
+   //HB//
+   // regularity is essential at the chi=0,PI poles, and we need to do it before
    // smoothing as calc_exp0 does not fill in the axis, and afterwards
    // again to make sure that theta and hence R is always exactly regular
    //--------------------------------------------------------------------------
-   if (AH_xc[c_AH][1]==0) 
-   { 
-     reg_ah_r_(AH_theta0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-   }
+   reg_ah_r_(AH_theta0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
 
    // AH smoothing
    if (eps0>0 && eps0<1)
@@ -212,10 +210,8 @@ real fill_theta(double *AH_theta0, real eps0, real *area, real *c_equat, real *c
         eps0+=1;
       }
    }
-   if (AH_xc[c_AH][1]==0) 
-   { 
-     reg_ah_r_(AH_theta0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-   }
+
+   reg_ah_r_(AH_theta0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
 
    // compute resid as the root mean square of AH_theta values on the AH surface
    for (i=0, resid=0; i<np; i++) resid+=AH_theta0[i]*AH_theta0[i];

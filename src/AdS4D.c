@@ -1365,7 +1365,6 @@ void AdS4D_var_post_init(char *pfile)
          /(pow(3,(2.0/3.0)));
      mh=ief_bh_r0/2;
      rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh;
-//     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh;  //*(1-ex_rbuf[0]); //HB
      if (my_rank==0) 
      {
        printf("\nBH initial data\n"
@@ -1394,7 +1393,6 @@ void AdS4D_var_post_init(char *pfile)
     }
     else
     {
-//     ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=(1-ex_rbuf[0]); //HB
 //     if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver, no BH\n"
 //                            "We excise inside fixed excision radius=%lf\n\n",ex_r[0][0]);
      if (my_rank==0) printf("\nscalar field initial data from Hamiltonian constraint solver\n");

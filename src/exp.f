@@ -2143,7 +2143,7 @@ c-----------------------------------------------------------------------
         real*8 avg_var,v1,v2,v3,v4
 
         logical rem_spikes
-        parameter (rem_spikes=.false.)
+        parameter (rem_spikes=.true.)
         real*8 max_var
         parameter (max_var=5)
 
@@ -2290,49 +2290,24 @@ c-----------------------------------------------------------------------
 
         !--------------------------------------------------------------
 
-!        ! set by average value
-!        r0=0
-!        r1=0
-!        do j=1,AH_Nphi
-!           r0=r0+AH_R(1,j)
-!           r1=r1+AH_R(AH_Nchi,j)
-!        end do
-!        r0=r0/AH_Nphi
-!        r1=r1/AH_Nphi
-!        do j=1,AH_Nphi
-!           AH_R(1,j)=r0
-!           AH_R(AH_Nchi,j)=r1
-!        end do
-
-!        ! testing pureads
-!        do i=1,AH_Nchi
-!           AH_R(i,1)=3.0d0
-!           AH_R(i,AH_Nphi)=3.0d0
-!        end do
-!        do j=2,AH_Nphi-1 !i=1, i=AH_Nchi are the poles i.e. the same pt for all j
-!           AH_R(1,j)=AH_R(1,1)
-!           AH_R(AH_Nchi,j)=AH_R(AH_Nchi,1)
-!        end do
-!
-!        ! set by zero-derivative extrapolation
-!        do i=1,AH_Nchi
-!           AH_R(i,1)=(AH_R(i,2)*4-AH_R(i,3))/3
-!           AH_R(i,AH_Nphi)=(AH_R(i,AH_Nphi-1)*4-AH_R(i,AH_Nphi-1))/3
-!        end do
-!        do j=1,AH_Nphi
-!           AH_R(1,j)=(AH_R(2,j)*4-AH_R(3,j))/3
-!           AH_R(AH_Nchi,j)=(AH_R(AH_Nchi-1,j)*4-AH_R(AH_Nchi-2,j))/3
-!        end do
-
-        ! set by zero-derivative extrapolation
-        do i=1,AH_Nchi
-           AH_R(i,1)=(AH_R(i,2)*4-AH_R(i,3))/3
-           AH_R(i,AH_Nphi)=(AH_R(i,AH_Nphi-1)*4-AH_R(i,AH_Nphi-2))/3
-        end do
-        do j=1,AH_Nphi
-           AH_R(1,j)=(AH_R(2,j)*4-AH_R(3,j))/3
-           AH_R(AH_Nchi,j)=(AH_R(AH_Nchi-1,j)*4-AH_R(AH_Nchi-2,j))/3
-        end do
+        !HB!
+        if (AH_Nphi.eq.1) then ! for the phi=0 point on the chi=0,PI poles, set by zero-derivative extrapolation along phi
+           AH_r(1,1)=(AH_r(2,1)*4-AH_r(3,1))/3
+           AH_r(AH_Nchi,1)=(AH_r(AH_Nchi-1,1)*4-AH_r(AH_Nchi-2,1))/3
+        else ! for the rest of the phi points on the chi=0,PI poles, set by average value along phi
+           r0=0
+           r1=0
+           do j=1,AH_Nphi
+              r0=r0+AH_R(1,j)
+              r1=r1+AH_R(AH_Nchi,j)
+           end do
+           r0=r0/AH_Nphi
+           r1=r1/AH_Nphi
+           do j=1,AH_Nphi
+              AH_r(1,j)=r0
+              AH_r(AH_Nchi,j)=r1
+           end do
+        end if
 
         return 
         end
