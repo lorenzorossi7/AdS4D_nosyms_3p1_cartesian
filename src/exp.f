@@ -2309,9 +2309,8 @@ c-----------------------------------------------------------------------
            end do
 
            do j=1,AH_Nphi !set chi=dchi,PI-dchi by zero-derivative extrapolation along phi
-              AH_r(2,j)=(AH_r(1,j)+3*AH_r(3,j)-AH_r(4,j))/3
-              AH_r(AH_Nchi-1,j)=(AH_r(AH_Nchi,j)+
-     &           3*AH_r(AH_Nchi-2,j)-AH_r(AH_Nchi-3,j))/3
+               AH_r(2,j)=(AH_r(3,j)+3*AH_r(1,j))/4
+               AH_r(AH_Nchi-1,j)=(AH_r(AH_Nchi-2,j)+3*AH_r(AH_Nchi,j))/4
            end do
 
         end if
