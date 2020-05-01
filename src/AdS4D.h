@@ -507,26 +507,42 @@ void chibdy_xibdy_(real *chibdy0,real *xibdy0,real *xextrap0, real *yextrap0, re
 
 void doubleintegralonsphere_(real *AdS_mass0, real *quasiset_massdensity0, real *xextrap0, real *yextrap0, real *zextrap0, int *basenumbdypoints, real *rhobdy0, real *chibdy0, real *xibdy0, int *basebdy_Nchi, int *basebdy_Nxi);
 
-void calc_locoeffphi1_(real *locoeffphi1,
-                           real *phi1_np1,real *phi1_n,real *phi1_nm1,
+void calc_leadordcoeff_phi1_(real *leadordcoeff_phi1,
+                            real *phi1_np1,real *phi1_n,real *phi1_nm1,
+                            real *x,real *y,real *z,real *dt,real *chr,real *AdS_L,real *ex,int *Nx,int *Ny,int *Nz,int *phys_bdy,int *ghost_width);
+
+void calc_bdyphi_(real *bdyphi,
+                  real *leadordcoeff_phi1,
                            real *xextrap,real *yextrap,real *zextrap,
                            real *chrbdy,int *numbdypoints,
                            real *x,real *y,real *z,real *dt,real *chr,real *AdS_L,real *ex,int *Nx,int *Ny,int *Nz,int *phys_bdy,int *ghost_width);
+
+void quasiset_ll_(
+                  real *quasiset_tt_ll,real *quasiset_tchi_ll,real *quasiset_txi_ll,
+                  real *quasiset_chichi_ll,real *quasiset_chixi_ll,
+                  real *quasiset_xixi_ll,
+                  real *quasiset_tracell,
+                  real *quasiset_massdensityll,
+                  real *gb_tt_np1,real *gb_tt_n,real *gb_tt_nm1,
+                  real *gb_tx_np1,real *gb_tx_n,real *gb_tx_nm1,
+                  real *gb_ty_np1,real *gb_ty_n,real *gb_ty_nm1,
+                  real *gb_tz_np1,real *gb_tz_n,real *gb_tz_nm1,
+                  real *gb_xx_np1,real *gb_xx_n,real *gb_xx_nm1,
+                  real *gb_xy_np1,real *gb_xy_n,real *gb_xy_nm1,
+                  real *gb_xz_np1,real *gb_xz_n,real *gb_xz_nm1,
+                  real *gb_yy_np1,real *gb_yy_n,real *gb_yy_nm1,
+                  real *gb_yz_np1,real *gb_yz_n,real *gb_yz_nm1,
+                  real *psi_np1,real *psi_n,real *psi_nm1,
+                  real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
 
 void quasiset_(    real *quasiset_tt, real *quasiset_tchi, real *quasiset_txi, real *quasiset_chichi, real *quasiset_chixi,
                    real *quasiset_xixi,
                    real *quasiset_trace,
                    real *quasiset_massdensity,
-                   real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
-                   real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
-                   real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
-                   real *gb_tz_np1, real *gb_tz_n, real *gb_tz_nm1,
-                   real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
-                   real *gb_xy_np1, real *gb_xy_n, real *gb_xy_nm1,
-                   real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
-                   real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
-                   real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
-                   real *psi_np1, real *psi_n, real *psi_nm1,
+                   real *quasiset_tt_ll, real *quasiset_tchi_ll, real *quasiset_txi_ll, real *quasiset_chichi_ll, real *quasiset_chixi_ll,
+                   real *quasiset_xixi_ll,
+                   real *quasiset_tracell,
+                   real *quasiset_massdensityll,
                    real *xextrap, real *yextrap, real *zextrap,
                    real *chrbdy, int *numbdypoints,
                    real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
