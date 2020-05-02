@@ -2217,8 +2217,7 @@ void AdS4D_pre_io_calc(void)
             ind=i+Nx*(j+Ny*k);
             rho=sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]);
 
-            // excise rho>1-1.5*dx pts (pure AdS diverges at rho=1, so cannot use these pts in difference stencils) 
-            if (chr[ind]==AMRD_ex || 1-rho<1.5*dx_Lc)
+            if (chr[ind]==AMRD_ex)
             {
               iresall[ind]=0;  
               irestt[ind]=0;  
