@@ -75,6 +75,7 @@ c-----------------------------------------------------------------------
         integer Nx,Ny,Nz,i,j,k
         real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,x(Nx),y(Ny),z(Nz),L
 
+        real*8 rhoijk
         real*8 dx,dy,dz,rho_bdy,xi,phi
         real*8 d_to_bdy
         real*8 f_bdy,f_int
@@ -95,6 +96,7 @@ c-----------------------------------------------------------------------
         dy=y(2)-y(1)
         dz=z(2)-z(1)
 
+        rhoijk=sqrt(x(i)**2+y(j)**2+z(k)**2)
         rho_bdy=1.0d0
         f_bdy=0.0d0
 
@@ -103,8 +105,9 @@ c-----------------------------------------------------------------------
         ! see if linear interpolation does the trick ... either in x or
         ! y
 
+        xi=acos(x(i)/rhoijk)
+
         if (abs(x(i)).eq.maxxyz) then
-           xi=acos(x(i)/rho_bdy)
            if (x(i).lt.0) then
               d_to_bdy=x(i)-rho_bdy*cos(xi)
               if (i.eq.Nx) then
@@ -123,8 +126,11 @@ c-----------------------------------------------------------------------
               f_int=f(i-1,j,k)
            end if
            f(i,j,k)=(dx*f_bdy+d_to_bdy*f_int)/(dx+d_to_bdy)
+!           write(*,*) "x(i),y(j),z(k),rho="
+!     &                ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
+!           write(*,*) "d_to_bdy,f_int,dx+d_to_bdy="
+!     &                ,d_to_bdy,f_int,dx+d_to_bdy
         else if (abs(y(j)).eq.maxxyz) then
-           xi=acos(x(i)/rho_bdy)
 
            if (y(j).ne.0) then
               if (z(k).lt.0) then
@@ -132,6 +138,7 @@ c-----------------------------------------------------------------------
               else
                  phi=atan2(z(k),y(j))
               end if
+
            else
               write(*,*) 'interp_from_ads_bdy, error: 
      &                     center of the grid'
@@ -157,11 +164,18 @@ c-----------------------------------------------------------------------
               f_int=f(i,j-1,k)
            end if
            f(i,j,k)=(dy*f_bdy+d_to_bdy*f_int)/(dy+d_to_bdy)
-        else
-           xi=acos(x(i)/rho_bdy)
+
+        else !i.e. abs(z(k)).eq.maxxyz
+
            if (z(k).ne.(0.0d0)) then
+
               if (z(k).lt.0) then
                  phi=atan2(z(k),y(j))+2*PI
+              else
+                 phi=atan2(z(k),y(j))
+              end if
+
+              if (z(k).lt.0) then
                  d_to_bdy=z(k)-rho_bdy*sin(xi)*sin(phi)
                  if (k.eq.Nz) then
                   write(*,*) 'interp_from_ads_bdy, error: out of bounds'
@@ -169,22 +183,27 @@ c-----------------------------------------------------------------------
                   stop
                  end if
                  f_int=f(i,j,k+1)
+!           write(*,*) "x(i),y(j),z(k),rho="
+!     &                ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
+!           write(*,*) "d_to_bdy,f_int,dz+d_to_bdy="
+!     &                ,d_to_bdy,f_int,dz+d_to_bdy
               else
-                 phi=atan2(z(k),y(j))
                  d_to_bdy=rho_bdy*sin(xi)*sin(phi)-z(k)
+                 if (k.eq.1) then
+                  write(*,*) 'interp_from_ads_bdy, error: out of bounds'
+                  write(*,*) 'k=1'
+                  stop
+                 end if
+                 f_int=f(i,j,k-1)
               end if
-              if (k.eq.1) then
-                 write(*,*) 'interp_from_ads_bdy, error: out of bounds'
-                 write(*,*) 'k=1'
-                 stop
-              end if
-              f_int=f(i,j,k-1)
+
            else
               write(*,*) 'interp_from_ads_bdy, error: 
      &                    center of the grid'
               write(*,*) 'i,j,k,x(i),y(j),z(k)=',i,j,k,x(i),y(j),z(k)
               stop
            end if
+
            f(i,j,k)=(dz*f_bdy+d_to_bdy*f_int)/(dz+d_to_bdy)
         end if
 
