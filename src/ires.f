@@ -121,9 +121,6 @@ c----------------------------------------------------------------------
 
         real*8 theta(Nx,Ny,Nz)
 
-        real*8 gb_tt_x_n(Nx,Ny,Nz),gb_xx_x_n(Nx,Ny,Nz)
-        real*8 dergb_tt_x_n,dergb_xx_x_n
-
 !!!!!!!DEBUGGING!!!!!!
         integer max_i,max_j,max_k
         real*8  max_efe_all_ires
@@ -549,27 +546,6 @@ c----------------------------------------------------------------------
 !     &              max_efe_all_ires 
 !!!!!!!!!!!!!!!!!!!!!!!
 
-
-!TEST!
-!         do i=1,Nx
-!          do j=1,Ny
-!           do k=1,Nz
-!
-!               if (chr(i,j,k).ne.ex) then
-!                write(*,*) "IRES DERIVATIVES"
-!      call df1_int_x(gb_tt_n,dergb_tt_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-!      call df1_int_x(gb_xx_n,dergb_xx_x_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-!
-!                gb_tt_x_n(i,j,k)=dergb_tt_x_n
-!                gb_xx_x_n(i,j,k)=dergb_xx_x_n
-!               end if
-!
-!            end do
-!           end do
-!          end do
-!!!!!!            
-
-             
         return
         end
 
@@ -682,9 +658,6 @@ c-----------------------------------------------------------------------
         real*8 kretsch_n(Nx,Ny,Nz),relkretsch_n(Nx,Ny,Nz)
         real*8 kretschpureads
         real*8 relkretschcentregrid
-
-        real*8 gb_tt_x_n(Nx,Ny,Nz),gb_xx_x_n(Nx,Ny,Nz)
-        real*8 dergb_tt_x_n,dergb_xx_x_n
 
 !!!!!!!DEBUGGING!!!!!!
         integer max_i,max_j,max_k
