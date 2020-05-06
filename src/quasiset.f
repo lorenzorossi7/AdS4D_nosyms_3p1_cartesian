@@ -65,8 +65,7 @@ c----------------------------------------------------------------------
            zp1=z(k)
            rhop1=sqrt(xp1**2+yp1**2+zp1**2)
 
-            if (rhop1.lt.(1-9*dx/2)) then
-!            if (rhop1.lt.0.8) then
+            if (rhop1.lt.(1-3*dx/2)) then  !we want to select the first points that are neither excised nor set by linear interpolation (this is so that we can check convergence of grid functions used for boundary extrapolation at those points)
               chrbdy(i,j,k) =ex-1.0d0
               chrbdy2(i,j,k)=ex-1.0d0
             else
@@ -773,6 +772,10 @@ c----------------------------------------------------------------------
         real*8 gamma0sphbdy_uu_chixi(Nx,Ny,Nz)
         real*8 gamma0sphbdy_uu_xixi(Nx,Ny,Nz)
 
+        real*8 gbsph_tt_n_x,gbsph_tt_n_y
+        real*8 gb_tt_n_x,gb_tt_n_y
+        real*8 gb_xx_n_x,gb_xx_n_y
+
         real*8 dergb_tt_x_n,dergbsph_tt_x_n
         real*8 dergb_tt_y_n,dergbsph_tt_y_n
         real*8 dergb_tt_z_n,dergbsph_tt_z_n
@@ -1316,7 +1319,6 @@ c----------------------------------------------------------------------
      &             df_drho(gbsph_chixi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
               dgbsph_xixi_drho_n  =
      &             df_drho(gbsph_xixi_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
-
 
                quasiset_tt_ll(i,j,k)=
      &                         (12*(-dgbsph_chichi_drho_n)

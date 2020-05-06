@@ -23,8 +23,8 @@ do_ex :=1
 #       See the maple scripts for the exact definitions     
 #==============================================================================
 
-num_hyperbolic_vars := 30
-hyperbolic_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]
+num_hyperbolic_vars := 31
+hyperbolic_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" ]
 
 #==============================================================================
 # For now only time-symmetric initial data ... 'conformal' to AdS space
@@ -38,21 +38,20 @@ elliptic_vars_t0 := ["zeta"]
 # "work" variables ... residuals, inverse metric components, etc.
 #==============================================================================
 
-num_AMRH_work_vars := 85
-AMRH_work_vars := [ "gb_tt_x_n" "gb_tt_x_np1" "gb_xx_x_n" "gb_xx_x_np1" "phi1_res" "gb_res" "hb_t_res" "hb_i_res" "kg_ires" "efe_all_ires" "efe_tt_ires" "efe_tx_ires" "efe_ty_ires" "efe_tz_ires" "efe_xx_ires" "efe_xy_ires" "efe_xz_ires" "efe_yy_ires" "efe_yz_ires" "efe_psi_ires" "chrbdy" "quasiset_tt" "quasiset_tchi" "quasiset_txi" "quasiset_chichi" "quasiset_chixi" "quasiset_xixi" "quasiset_massdensity" "quasiset_trace" "AdS_mass" "locoeffphi1" "xextrap" "yextrap" "zextrap" "kretsch" "relkretsch" "relkretschcentregrid" "w1" "w2" "w3" "w4" "alpha" "theta" "f" "tfunction" "iresall" "irestt" "irestx" "iresty" "irestz" "iresxx" "iresxy" "iresxz" "iresyy" "iresyz" "irespsi" "qstt" "qstx" "qsty" "qsxx" "qsxy" "qsyy" "qspsi" "qsmass" "qsone" "test1" "test2" "test3" "test4" "gu_tt" "gu_tx" "gu_ty" "gu_tz" "gu_xx" "gu_xy" "gu_xz" "gu_yy" "gu_yz" "gu_psi" "m_g_det" "Hb_t_0" "Hb_x_0" "Hb_y_0" "Hb_z_0" "cl_res" ]
-
+num_AMRH_work_vars := 80
+AMRH_work_vars := [ "phi1_res" "gb_res" "hb_t_res" "hb_i_res" "efe_all_ires" "efe_tt_ires" "efe_tx_ires" "efe_ty_ires" "efe_tz_ires" "efe_xx_ires" "efe_xy_ires" "efe_xz_ires" "efe_yy_ires" "efe_yz_ires" "efe_psi_ires" "kg_ires" "chrbdy" "quasiset_tt_ll" "quasiset_tchi_ll" "quasiset_txi_ll" "quasiset_chichi_ll" "quasiset_chixi_ll" "quasiset_xixi_ll" "quasiset_massdensityll" "quasiset_tracell" "AdS_mass" "leadordcoeff_phi1" "xextrap" "yextrap" "zextrap" "relkretschcentregrid" "w1" "w2" "w3" "w4" "alpha" "theta" "f" "tfunction" "iresall" "irestt" "irestx" "iresty" "irestz" "iresxx" "iresxy" "iresxz" "iresyy" "iresyz" "irespsi" "ireskg" "qstt" "qstx" "qsty" "qsxx" "qsxy" "qsyy" "qspsi" "qsmass" "qsone" "test1" "test2" "test3" "test4" "gu_tt" "gu_tx" "gu_ty" "gu_tz" "gu_xx" "gu_xy" "gu_xz" "gu_yy" "gu_yz" "gu_psi" "m_g_det" "Hb_t_0" "Hb_x_0" "Hb_y_0" "Hb_z_0" "cl_res" ]
 
 num_MGH_work_vars := 4
 MGH_work_vars := [ "mg_w1" "mg_w2" "mg_w3" "mg_w4" ]
 
-num_AMRH_work_in_MGH_vars := 28
-AMRH_work_in_MGH_vars := [ "phi1_res" "gb_res" "gb_ii_res" "hb_t_res" "hb_i_res" "kg_ires" "efe_all_ires" "efe_tt_ires" "efe_xx_ires" "efe_xy_ires" "efe_xz_ires" "efe_yy_ires" "efe_yz_ires" "efe_psi_ires" "w1" "w2" "w3" "w4" "alpha" "theta" "test1" "test2" "test3" "test4" "Hb_t_0" "Hb_x_0" "Hb_y_0" "cl_res" ]
+num_AMRH_work_in_MGH_vars := 29
+AMRH_work_in_MGH_vars := [ "phi1_res" "gb_res" "gb_ii_res" "hb_t_res" "hb_i_res" "efe_all_ires" "efe_tt_ires" "efe_xx_ires" "efe_xy_ires" "efe_xz_ires" "efe_yy_ires" "efe_yz_ires" "efe_psi_ires" "kg_ires" "w1" "w2" "w3" "w4" "alpha" "theta" "test1" "test2" "test3" "test4" "Hb_t_0" "Hb_x_0" "Hb_y_0" "Hb_z_0" "cl_res" ]
 
 num_amr_inject   := 30
 amr_inject       := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]
 
-num_amr_sync     := 30
-amr_sync         := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]
+num_amr_sync     := 31
+amr_sync         := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" ]
 
 num_amr_interp4  := 30
 amr_interp4      := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]
@@ -113,7 +112,7 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 10000
+AH_max_iter := 0000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -121,10 +120,10 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 4
-AH_freq_aft := 40
+AH_freq := 1
+AH_freq_aft := 1
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.35
+ex_rbuf := 1.0
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
@@ -143,10 +142,11 @@ skip_constraints := 0
 output_ires := 1
 output_bdyquantities := 1
 output_AdS_mass := 0
+#setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
 output_relkretschcentregrid := 1
 output_kretsch := 1
-reduced_ascii := 1
-reduction_factor := 40
+reduced_ascii := 0
+reduction_factor := 1
 alltimes_ascii := 1
 timestep_ascii := 1
 
@@ -238,7 +238,7 @@ c2_i := 0.5
 c3_i := 1.0
 
 rhoa := 0.5
-rhob := 0.95
+rhob := 0.9
 
 #------ dissipation --------------------------------------------------------
 
@@ -297,11 +297,11 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 2
-save_1_vars := [ "iresall" "gb_res" ]
+num_save_1_vars := 3
+save_1_vars := [ "iresall" "gb_res" "quasiset_tt_ll" ]
 
-num_save_2_vars := 4
-save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" ]
+num_save_2_vars := 6
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" ]
 
 num_save_3_vars := 0
 save_3_vars := [ ]
