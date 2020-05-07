@@ -2929,10 +2929,9 @@ void AdS4D_pre_tstep(int L)
               if (my_rank==0)
               {
               // save relkretschcentregrid as ascii
-              FILE * fp;
-              char filename_relkretschcentregrid[64];
-              sprintf(filename_relkretschcentregrid,"AdSbdy_%st_relkretschcentregrid.txt",AMRD_save_tag);
-              fp = fopen (filename_relkretschcentregrid, "a+");
+              FILE *fp;
+              sprintf(name,"AdSbdy_%st_relkretschcentregrid.txt",AMRD_save_tag);
+              fp = fopen(name, "a+");
                     fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
               fclose(fp);
               }
@@ -2994,11 +2993,10 @@ void AdS4D_pre_tstep(int L)
           if (my_rank==0)
           {
 
-           FILE * fp;
-           char filename[64];
+           FILE *fp;
 
-           sprintf(filename,"AdSbdy_%sxext_yext_zext_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%sxext_yext_zext_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0[j],yextrap0[j],zextrap0[j],j);
@@ -3007,8 +3005,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%sxext_yext_zext_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%sxext_yext_zext_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3025,8 +3023,8 @@ void AdS4D_pre_tstep(int L)
         if (alltimes_ascii)
         {
 
-           sprintf(filename,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0[j],j);
@@ -3035,8 +3033,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3050,8 +3048,8 @@ void AdS4D_pre_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           sprintf(filename,"AdSbdy_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -3063,8 +3061,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3081,8 +3079,8 @@ void AdS4D_pre_tstep(int L)
           }
 
 
-           sprintf(filename,"AdSbdy_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3094,8 +3092,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3111,8 +3109,8 @@ void AdS4D_pre_tstep(int L)
           }
 
 
-           sprintf(filename,"AdSbdy_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3124,8 +3122,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3145,8 +3143,8 @@ void AdS4D_pre_tstep(int L)
 
         if (timestep_ascii)
         {
-           sprintf(filename,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0[j],j);
@@ -3155,8 +3153,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3170,8 +3168,8 @@ void AdS4D_pre_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           sprintf(filename,"AdSbdy_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -3183,8 +3181,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3200,8 +3198,8 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
 
-           sprintf(filename,"AdSbdy_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3213,8 +3211,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3229,8 +3227,8 @@ void AdS4D_pre_tstep(int L)
            fclose(fp);
           }
 
-           sprintf(filename,"AdSbdy_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3242,8 +3240,8 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3278,10 +3276,9 @@ void AdS4D_pre_tstep(int L)
             chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);    
             doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi); 
    
-            FILE * fp;
-            char filename_mass[64];
-            sprintf(filename_mass,"AdSbdy_%st_AdSmass.txt",AMRD_save_tag);
-            fp = fopen (filename_mass, "a+");
+            FILE *fp;
+            sprintf(name,"AdSbdy_%st_AdSmass.txt",AMRD_save_tag);
+            fp = fopen(name, "a+");
                  fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
             fclose(fp);
            }
@@ -3525,13 +3522,14 @@ void AdS4D_pre_tstep(int L)
 //=============================================================================
 void AdS4D_post_tstep(int L)
 {
+   char name[256];
    int itrace=1,valid;
    static int local_first = 1;
 
    real ct;
    int n,i,j,k,ind,j_red,Lf,Lc;
    int is,ie,js,je,ks,ke;
-   int count_relkretschcentregrid;
+
 
 //   printf("AdS4D_post_tstep is called");
 //           fflush(stdout);
@@ -3645,10 +3643,9 @@ void AdS4D_post_tstep(int L)
              if (my_rank==0)
              {
              // save relkretschcentregrid as ascii
-             FILE * fp;
-             char filename_relkretschcentregrid[64];
-             sprintf(filename_relkretschcentregrid,"AdSbdy_%st_relkretschcentregrid.txt",AMRD_save_tag);
-             fp = fopen (filename_relkretschcentregrid, "a+");
+             FILE *fp;
+             sprintf(name,"AdSbdy_%st_relkretschcentregrid.txt",AMRD_save_tag);
+             fp = fopen(name, "a+");
                    fprintf(fp,"%24.16e %24.16e \n",ct,*relkretschcentregrid0);
              fclose(fp);
              }
@@ -3712,8 +3709,7 @@ void AdS4D_post_tstep(int L)
           if (my_rank==0)
           {
 
-           FILE * fp;
-           char filename[64];
+           FILE *fp;
            // save quasiset_ll as ascii
 
         if (alltimes_ascii)
@@ -3721,8 +3717,8 @@ void AdS4D_post_tstep(int L)
 
 
 
-           sprintf(filename,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
 
@@ -3733,8 +3729,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             j_red=0; 
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3747,8 +3743,8 @@ void AdS4D_post_tstep(int L)
            fclose(fp);
           }
 
-           sprintf(filename,"AdSbdy_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -3760,8 +3756,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3778,8 +3774,8 @@ void AdS4D_post_tstep(int L)
           }
 
 
-           sprintf(filename,"AdSbdy_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3791,8 +3787,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3808,8 +3804,8 @@ void AdS4D_post_tstep(int L)
           }
 
 
-           sprintf(filename,"AdSbdy_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3821,8 +3817,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
-           fp = fopen (filename, "a+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+           fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3842,8 +3838,8 @@ void AdS4D_post_tstep(int L)
 
         if (timestep_ascii)
         {
-           sprintf(filename,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0[j],j);
@@ -3852,8 +3848,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             j_red=0; 
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3867,8 +3863,8 @@ void AdS4D_post_tstep(int L)
           }
 
            // save quasiset_ll as ascii
-           sprintf(filename,"AdSbdy_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
@@ -3880,8 +3876,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3897,8 +3893,8 @@ void AdS4D_post_tstep(int L)
            fclose(fp);
           }
 
-           sprintf(filename,"AdSbdy_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3910,8 +3906,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3926,8 +3922,8 @@ void AdS4D_post_tstep(int L)
            fclose(fp);
           }
 
-           sprintf(filename,"AdSbdy_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
                 fprintf(fp,"%24.16e %24.16e %i \n",
@@ -3939,8 +3935,8 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(filename,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
-           fp = fopen (filename, "w+");
+           sprintf(name,"AdSbdy_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
             {
                if ((j%reduction_factor)==0)
@@ -3974,10 +3970,9 @@ void AdS4D_post_tstep(int L)
             chibdy_xibdy_(chibdy0,xibdy0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,chiextrap0,xiextrap0,&basebdy_Nchi,&basebdy_Nxi);
             doubleintegralonsphere_(AdS_mass0,quasiset_massdensity0,xextrap0,yextrap0,zextrap0,&basenumbdypoints,rhobdy0,chibdy0,xibdy0,&basebdy_Nchi,&basebdy_Nxi);
 
-            FILE * fp;
-            char filename_mass[64];
-            sprintf(filename_mass,"AdSbdy_%st_AdSmass.txt",AMRD_save_tag);
-            fp = fopen (filename_mass, "a+");
+            FILE *fp;
+            sprintf(name,"AdSbdy_%st_AdSmass.txt",AMRD_save_tag);
+            fp = fopen(name, "a+");
                  fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0);
             fclose(fp);
            }
