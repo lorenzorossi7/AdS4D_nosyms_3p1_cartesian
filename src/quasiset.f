@@ -100,7 +100,7 @@ c----------------------------------------------------------------------
 
            if (chrbdy(i,j,k).ne.ex) then
             if (maxxyzp1.eq.abs(xp1)) then
-!if we use derivatives to definenear boundary quantities, we will only define them at points between is and ie (js and je, ks and ke).
+!if we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke).
 !Therefore, for extrapolation, we can only select near boundary points whose neighbors in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
              if (xp1.gt.0) then 
               if (((i-1).lt.is).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
@@ -1519,24 +1519,6 @@ c-------------------------------------------------------------------------------
         dx=x(2)-x(1)
         dy=y(2)-y(1)
         dz=z(2)-z(1)
-
-!        call quasiset_ll(
-!     &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
-!     &                  quasiset_chichi_ll,quasiset_chixi_ll,
-!     &                  quasiset_xixi_ll,
-!     &                  quasiset_massdensityll,
-!     &                  quasiset_tracell,
-!     &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
-!     &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
-!     &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
-!     &                  gb_tz_np1,gb_tz_n,gb_tz_nm1,
-!     &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
-!     &                  gb_xy_np1,gb_xy_n,gb_xy_nm1,
-!     &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
-!     &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
-!     &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-!     &                  psi_np1,psi_n,psi_nm1,
-!     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 
         ! set index bounds for main loop

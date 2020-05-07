@@ -120,8 +120,8 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 8
-AH_freq_aft := 80
+AH_freq := 1
+AH_freq_aft := 10
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
 ex_rbuf := 0.35
 AH_reset_scale := 1.1
@@ -178,7 +178,7 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [513 513 513]
+base_shape := [97 97 97]
 max_lev := 1
 lambda := 0.2
 rho_sp := 2
@@ -263,12 +263,12 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 99.9
-cp_save_fname := "cp_L4"
-cp_restore_fname := "cp_L4_A"
+cp_save_fname := "cp_L1.5"
+cp_restore_fname := "cp_L1.5_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 48000
+steps := 9000
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -309,8 +309,8 @@ save_3_vars := [ ]
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_3p1_gauge3_L4_"
+save_tag := "AdS4D_3p1_gauge3_L1.5_"
 
-save_ivec := 1-*/8
+save_ivec := 1-*/1
 
 #-----------------------------------------------------

@@ -112,7 +112,7 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 0000
+AH_max_iter := 10000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -120,10 +120,10 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 1
-AH_freq_aft := 1
+AH_freq := 2
+AH_freq_aft := 20
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 1.0
+ex_rbuf := 0.35
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
@@ -300,7 +300,7 @@ max_t_interp_order := 3
 num_save_1_vars := 3
 save_1_vars := [ "iresall" "gb_res" "quasiset_tt_ll" ]
 
-num_save_2_vars := 6
+num_save_2_vars := 5
 save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" ]
 
 num_save_3_vars := 0
