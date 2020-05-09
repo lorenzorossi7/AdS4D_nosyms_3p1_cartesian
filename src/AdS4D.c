@@ -3023,7 +3023,7 @@ void AdS4D_pre_tstep(int L)
         if (alltimes_ascii)
         {
 
-           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           sprintf(name,"AdSbdy_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
            fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3033,7 +3033,7 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
            fp = fopen(name, "a+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
@@ -3143,7 +3143,7 @@ void AdS4D_pre_tstep(int L)
 
         if (timestep_ascii)
         {
-           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           sprintf(name,"AdSbdy_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
            fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3153,7 +3153,7 @@ void AdS4D_pre_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
            fp = fopen(name, "w+");
             j_red=0;
             for( j = 0; j < basenumbdypoints; j++ )
@@ -3717,7 +3717,7 @@ void AdS4D_post_tstep(int L)
 
 
 
-           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           sprintf(name,"AdSbdy_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
            fp = fopen(name, "a+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3729,7 +3729,7 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint.txt",AMRD_save_tag);
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
            fp = fopen(name, "a+");
             j_red=0; 
             for( j = 0; j < basenumbdypoints; j++ )
@@ -3838,7 +3838,7 @@ void AdS4D_post_tstep(int L)
 
         if (timestep_ascii)
         {
-           sprintf(name,"AdSbdy_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           sprintf(name,"AdSbdy_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
            fp = fopen(name, "w+");
             for( j = 0; j < basenumbdypoints; j++ )
               {
@@ -3848,7 +3848,7 @@ void AdS4D_post_tstep(int L)
 
           if (reduced_ascii)
           {
-           sprintf(name,"AdSbdy_reduced_%st_bdyphi1_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+           sprintf(name,"AdSbdy_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
            fp = fopen(name, "w+");
             j_red=0; 
             for( j = 0; j < basenumbdypoints; j++ )

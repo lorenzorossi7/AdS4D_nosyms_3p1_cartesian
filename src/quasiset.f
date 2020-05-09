@@ -26,7 +26,7 @@ c----------------------------------------------------------------------
         real*8 x0,y0,z0,rho0,q
 
         real*8 dx,dy,dz
-        real*8 xp1,yp1,zp1,rhop1
+        real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
 
@@ -64,8 +64,14 @@ c----------------------------------------------------------------------
            yp1=y(j)
            zp1=z(k)
            rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+           chip1=(1/PI)*acos(xp1/rhop1)
+           if (zp1.lt.0) then
+              xip1=(1/(2*PI))*(atan2(zp1,yp1)+2*PI)
+           else
+              xip1=(1/(2*PI))*atan2(zp1,yp1)
+           end if
 
-            if (rhop1.lt.(1-3*dx/2)) then  !we want to select the first points that are neither excised nor set by linear interpolation (this is so that we can check convergence of grid functions used for boundary extrapolation at those points)
+            if (rhop1.lt.(1-5*dx/2)) then !points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2 
               chrbdy(i,j,k) =ex-1.0d0
               chrbdy2(i,j,k)=ex-1.0d0
             else
@@ -73,9 +79,15 @@ c----------------------------------------------------------------------
               chrbdy2(i,j,k)=ex
             end if
 
-! do not include points with y0=z0=0, which give a singular conformal boundary metric
+! eliminate troublesome points
            if (chrbdy(i,j,k).ne.ex) then
-            if ((yp1.eq.0.0d0).and.(zp1.eq.0.0d0)) then
+            if (
+     &          (abs(yp1).lt.10.0d0**(-10)).and.
+     &          (abs(zp1).lt.10.0d0**(-10))
+!     &          (abs(xp1).lt.10.0d0**(-10)).or.
+!     &          (abs(yp1).lt.10.0d0**(-10)).or.
+!     &          (abs(zp1).lt.10.0d0**(-10))
+     &         ) then
              chrbdy(i,j,k)=ex
             end if
            end if
@@ -342,7 +354,10 @@ c----------------------------------------------------------------------
              q=1-rho0
 
             if ((chr(i,j,k).ne.ex)
-     &          .and.((y0.ne.0.0d0).or.(z0.ne.0.0d0)) !xi0 coordinate is not defined if y0=z0=0
+     &          .and.(
+     &                (abs(y0).ge.10.0d0**(-10)).or.
+     &                (abs(z0).ge.10.0d0**(-10))
+     &               )
      &         ) then
                leadordcoeff_phi1(i,j,k)=phi1_n(i,j,k)/q
             else
@@ -379,7 +394,11 @@ c----------------------------------------------------------------------
              q=1-rho0
 
             if ((chr(i,j,k).ne.ex)
-     &          .and.((y0.ne.0.0d0).or.(z0.ne.0.0d0)) !xi0 coordinate is not defined if y0=z0=0
+     &          .and.(
+!the xi coordinate is not defined at y0=z0=0
+     &                (abs(y0).ge.10.0d0**(-10)).or.
+     &                (abs(z0).ge.10.0d0**(-10))
+     &               )
      &         ) then
                leadordcoeff_phi1(i,j,k)=
      &                  -df_drho(phi1_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
@@ -809,9 +828,13 @@ c----------------------------------------------------------------------
 !calculate regularized metric components in spherical coordinates in terms of regularized metric components in Cartesian coordinates
 ! we use the following coordinate transformation (notice that the angles are rescaled w.r.t. the usual spherical coordinates): x=rho*cos(PI*chi),y=rho*sin(PI*chi)*cos(2*PI*xi),z=rho*sin(PI*chi)*sin(2*PI*xi)
 
-          if ( chr(i,j,k).ne.ex
-     &          .and.((y0.ne.0.0d0).or.(z0.ne.0.0d0)) !xi0 coordinate is not defined if y0=z0=0
-     &       ) then
+          if ( (chr(i,j,k).ne.ex)
+     &          .and.(
+!the xi coordinate is not defined at y0=z0=0
+     &                (abs(y0).ge.10.0d0**(-10)).or.
+     &                (abs(z0).ge.10.0d0**(-10))
+     &               )
+     &         ) then
 
 !transformation matrix
 
@@ -1296,8 +1319,12 @@ c----------------------------------------------------------------------
 !                ! calculate the AdS-subtracted bulk gravity quasilocal stress-energy tensor,
 !                ! identified with the bdy CFT stress-energy tensor one-point function
 !                !these are the coefficients of the lowest order terms (i.e. those contributing to the AdS mass) in the expansion of the non-zero components of the quasi-local stress-energy tensor
-            if ( chr(i,j,k).ne.ex
-     &          .and.((y0.ne.0.0d0).or.(z0.ne.0.0d0)) !xi0 coordinate is not defined if y0=z0=0
+            if ( (chr(i,j,k).ne.ex)
+     &          .and.(
+!the xi coordinate is not defined at y0=z0=0
+     &                (abs(y0).ge.10.0d0**(-10)).or.
+     &                (abs(z0).ge.10.0d0**(-10))
+     &               )
      &         ) then
               dgbsph_tt_drho_n    =
      &             df_drho(gbsph_tt_n,x,y,z,i,j,k,chr,ex,Nx,Ny,Nz)
