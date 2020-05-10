@@ -82,11 +82,7 @@ c----------------------------------------------------------------------
 ! eliminate troublesome points
            if (chrbdy(i,j,k).ne.ex) then
             if (
-     &          (abs(yp1).lt.10.0d0**(-10)).and.
-     &          (abs(zp1).lt.10.0d0**(-10))
-!     &          (abs(xp1).lt.10.0d0**(-10)).or.
-!     &          (abs(yp1).lt.10.0d0**(-10)).or.
-!     &          (abs(zp1).lt.10.0d0**(-10))
+     &          (abs(zp1).lt.10.0d0**(-10))  !removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
      &         ) then
              chrbdy(i,j,k)=ex
             end if
