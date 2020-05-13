@@ -16,6 +16,14 @@ c-----------------------------------------------------------------------
         real*8 f(Nx,Ny,Nz),chr(Nx,Ny,Nz),ex,f_x,x(Nx),y(Ny),z(Nz)
 
         real*8 dx
+        real*8 x0,y0,z0
+        real*8 xi,yj,zk
+        real*8 xip1,yjp1,zkp1
+        real*8 xim1,yjm1,zkm1
+        real*8 rhoijk,rhoip1jk,rhoijp1k,rhoip1jp1k,rhoijkp1
+        real*8 rhoip1jkp1,rhoijp1kp1,rhoip1jp1kp1
+        real*8 rhoim1jk,rhoijm1k,rhoim1jp1k,rhoijkm1
+        real*8 rhoim1jkm1,rhoijm1km1,rhoim1jm1km1
 
         !--------------------------------------------------------------
 
@@ -27,6 +35,15 @@ c-----------------------------------------------------------------------
         data extrap/.true./
 
         dx=x(2)-x(1)
+
+        xi=x(i)
+        yj=y(j)
+        zk=z(k)
+        rhoijk=sqrt(xi**2+yj**2+zk**2)
+        xip1=x(i+1)
+        rhoip1jk=sqrt(xip1**2+yj**2+zk**2)
+        xim1=x(i-1)
+        rhoim1jk=sqrt(xim1**2+yj**2+zk**2)
 
 
 !!!!!!!!!!!!MYVERSION
@@ -48,8 +65,16 @@ c-----------------------------------------------------------------------
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (A)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                  end if
                    f_x=0
@@ -76,9 +101,18 @@ c-----------------------------------------------------------------------
                else
                 if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (B)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -110,9 +144,18 @@ c-----------------------------------------------------------------------
                else
                 if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (C)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -157,9 +200,18 @@ c-----------------------------------------------------------------------
                else
                 if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (D)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -201,9 +253,18 @@ c-----------------------------------------------------------------------
                else
                 if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (E)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -239,9 +300,18 @@ c-----------------------------------------------------------------------
                else
                 if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (F)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_x=0
@@ -271,9 +341,18 @@ c-----------------------------------------------------------------------
                else
                  if (first) then
                      first=.false.
+                     first=.false.
                      write(*,*) 'df1_int_x: error in chr stencil (G)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dx=',i,j,k,
-     &                                                   Nx,Ny,Nz,dx
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           xip1,rhoip1jk,xim1,rhoim1jk
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dx,
+     &                           chr(i,j,k),chr(i+1,j,k),chr(i-1,j,k)
                      write(*,*) '    (first error only)'
                  end if
                    f_x=0
@@ -365,9 +444,28 @@ c-----------------------------------------------------------------------
         logical extrap
         data extrap/.true./
 
+        real*8 dx
+        real*8 x0,y0,z0
+        real*8 xi,yj,zk
+        real*8 xip1,yjp1,zkp1
+        real*8 xim1,yjm1,zkm1
+        real*8 rhoijk,rhoip1jk,rhoijp1k,rhoip1jp1k,rhoijkp1
+        real*8 rhoip1jkp1,rhoijp1kp1,rhoip1jp1kp1
+        real*8 rhoim1jk,rhoijm1k,rhoim1jp1k,rhoijkm1
+        real*8 rhoim1jkm1,rhoijm1km1,rhoim1jm1km1
+
         !--------------------------------------------------------------
 
         dy=y(2)-y(1)
+
+        xi=x(i)
+        yj=y(j)
+        zk=z(k)
+        rhoijk=sqrt(xi**2+yj**2+zk**2)
+        yjp1=y(j+1)
+        rhoijp1k=sqrt(xi**2+yjp1**2+zk**2)
+        yjm1=y(j-1)
+        rhoijm1k=sqrt(xi**2+yjm1**2+zk**2)
 
 !!!!!!!MYVERSION!!!!!!!!!!!!
 
@@ -389,8 +487,16 @@ c-----------------------------------------------------------------------
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (A)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                  end if
                    f_y=0
@@ -418,8 +524,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (B)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -452,8 +566,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (C)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -490,8 +612,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (D)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -533,8 +663,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (E)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -571,8 +709,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (F)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                 end if
                    f_y=0
@@ -602,8 +748,16 @@ c-----------------------------------------------------------------------
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_y: error in chr stencil (G)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dy=',i,j,k,
-     &                                                   Nx,Ny,Nz,dy
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k='
+     &                           ,i,j,k,Nx,Ny,Nz,dy,
+     &                           xi,yj,zk,rhoijk,
+     &                           yjp1,rhoijp1k,yjm1,rhoijm1k
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)='
+     &                          ,i,j,k,Nx,Ny,Nz,dy,
+     &                           chr(i,j,k),chr(i,j+1,k),chr(i,j-1,k)
                      write(*,*) '    (first error only)'
                  end if
                    f_y=0
@@ -692,9 +846,28 @@ c-----------------------------------------------------------------------
         logical extrap
         data extrap/.true./
 
+        real*8 dx
+        real*8 x0,y0,z0
+        real*8 xi,yj,zk
+        real*8 xip1,yjp1,zkp1
+        real*8 xim1,yjm1,zkm1
+        real*8 rhoijk,rhoip1jk,rhoijp1k,rhoip1jp1k,rhoijkp1
+        real*8 rhoip1jkp1,rhoijp1kp1,rhoip1jp1kp1
+        real*8 rhoim1jk,rhoijm1k,rhoim1jp1k,rhoijkm1
+        real*8 rhoim1jkm1,rhoijm1km1,rhoim1jm1km1
+
         !--------------------------------------------------------------
 
         dz=z(2)-z(1)
+
+        xi=x(i)
+        yj=y(j)
+        zk=z(k)
+        rhoijk=sqrt(xi**2+yj**2+zk**2)
+        zkp1=z(k+1)
+        rhoijkp1=sqrt(xi**2+yj**2+zkp1**2)
+        zkm1=z(k-1)
+        rhoijkm1=sqrt(xi**2+yj**2+zkm1**2)
 
 !        f_z=0
 
@@ -717,10 +890,16 @@ c-----------------------------------------------------------------------
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (A)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
-                     write(*,*) 'x(i),y(j),z(k),rho0='
-     &                    ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0
@@ -748,8 +927,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (B)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                 end if
                    f_z=0
@@ -782,8 +969,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (C)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                 end if
                    f_z=0
@@ -820,8 +1015,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (D)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                 end if
                    f_z=0
@@ -863,8 +1066,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (E)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                 end if
                    f_z=0
@@ -901,8 +1112,16 @@ c-----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (F)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                 end if
                    f_z=0
@@ -932,10 +1151,16 @@ c-----------------------------------------------------------------------
                  if (first) then
                      first=.false.
                      write(*,*) 'df1_int_z: error in chr stencil (G)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
-                     write(*,*) 'x(i),y(j),z(k),rho0='
-     &                    ,x(i),y(j),z(k),sqrt(x(i)**2+y(j)**2+z(k)**2)
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1='
+     &                           ,i,j,k,Nx,Ny,Nz,dz,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,rhoijkp1,zkm1,rhoijkm1
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)='
+     &                          ,i,j,k,Nx,Ny,Nz,dz,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1)
                      write(*,*) '    (first error only)'
                  end if
                    f_z=0
