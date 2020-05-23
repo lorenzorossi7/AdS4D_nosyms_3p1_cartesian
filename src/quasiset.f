@@ -4,10 +4,13 @@ c
 c routine for setting the mask chrbdy to a value different from ex at grid points that are at large rho=sqrt(x**2+y**2+z**2) and next to excised points, so we're identifying the last not excised grid points near the boundary. We will use them to extrapolate the value of the quasi-local boundary stress-energy tensor at the boundary
 c----------------------------------------------------------------------
 
-        subroutine nexttobdypoints(
+        subroutine nexttobdypoints_freepts(
      &                  chrbdy,
      &                  numbdypoints,
+     &                  bdy_extrap_order,
      &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
 
         implicit none
 
@@ -29,6 +32,7 @@ c----------------------------------------------------------------------
         real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
+        integer bdy_extrap_order
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -71,7 +75,10 @@ c----------------------------------------------------------------------
               xip1=(1/(2*PI))*atan2(zp1,yp1)
            end if
 
-            if (rhop1.lt.(1-5*dx/2)) then !points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2 
+!select only points that have radius smaller than (1-5*dx/2).
+!For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2
+            if ((rhop1.lt.(1-5*dx/2))
+     &          .and.(chr(i,j,k).ne.ex)) then
               chrbdy(i,j,k) =ex-1.0d0
               chrbdy2(i,j,k)=ex-1.0d0
             else
@@ -79,14 +86,14 @@ c----------------------------------------------------------------------
               chrbdy2(i,j,k)=ex
             end if
 
-! eliminate troublesome points
-           if (chrbdy(i,j,k).ne.ex) then
-            if (
-     &          (abs(zp1).lt.10.0d0**(-10))  !removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
-     &         ) then
-             chrbdy(i,j,k)=ex
+
+            if ((i.lt.is).or.(i.gt.ie).or.
+     &          (j.lt.js).or.(j.gt.je).or.
+     &          (k.lt.ks).or.(k.gt.ke)) then
+
+               chrbdy(i,j,k) =ex
+               chrbdy2(i,j,k)=ex
             end if
-           end if
 
            end do
           end do
@@ -102,63 +109,635 @@ c----------------------------------------------------------------------
            zp1=z(k)
            rhop1=sqrt(xp1**2+yp1**2+zp1**2)
 
-           !chrbdy(i,j,k) is not ex only for points near the boundary AND next to excised points   
+! eliminate troublesome points
+!removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
+           if (chrbdy(i,j,k).ne.ex) then
+            if (
+     &          (abs(zp1).lt.10.0d0**(-10)) 
+     &         ) then
+             chrbdy(i,j,k)=ex
+            end if
+           end if
 
+
+!If we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke). Therefore, for extrapolation, we can only select near boundary points whose neighbors used for extrapolation in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
+!We also need to make sure that those neighbours are not excised.
+!We also define near boundary quantities at points where y0 and z0 are not both 0. So we need to make sure that we select points such that neighbouring points used for extrapolation don't have such values of y0,z0. Notice, we've already imposed that z(k) is not 0, we only need to impose the condition when extrapolation is along z, so the value of the z-coordinate of the second point used is different from the first one.
+!The condition (chrbdy2(i+1,j,k).ne.ex) makes sure that (i,j,k) is the outmost point satisfying the conditions of the previous for-loop, which sets chrbdy2 as well as chrbdy. In other words, if there's an outer point w.r.t. (i,j,k) that satisfies those conditions, then we don't want to use (i,j,k) for extrapolation, but we will use that other point. 
+
+
+          if (chrbdy(i,j,k).ne.ex) then
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-           if (chrbdy(i,j,k).ne.ex) then
-            if (maxxyzp1.eq.abs(xp1)) then
-!if we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke).
-!Therefore, for extrapolation, we can only select near boundary points whose neighbors in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
+           if (bdy_extrap_order.eq.1) then
+            if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then 
-              if (((i-1).lt.is).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &           ((chrbdy2(i+1,j,k).ne.ex)
-     &           .and.(chrbdy2(i-1,j,k).ne.ex))) then
+              if ((i-1).lt.is) then !it ensures that the index i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
+              else if (chr(i-1,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i+1).le.Nx) then !ensures that the index i+1 is not out of bounds
+                 if (chrbdy2(i+1,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              else
-              if (((i+1).gt.ie).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &           ((chrbdy2(i+1,j,k).ne.ex)
-     &           .and.(chrbdy2(i-1,j,k).ne.ex))) then
+              if ((i+1).gt.ie) then !it ensures that the index i+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation at other points used for extrapolation
                    chrbdy(i,j,k)=ex
+              else if (chr(i+1,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i-1).ge.1) then !ensures that the index i-1 is not out of bounds
+                 if (chrbdy2(i-1,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              end if
 
 
-            else if (maxxyzp1.eq.abs(yp1)) then
+            else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
              if (yp1.gt.0) then
-              if (((j-1).lt.js).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &            ((chrbdy2(i,j+1,k).ne.ex)
-     &           .and.(chrbdy2(i,j-1,k).ne.ex))) then
+              if ((j-1).lt.js) then !it ensures that the index j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation  at other points used for extrapolation
                    chrbdy(i,j,k)=ex
+              else if (chr(i,j-1,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j+1).le.Ny) then !ensures that the index j+1 is not out of bounds
+                 if (chrbdy2(i,j+1,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              else
-              if (((j+1).gt.je).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &           ((chrbdy2(i,j+1,k).ne.ex)
-     &           .and.(chrbdy2(i,j-1,k).ne.ex))) then
+              if ((j+1).gt.je) then !it ensures that the index j+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
+              else if (chr(i,j+1,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j-1).ge.1) then !ensures that the index j-1 is not out of bounds
+                 if (chrbdy2(i,j-1,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
              if (zp1.gt.0) then
-              if (((k-1).lt.ks).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &           ((chrbdy2(i,j,k+1).ne.ex)
-     &           .and.(chrbdy2(i,j,k-1).ne.ex))) then
-               chrbdy(i,j,k)=ex
+              if ((k-1).lt.ks) then !it ensures that the index k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-1).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-1))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k+1).le.Nz) then !ensures that the index k+1 is not out of bounds
+                 if (chrbdy2(i,j,k+1).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              else
-              if (((k+1).gt.ke).or. !this condition is actually only necessary when using derivatives to define near bdy quantities, i.e. when no_derivatives is set to .false. below
-     &           ((chrbdy2(i,j,k+1).ne.ex)
-     &           .and.(chrbdy2(i,j,k-1).ne.ex))) then
+              if ((k+1).gt.ke) then !it ensures that the index k+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+1).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+1))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k-1).ge.1) then !ensures that the index k-1 is not out of bounds
+                 if (chrbdy2(i,j,k-1).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
               end if
              end if
             
-            end if
+            end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
            
 
-          end if
+           end if !closes condition on bdy_extrap_order.eq.1
+
+
+           if (bdy_extrap_order.eq.2) then
+            if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+             if (xp1.gt.0) then
+              if ((i-2).lt.is) then !it ensures that the index i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i-1,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i-2,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i+1).le.Nx) then !ensures that the index i+1 is not out of bounds
+                 if (chrbdy2(i+1,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((i+2).gt.ie) then !it ensures that the index i+2,i+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i+1,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i+2,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i-1).ge.1) then !ensures that the index i-1 is not out of bounds
+                 if (chrbdy2(i-1,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+
+            else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+             if (yp1.gt.0) then
+              if ((j-2).lt.js) then !it ensures that the index j-2,j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j-1,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j-2,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j+1).le.Ny) then !ensures that the index j+1 is not out of bounds
+                 if (chrbdy2(i,j+1,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((j+2).gt.je) then !it ensures that the index j+2,j+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j+1,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j+2,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j-1).ge.1) then !ensures that the index j-1 is not out of bounds
+                 if (chrbdy2(i,j-1,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            else !i.e. when maxxyzp1.eq.abs(zp1)
+             if (zp1.gt.0) then
+              if ((k-2).lt.ks) then !it ensures that the index k-2,k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-1).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-2).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-1))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-2))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k+1).le.Nz) then !ensures that the index k+1 is not out of bounds
+                 if (chrbdy2(i,j,k+1).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((k+2).gt.ke) then !it ensures that the index k+2,k+1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+1).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+2).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+1))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+2))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k-1).ge.1) then !ensures that the index k-1 is not out of bounds
+                 if (chrbdy2(i,j,k-1).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
+
+
+           end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+        end if !closes condition on chrbdy(i,j,k).ne.ex
+
+
+
+
+
+           if (chrbdy(i,j,k).ne.ex) then
+             numbdypoints=numbdypoints+1
+           end if
+
+
+           end do
+         end do
+        end do
+
+        return
+        end
+
+
+c------------------------------------------------------------------------------------------------------
+
+c----------------------------------------------------------------------
+c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
+c
+c routine for setting the mask chrbdy to a value different from ex at grid points that are at large rho=sqrt(x**2+y**2+z**2) and next to excised points and have coordinates in a range of fixed values for all resolutions (in order to be able to show convergence of boundary extrapolated quantities), so we're identifying the last not excised grid points near the boundary. We will use them to extrapolate the value of the quasi-local boundary stress-energy tensor at the boundary
+c----------------------------------------------------------------------
+
+        subroutine nexttobdypoints_fixedpts(
+     &                  chrbdy,
+     &                  numbdypoints,
+     &                  bdy_extrap_order,
+     &                  ind_distance_fixedpts,
+     &                  currentres_ratio_Lhighres_Llowres,
+     &                  num_fixed_coords,
+     &                  fixed_coords,
+     &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
+
+        implicit none
+
+        integer Nx,Ny,Nz
+        integer phys_bdy(6),ghost_width(6)
+        real*8 L
+        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+
+        real*8 chrbdy(Nx,Ny,Nz),chrbdy2(Nx,Ny,Nz)
+
+        integer i,j,k,is,ie,js,je,ks,ke
+        integer m
+
+        integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
+        integer ix,jy,kz
+
+        real*8 x0,y0,z0,rho0,q
+
+        real*8 dx,dy,dz
+        real*8 xp1,yp1,zp1,rhop1,chip1,xip1
+        real*8 maxxyzp1
+        integer numbdypoints
+        integer bdy_extrap_order
+
+        real*8 currentres_ratio_Lhighres_Llowres
+        integer num_fixed_coords
+        integer ind_distance_fixedpts
+        real*8 fixed_coords(num_fixed_coords)
+
+        integer isxp1fixcoord
+        integer isyp1fixcoord
+        integer iszp1fixcoord
+
+        real*8 PI
+        parameter (PI=3.141592653589793d0)
+
+!----------------------------------------------------------------------
+
+
+        dx=x(2)-x(1)
+        dy=y(2)-y(1)
+        dz=z(2)-z(1)
+
+        numbdypoints=0
+
+        ! set index bounds for main loop
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
+
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+       
+         do i=1,Nx
+          do j=1,Ny
+           do k=1,Nz
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+           chip1=(1/PI)*acos(xp1/rhop1)
+           if (zp1.lt.0) then
+              xip1=(1/(2*PI))*(atan2(zp1,yp1)+2*PI)
+           else
+              xip1=(1/(2*PI))*atan2(zp1,yp1)
+           end if
+
+!select only points that have radius smaller than (1-5*currentres_ratio_Lhighres_Llowres*dx/2).
+!for the lowest degree resolution, currentres_ratio_Lhighres_Llowres=1. For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2 
+
+            if ((rhop1.lt.
+     &          (1-5*currentres_ratio_Lhighres_Llowres*dx/2))
+     &         .and.(chr(i,j,k).ne.ex)) then
+              chrbdy(i,j,k) =ex-1.0d0
+              chrbdy2(i,j,k)=ex-1.0d0
+            else
+              chrbdy(i,j,k) =ex
+              chrbdy2(i,j,k)=ex
+            end if
+
+
+            if ((i.lt.is).or.(i.gt.ie).or.
+     &          (j.lt.js).or.(j.gt.je).or.
+     &          (k.lt.ks).or.(k.gt.ke)) then
+               chrbdy(i,j,k) =ex
+               chrbdy2(i,j,k)=ex
+            end if
+
+           if (chrbdy(i,j,k).ne.ex) then
+
+!select only points whose coordinates are in the group of fixed_coordinates for all resolutions
+             isxp1fixcoord=0
+             isyp1fixcoord=0
+             iszp1fixcoord=0
+             do m=1,num_fixed_coords
+              if ((abs(xp1-fixed_coords(m)).lt.10.0d0**(-10)).and.
+     &            (isxp1fixcoord.ne.1)) then
+                   isxp1fixcoord=1
+              end if
+              if ((abs(yp1-fixed_coords(m)).lt.10.0d0**(-10)).and.
+     &            (isyp1fixcoord.ne.1)) then
+                   isyp1fixcoord=1
+              end if
+              if ((abs(zp1-fixed_coords(m)).lt.10.0d0**(-10)).and.
+     &            (iszp1fixcoord.ne.1)) then
+                   iszp1fixcoord=1
+              end if
+             end do
+
+             if ((isxp1fixcoord.ne.1).or.
+     &           (isyp1fixcoord.ne.1).or.
+     &           (iszp1fixcoord.ne.1)) then
+                   chrbdy(i,j,k)=ex
+                   chrbdy2(i,j,k)=ex
+             end if
+
+
+           end if
+
+
+
+          end do
+         end do
+        end do
+
+         do i=is,ie
+          do j=js,je
+           do k=ks,ke
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+           rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+
+           if (chrbdy(i,j,k).ne.ex) then
+
+
+! eliminate troublesome points
+!removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
+            if (
+     &          (abs(zp1).lt.10.0d0**(-10))
+     &         ) then
+             chrbdy(i,j,k)=ex
+            end if
+
+
+           end if
+
+!NOTICE: for example, in the case of extrapolation along x, x>0, if the closest point to the AdS boundary that we use is (i,j,k), the second fixed (for all resolutions) point that we want to use is (i-ind_distance_fixedpts,j,k)
+!If we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke). Therefore, for extrapolation, we can only select near boundary points whose neighbors used for extrapolation in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
+!We also define near boundary quantities at points where y0 and z0 are not both 0. So we need to make sure that we select points such that neighbouring points used for extrapolation don't have such values of y0,z0. Notice, we've already imposed that z(k) is not 0, we only need to impose the condition when extrapolation is along z, so the value of the z-coordinate of the second point used is different from the first one.
+!The condition (chrbdy2(i+ind_distance_fixedpts,j,k).ne.ex) makes sure that (i,j,k) is the outmost point satisfying the conditions of the previous for-loop, which sets chrbdy2 as well as chrbdy. In other words, if there's an outer point w.r.t. (i,j,k) that satisfies those conditions, then we don't want to use (i,j,k) for extrapolation, but we will use that other point.
+
+          if (chrbdy(i,j,k).ne.ex) then
+           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+
+           if (bdy_extrap_order.eq.1) then
+            if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+             if (xp1.gt.0) then
+              if ((i-ind_distance_fixedpts).lt.is) then !it ensures that the index i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i-ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i+ind_distance_fixedpts).le.Nx) then !ensures that the index i+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i+ind_distance_fixedpts,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((i+ind_distance_fixedpts).gt.ie) then !it ensures that the index i+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i+ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i-ind_distance_fixedpts).ge.1) then !ensures that the index i-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i-ind_distance_fixedpts,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+             if (yp1.gt.0) then
+              if ((j-ind_distance_fixedpts).lt.js) then !it ensures that the index j-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation  at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j-ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j+ind_distance_fixedpts).le.Ny) then !ensures that the index j+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j+ind_distance_fixedpts,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((j+ind_distance_fixedpts).gt.je) then !it ensures that the index j+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j+ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j-ind_distance_fixedpts).ge.1) then !ensures that the index j-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j-ind_distance_fixedpts,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            else !i.e. when maxxyzp1.eq.abs(zp1)
+             if (zp1.gt.0) then
+              if ((k-ind_distance_fixedpts).lt.ks) then !it ensures that the index k-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k+ind_distance_fixedpts).le.Nz) then !ensures that the index k+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j,k+ind_distance_fixedpts).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((k+ind_distance_fixedpts).gt.ke) then !it ensures that the index k+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k-ind_distance_fixedpts).ge.1) then !ensures that the index k-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j,k-ind_distance_fixedpts).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
+
+           end if !closes condition on bdy_extrap_order.eq.1
+
+           
+
+           if (bdy_extrap_order.eq.2) then
+            if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+             if (xp1.gt.0) then
+              if ((i-2*ind_distance_fixedpts).lt.is) then !it ensures that the index i-2*ind_distance_fixedpts,i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i-ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i-2*ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i+ind_distance_fixedpts).le.Nx) then !ensures that the index i+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i+ind_distance_fixedpts,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((i+2*ind_distance_fixedpts).gt.ie) then !it ensures that the index i+2*ind_distance_fixedpts,i+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i+ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i+2*ind_distance_fixedpts,j,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((i-ind_distance_fixedpts).ge.1) then !ensures that the index i-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i-ind_distance_fixedpts,j,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+             if (yp1.gt.0) then
+              if ((j-2*ind_distance_fixedpts).lt.js) then !it ensures that the index j-2*ind_distance_fixedpts,j-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j-ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j-2*ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j+ind_distance_fixedpts).le.Ny) then !ensures that the index j+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j+ind_distance_fixedpts,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((j+2*ind_distance_fixedpts).gt.je) then !it ensures that the index j+2*ind_distance_fixedpts,j+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j+ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j+2*ind_distance_fixedpts,k).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if ((j-ind_distance_fixedpts).ge.1) then !ensures that the index j-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j-ind_distance_fixedpts,k).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            else !i.e. when maxxyzp1.eq.abs(zp1)
+             if (zp1.gt.0) then
+              if ((k-2*ind_distance_fixedpts).lt.ks) then !it ensures that the index k-2*ind_distance_fixedpts,k-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k-2*ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k-2*ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k+ind_distance_fixedpts).le.Nz) then !ensures that the index k+ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j,k+ind_distance_fixedpts).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             else
+              if ((k+2*ind_distance_fixedpts).gt.ke) then !it ensures that the index k+2*ind_distance_fixedpts,k+ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (chr(i,j,k+2*ind_distance_fixedpts).eq.ex) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if (
+     &             (abs(y(j)).lt.10.0d0**(-10)).and.
+     &             (abs(z(k+2*ind_distance_fixedpts))
+     &                 .lt.10.0d0**(-10))
+     &            ) then
+                   chrbdy(i,j,k)=ex
+              else if ((k-ind_distance_fixedpts).ge.1) then !ensures that the index k-ind_distance_fixedpts is not out of bounds
+                 if (chrbdy2(i,j,k-ind_distance_fixedpts).ne.ex) then
+                   chrbdy(i,j,k)=ex
+                 end if
+              end if
+             end if
+
+            end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
+
+           end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+        end if !closes condition on chrbdy(i,j,k).ne.ex
+
+
+
+
 
            if (chrbdy(i,j,k).ne.ex) then
              numbdypoints=numbdypoints+1
@@ -187,6 +766,8 @@ c-------------------------------------------------------------------------------
      &                  chrbdy,
      &                  numbdypoints,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,ghost_width)
+
+!----------------------------------------------------------------------
 
         implicit none
 
@@ -249,7 +830,7 @@ c-------------------------------------------------------------------------------
 
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
-              if (maxxyzp1.eq.abs(xp1)) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                if (xp1.gt.0) then
                   xextrap(lind)=sqrt(1-yp1**2-zp1**2)
                   yextrap(lind)=yp1
@@ -259,7 +840,7 @@ c-------------------------------------------------------------------------------
                   yextrap(lind)=yp1
                   zextrap(lind)=zp1
               end if
-             else if (maxxyzp1.eq.abs(yp1)) then
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
               if (yp1.gt.0) then
                   yextrap(lind)=sqrt(1-xp1**2-zp1**2)
                   xextrap(lind)=xp1
@@ -304,6 +885,8 @@ c----------------------------------------------------------------------
         subroutine calc_leadordcoeff_phi1(leadordcoeff_phi1,
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
 
         implicit none
 
@@ -416,20 +999,24 @@ c-------------------------------------------------------------------------------
 c----------------------------------------------------------------------
 c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
 c
-c routine for computing the leading order coefficient of the scalar field phi1 at the boundary
+c routine for computing the scalar field phi of the boundary CFT
 c----------------------------------------------------------------------
 
-        subroutine calc_bdyphi(bdyphi,
+        subroutine extrap_bdyphi_freepts(bdyphi,
      &                  leadordcoeff_phi1,
      &                  xextrap,yextrap,zextrap,
      &                  chrbdy,numbdypoints,
+     &                  bdy_extrap_order,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
 
         implicit none
 
         integer Nx,Ny,Nz
         integer phys_bdy(6),ghost_width(6)
         integer numbdypoints
+        integer bdy_extrap_order
         real*8 chrbdy(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 L
@@ -452,17 +1039,23 @@ c----------------------------------------------------------------------
         real*8 leadordcoeff_phi1(Nx,Ny,Nz)
         real*8 leadordcoeff_phi1_p1
         real*8 leadordcoeff_phi1_p2
+        real*8 leadordcoeff_phi1_p3
         real*8 bdyphi(numbdypoints)
 
         real*8 xextrap(numbdypoints)
         real*8 yextrap(numbdypoints)
         real*8 zextrap(numbdypoints)
 
-        real*8 xp1,yp1,zp1,xp2,yp2,zp2
+        real*8 xp1,yp1,zp1
+        real*8 xp2,yp2,zp2
+        real*8 xp3,yp3,zp3
         real*8 xex,yex,zex,rhoex,chiex,xiex
         real*8 maxxyzp1
 
-        real*8 extrapalongx,extrapalongy,extrapalongz
+        real*8 firstord_extrap
+        real*8 secondord_extrap
+        real*8 thirdord_extrap
+        real*8 fourthord_extrap
 !----------------------------------------------------------------------
 
         dx=x(2)-x(1)
@@ -497,7 +1090,7 @@ c----------------------------------------------------------------------
            leadordcoeff_phi1_p1=leadordcoeff_phi1(i,j,k)
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-            if (chrbdy(i,j,k).ne.ex) then
+           if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
 
                    xex=xextrap(lind)
@@ -511,43 +1104,40 @@ c----------------------------------------------------------------------
                    xiex=(1/(2*PI))*atan2(zex,yex)
                 end if
 
-
-              if (maxxyzp1.eq.abs(xp1)) then
+             if (bdy_extrap_order.eq.1) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i-1,j,k)
-                  bdyphi(lind)=extrapalongx(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,xp1,xp2,xex)
               else
                   xp2=x(i+1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i+1,j,k)
-                  bdyphi(lind)=extrapalongx(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,xp1,xp2,xex)
                end if
-             else if (maxxyzp1.eq.abs(yp1)) then
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,xp1,xp2,xex)
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
               if (yp1.gt.0) then
                   yp2=y(j-1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j-1,k)
-                  bdyphi(lind)=extrapalongy(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,yp1,yp2,yex)
               else
                   yp2=y(j+1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j+1,k)
-                  bdyphi(lind)=extrapalongy(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,yp1,yp2,yex)
               end if
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,yp1,yp2,yex)
              else
                  if (zp1.gt.0) then
                   zp2=z(k-1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j,k-1)
-                  bdyphi(lind)=extrapalongz(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,zp1,zp2,zex)
                  else
                   zp2=z(k+1)
                   leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j,k+1)
-                  bdyphi(lind)=extrapalongz(leadordcoeff_phi1_p1
-     &                         ,leadordcoeff_phi1_p2,zp1,zp2,zex)
                end if
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,zp1,zp2,zex)
               end if
 
 
@@ -555,7 +1145,84 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if
+            end if !closes condition on bdy_extrap_order.eq.1
+
+
+
+             if (bdy_extrap_order.eq.2) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+                if (xp1.gt.0) then
+                  xp2=x(i-1)
+                  xp3=x(i-2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i-1,j,k)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i-2,j,k)
+              else
+                  xp2=x(i+1)
+                  xp3=x(i+2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i+1,j,k)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i+2,j,k)
+               end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   xp1,xp2,xp3,xex)
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+              if (yp1.gt.0) then
+                  yp2=y(j-1)
+                  yp3=y(j-2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j-1,k)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i,j-2,k)
+              else
+                  yp2=y(j+1)
+                  yp3=y(j+2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j+1,k)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i,j+2,k)
+              end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   yp1,yp2,yp3,yex)
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-1)
+                  zp3=z(k-2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j,k-1)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i,j,k-2)
+                 else
+                  zp2=z(k+1)
+                  zp3=z(k+2)
+                  leadordcoeff_phi1_p2=leadordcoeff_phi1(i,j,k+1)
+                  leadordcoeff_phi1_p3=leadordcoeff_phi1(i,j,k+2)
+               end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   zp1,zp2,zp3,zex)
+              end if
+
+
+!                  bdyphi(lind)=leadordcoeff_phi1_p1  !TEST
+!              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
+!             write(*,*) "bdyphi(lind)=",bdyphi(lind)
+
+            end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+
+
+
+           end if !closes condition on chrbdy(i,j,k).ne.ex
+
+
+
+
           end do
          end do
         end do
@@ -564,6 +1231,261 @@ c----------------------------------------------------------------------
         return
         end
 c--------------------------------------------------------------------------------------
+
+c----------------------------------------------------------------------
+c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
+c
+c routine for computing the scalar field phi of the boundary CFT, extrapolation with fixed points for all resolutions
+c----------------------------------------------------------------------
+
+        subroutine extrap_bdyphi_fixedpts(bdyphi,
+     &                  leadordcoeff_phi1,
+     &                  xextrap,yextrap,zextrap,
+     &                  chrbdy,numbdypoints,
+     &                  bdy_extrap_order,
+     &                  ind_distance_fixedpts,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
+
+        implicit none
+
+        integer Nx,Ny,Nz
+        integer phys_bdy(6),ghost_width(6)
+        integer numbdypoints
+        integer bdy_extrap_order
+        real*8 chrbdy(Nx,Ny,Nz)
+        real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
+        real*8 L
+        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+
+        integer i,j,k,is,ie,js,je,ks,ke,lind
+        integer a,b,c,d
+
+        integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
+        integer ix,jy,kz
+
+
+        real*8 x0,y0,z0,rho0,q,chi0,xi0
+
+        real*8 dx,dy,dz
+
+        real*8 PI
+        parameter (PI=3.141592653589793d0)
+
+        real*8 leadordcoeff_phi1(Nx,Ny,Nz)
+        real*8 leadordcoeff_phi1_p1
+        real*8 leadordcoeff_phi1_p2
+        real*8 leadordcoeff_phi1_p3
+        real*8 bdyphi(numbdypoints)
+
+        real*8 xextrap(numbdypoints)
+        real*8 yextrap(numbdypoints)
+        real*8 zextrap(numbdypoints)
+
+        real*8 xp1,yp1,zp1
+        real*8 xp2,yp2,zp2
+        real*8 xp3,yp3,zp3
+        real*8 xex,yex,zex,rhoex,chiex,xiex
+        real*8 maxxyzp1
+
+        real*8 firstord_extrap
+        real*8 secondord_extrap
+        real*8 thirdord_extrap
+        real*8 fourthord_extrap
+
+        real*8 ratio_Lhighres_Llowres
+        integer resolution_degree
+        integer max_resolution_degree
+        integer reduction_factor
+        integer ind_distance_fixedpts
+!----------------------------------------------------------------------
+
+        dx=x(2)-x(1)
+        dy=y(2)-y(1)
+        dz=z(2)-z(1)
+
+
+        ! set index bounds for main loop
+        is=2
+        ie=Nx-1
+        js=2
+        je=Ny-1
+        ks=2
+        ke=Nz-1
+
+        ! adjust index bounds to compensate for ghost_width
+        if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+        if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+        if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+        if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+
+        lind=0
+        do i=is,ie
+         do j=js,je
+          do k=ks,ke
+           xp1=x(i)
+           yp1=y(j)
+           zp1=z(k)
+
+           leadordcoeff_phi1_p1=leadordcoeff_phi1(i,j,k)
+           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+
+           if (chrbdy(i,j,k).ne.ex) then
+              lind=lind+1
+
+                   xex=xextrap(lind)
+                   yex=yextrap(lind)
+                   zex=zextrap(lind)
+                   rhoex=sqrt(xex**2+yex**2+zex**2)
+                   chiex=(1/PI)*acos(xex/rhoex)
+                if (zex.lt.0) then
+                   xiex=(1/(2*PI))*(atan2(zex,yex)+2*PI)
+                else
+                   xiex=(1/(2*PI))*atan2(zex,yex)
+                end if
+
+             if (bdy_extrap_order.eq.1) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+                if (xp1.gt.0) then
+                  xp2=x(i-ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i-ind_distance_fixedpts,j,k)
+              else
+                  xp2=x(i+ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i+ind_distance_fixedpts,j,k)
+               end if
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,xp1,xp2,xex)
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+              if (yp1.gt.0) then
+                  yp2=y(j-ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j-ind_distance_fixedpts,k)
+              else
+                  yp2=y(j+ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j+ind_distance_fixedpts,k)
+              end if
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,yp1,yp2,yex)
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j,k-ind_distance_fixedpts)
+                 else
+                  zp2=z(k+ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j,k+ind_distance_fixedpts)
+               end if
+                  bdyphi(lind)=
+     &                 firstord_extrap(leadordcoeff_phi1_p1
+     &                  ,leadordcoeff_phi1_p2,zp1,zp2,zex)
+              end if
+
+
+!                  bdyphi(lind)=leadordcoeff_phi1_p1  !TEST
+!              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
+!             write(*,*) "bdyphi(lind)=",bdyphi(lind)
+
+            end if !closes condition on bdy_extrap_order.eq.1
+
+             if (bdy_extrap_order.eq.2) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+                if (xp1.gt.0) then
+                  xp2=x(i-ind_distance_fixedpts)
+                  xp3=x(i-2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i-ind_distance_fixedpts,j,k)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i-2*ind_distance_fixedpts,j,k)
+              else
+                  xp2=x(i+ind_distance_fixedpts)
+                  xp3=x(i+2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i+ind_distance_fixedpts,j,k)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i+2*ind_distance_fixedpts,j,k)
+               end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   xp1,xp2,xp3,xex)
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+              if (yp1.gt.0) then
+                  yp2=y(j-ind_distance_fixedpts)
+                  yp3=y(j-2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j-ind_distance_fixedpts,k)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i,j-2*ind_distance_fixedpts,k)
+              else
+                  yp2=y(j+ind_distance_fixedpts)
+                  yp3=y(j+2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j+ind_distance_fixedpts,k)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i,j+2*ind_distance_fixedpts,k)
+              end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   yp1,yp2,yp3,yex)
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-ind_distance_fixedpts)
+                  zp3=z(k-2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j,k-ind_distance_fixedpts)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i,j,k-2*ind_distance_fixedpts)
+                 else
+                  zp2=z(k+ind_distance_fixedpts)
+                  zp3=z(k+2*ind_distance_fixedpts)
+                  leadordcoeff_phi1_p2=
+     &                leadordcoeff_phi1(i,j,k+ind_distance_fixedpts)
+                  leadordcoeff_phi1_p3=
+     &                leadordcoeff_phi1(i,j,k+2*ind_distance_fixedpts)
+               end if
+                  bdyphi(lind)=
+     &                 secondord_extrap(
+     &                   leadordcoeff_phi1_p1,
+     &                   leadordcoeff_phi1_p2,
+     &                   leadordcoeff_phi1_p3,
+     &                   zp1,zp2,zp3,zex)
+              end if
+
+
+!                  bdyphi(lind)=leadordcoeff_phi1_p1  !TEST
+!              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
+!             write(*,*) "bdyphi(lind)=",bdyphi(lind)
+
+            end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+
+
+           end if !closes condition on chrbdy(i,j,k).ne.ex
+          end do
+         end do
+        end do
+
+
+        return
+        end
+c--------------------------------------------------------------------------------------
+
 
         
 
@@ -576,7 +1498,7 @@ c using a 1-rho expansion about rho=1 at points near the boundary.
 c The tensor components are given in spherical polar coordinates.
 c----------------------------------------------------------------------
 
-        subroutine quasiset_ll(
+        subroutine calc_quasiset_ll(
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
@@ -593,6 +1515,8 @@ c----------------------------------------------------------------------
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
 
 
         implicit none
@@ -1138,8 +2062,8 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
-              quasiset_massdensityll(i,j,k)=0
               quasiset_tracell(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
 
             if (no_derivatives) then
 !             if ((y0.ne.0.0d0).or.(z0.ne.0.0d0)) then
@@ -1171,16 +2095,6 @@ c----------------------------------------------------------------------
      &                                  +PI**2*(3*(gbsph_n(1,1)/q)
      &                                  -2*(gbsph_n(2,2)/q)))
      &                                  )/(4*PI)
-
-               quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
-     &                                    *(
-     &                                     12*(gbsph_n(3,3)/q)
-     &                                    +8*PI**2*(gbsph_n(2,2)/q)
-     &                                    +3*(gbsph_n(4,4)/q)
-     &                                     /((sin(PI*chi0))**2)
-     &                                    )
-     &                                    /(32*PI)
-
 
        !trace of quasi local stress-tensor from definition of trace
              quasiset_tracell(i,j,k)=(
@@ -1238,6 +2152,17 @@ c----------------------------------------------------------------------
 !!     &                                   *(gb_yy_n(i,j,k)/q)))
 !!     &                                 /(8*PI*rho0**2))
 !!             end if
+
+               quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
+     &                                    *(
+     &                                     12*(gbsph_n(3,3)/q)
+     &                                    +8*PI**2*(gbsph_n(2,2)/q)
+     &                                    +3*(gbsph_n(4,4)/q)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
+
+
             end if
 
           else  !excised points or points with y0=z0=0
@@ -1266,8 +2191,8 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
-              quasiset_massdensityll(i,j,k)=0
               quasiset_tracell(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
 
           end if
 
@@ -1384,17 +2309,6 @@ c----------------------------------------------------------------------
      &                                  -2*(-dgbsph_rhorho_drho_n)))
      &                                  )/(4*PI)
 
-               quasiset_massdensityll(i,j,k)=
-     &                                     (sin(PI*chi0))
-     &                                    *(
-     &                                     12*(-dgbsph_chichi_drho_n)
-     &                                    +8*PI**2
-     &                                        *(-dgbsph_rhorho_drho_n)
-     &                                    +3*(-dgbsph_xixi_drho_n)
-     &                                     /((sin(PI*chi0))**2)
-     &                                    )
-     &                                    /(32*PI)
-
 
        !trace of quasi local stress-tensor from definition of trace
              quasiset_tracell(i,j,k)=
@@ -1407,6 +2321,16 @@ c----------------------------------------------------------------------
      &          +gamma0sphbdy_uu_xixi(i,j,k)*quasiset_xixi_ll(i,j,k)
      &                   )
 
+               quasiset_massdensityll(i,j,k)=
+     &                                     (sin(PI*chi0))
+     &                                    *(
+     &                                     12*(-dgbsph_chichi_drho_n)
+     &                                    +8*PI**2
+     &                                        *(-dgbsph_rhorho_drho_n)
+     &                                    +3*(-dgbsph_xixi_drho_n)
+     &                                     /((sin(PI*chi0))**2)
+     &                                    )
+     &                                    /(32*PI)
 
            else !excised points or points with y0=z0=0
 
@@ -1416,8 +2340,8 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
-              quasiset_massdensityll(i,j,k)=0
               quasiset_tracell(i,j,k)=0
+              quasiset_massdensityll(i,j,k)=0
             end if
 
           end do
@@ -1440,28 +2364,30 @@ c using a 1-rho expansion about rho=1 AT the boundary through extrapolation.
 c The tensor components are given in spherical polar coordinates.
 c-------------------------------------------------------------------------------------
 
-        subroutine quasiset(
+        subroutine extrap_quasiset_freepts(
      &                  quasiset_tt,quasiset_tchi,quasiset_txi,
      &                  quasiset_chichi,quasiset_chixi,
      &                  quasiset_xixi,
-     &                  quasiset_massdensity,
      &                  quasiset_trace,
+     &                  quasiset_massdensity,
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
-     &                  quasiset_massdensityll,
      &                  quasiset_tracell,
+     &                  quasiset_massdensityll,
      &                  xextrap,yextrap,zextrap,
      &                  chrbdy,numbdypoints,
+     &                  bdy_extrap_order,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
-!!!!!!!!define variables!!!!!!!!!
+!----------------------------------------------------------------------
 
         implicit none
 
         integer Nx,Ny,Nz
         integer phys_bdy(6),ghost_width(6)
         integer numbdypoints
+        integer bdy_extrap_order
         real*8 chrbdy(Nx,Ny,Nz)
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
         real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
@@ -1498,6 +2424,12 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_massdensity_p2
         real*8 quasiset_trace_p2
 
+        real*8 quasiset_tt_p3,quasiset_tchi_p3
+        real*8 quasiset_txi_p3,quasiset_chichi_p3
+        real*8 quasiset_chixi_p3,quasiset_xixi_p3
+        real*8 quasiset_massdensity_p3
+        real*8 quasiset_trace_p3
+
         real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
         real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
         real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
@@ -1527,17 +2459,22 @@ c-------------------------------------------------------------------------------
 
         real*8 x0,y0,z0,rho0,q
 
-        real*8 xp1,yp1,zp1,rhop1,xp2,yp2,zp2
+        real*8 xp1,yp1,zp1,rhop1
+        real*8 xp2,yp2,zp2
+        real*8 xp3,yp3,zp3
         real*8 xex,yex,zex,rhoex,chiex,xiex
         real*8 maxxyzp1
 
-        real*8 extrapalongx,extrapalongy,extrapalongz
+        real*8 firstord_extrap
+        real*8 secondord_extrap
+        real*8 thirdord_extrap
+        real*8 fourthord_extrap
 
         real*8 dp1p2
 
         real*8 AdS_mass
 
-!!!!!!!!!!!!!!!!
+!----------------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
@@ -1576,11 +2513,11 @@ c-------------------------------------------------------------------------------
            quasiset_chichi_p1=quasiset_chichi_ll(i,j,k)
            quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
            quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
-           quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
            quasiset_trace_p1=quasiset_tracell(i,j,k)
+           quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-            if (chrbdy(i,j,k).ne.ex) then
+           if (chrbdy(i,j,k).ne.ex) then
 
               lind=lind+1
 
@@ -1595,8 +2532,8 @@ c-------------------------------------------------------------------------------
                     xiex=(1/(2*PI))*atan2(zex,yex)
                   end if
 
-
-              if (maxxyzp1.eq.abs(xp1)) then
+             if (bdy_extrap_order.eq.1) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
                   xp2=x(i-1)
@@ -1611,26 +2548,6 @@ c-------------------------------------------------------------------------------
      &                           quasiset_massdensityll(i-1,j,k)
 
 
-                  quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,xp1,xp2,xex)
-                  quasiset_tchi(lind)=extrapalongx(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,xp1,xp2,xex)
-                  quasiset_txi(lind)=extrapalongx(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,xp1,xp2,xex)
-                  quasiset_chichi(lind)=extrapalongx(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,xp1,xp2,xex)
-                  quasiset_chixi(lind)=extrapalongx(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,xp1,xp2,xex)
-                  quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,xp1,xp2,xex)
-          quasiset_trace(lind)=
-     &                         extrapalongx(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,xp1,xp2,xex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongx(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
- 
- 
               else
                   xp2=x(i+1)
                   quasiset_tt_p2=quasiset_tt_ll(i+1,j,k)
@@ -1644,28 +2561,34 @@ c-------------------------------------------------------------------------------
      &                                 quasiset_massdensityll(i+1,j,k)
 
 
-                  quasiset_tt(lind)=extrapalongx(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,xp1,xp2,xex)
-                  quasiset_tchi(lind)=extrapalongx(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,xp1,xp2,xex)
-                  quasiset_txi(lind)=extrapalongx(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,xp1,xp2,xex)
-                  quasiset_chichi(lind)=extrapalongx(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,xp1,xp2,xex)
-                  quasiset_chixi(lind)=extrapalongx(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,xp1,xp2,xex)
-                  quasiset_xixi(lind)=extrapalongx(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,xp1,xp2,xex)
-          quasiset_trace(lind)=
-     &                         extrapalongx(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,xp1,xp2,xex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongx(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,xp1,xp2,xex)
- 
- 
                end if
-             else if (maxxyzp1.eq.abs(yp1)) then
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,xp1,xp2,xex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,xp1,xp2,xex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,xp1,xp2,xex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,xp1,xp2,xex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,xp1,xp2,xex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,xp1,xp2,xex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,xp1,xp2,xex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,xp1,xp2,xex)
+
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
               if (yp1.gt.0) then
                   yp2=y(j-1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j-1,k)
@@ -1675,28 +2598,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
                   quasiset_trace_p2=quasiset_tracell(i,j-1,k)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j-1,k)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j-1,k)
 
 
-                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,yp1,yp2,yex)
-                  quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,yp1,yp2,yex)
-                  quasiset_txi(lind)=extrapalongy(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,yp1,yp2,yex)
-                  quasiset_chichi(lind)=extrapalongy(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,yp1,yp2,yex)
-                  quasiset_chixi(lind)=extrapalongy(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,yp1,yp2,yex)
-                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,yp1,yp2,yex)
-          quasiset_trace(lind)=
-     &                         extrapalongy(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,yp1,yp2,yex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongy(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
- 
  
               else
                   yp2=y(j+1)
@@ -1707,30 +2612,36 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
                   quasiset_trace_p2=quasiset_tracell(i,j+1,k)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j+1,k)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j+1,k)
 
 
-                 quasiset_tt(lind)=extrapalongy(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,yp1,yp2,yex)
-                  quasiset_tchi(lind)=extrapalongy(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,yp1,yp2,yex)
-                  quasiset_txi(lind)=extrapalongy(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,yp1,yp2,yex)
-                  quasiset_chichi(lind)=extrapalongy(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,yp1,yp2,yex)
-                  quasiset_chixi(lind)=extrapalongy(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,yp1,yp2,yex)
-                  quasiset_xixi(lind)=extrapalongy(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,yp1,yp2,yex)
-          quasiset_trace(lind)=
-     &                         extrapalongy(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,yp1,yp2,yex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongy(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,yp1,yp2,yex)
- 
- 
               end if             
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,yp1,yp2,yex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,yp1,yp2,yex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,yp1,yp2,yex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,yp1,yp2,yex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,yp1,yp2,yex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,yp1,yp2,yex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,yp1,yp2,yex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,yp1,yp2,yex)
              else
                  if (zp1.gt.0) then
                   zp2=z(k-1)
@@ -1741,28 +2652,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
                   quasiset_trace_p2=quasiset_tracell(i,j,k-1)
-                quasiset_massdensity_p2=quasiset_massdensityll(i,j,k-1)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j,k-1)
 
 
-                 quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,zp1,zp2,zex)
-                  quasiset_tchi(lind)=extrapalongz(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,zp1,zp2,zex)
-                  quasiset_txi(lind)=extrapalongz(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,zp1,zp2,zex)
-                  quasiset_chichi(lind)=extrapalongz(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,zp1,zp2,zex)
-                  quasiset_chixi(lind)=extrapalongz(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,zp1,zp2,zex)
-                  quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,zp1,zp2,zex)
-          quasiset_trace(lind)=
-     &                         extrapalongz(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,zp1,zp2,zex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongz(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
- 
               else
                   zp2=z(k+1)
                   quasiset_tt_p2=quasiset_tt_ll(i,j,k+1)
@@ -1772,34 +2665,344 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
                   quasiset_trace_p2=quasiset_tracell(i,j,k+1)
-                 quasiset_massdensity_p2=quasiset_massdensityll(i,j,k+1)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j,k+1)
 
 
-                  quasiset_tt(lind)=extrapalongz(quasiset_tt_p1
-     &                         ,quasiset_tt_p2,zp1,zp2,zex)
-                  quasiset_tchi(lind)=extrapalongz(quasiset_tchi_p1
-     &                         ,quasiset_tchi_p2,zp1,zp2,zex)
-                  quasiset_txi(lind)=extrapalongz(quasiset_txi_p1
-     &                         ,quasiset_txi_p2,zp1,zp2,zex)
-                  quasiset_chichi(lind)=extrapalongz(quasiset_chichi_p1
-     &                         ,quasiset_chichi_p2,zp1,zp2,zex)
-                  quasiset_chixi(lind)=extrapalongz(quasiset_chixi_p1
-     &                         ,quasiset_chixi_p2,zp1,zp2,zex)
-                  quasiset_xixi(lind)=extrapalongz(quasiset_xixi_p1
-     &                         ,quasiset_xixi_p2,zp1,zp2,zex)
-          quasiset_trace(lind)=
-     &                         extrapalongz(quasiset_trace_p1
-     &                         ,quasiset_trace_p2,zp1,zp2,zex)
-          quasiset_massdensity(lind)=
-     &                         extrapalongz(quasiset_massdensity_p1
-     &                         ,quasiset_massdensity_p2,zp1,zp2,zex)
- 
                end if
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,zp1,zp2,zex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,zp1,zp2,zex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,zp1,zp2,zex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,zp1,zp2,zex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,zp1,zp2,zex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,zp1,zp2,zex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,zp1,zp2,zex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,zp1,zp2,zex)
               end if
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if
+            end if !closes condition on bdy_extrap_order.eq.1
+
+
+             if (bdy_extrap_order.eq.2) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+                if (xp1.gt.0) then
+
+                  xp2=x(i-1)
+                  xp3=x(i-2)
+                  quasiset_tt_p2=quasiset_tt_ll(i-1,j,k)
+                  quasiset_tt_p3=quasiset_tt_ll(i-2,j,k)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i-1,j,k)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i-2,j,k)
+                  quasiset_txi_p2=quasiset_txi_ll(i-1,j,k)
+                  quasiset_txi_p3=quasiset_txi_ll(i-2,j,k)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i-1,j,k)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i-2,j,k)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i-1,j,k)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i-2,j,k)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i-2,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i-1,j,k)
+                  quasiset_trace_p3=quasiset_tracell(i-2,j,k)
+                  quasiset_massdensity_p2=
+     &                           quasiset_massdensityll(i-1,j,k)
+                  quasiset_massdensity_p3=
+     &                           quasiset_massdensityll(i-2,j,k)
+
+
+              else
+                  xp2=x(i+1)
+                  xp3=x(i+2)
+                  quasiset_tt_p2=quasiset_tt_ll(i+1,j,k)
+                  quasiset_tt_p3=quasiset_tt_ll(i+2,j,k)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i+1,j,k)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i+2,j,k)
+                  quasiset_txi_p2=quasiset_txi_ll(i+1,j,k)
+                  quasiset_txi_p3=quasiset_txi_ll(i+2,j,k)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i+1,j,k)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i+2,j,k)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i+1,j,k)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i+2,j,k)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i+2,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i+1,j,k)
+                  quasiset_trace_p3=quasiset_tracell(i+2,j,k)
+                  quasiset_massdensity_p2=
+     &                                 quasiset_massdensityll(i+1,j,k)
+                  quasiset_massdensity_p3=
+     &                                 quasiset_massdensityll(i+2,j,k)
+
+
+               end if
+
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   xp1,xp2,xp3,xex)
+
+
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+              if (yp1.gt.0) then
+                  yp2=y(j-1)
+                  yp3=y(j-2)
+                  quasiset_tt_p2=quasiset_tt_ll(i,j-1,k)
+                  quasiset_tt_p3=quasiset_tt_ll(i,j-2,k)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i,j-1,k)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i,j-2,k)
+                  quasiset_txi_p2=quasiset_txi_ll(i,j-1,k)
+                  quasiset_txi_p3=quasiset_txi_ll(i,j-2,k)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i,j-1,k)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i,j-2,k)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i,j-2,k)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i,j-2,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j-1,k)
+                  quasiset_trace_p3=quasiset_tracell(i,j-2,k)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j-1,k)
+                  quasiset_massdensity_p3=
+     &                  quasiset_massdensityll(i,j-2,k)
+
+
+
+              else
+                  yp2=y(j+1)
+                  yp3=y(j+2)
+                  quasiset_tt_p2=quasiset_tt_ll(i,j+1,k)
+                  quasiset_tt_p3=quasiset_tt_ll(i,j+2,k)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i,j+1,k)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i,j+2,k)
+                  quasiset_txi_p2=quasiset_txi_ll(i,j+1,k)
+                  quasiset_txi_p3=quasiset_txi_ll(i,j+2,k)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i,j+2,k)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i,j+2,k)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i,j+2,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j+1,k)
+                  quasiset_trace_p3=quasiset_tracell(i,j+2,k)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j+1,k)
+                  quasiset_massdensity_p3=
+     &                  quasiset_massdensityll(i,j+2,k)
+
+              end if
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   yp1,yp2,yp3,yex)
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-1)
+                  zp3=z(k-2)
+                  quasiset_tt_p2=quasiset_tt_ll(i,j,k-1)
+                  quasiset_tt_p3=quasiset_tt_ll(i,j,k-2)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i,j,k-1)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i,j,k-2)
+                  quasiset_txi_p2=quasiset_txi_ll(i,j,k-1)
+                  quasiset_txi_p3=quasiset_txi_ll(i,j,k-2)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i,j,k-1)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i,j,k-2)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i,j,k-2)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i,j,k-2)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k-1)
+                  quasiset_trace_p3=quasiset_tracell(i,j,k-2)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j,k-1)
+                  quasiset_massdensity_p3=
+     &                  quasiset_massdensityll(i,j,k-2)
+
+              else
+                  zp2=z(k+1)
+                  zp3=z(k+2)
+                  quasiset_tt_p2=quasiset_tt_ll(i,j,k+1)
+                  quasiset_tt_p3=quasiset_tt_ll(i,j,k+2)
+                  quasiset_tchi_p2=quasiset_tchi_ll(i,j,k+1)
+                  quasiset_tchi_p3=quasiset_tchi_ll(i,j,k+2)
+                  quasiset_txi_p2=quasiset_txi_ll(i,j,k+1)
+                  quasiset_txi_p3=quasiset_txi_ll(i,j,k+2)
+                  quasiset_chichi_p2=quasiset_chichi_ll(i,j,k+1)
+                  quasiset_chichi_p3=quasiset_chichi_ll(i,j,k+2)
+                  quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
+                  quasiset_chixi_p3=quasiset_chixi_ll(i,j,k+2)
+                  quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
+                  quasiset_xixi_p3=quasiset_xixi_ll(i,j,k+2)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k+1)
+                  quasiset_trace_p3=quasiset_tracell(i,j,k+2)
+                  quasiset_massdensity_p2=
+     &                  quasiset_massdensityll(i,j,k+1)
+                  quasiset_massdensity_p3=
+     &                  quasiset_massdensityll(i,j,k+2)
+
+               end if
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   zp1,zp2,zp3,zex)
+              end if
+
+!               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
+
+            end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+
+           end if !closes condition on chrbdy(i,j,k).ne.ex
           end do
          end do
         end do
@@ -1812,6 +3015,800 @@ c-------------------------------------------------------------------------------
 
         return
         end
+c--------------------------------------------------------------------------------------
+
+c-------------------------------------------------------------------------------------
+c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
+c
+c routine for computing the asymptotic quasilocal stress-energy of AdS4D_polar  
+c using a 1-rho expansion about rho=1 AT the boundary through extrapolation.
+c The tensor components are given in spherical polar coordinates.i
+c Extrapolation at fixed points for all resolutions
+c-------------------------------------------------------------------------------------
+
+        subroutine extrap_quasiset_fixedpts(
+     &                  quasiset_tt,quasiset_tchi,quasiset_txi,
+     &                  quasiset_chichi,quasiset_chixi,
+     &                  quasiset_xixi,
+     &                  quasiset_massdensity,
+     &                  quasiset_trace,
+     &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+     &                  quasiset_chichi_ll,quasiset_chixi_ll,
+     &                  quasiset_xixi_ll,
+     &                  quasiset_tracell,
+     &                  quasiset_massdensityll,
+     &                  xextrap,yextrap,zextrap,
+     &                  chrbdy,numbdypoints,
+     &                  bdy_extrap_order,
+     &                  ind_distance_fixedpts,
+     &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
+
+!----------------------------------------------------------------------
+
+       implicit none
+
+       integer Nx,Ny,Nz
+       integer phys_bdy(6),ghost_width(6)
+       integer numbdypoints
+       integer bdy_extrap_order
+       real*8 chrbdy(Nx,Ny,Nz)
+       real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
+       real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
+       real*8 gb_ty_np1(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz),gb_ty_nm1(Nx,Ny,Nz)
+       real*8 gb_tz_np1(Nx,Ny,Nz),gb_tz_n(Nx,Ny,Nz),gb_tz_nm1(Nx,Ny,Nz)
+       real*8 gb_xx_np1(Nx,Ny,Nz),gb_xx_n(Nx,Ny,Nz),gb_xx_nm1(Nx,Ny,Nz)
+       real*8 gb_xy_np1(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_xy_nm1(Nx,Ny,Nz)
+       real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
+       real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
+       real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
+       real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+       real*8 L
+       real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
+       real*8 dx,dy,dz
+
+       real*8 PI
+       parameter (PI=3.141592653589793d0)
+
+       real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
+       real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
+       real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
+       real*8 quasiset_massdensityll(Nx,Ny,Nz)
+       real*8 quasiset_tracell(Nx,Ny,Nz)
+
+       real*8 quasiset_tt_p1,quasiset_tchi_p1
+       real*8 quasiset_txi_p1,quasiset_chichi_p1
+       real*8 quasiset_chixi_p1,quasiset_xixi_p1
+       real*8 quasiset_massdensity_p1
+       real*8 quasiset_trace_p1
+
+       real*8 quasiset_tt_p2,quasiset_tchi_p2
+       real*8 quasiset_txi_p2,quasiset_chichi_p2
+       real*8 quasiset_chixi_p2,quasiset_xixi_p2
+       real*8 quasiset_massdensity_p2
+       real*8 quasiset_trace_p2
+
+        real*8 quasiset_tt_p3,quasiset_tchi_p3
+        real*8 quasiset_txi_p3,quasiset_chichi_p3
+        real*8 quasiset_chixi_p3,quasiset_xixi_p3
+        real*8 quasiset_massdensity_p3
+        real*8 quasiset_trace_p3
+
+       real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
+       real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
+       real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
+       real*8 quasiset_massdensity(numbdypoints)
+       real*8 quasiset_trace(numbdypoints)
+
+       real*8 xextrap(numbdypoints)
+       real*8 yextrap(numbdypoints)
+       real*8 zextrap(numbdypoints)
+
+       real*8 rhoextrap
+       real*8 chiextrap(numbdypoints)
+       real*8 xiextrap(numbdypoints)
+
+       real*8 chiextrap_min,chiextrap_max
+       real*8 xiextrap_min,xiextrap_max
+
+       integer bdy_Nchi,bdy_Nxi
+
+!       real*8 chibdy(bdy_Nchi)
+!       real*8 xibdy(bdy_Nxi)
+
+       integer i,j,k,is,ie,js,je,ks,ke,lind,m,e,increase
+
+       integer ix1,ix2,ix3,jy1,jy2,jy3,kz1,kz2,kz3
+       integer ix,jy,kz
+
+       real*8 x0,y0,z0,rho0,q
+
+       real*8 xp1,yp1,zp1,rhop1
+       real*8 xp2,yp2,zp2
+       real*8 xp3,yp3,zp3
+       real*8 xex,yex,zex,rhoex,chiex,xiex
+       real*8 maxxyzp1
+
+       real*8 firstord_extrap
+       real*8 secondord_extrap
+       real*8 thirdord_extrap
+       real*8 fourthord_extrap
+
+       real*8 dp1p2
+
+       real*8 AdS_mass
+
+       real*8 ratio_Lhighres_Llowres
+       integer resolution_degree
+       integer max_resolution_degree
+       real*8 reduction_factor
+       integer ind_distance_fixedpts
+
+!----------------------------------------------------------------------
+
+       dx=x(2)-x(1)
+       dy=y(2)-y(1)
+       dz=z(2)-z(1)
+
+
+       ! set index bounds for main loop
+       is=2
+       ie=Nx-1
+       js=2
+       je=Ny-1
+       ks=2
+       ke=Nz-1
+
+       ! adjust index bounds to compensate for ghost_width
+       if (ghost_width(1).gt.0) is=is+ghost_width(1)-1
+       if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-1)
+       if (ghost_width(3).gt.0) js=js+ghost_width(3)-1
+       if (ghost_width(4).gt.0) je=je-(ghost_width(4)-1)
+       if (ghost_width(5).gt.0) ks=ks+ghost_width(5)-1
+       if (ghost_width(6).gt.0) ke=ke-(ghost_width(6)-1)
+
+       lind=0
+       do i=is,ie
+        do j=js,je
+         do k=ks,ke
+          xp1=x(i)
+          yp1=y(j)
+          zp1=z(k)
+          rhop1=sqrt(xp1**2+yp1**2+zp1**2)
+
+          quasiset_tt_p1=quasiset_tt_ll(i,j,k)
+          quasiset_tchi_p1=quasiset_tchi_ll(i,j,k)
+          quasiset_txi_p1=quasiset_txi_ll(i,j,k)
+          quasiset_chichi_p1=quasiset_chichi_ll(i,j,k)
+          quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
+          quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
+          quasiset_trace_p1=quasiset_tracell(i,j,k)
+          quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
+          maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+
+          if (chrbdy(i,j,k).ne.ex) then
+
+             lind=lind+1
+
+                 xex=xextrap(lind)
+                 yex=yextrap(lind)
+                 zex=zextrap(lind)
+                 rhoex=sqrt(xex**2+yex**2+zex**2)
+                 chiex=(1/PI)*acos(xex/rhoex)
+                 if (zex.lt.0) then
+                   xiex=(1/(2*PI))*(atan2(zex,yex)+2*PI)
+                 else
+                   xiex=(1/(2*PI))*atan2(zex,yex)
+                 end if
+
+           if (bdy_extrap_order.eq.1) then
+             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+               if (xp1.gt.0) then
+
+                 xp2=x(i-ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i-ind_distance_fixedpts,j,k)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i-ind_distance_fixedpts,j,k)
+
+
+             else
+                 xp2=x(i+ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i+ind_distance_fixedpts,j,k)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i+ind_distance_fixedpts,j,k)
+
+
+              end if
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,xp1,xp2,xex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,xp1,xp2,xex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,xp1,xp2,xex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,xp1,xp2,xex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,xp1,xp2,xex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,xp1,xp2,xex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,xp1,xp2,xex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,xp1,xp2,xex)
+
+            else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+             if (yp1.gt.0) then
+                 yp2=y(j-ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j-ind_distance_fixedpts,k)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i,j-ind_distance_fixedpts,k)
+
+
+             else
+                 yp2=y(j+ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j+ind_distance_fixedpts,k)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i,j+ind_distance_fixedpts,k)
+
+
+
+             end if
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,yp1,yp2,yex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,yp1,yp2,yex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,yp1,yp2,yex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,yp1,yp2,yex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,yp1,yp2,yex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,yp1,yp2,yex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,yp1,yp2,yex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,yp1,yp2,yex)
+            else
+                if (zp1.gt.0) then
+                 zp2=z(k-ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j,k-ind_distance_fixedpts)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i,j,k-ind_distance_fixedpts)
+
+             else
+                 zp2=z(k+ind_distance_fixedpts)
+                 quasiset_tt_p2=
+     &               quasiset_tt_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_tchi_p2=
+     &               quasiset_tchi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_txi_p2=
+     &               quasiset_txi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_chichi_p2=
+     &               quasiset_chichi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_chixi_p2=
+     &               quasiset_chixi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_xixi_p2=
+     &               quasiset_xixi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j,k+ind_distance_fixedpts)
+                 quasiset_massdensity_p2=
+     &               quasiset_massdensityll(i,j,k+ind_distance_fixedpts)
+
+
+              end if
+
+                 quasiset_tt(lind)=
+     &                 firstord_extrap(quasiset_tt_p1
+     &                  ,quasiset_tt_p2,zp1,zp2,zex)
+                 quasiset_tchi(lind)=
+     &                 firstord_extrap(quasiset_tchi_p1
+     &                  ,quasiset_tchi_p2,zp1,zp2,zex)
+                 quasiset_txi(lind)=
+     &                 firstord_extrap(quasiset_txi_p1
+     &                  ,quasiset_txi_p2,zp1,zp2,zex)
+                 quasiset_chichi(lind)=
+     &                 firstord_extrap(quasiset_chichi_p1
+     &                  ,quasiset_chichi_p2,zp1,zp2,zex)
+                 quasiset_chixi(lind)=
+     &                 firstord_extrap(quasiset_chixi_p1
+     &                  ,quasiset_chixi_p2,zp1,zp2,zex)
+                 quasiset_xixi(lind)=
+     &                 firstord_extrap(quasiset_xixi_p1
+     &                  ,quasiset_xixi_p2,zp1,zp2,zex)
+                 quasiset_trace(lind)=
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,zp1,zp2,zex)
+                 quasiset_massdensity(lind)=
+     &                 firstord_extrap(quasiset_massdensity_p1
+     &                  ,quasiset_massdensity_p2,zp1,zp2,zex)
+             end if
+
+!              quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
+
+            end if !closes condition on bdy_extrap_order.eq.1
+
+
+             if (bdy_extrap_order.eq.2) then
+              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+                if (xp1.gt.0) then
+
+                  xp2=x(i-ind_distance_fixedpts)
+                  xp3=x(i-2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i-ind_distance_fixedpts,j,k)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i-ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i-ind_distance_fixedpts,j,k)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i-2*ind_distance_fixedpts,j,k)
+
+
+              else
+                  xp2=x(i+ind_distance_fixedpts)
+                  xp3=x(i+2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i+ind_distance_fixedpts,j,k)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i+ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i+ind_distance_fixedpts,j,k)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i+2*ind_distance_fixedpts,j,k)
+
+
+               end if
+
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   xp1,xp2,xp3,xex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   xp1,xp2,xp3,xex)
+
+
+             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+              if (yp1.gt.0) then
+                  yp2=y(j-ind_distance_fixedpts)
+                  yp3=y(j-2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i,j-ind_distance_fixedpts,k)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j-ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i,j-ind_distance_fixedpts,k)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i,j-2*ind_distance_fixedpts,k)
+
+
+
+              else
+                  yp2=y(j+ind_distance_fixedpts)
+                  yp3=y(j+2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i,j+ind_distance_fixedpts,k)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j+ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i,j+ind_distance_fixedpts,k)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i,j+2*ind_distance_fixedpts,k)
+
+              end if
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   yp1,yp2,yp3,yex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   yp1,yp2,yp3,yex)
+             else
+                 if (zp1.gt.0) then
+                  zp2=z(k-ind_distance_fixedpts)
+                  zp3=z(k-2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i,j,k-ind_distance_fixedpts)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k-ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i,j,k-ind_distance_fixedpts)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i,j,k-2*ind_distance_fixedpts)
+
+              else
+                  zp2=z(k+ind_distance_fixedpts)
+                  zp3=z(k+2*ind_distance_fixedpts)
+                  quasiset_tt_p2=
+     &             quasiset_tt_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_tt_p3=
+     &             quasiset_tt_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_tchi_p2=
+     &             quasiset_tchi_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_tchi_p3=
+     &             quasiset_tchi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_txi_p2=
+     &             quasiset_txi_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_txi_p3=
+     &             quasiset_txi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_chichi_p2=
+     &             quasiset_chichi_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_chichi_p3=
+     &             quasiset_chichi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_chixi_p2=
+     &             quasiset_chixi_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_chixi_p3=
+     &             quasiset_chixi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_xixi_p2=
+     &             quasiset_xixi_ll(i,j,k+ind_distance_fixedpts)
+                  quasiset_xixi_p3=
+     &             quasiset_xixi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k+ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_massdensity_p2=
+     &             quasiset_massdensityll(i,j,k+ind_distance_fixedpts)
+                  quasiset_massdensity_p3=
+     &             quasiset_massdensityll(i,j,k+2*ind_distance_fixedpts)
+
+               end if
+                 quasiset_tt(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tt_p1,
+     &                   quasiset_tt_p2,
+     &                   quasiset_tt_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_tchi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_tchi_p1,
+     &                   quasiset_tchi_p2,
+     &                   quasiset_tchi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_txi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_txi_p1,
+     &                   quasiset_txi_p2,
+     &                   quasiset_txi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_chichi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chichi_p1,
+     &                   quasiset_chichi_p2,
+     &                   quasiset_chichi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_chixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_chixi_p1,
+     &                   quasiset_chixi_p2,
+     &                   quasiset_chixi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_xixi(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_xixi_p1,
+     &                   quasiset_xixi_p2,
+     &                   quasiset_xixi_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_trace(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   zp1,zp2,zp3,zex)
+                 quasiset_massdensity(lind)=
+     &                 secondord_extrap(
+     &                   quasiset_massdensity_p1,
+     &                   quasiset_massdensity_p2,
+     &                   quasiset_massdensity_p3,
+     &                   zp1,zp2,zp3,zex)
+              end if
+
+!               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
+
+            end if !closes condition on bdy_extrap_order.eq.2
+
+
+
+
+           end if !closes condition on chrbdy(i,j,k).ne.ex
+         end do
+        end do
+       end do
+
+
+!       do lind=1,numbdypoints
+!        write(*,*) "lind,xextrap(lind),yextrap(lind),zextrap(lind)="
+!     &             ,lind,xextrap(lind),yextrap(lind),zextrap(lind)
+!        write(*,*) "quasiset_trace(lind)=",quasiset_trace(lind)
+!       end do
+
+       return
+       end
 c--------------------------------------------------------------------------------------
 
 c--------------------------------------------------------------------------
@@ -1859,45 +3856,80 @@ c-------------------------------------------------------------------------------
 
 
 c----------------------------------------------------------------------
-c 2-point extrapolation along x axis function using values Txp1,Txp2 at xp1,xp2
+c 2-point (i.e. first order) extrapolation stencil using values Tp1,Tp2 at xp1,xp2 (p1 is the closest point to the one we want to extrapolate, p2 is the furthest one)
 c----------------------------------------------------------------------
-        real*8 function extrapalongx(Txp1,Txp2,xp1,xp2,xex)
+        real*8 function firstord_extrap(Tp1,Tp2,xp1,xp2,xex)
         implicit none
-        real*8 Txp1,Txp2,xp1,xp2,xex
+        real*8 Tp1,Tp2,xp1,xp2,xex
 
         !--------------------------------------------------------------
 
-        extrapalongx=Txp2+((Txp1-Txp2)/(xp1-xp2))*(xex-xp2)
-
-        return 
-        end
-c--------------------------------------------------------------------------------------
-
-c----------------------------------------------------------------------
-c 2-point extrapolation along y axis function using values Typ1,Typ2 at yp1,yp2
-c----------------------------------------------------------------------
-        real*8 function extrapalongy(Typ1,Typ2,yp1,yp2,yex)
-        implicit none
-        real*8 Typ1,Typ2,yp1,yp2,yex
-
-        !--------------------------------------------------------------
-
-        extrapalongy=Typ2+((Typ1-Typ2)/(yp1-yp2))*(yex-yp2)
+        firstord_extrap=Tp1*(xex-xp2)/(xp1-xp2)+Tp2*(xex-xp1)/(xp2-xp1)
 
         return
         end
 c--------------------------------------------------------------------------------------
 
 c----------------------------------------------------------------------
-c 2-point extrapolation along z axis function using values Tzp1,Tzp2 at zp1,zp2
+c 3-point (i.e. second order) extrapolation stencil using values Tp1,Tp2,Tp3 at xp1,xp2,xp3 (p1 is the closest point to the one we want to extrapolate, p2 is the middle one, p3 is the furthest one)
 c----------------------------------------------------------------------
-        real*8 function extrapalongz(Tzp1,Tzp2,zp1,zp2,zex)
+        real*8 function secondord_extrap(Tp1,Tp2,Tp3,xp1,xp2,xp3,xex)
         implicit none
-        real*8 Tzp1,Tzp2,zp1,zp2,zex
+        real*8 Tp1,Tp2,Tp3,xp1,xp2,xp3,xex
 
         !--------------------------------------------------------------
 
-        extrapalongz=Tzp2+((Tzp1-Tzp2)/(zp1-zp2))*(zex-zp2)
+        secondord_extrap=Tp1*(xex-xp2)*(xex-xp3)/((xp1-xp2)*(xp1-xp3))
+     &                  +Tp2*(xex-xp1)*(xex-xp3)/((xp2-xp1)*(xp2-xp3))
+     &                  +Tp3*(xex-xp1)*(xex-xp2)/((xp3-xp1)*(xp3-xp2))
+
+        return
+        end
+c--------------------------------------------------------------------------------------
+
+c----------------------------------------------------------------------
+c 4-point (i.e. third order) extrapolation stencil using values Tp1,Tp2,Tp3,Tp4 at xp1,xp2,xp3,xp4 (if xp1>0, the order is xp4<xp3<xp2<xp1<xex; if xp1<0, the order is xex<xp1<xp2<xp3<xp4)
+c----------------------------------------------------------------------
+        real*8 function thirdord_extrap(Tp1,Tp2,Tp3,Tp4
+     &                                 ,xp1,xp2,xp3,xp4,xex)
+        implicit none
+        real*8 Tp1,Tp2,Tp3,Tp4,xp1,xp2,xp3,xp4,xex
+
+        !--------------------------------------------------------------
+
+        thirdord_extrap= Tp1*(xex-xp2)*(xex-xp3)*(xex-xp4)
+     &                      /((xp1-xp2)*(xp1-xp3)*(xp1-xp4))
+     &                  +Tp2*(xex-xp1)*(xex-xp3)*(xex-xp4)
+     &                      /((xp2-xp1)*(xp2-xp3)*(xp2-xp4))
+     &                  +Tp3*(xex-xp1)*(xex-xp2)*(xex-xp4)
+     &                      /((xp3-xp1)*(xp3-xp2)*(xp3-xp4))
+     &                  +Tp4*(xex-xp1)*(xex-xp2)*(xex-xp3)
+     &                      /((xp4-xp1)*(xp4-xp2)*(xp4-xp3))
+        
+        return
+        end
+c--------------------------------------------------------------------------------------
+
+c----------------------------------------------------------------------
+c 5-point (i.e. fourth order) extrapolation stencil using values Tp1,Tp2,Tp3,Tp4,Tp5 at xp1,xp2,xp3,xp4,xp5 (if xp1>0, the order is xp5<xp4<xp3<xp2<xp1<xex; if xp1<0, the order is xex<xp1<xp2<xp3<xp4<xp5)
+c----------------------------------------------------------------------
+        real*8 function fourthord_extrap(Tp1,Tp2,Tp3,Tp4,Tp5
+     &                                 ,xp1,xp2,xp3,xp4,xp5,xex)
+        implicit none
+        real*8 Tp1,Tp2,Tp3,Tp4,Tp5,xp1,xp2,xp3,xp4,xp5,xex
+
+        !--------------------------------------------------------------
+
+        fourthord_extrap= Tp1*(xex-xp2)*(xex-xp3)*(xex-xp4)*(xex-xp5)
+     &                      /((xp1-xp2)*(xp1-xp3)*(xp1-xp4)*(xp1-xp5))
+     &                   +Tp2*(xex-xp1)*(xex-xp3)*(xex-xp4)*(xex-xp5)
+     &                      /((xp2-xp1)*(xp2-xp3)*(xp2-xp4)*(xp2-xp5))
+     &                   +Tp3*(xex-xp1)*(xex-xp2)*(xex-xp4)*(xex-xp5)
+     &                      /((xp3-xp1)*(xp3-xp2)*(xp3-xp4)*(xp3-xp5))
+     &                   +Tp4*(xex-xp1)*(xex-xp2)*(xex-xp3)*(xex-xp5)
+     &                      /((xp4-xp1)*(xp4-xp2)*(xp4-xp3)*(xp4-xp5))
+     &                   +Tp5*(xex-xp1)*(xex-xp2)*(xex-xp3)*(xex-xp4)
+     &                      /((xp5-xp1)*(xp5-xp2)*(xp5-xp3)*(xp5-xp4))
 
         return
         end
@@ -1911,6 +3943,8 @@ c-------------------------------------------------------------------------------
      &                  xextrap,yextrap,zextrap,numbdypoints,
      &                  rhobdy,chibdy,xibdy,
      &                  bdy_Nchi,bdy_Nxi)
+
+!----------------------------------------------------------------------
 
         implicit none
         integer numbdypoints
@@ -2054,6 +4088,8 @@ c-------------------------------------------------------------------------------
      &                         xextrap,yextrap,zextrap,
      &                         numbdypoints)
 
+!----------------------------------------------------------------------
+
         integer numbdypoints
 
         real*8 xextrap(numbdypoints)
@@ -2094,6 +4130,8 @@ c-------------------------------------------------------------------------------
      &                  bdy_Nchi,bdy_Nxi,
      &                  numbdypoints,
      &                  chiextrap,xiextrap)
+
+!----------------------------------------------------------------------
 
         implicit none
         integer numbdypoints
