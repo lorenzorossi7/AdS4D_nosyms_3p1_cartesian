@@ -3710,24 +3710,24 @@ void AdS4D_pre_tstep(int L)
     
                             if (timestep_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j);
                                     }
                                     fclose(fp);   
     
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
@@ -4036,23 +4036,23 @@ void AdS4D_pre_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
-                                    fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
+                                    fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
                             if (reduced_ascii)
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
                                     if ((j%reduction_factor_ascii)==0)
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j_red);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j_red);
                                         j_red=j_red+1;
                                     }
                                 }
@@ -4357,23 +4357,23 @@ void AdS4D_pre_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
@@ -4673,23 +4673,23 @@ void AdS4D_pre_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
@@ -6458,24 +6458,24 @@ void AdS4D_post_tstep(int L)
   
                             if (timestep_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j);
                                     }
                                     fclose(fp);   
     
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder1[j],yextrap0_freepts_extraporder1[j],zextrap0_freepts_extraporder1[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
@@ -6784,23 +6784,23 @@ void AdS4D_post_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
-                                    fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
+                                    fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
                             if (reduced_ascii)
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
                                     if ((j%reduction_factor_ascii)==0)
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j_red);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j_red);
                                         j_red=j_red+1;
                                     }
                                 }
@@ -7105,23 +7105,23 @@ void AdS4D_post_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
@@ -7421,23 +7421,23 @@ void AdS4D_post_tstep(int L)
                             } //closes if(alltimes_ascii) condition 
                             if (timestep_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
-                                        fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
                                 if (reduced_ascii)
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%sxext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
                                         if ((j%reduction_factor_ascii)==0)
                                         {
-                                            fprintf(fp,"%24.16e %24.16e %24.16e %i \n",xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j_red);
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j_red);
                                             j_red=j_red+1;
                                         }
                                     }
