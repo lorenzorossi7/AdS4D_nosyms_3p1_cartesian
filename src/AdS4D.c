@@ -153,8 +153,10 @@ real *mask,*mask_mg,*chr,*chr_mg;
 
 real *chrbdy_freepts_extraporder1;
 real *chrbdy_freepts_extraporder2;
+real *chrbdy_freepts_extraporder3;
 real *chrbdy_fixedpts_extraporder1;
 real *chrbdy_fixedpts_extraporder2;
+real *chrbdy_fixedpts_extraporder3;
 
 real *kg_ires,*alpha,*ricci,*theta,*f,*K;
 
@@ -178,6 +180,10 @@ int numbdypoints_freepts_extraporder2;
 int basenumbdypoints_freepts_extraporder2;
 int basebdy_Nchi_freepts_extraporder2,basebdy_Nxi_freepts_extraporder2;
 
+int numbdypoints_freepts_extraporder3;
+int basenumbdypoints_freepts_extraporder3;
+int basebdy_Nchi_freepts_extraporder3,basebdy_Nxi_freepts_extraporder3;
+
 int numbdypoints_fixedpts_extraporder1;
 int basenumbdypoints_fixedpts_extraporder1;
 int basebdy_Nchi_fixedpts_extraporder1,basebdy_Nxi_fixedpts_extraporder1;
@@ -186,16 +192,22 @@ int numbdypoints_fixedpts_extraporder2;
 int basenumbdypoints_fixedpts_extraporder2;
 int basebdy_Nchi_fixedpts_extraporder2,basebdy_Nxi_fixedpts_extraporder2;
 
+int numbdypoints_fixedpts_extraporder3;
+int basenumbdypoints_fixedpts_extraporder3;
+int basebdy_Nchi_fixedpts_extraporder3,basebdy_Nxi_fixedpts_extraporder3;
+
 int *vecbdypoints_freepts_extraporder1, *dsplsbdypoints_freepts_extraporder1;
 int *vecbdypoints_freepts_extraporder2, *dsplsbdypoints_freepts_extraporder2;
+int *vecbdypoints_freepts_extraporder3, *dsplsbdypoints_freepts_extraporder3;
 int *vecbdypoints_fixedpts_extraporder1, *dsplsbdypoints_fixedpts_extraporder1;
 int *vecbdypoints_fixedpts_extraporder2, *dsplsbdypoints_fixedpts_extraporder2;
+int *vecbdypoints_fixedpts_extraporder3, *dsplsbdypoints_fixedpts_extraporder3;
 
 int uniSize;
 real *leadordcoeff_phi1;
 real *quasiset_tt_ll,*quasiset_tchi_ll,*quasiset_txi_ll;
 real *quasiset_chichi_ll,*quasiset_chixi_ll,*quasiset_xixi_ll;
-real *quasiset_tracell, *quasiset_massdensityll;
+real *quasiset_massdensityll;
 
 real *quasiset_tt_freepts_extraporder1;
 real *quasiset_tchi_freepts_extraporder1;
@@ -225,6 +237,20 @@ real *xextrap_freepts_extraporder2;
 real *yextrap_freepts_extraporder2;
 real *zextrap_freepts_extraporder2;
 
+real *quasiset_tt_freepts_extraporder3;
+real *quasiset_tchi_freepts_extraporder3;
+real *quasiset_txi_freepts_extraporder3;
+real *quasiset_chichi_freepts_extraporder3;
+real *quasiset_chixi_freepts_extraporder3;
+real *quasiset_xixi_freepts_extraporder3;
+real *quasiset_trace_freepts_extraporder3;
+real *quasiset_massdensity_freepts_extraporder3;
+real *AdS_mass_freepts_extraporder3;
+real *bdyphi_freepts_extraporder3;
+real *xextrap_freepts_extraporder3;
+real *yextrap_freepts_extraporder3;
+real *zextrap_freepts_extraporder3;
+
 real *quasiset_tt_fixedpts_extraporder1;
 real *quasiset_tchi_fixedpts_extraporder1;
 real *quasiset_txi_fixedpts_extraporder1;
@@ -252,6 +278,20 @@ real *bdyphi_fixedpts_extraporder2;
 real *xextrap_fixedpts_extraporder2;
 real *yextrap_fixedpts_extraporder2;
 real *zextrap_fixedpts_extraporder2;
+
+real *quasiset_tt_fixedpts_extraporder3;
+real *quasiset_tchi_fixedpts_extraporder3;
+real *quasiset_txi_fixedpts_extraporder3;
+real *quasiset_chichi_fixedpts_extraporder3;
+real *quasiset_chixi_fixedpts_extraporder3;
+real *quasiset_xixi_fixedpts_extraporder3;
+real *quasiset_trace_fixedpts_extraporder3;
+real *quasiset_massdensity_fixedpts_extraporder3;
+real *AdS_mass_fixedpts_extraporder3;
+real *bdyphi_fixedpts_extraporder3;
+real *xextrap_fixedpts_extraporder3;
+real *yextrap_fixedpts_extraporder3;
+real *zextrap_fixedpts_extraporder3;
 
 real *relkretschcentregrid, *lrelkretschcentregrid0, *maxrelkretschcentregrid0,*minrelkretschcentregrid0,*relkretschcentregrid0;
 
@@ -317,8 +357,11 @@ int mask_gfn,mask_mg_gfn,chr_gfn,chr_mg_gfn;
 
 int chrbdy_freepts_extraporder1_gfn;
 int chrbdy_freepts_extraporder2_gfn;
+int chrbdy_freepts_extraporder3_gfn;
 int chrbdy_fixedpts_extraporder1_gfn;
 int chrbdy_fixedpts_extraporder2_gfn;
+int chrbdy_fixedpts_extraporder3_gfn;
+
 
 real *gu_tt,*gu_tx,*gu_ty,*gu_tz,*gu_xx,*gu_xy,*gu_xz,*gu_yy,*gu_yz,*gu_psi,*m_g_det;
 int kg_ires_gfn,alpha_gfn,theta_gfn,f_gfn;
@@ -333,7 +376,7 @@ int leadordcoeff_phi1_gfn;
 int quasiset_tt_ll_gfn;
 int quasiset_tchi_ll_gfn,quasiset_txi_ll_gfn;
 int quasiset_chichi_ll_gfn,quasiset_chixi_ll_gfn,quasiset_xixi_ll_gfn;
-int quasiset_tracell_gfn,quasiset_massdensityll_gfn;
+int quasiset_massdensityll_gfn;
 int relkretschcentregrid_gfn;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
@@ -412,6 +455,17 @@ real *lquasiset_massdensity0_freepts_extraporder2;
 real *lAdS_mass0_freepts_extraporder2;
 real *lbdyphi0_freepts_extraporder2;
 
+real *lquasiset_tt0_freepts_extraporder3;
+real *lquasiset_tchi0_freepts_extraporder3;
+real *lquasiset_txi0_freepts_extraporder3;
+real *lquasiset_chichi0_freepts_extraporder3;
+real *lquasiset_chixi0_freepts_extraporder3;
+real *lquasiset_xixi0_freepts_extraporder3;
+real *lquasiset_trace0_freepts_extraporder3;
+real *lquasiset_massdensity0_freepts_extraporder3;
+real *lAdS_mass0_freepts_extraporder3;
+real *lbdyphi0_freepts_extraporder3;
+
 real *lquasiset_tt0_fixedpts_extraporder1;
 real *lquasiset_tchi0_fixedpts_extraporder1;
 real *lquasiset_txi0_fixedpts_extraporder1;
@@ -434,6 +488,17 @@ real *lquasiset_massdensity0_fixedpts_extraporder2;
 real *lAdS_mass0_fixedpts_extraporder2;
 real *lbdyphi0_fixedpts_extraporder2;
 
+real *lquasiset_tt0_fixedpts_extraporder3;
+real *lquasiset_tchi0_fixedpts_extraporder3;
+real *lquasiset_txi0_fixedpts_extraporder3;
+real *lquasiset_chichi0_fixedpts_extraporder3;
+real *lquasiset_chixi0_fixedpts_extraporder3;
+real *lquasiset_xixi0_fixedpts_extraporder3;
+real *lquasiset_trace0_fixedpts_extraporder3;
+real *lquasiset_massdensity0_fixedpts_extraporder3;
+real *lAdS_mass0_fixedpts_extraporder3;
+real *lbdyphi0_fixedpts_extraporder3;
+
 real *maxquasiset_tt0_freepts_extraporder1;
 real *maxquasiset_tchi0_freepts_extraporder1;
 real *maxquasiset_txi0_freepts_extraporder1;
@@ -453,6 +518,16 @@ real *maxquasiset_xixi0_freepts_extraporder2;
 real *maxquasiset_trace0_freepts_extraporder2;
 real *maxquasiset_massdensity0_freepts_extraporder2;
 real *maxbdyphi0_freepts_extraporder2;
+
+real *maxquasiset_tt0_freepts_extraporder3;
+real *maxquasiset_tchi0_freepts_extraporder3;
+real *maxquasiset_txi0_freepts_extraporder3;
+real *maxquasiset_chichi0_freepts_extraporder3;
+real *maxquasiset_chixi0_freepts_extraporder3;
+real *maxquasiset_xixi0_freepts_extraporder3;
+real *maxquasiset_trace0_freepts_extraporder3;
+real *maxquasiset_massdensity0_freepts_extraporder3;
+real *maxbdyphi0_freepts_extraporder3;
 
 real *maxquasiset_tt0_fixedpts_extraporder1;
 real *maxquasiset_tchi0_fixedpts_extraporder1;
@@ -474,6 +549,16 @@ real *maxquasiset_trace0_fixedpts_extraporder2;
 real *maxquasiset_massdensity0_fixedpts_extraporder2;
 real *maxbdyphi0_fixedpts_extraporder2;
 
+real *maxquasiset_tt0_fixedpts_extraporder3;
+real *maxquasiset_tchi0_fixedpts_extraporder3;
+real *maxquasiset_txi0_fixedpts_extraporder3;
+real *maxquasiset_chichi0_fixedpts_extraporder3;
+real *maxquasiset_chixi0_fixedpts_extraporder3;
+real *maxquasiset_xixi0_fixedpts_extraporder3;
+real *maxquasiset_trace0_fixedpts_extraporder3;
+real *maxquasiset_massdensity0_fixedpts_extraporder3;
+real *maxbdyphi0_fixedpts_extraporder3;
+
 real *minquasiset_tt0_freepts_extraporder1;
 real *minquasiset_tchi0_freepts_extraporder1;
 real *minquasiset_txi0_freepts_extraporder1;
@@ -494,6 +579,16 @@ real *minquasiset_trace0_freepts_extraporder2;
 real *minquasiset_massdensity0_freepts_extraporder2;
 real *minbdyphi0_freepts_extraporder2;
 
+real *minquasiset_tt0_freepts_extraporder3;
+real *minquasiset_tchi0_freepts_extraporder3;
+real *minquasiset_txi0_freepts_extraporder3;
+real *minquasiset_chichi0_freepts_extraporder3;
+real *minquasiset_chixi0_freepts_extraporder3;
+real *minquasiset_xixi0_freepts_extraporder3;
+real *minquasiset_trace0_freepts_extraporder3;
+real *minquasiset_massdensity0_freepts_extraporder3;
+real *minbdyphi0_freepts_extraporder3;
+
 real *minquasiset_tt0_fixedpts_extraporder1;
 real *minquasiset_tchi0_fixedpts_extraporder1;
 real *minquasiset_txi0_fixedpts_extraporder1;
@@ -513,6 +608,16 @@ real *minquasiset_xixi0_fixedpts_extraporder2;
 real *minquasiset_trace0_fixedpts_extraporder2;
 real *minquasiset_massdensity0_fixedpts_extraporder2;
 real *minbdyphi0_fixedpts_extraporder2;
+
+real *minquasiset_tt0_fixedpts_extraporder3;
+real *minquasiset_tchi0_fixedpts_extraporder3;
+real *minquasiset_txi0_fixedpts_extraporder3;
+real *minquasiset_chichi0_fixedpts_extraporder3;
+real *minquasiset_chixi0_fixedpts_extraporder3;
+real *minquasiset_xixi0_fixedpts_extraporder3;
+real *minquasiset_trace0_fixedpts_extraporder3;
+real *minquasiset_massdensity0_fixedpts_extraporder3;
+real *minbdyphi0_fixedpts_extraporder3;
 
 real *quasiset_tt0_freepts_extraporder1;
 real *quasiset_tchi0_freepts_extraporder1;
@@ -536,6 +641,17 @@ real *quasiset_massdensity0_freepts_extraporder2;
 real *AdS_mass0_freepts_extraporder2;
 real *bdyphi0_freepts_extraporder2;
 
+real *quasiset_tt0_freepts_extraporder3;
+real *quasiset_tchi0_freepts_extraporder3;
+real *quasiset_txi0_freepts_extraporder3;
+real *quasiset_chichi0_freepts_extraporder3;
+real *quasiset_chixi0_freepts_extraporder3;
+real *quasiset_xixi0_freepts_extraporder3;
+real *quasiset_trace0_freepts_extraporder3;
+real *quasiset_massdensity0_freepts_extraporder3;
+real *AdS_mass0_freepts_extraporder3;
+real *bdyphi0_freepts_extraporder3;
+
 real *quasiset_tt0_fixedpts_extraporder1;
 real *quasiset_tchi0_fixedpts_extraporder1;
 real *quasiset_txi0_fixedpts_extraporder1;
@@ -558,6 +674,17 @@ real *quasiset_massdensity0_fixedpts_extraporder2;
 real *AdS_mass0_fixedpts_extraporder2;
 real *bdyphi0_fixedpts_extraporder2;
 
+real *quasiset_tt0_fixedpts_extraporder3;
+real *quasiset_tchi0_fixedpts_extraporder3;
+real *quasiset_txi0_fixedpts_extraporder3;
+real *quasiset_chichi0_fixedpts_extraporder3;
+real *quasiset_chixi0_fixedpts_extraporder3;
+real *quasiset_xixi0_fixedpts_extraporder3;
+real *quasiset_trace0_fixedpts_extraporder3;
+real *quasiset_massdensity0_fixedpts_extraporder3;
+real *AdS_mass0_fixedpts_extraporder3;
+real *bdyphi0_fixedpts_extraporder3;
+
 real *xextrap0_freepts_extraporder1;
 real *yextrap0_freepts_extraporder1;
 real *zextrap0_freepts_extraporder1;
@@ -566,6 +693,10 @@ real *xextrap0_freepts_extraporder2;
 real *yextrap0_freepts_extraporder2;
 real *zextrap0_freepts_extraporder2;
 
+real *xextrap0_freepts_extraporder3;
+real *yextrap0_freepts_extraporder3;
+real *zextrap0_freepts_extraporder3;
+
 real *xextrap0_fixedpts_extraporder1;
 real *yextrap0_fixedpts_extraporder1;
 real *zextrap0_fixedpts_extraporder1;
@@ -573,6 +704,10 @@ real *zextrap0_fixedpts_extraporder1;
 real *xextrap0_fixedpts_extraporder2;
 real *yextrap0_fixedpts_extraporder2;
 real *zextrap0_fixedpts_extraporder2;
+
+real *xextrap0_fixedpts_extraporder3;
+real *yextrap0_fixedpts_extraporder3;
+real *zextrap0_fixedpts_extraporder3;
 
 real *rhoextrap0_freepts_extraporder1;
 real *chiextrap0_freepts_extraporder1;
@@ -588,6 +723,13 @@ real *rhobdy0_freepts_extraporder2;
 real *chibdy0_freepts_extraporder2;
 real *xibdy0_freepts_extraporder2;
 
+real *rhoextrap0_freepts_extraporder3;
+real *chiextrap0_freepts_extraporder3;
+real *xiextrap0_freepts_extraporder3;
+real *rhobdy0_freepts_extraporder3;
+real *chibdy0_freepts_extraporder3;
+real *xibdy0_freepts_extraporder3;
+
 real *rhoextrap0_fixedpts_extraporder1;
 real *chiextrap0_fixedpts_extraporder1;
 real *xiextrap0_fixedpts_extraporder1;
@@ -601,6 +743,13 @@ real *xiextrap0_fixedpts_extraporder2;
 real *rhobdy0_fixedpts_extraporder2;
 real *chibdy0_fixedpts_extraporder2;
 real *xibdy0_fixedpts_extraporder2;
+
+real *rhoextrap0_fixedpts_extraporder3;
+real *chiextrap0_fixedpts_extraporder3;
+real *xiextrap0_fixedpts_extraporder3;
+real *rhobdy0_fixedpts_extraporder3;
+real *chibdy0_fixedpts_extraporder3;
+real *xibdy0_fixedpts_extraporder3;
 
 //=============================================================================
 // call after variables have been defined
@@ -745,9 +894,10 @@ void set_gfns(void)
 
     if ((chrbdy_freepts_extraporder1_gfn     = PAMR_get_gfn("chrbdy_freepts_extraporder1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((chrbdy_freepts_extraporder2_gfn     = PAMR_get_gfn("chrbdy_freepts_extraporder2",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((chrbdy_freepts_extraporder3_gfn     = PAMR_get_gfn("chrbdy_freepts_extraporder3",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((chrbdy_fixedpts_extraporder1_gfn     = PAMR_get_gfn("chrbdy_fixedpts_extraporder1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((chrbdy_fixedpts_extraporder2_gfn     = PAMR_get_gfn("chrbdy_fixedpts_extraporder2",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-
+    if ((chrbdy_fixedpts_extraporder3_gfn     = PAMR_get_gfn("chrbdy_fixedpts_extraporder3",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_res_gfn  = PAMR_get_gfn("phi1_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_res_gfn    = PAMR_get_gfn("gb_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((efe_all_ires_gfn    = PAMR_get_gfn("efe_all_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -768,7 +918,6 @@ void set_gfns(void)
     if ((quasiset_chichi_ll_gfn    = PAMR_get_gfn("quasiset_chichi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_chixi_ll_gfn    = PAMR_get_gfn("quasiset_chixi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_xixi_ll_gfn    = PAMR_get_gfn("quasiset_xixi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((quasiset_tracell_gfn    = PAMR_get_gfn("quasiset_tracell",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_massdensityll_gfn    = PAMR_get_gfn("quasiset_massdensityll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((relkretschcentregrid_gfn    = PAMR_get_gfn("relkretschcentregrid",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -978,8 +1127,10 @@ void ldptr(void)
     chr_mg = gfs[chr_mg_gfn-1]; 
     chrbdy_freepts_extraporder1 = gfs[chrbdy_freepts_extraporder1_gfn-1];
     chrbdy_freepts_extraporder2 = gfs[chrbdy_freepts_extraporder2_gfn-1];
+    chrbdy_freepts_extraporder3 = gfs[chrbdy_freepts_extraporder3_gfn-1];
     chrbdy_fixedpts_extraporder1 = gfs[chrbdy_fixedpts_extraporder1_gfn-1];
     chrbdy_fixedpts_extraporder2 = gfs[chrbdy_fixedpts_extraporder2_gfn-1]; 
+    chrbdy_fixedpts_extraporder3 = gfs[chrbdy_fixedpts_extraporder3_gfn-1];
     phi1_res  = gfs[phi1_res_gfn-1];
     gb_res    = gfs[gb_res_gfn-1];
     efe_all_ires  = gfs[efe_all_ires_gfn-1];
@@ -1000,7 +1151,6 @@ void ldptr(void)
     quasiset_chichi_ll  = gfs[quasiset_chichi_ll_gfn-1];
     quasiset_chixi_ll  = gfs[quasiset_chixi_ll_gfn-1];
     quasiset_xixi_ll  = gfs[quasiset_xixi_ll_gfn-1];
-    quasiset_tracell  = gfs[quasiset_tracell_gfn-1];
     quasiset_massdensityll  = gfs[quasiset_massdensityll_gfn-1];
     relkretschcentregrid = gfs[relkretschcentregrid_gfn-1];
     hb_t_res  = gfs[hb_t_res_gfn-1];
@@ -2029,7 +2179,6 @@ void AdS4D_pre_io_calc(void)
                         quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                         quasiset_chichi_ll,quasiset_chixi_ll,
                         quasiset_xixi_ll,
-                        quasiset_tracell,
                         quasiset_massdensityll,
                         gb_tt_np1,gb_tt_n,gb_tt_nm1,
                         gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -2053,14 +2202,20 @@ void AdS4D_pre_io_calc(void)
             	{
                 	bdy_extrap_order=2;
                 	nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
-            	}   
+            	}  
+            	if (output_bdy_extraporder3)
+            	{
+                	bdy_extrap_order=3;
+                	nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            	}  
         	}   
         	if (bdy_extrap_fixedpts)
         	{   
             	//set fixed_coords, i.e. the values (fixed for all resolutions) of coordinates of points that we use for use boundary extrapolation
             	for (i=0;i<num_fixed_coords;i++)
             	{
-                	fixed_coords[i]=x[i*ind_distance_fixedpts]; //         printf("i=%i,fixed_coords[i]=%lf\n",i,fixed_coords[i]);
+                	fixed_coords[i]=x[i*ind_distance_fixedpts]; 
+                	//         printf("i=%i,fixed_coords[i]=%lf\n",i,fixed_coords[i]);
             	}           
             	if (output_bdy_extraporder1)
             	{
@@ -2071,11 +2226,17 @@ void AdS4D_pre_io_calc(void)
             	{
                 	bdy_extrap_order=2;
                 	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            	}  
+				if (output_bdy_extraporder3)
+            	{
+                	bdy_extrap_order=3;
+                	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
             	}   
         	}   
             //reduce boundary points if needed  
             //         int reduced_numbdypoints=10000;    
             //         if (numbdypoints*uniSize>reduced_numbdypoints) numbdypoints=roundl(reduced_numbdypoints/uniSize)+1;  
+
         } //closes condition on output_bdyquantities    
         if (output_ires)
         {   
@@ -2491,7 +2652,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
     dy=(bbox[3]-bbox[2])/(shape[1]-1);
     dz=(bbox[5]-bbox[4])/(shape[2]-1);  
 
-    //   printf("AdS4D_fill_ex_mask is called");  
+    //printf("AdS4D_fill_ex_mask is called");  
     for (i=0; i<shape[0]; i++)
     {
         x=bbox[0]+i*dx;
@@ -2510,7 +2671,11 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                 }
                 else 
                 {
-                    mask[ind]=excised-1;    //       printf("point not excised");   //       printf("EX_MASK: i=%i,j=%i,k=%i,ind=%i\n",i,j,k,ind); //       printf("EX_MASK: x=%lf,y=%lf,z=%lf,rho=%lf\n",x,y,z,rho);   //       printf("EX_MASK: mask[ind]=%lf\n",mask[ind]);
+                    mask[ind]=excised-1;    
+                    //       printf("point not excised");   
+                    //       printf("EX_MASK: i=%i,j=%i,k=%i,ind=%i\n",i,j,k,ind); 
+                    //       printf("EX_MASK: x=%lf,y=%lf,z=%lf,rho=%lf\n",x,y,z,rho);   
+                    //       printf("EX_MASK: mask[ind]=%lf\n",mask[ind]);
                     //when MAX_BHS.ne.0, excise inside a fraction ex_r of the horizon
                     for (l=0; l<MAX_BHS; l++)
                     {
@@ -2521,7 +2686,9 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                             zp=(z-ex_xc[l][2]);
                             ex_r_xp=(ex_r[l][0]*(1-ex_rbuf[l]));
                             ex_r_yp=(ex_r[l][1]*(1-ex_rbuf[l]));
-                            ex_r_zp=(ex_r[l][2]*(1-ex_rbuf[l]));    //                 printf("xp=%lf,yp=%lf,zp=%lf\n",xp,yp,zp);   //                 printf("ex_r_xp=%lf,ex_r_yp=%lf,ex_r_zp=%lf\n",ex_r_xp,ex_r_yp,ex_r_zp);    
+                            ex_r_zp=(ex_r[l][2]*(1-ex_rbuf[l]));    
+                            //                 printf("xp=%lf,yp=%lf,zp=%lf\n",xp,yp,zp);   
+                            //                 printf("ex_r_xp=%lf,ex_r_yp=%lf,ex_r_zp=%lf\n",ex_r_xp,ex_r_yp,ex_r_zp);    
                             if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp+zp*zp/ex_r_zp/ex_r_zp))<1) 
                             {
                                 mask[ind]=excised;
@@ -2560,8 +2727,10 @@ int pre_tstep_global_first=1,valid;
 //int mem_alloc_bdyquantities_first=1;
 int is_bdy_freepts_extraporder1,ie_bdy_freepts_extraporder1;
 int is_bdy_freepts_extraporder2,ie_bdy_freepts_extraporder2;
+int is_bdy_freepts_extraporder3,ie_bdy_freepts_extraporder3;
 int is_bdy_fixedpts_extraporder1,ie_bdy_fixedpts_extraporder1;
 int is_bdy_fixedpts_extraporder2,ie_bdy_fixedpts_extraporder2;
+int is_bdy_fixedpts_extraporder3,ie_bdy_fixedpts_extraporder3;
 
 void AdS4D_pre_tstep(int L)
 {
@@ -2818,7 +2987,6 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder1,yextrap_freepts_extraporder1,zextrap_freepts_extraporder1,
                                 chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,
@@ -2837,7 +3005,9 @@ void AdS4D_pre_tstep(int L)
                             lquasiset_massdensity0_freepts_extraporder1  [i] = quasiset_massdensity_freepts_extraporder1[i-is_bdy_freepts_extraporder1];
                             lbdyphi0_freepts_extraporder1                [i] = bdyphi_freepts_extraporder1[i-is_bdy_freepts_extraporder1];
                         }   
-                    }//closes condition on output_bdy_extraporder1  
+                    }//closes condition on output_bdy_extraporder1
+
+
                     //FREE POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {
@@ -3034,7 +3204,6 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder2,yextrap_freepts_extraporder2,zextrap_freepts_extraporder2,
                                 chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,
@@ -3054,6 +3223,231 @@ void AdS4D_pre_tstep(int L)
                             lbdyphi0_freepts_extraporder2                [i] = bdyphi_freepts_extraporder2[i-is_bdy_freepts_extraporder2];
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
+                        vecbdypoints_freepts_extraporder3 = malloc(uniSize*sizeof(int));
+                        dsplsbdypoints_freepts_extraporder3 = malloc(uniSize*sizeof(int));    
+                        //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+                        MPI_Allgather(&numbdypoints_freepts_extraporder3,1,MPI_INT,vecbdypoints_freepts_extraporder3,1,MPI_INT,MPI_COMM_WORLD); 
+                        //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
+                        MPI_Allreduce(&numbdypoints_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);  
+                        //printf("numbdypoints_freepts_extraporder3=%i\n",numbdypoints_freepts_extraporder3);
+                        //fflush(stdout); 
+                        quasiset_tt_freepts_extraporder3              = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_tchi_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_txi_freepts_extraporder3             = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chichi_freepts_extraporder3          = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chixi_freepts_extraporder3           = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_xixi_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_trace_freepts_extraporder3           = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_massdensity_freepts_extraporder3     = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        bdyphi_freepts_extraporder3                   = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));   
+                        xextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        yextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        zextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));   
+                        lquasiset_tt0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_tchi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_txi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_chichi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_chixi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_xixi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_trace0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_massdensity0_freepts_extraporder3   = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lbdyphi0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        maxquasiset_tt0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_tchi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_txi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_chichi0_freepts_extraporder3      = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_chixi0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_xixi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_trace0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_massdensity0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxbdyphi0_freepts_extraporder3               = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        minquasiset_tt0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_tchi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_txi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_chichi0_freepts_extraporder3      = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_chixi0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_xixi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_trace0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_massdensity0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minbdyphi0_freepts_extraporder3               = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        quasiset_tt0_freepts_extraporder3             = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_tchi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_txi0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chichi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chixi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_xixi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_trace0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_massdensity0_freepts_extraporder3    = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        AdS_mass0_freepts_extraporder3                = malloc(sizeof(real));
+                        bdyphi0_freepts_extraporder3                  = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));    
+                        xextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        yextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        zextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+
+                        //initialize
+                        for (i=0;i<numbdypoints_freepts_extraporder3;i++)
+                        {
+                            quasiset_tt_freepts_extraporder3             [i] = 0;
+                            quasiset_tchi_freepts_extraporder3           [i] = 0;
+                            quasiset_txi_freepts_extraporder3            [i] = 0;
+                            quasiset_chichi_freepts_extraporder3         [i] = 0;
+                            quasiset_chixi_freepts_extraporder3          [i] = 0;
+                            quasiset_xixi_freepts_extraporder3           [i] = 0;
+                            quasiset_trace_freepts_extraporder3          [i] = 0;
+                            quasiset_massdensity_freepts_extraporder3    [i] = 0;
+                            bdyphi_freepts_extraporder3                  [i] = 0;   
+                            xextrap_freepts_extraporder3                 [i] = 0;
+                            yextrap_freepts_extraporder3                 [i] = 0;
+                            zextrap_freepts_extraporder3                 [i] = 0;
+                        }   
+                        for (i=0;i<basenumbdypoints_freepts_extraporder3;i++)
+                        {   
+                            lquasiset_tt0_freepts_extraporder3            [i] = 0;
+                            lquasiset_tchi0_freepts_extraporder3          [i] = 0;
+                            lquasiset_txi0_freepts_extraporder3           [i] = 0;
+                            lquasiset_chichi0_freepts_extraporder3        [i] = 0;
+                            lquasiset_chixi0_freepts_extraporder3         [i] = 0;
+                            lquasiset_xixi0_freepts_extraporder3          [i] = 0;
+                            lquasiset_trace0_freepts_extraporder3         [i] = 0;
+                            lquasiset_massdensity0_freepts_extraporder3   [i] = 0;
+                            lbdyphi0_freepts_extraporder3                 [i] = 0;             
+                            maxquasiset_tt0_freepts_extraporder3          [i] = 0;
+                            maxquasiset_tchi0_freepts_extraporder3        [i] = 0;
+                            maxquasiset_txi0_freepts_extraporder3         [i] = 0;
+                            maxquasiset_chichi0_freepts_extraporder3      [i] = 0;
+                            maxquasiset_chixi0_freepts_extraporder3       [i] = 0;
+                            maxquasiset_xixi0_freepts_extraporder3        [i] = 0;
+                            maxquasiset_trace0_freepts_extraporder3       [i] = 0;
+                            maxquasiset_massdensity0_freepts_extraporder3 [i] = 0;
+                            maxbdyphi0_freepts_extraporder3               [i] = 0;  
+                            minquasiset_tt0_freepts_extraporder3          [i] = 0;
+                            minquasiset_tchi0_freepts_extraporder3        [i] = 0;
+                            minquasiset_txi0_freepts_extraporder3         [i] = 0;
+                            minquasiset_chichi0_freepts_extraporder3      [i] = 0;
+                            minquasiset_chixi0_freepts_extraporder3       [i] = 0;
+                            minquasiset_xixi0_freepts_extraporder3        [i] = 0;
+                            minquasiset_trace0_freepts_extraporder3       [i] = 0;
+                            minquasiset_massdensity0_freepts_extraporder3 [i] = 0;
+                            minbdyphi0_freepts_extraporder3               [i] = 0;  
+                            quasiset_tt0_freepts_extraporder3             [i] = 0;
+                            quasiset_tchi0_freepts_extraporder3           [i] = 0;
+                            quasiset_txi0_freepts_extraporder3            [i] = 0;
+                            quasiset_chichi0_freepts_extraporder3         [i] = 0;
+                            quasiset_chixi0_freepts_extraporder3          [i] = 0;
+                            quasiset_xixi0_freepts_extraporder3           [i] = 0;
+                            quasiset_trace0_freepts_extraporder3          [i] = 0;
+                            quasiset_massdensity0_freepts_extraporder3    [i] = 0;
+                            bdyphi0_freepts_extraporder3                  [i] = 0;   
+                            xextrap0_freepts_extraporder3                 [i] = 0;
+                            yextrap0_freepts_extraporder3                 [i] = 0;
+                            zextrap0_freepts_extraporder3                 [i] = 0;  
+                        }
+                        *AdS_mass0_freepts_extraporder3                    = 0; 
+                        
+                        //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+                        is_bdy_freepts_extraporder3=0;
+                        if (my_rank==0)
+                        {
+                            ie_bdy_freepts_extraporder3=vecbdypoints_freepts_extraporder3[0];
+                        }
+                        else
+                        {
+                            for (j=0; j<my_rank; j++)
+                            {
+                                is_bdy_freepts_extraporder3=is_bdy_freepts_extraporder3+vecbdypoints_freepts_extraporder3[j];
+                            }
+                            ie_bdy_freepts_extraporder3=is_bdy_freepts_extraporder3+vecbdypoints_freepts_extraporder3[my_rank];
+                        }      
+                        //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+                        for (i=0; i<uniSize; i++)
+                        {
+                            dsplsbdypoints_freepts_extraporder3[i]=0;
+                        }         
+                        for (i=0; i<uniSize; i++)
+                        {
+                            if (i!=0)
+                            {
+                                for (j=0; j<i; j++)
+                                {
+                                    dsplsbdypoints_freepts_extraporder3[i]=dsplsbdypoints_freepts_extraporder3[i]+vecbdypoints_freepts_extraporder3[j];
+                                }
+                            }
+                        }   
+                        
+                        xyzextrap_(xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);    
+                        
+                        //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+                        MPI_Allgatherv(xextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,xextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(yextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,yextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(zextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,zextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);    //the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) 
+                                {
+                                    printf("THE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT TRUSTWORTHY...\n NOT ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS\n");
+                                    printf("...setting output_AdS_mass to 0...");
+                                }
+                                output_AdS_mass=0;
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("RUNNING ON ONLY 1 PROCESS...ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS FOR FREE POINTS, FIRST ORDER EXTRAPOLATION ON ONLY 1 PROCESS\n");
+                                rhoextrap0_freepts_extraporder3 = malloc(sizeof(real));
+                                chiextrap0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                                xiextrap0_freepts_extraporder3  = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real)); 
+                                chixiextrap_(rhoextrap0_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3);  
+                                basebdy_Nchi_freepts_extraporder3=0;//initialize
+                                basebdy_Nxi_freepts_extraporder3=0; //initialize
+                                bdyn_(&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3);  
+                                rhobdy0_freepts_extraporder3 = malloc(sizeof(real));
+                                chibdy0_freepts_extraporder3 = malloc(basebdy_Nchi_freepts_extraporder3*sizeof(real));
+                                xibdy0_freepts_extraporder3  = malloc(basebdy_Nxi_freepts_extraporder3*sizeof(real));   
+                            }
+                        }
+
+   
+                        extrap_bdyphi_freepts_(bdyphi_freepts_extraporder3,
+                                        leadordcoeff_phi1,
+                                        xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
+                                        chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
+                                        &bdy_extrap_order,
+                                        x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        extrap_quasiset_freepts_(quasiset_tt_freepts_extraporder3,quasiset_tchi_freepts_extraporder3,quasiset_txi_freepts_extraporder3,
+                                quasiset_chichi_freepts_extraporder3,quasiset_chixi_freepts_extraporder3,
+                                quasiset_xixi_freepts_extraporder3,
+                                quasiset_trace_freepts_extraporder3,
+                                quasiset_massdensity_freepts_extraporder3,
+                                quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+                                quasiset_chichi_ll,quasiset_chixi_ll,
+                                quasiset_xixi_ll,
+                                quasiset_massdensityll,
+                                xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
+                                chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
+                                &bdy_extrap_order,
+                                x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
+                        for (i=is_bdy_freepts_extraporder3; i<ie_bdy_freepts_extraporder3; i++)
+                        {
+                            lquasiset_tt0_freepts_extraporder3           [i] = quasiset_tt_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_tchi0_freepts_extraporder3         [i] = quasiset_tchi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_txi0_freepts_extraporder3          [i] = quasiset_txi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_chichi0_freepts_extraporder3       [i] = quasiset_chichi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_chixi0_freepts_extraporder3        [i] = quasiset_chixi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_xixi0_freepts_extraporder3         [i] = quasiset_xixi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_trace0_freepts_extraporder3        [i] = quasiset_trace_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_massdensity0_freepts_extraporder3  [i] = quasiset_massdensity_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lbdyphi0_freepts_extraporder3                [i] = bdyphi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_extrap_freepts
 
                 //FIXED POINTS EXTRAPOLATION
@@ -3257,13 +3651,13 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder1,yextrap_fixedpts_extraporder1,zextrap_fixedpts_extraporder1,
                                 chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,
                                 &bdy_extrap_order,
                                 &ind_distance_fixedpts,
                                 x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+
                         //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
                         for (i=is_bdy_fixedpts_extraporder1; i<ie_bdy_fixedpts_extraporder1; i++)
                         {
@@ -3477,7 +3871,6 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder2,yextrap_fixedpts_extraporder2,zextrap_fixedpts_extraporder2,
                                 chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,
@@ -3498,8 +3891,230 @@ void AdS4D_pre_tstep(int L)
                             lbdyphi0_fixedpts_extraporder2                [i] = bdyphi_fixedpts_extraporder2[i-is_bdy_fixedpts_extraporder2];
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FIXED POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        MPI_Comm_size(MPI_COMM_WORLD,&uniSize);
+                        vecbdypoints_fixedpts_extraporder3 = malloc(uniSize*sizeof(int));
+                        dsplsbdypoints_fixedpts_extraporder3 = malloc(uniSize*sizeof(int)); 
+                        //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+                        MPI_Allgather(&numbdypoints_fixedpts_extraporder3,1,MPI_INT,vecbdypoints_fixedpts_extraporder3,1,MPI_INT,MPI_COMM_WORLD);   
+                        //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
+                        MPI_Allreduce(&numbdypoints_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);    
+                        quasiset_tt_fixedpts_extraporder3              = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_tchi_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_txi_fixedpts_extraporder3             = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chichi_fixedpts_extraporder3          = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chixi_fixedpts_extraporder3           = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_xixi_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_trace_fixedpts_extraporder3           = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_massdensity_fixedpts_extraporder3     = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        bdyphi_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        xextrap_fixedpts_extraporder3                  = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        yextrap_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        zextrap_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));    
+                        lquasiset_tt0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_tchi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_txi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_chichi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_chixi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_xixi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_trace0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_massdensity0_fixedpts_extraporder3   = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lbdyphi0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        maxquasiset_tt0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_tchi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_txi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_chichi0_fixedpts_extraporder3      = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_chixi0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_xixi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_trace0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_massdensity0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxbdyphi0_fixedpts_extraporder3               = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        minquasiset_tt0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_tchi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_txi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_chichi0_fixedpts_extraporder3      = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_chixi0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_xixi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_trace0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_massdensity0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minbdyphi0_fixedpts_extraporder3               = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        quasiset_tt0_fixedpts_extraporder3             = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_tchi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_txi0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chichi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chixi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_xixi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_trace0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_massdensity0_fixedpts_extraporder3    = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        AdS_mass0_fixedpts_extraporder3                = malloc(sizeof(real));
+                        bdyphi0_fixedpts_extraporder3                  = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        xextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        yextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        zextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        //initialize
+                        for (i=0;i<numbdypoints_fixedpts_extraporder3;i++)
+                        {
+                            quasiset_tt_fixedpts_extraporder3             [i] = 0;
+                            quasiset_tchi_fixedpts_extraporder3           [i] = 0;
+                            quasiset_txi_fixedpts_extraporder3            [i] = 0;
+                            quasiset_chichi_fixedpts_extraporder3         [i] = 0;
+                            quasiset_chixi_fixedpts_extraporder3          [i] = 0;
+                            quasiset_xixi_fixedpts_extraporder3           [i] = 0;
+                            quasiset_trace_fixedpts_extraporder3          [i] = 0;
+                            quasiset_massdensity_fixedpts_extraporder3    [i] = 0;
+                            bdyphi_fixedpts_extraporder3                  [i] = 0;  
+                            xextrap_fixedpts_extraporder3                 [i] = 0;
+                            yextrap_fixedpts_extraporder3                 [i] = 0;
+                            zextrap_fixedpts_extraporder3                 [i] = 0;
+                        }   
+                        for (i=0;i<basenumbdypoints_fixedpts_extraporder3;i++)
+                        {   
+                            lquasiset_tt0_fixedpts_extraporder3            [i] = 0;
+                            lquasiset_tchi0_fixedpts_extraporder3          [i] = 0;
+                            lquasiset_txi0_fixedpts_extraporder3           [i] = 0;
+                            lquasiset_chichi0_fixedpts_extraporder3        [i] = 0;
+                            lquasiset_chixi0_fixedpts_extraporder3         [i] = 0;
+                            lquasiset_xixi0_fixedpts_extraporder3          [i] = 0;
+                            lquasiset_trace0_fixedpts_extraporder3         [i] = 0;
+                            lquasiset_massdensity0_fixedpts_extraporder3   [i] = 0;
+                            lbdyphi0_fixedpts_extraporder3                 [i] = 0; 
+                            maxquasiset_tt0_fixedpts_extraporder3          [i] = 0;
+                            maxquasiset_tchi0_fixedpts_extraporder3        [i] = 0;
+                            maxquasiset_txi0_fixedpts_extraporder3         [i] = 0;
+                            maxquasiset_chichi0_fixedpts_extraporder3      [i] = 0;
+                            maxquasiset_chixi0_fixedpts_extraporder3       [i] = 0;
+                            maxquasiset_xixi0_fixedpts_extraporder3        [i] = 0;
+                            maxquasiset_trace0_fixedpts_extraporder3       [i] = 0;
+                            maxquasiset_massdensity0_fixedpts_extraporder3 [i] = 0;
+                            maxbdyphi0_fixedpts_extraporder3               [i] = 0; 
+                            minquasiset_tt0_fixedpts_extraporder3          [i] = 0;
+                            minquasiset_tchi0_fixedpts_extraporder3        [i] = 0;
+                            minquasiset_txi0_fixedpts_extraporder3         [i] = 0;
+                            minquasiset_chichi0_fixedpts_extraporder3      [i] = 0;
+                            minquasiset_chixi0_fixedpts_extraporder3       [i] = 0;
+                            minquasiset_xixi0_fixedpts_extraporder3        [i] = 0;
+                            minquasiset_trace0_fixedpts_extraporder3       [i] = 0;
+                            minquasiset_massdensity0_fixedpts_extraporder3 [i] = 0;
+                            minbdyphi0_fixedpts_extraporder3               [i] = 0; 
+                            quasiset_tt0_fixedpts_extraporder3             [i] = 0;
+                            quasiset_tchi0_fixedpts_extraporder3           [i] = 0;
+                            quasiset_txi0_fixedpts_extraporder3            [i] = 0;
+                            quasiset_chichi0_fixedpts_extraporder3         [i] = 0;
+                            quasiset_chixi0_fixedpts_extraporder3          [i] = 0;
+                            quasiset_xixi0_fixedpts_extraporder3           [i] = 0;
+                            quasiset_trace0_fixedpts_extraporder3          [i] = 0;
+                            quasiset_massdensity0_fixedpts_extraporder3    [i] = 0;
+                            bdyphi0_fixedpts_extraporder3                  [i] = 0; 
+                            xextrap0_fixedpts_extraporder3                 [i] = 0;
+                            yextrap0_fixedpts_extraporder3                 [i] = 0;
+                            zextrap0_fixedpts_extraporder3                 [i] = 0; 
+                        }
+                        *AdS_mass0_fixedpts_extraporder3                    = 0;    
+                        //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+                        is_bdy_fixedpts_extraporder3=0;
+                        if (my_rank==0)
+                        {
+                            ie_bdy_fixedpts_extraporder3=vecbdypoints_fixedpts_extraporder3[0];
+                        }
+                        else
+                        {
+                            for (j=0; j<my_rank; j++)
+                            {
+                                is_bdy_fixedpts_extraporder3=is_bdy_fixedpts_extraporder3+vecbdypoints_fixedpts_extraporder3[j];
+                            }
+                            ie_bdy_fixedpts_extraporder3=is_bdy_fixedpts_extraporder3+vecbdypoints_fixedpts_extraporder3[my_rank];
+                        }   
+                        //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+                        for (i=0; i<uniSize; i++)
+                        {
+                            dsplsbdypoints_fixedpts_extraporder3[i]=0;
+                        }   
+                        for (i=0; i<uniSize; i++)
+                        {
+                            if (i!=0)
+                            {
+                                for (j=0; j<i; j++)
+                                {
+                                    dsplsbdypoints_fixedpts_extraporder3[i]=dsplsbdypoints_fixedpts_extraporder3[i]+vecbdypoints_fixedpts_extraporder3[j];
+                                }
+                            }
+                        }
+
+                        xyzextrap_(xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);   
+                        //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+                        MPI_Allgatherv(xextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,xextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(yextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,yextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(zextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,zextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);   //the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) 
+                                {
+                                    printf("THE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT TRUSTWORTHY...\n NOT ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS\n");
+                                    printf("...setting output_AdS_mass to 0");
+                                }
+                                output_AdS_mass=0;
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("RUNNING ON ONLY 1 PROCESS...ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS FOR FIXED POINTS, FIRST ORDER EXTRAPOLATION ON ONLY 1 PROCESS\n");
+                                rhoextrap0_fixedpts_extraporder3 = malloc(sizeof(real));
+                                chiextrap0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                                xiextrap0_fixedpts_extraporder3  = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
+                                chixiextrap_(rhoextrap0_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3);   
+                                basebdy_Nchi_fixedpts_extraporder3=0;//initialize
+                                basebdy_Nxi_fixedpts_extraporder3=0; //initialize
+                                bdyn_(&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3); 
+                                rhobdy0_fixedpts_extraporder3 = malloc(sizeof(real));
+                                chibdy0_fixedpts_extraporder3 = malloc(basebdy_Nchi_fixedpts_extraporder3*sizeof(real));
+                                xibdy0_fixedpts_extraporder3  = malloc(basebdy_Nxi_fixedpts_extraporder3*sizeof(real)); 
+                            }
+                        }   
+                        extrap_bdyphi_fixedpts_(bdyphi_fixedpts_extraporder3,
+                                        leadordcoeff_phi1,
+                                        xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
+                                        chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
+                                        &bdy_extrap_order,
+                                        &ind_distance_fixedpts,
+                                        x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        extrap_quasiset_fixedpts_(quasiset_tt_fixedpts_extraporder3,quasiset_tchi_fixedpts_extraporder3,quasiset_txi_fixedpts_extraporder3,
+                                quasiset_chichi_fixedpts_extraporder3,quasiset_chixi_fixedpts_extraporder3,
+                                quasiset_xixi_fixedpts_extraporder3,
+                                quasiset_trace_fixedpts_extraporder3,
+                                quasiset_massdensity_fixedpts_extraporder3,
+                                quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+                                quasiset_chichi_ll,quasiset_chixi_ll,
+                                quasiset_xixi_ll,
+                                quasiset_massdensityll,
+                                xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
+                                chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
+                                &bdy_extrap_order,
+                                &ind_distance_fixedpts,
+                                x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+
+                        //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
+                        for (i=is_bdy_fixedpts_extraporder3; i<ie_bdy_fixedpts_extraporder3; i++)
+                        {
+                            lquasiset_tt0_fixedpts_extraporder3           [i] = quasiset_tt_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_tchi0_fixedpts_extraporder3         [i] = quasiset_tchi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_txi0_fixedpts_extraporder3          [i] = quasiset_txi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_chichi0_fixedpts_extraporder3       [i] = quasiset_chichi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_chixi0_fixedpts_extraporder3        [i] = quasiset_chixi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_xixi0_fixedpts_extraporder3         [i] = quasiset_xixi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_trace0_fixedpts_extraporder3        [i] = quasiset_trace_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_massdensity0_fixedpts_extraporder3  [i] = quasiset_massdensity_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lbdyphi0_fixedpts_extraporder3                [i] = bdyphi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];   //           *lAdS_mass0_fixedpts_extraporder3                 = *AdS_mass_fixedpts_extraporder3;
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_fixedpts_extrap  
-            } //closes condition on output_bdyquantities    
+            } //closes condition on output_bdyquantities  
+
             valid=PAMR_next_g();
         }
 
@@ -3601,7 +4216,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -3629,7 +4244,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -3659,7 +4274,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -3688,7 +4303,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -3718,7 +4333,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -3742,7 +4357,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp); 
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -3770,7 +4385,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);  
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -3800,7 +4415,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -3829,7 +4444,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -3935,7 +4550,7 @@ void AdS4D_pre_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -3961,7 +4576,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -3989,7 +4604,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -4016,7 +4631,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -4043,7 +4658,7 @@ void AdS4D_pre_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -4065,7 +4680,7 @@ void AdS4D_pre_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -4091,7 +4706,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -4119,7 +4734,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -4146,7 +4761,7 @@ void AdS4D_pre_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -4187,6 +4802,343 @@ void AdS4D_pre_tstep(int L)
                             }
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+                        //basenumbdypoints is set in AdS4D_post_init
+                        MPI_Allreduce(lquasiset_tt0_freepts_extraporder3,          maxquasiset_tt0_freepts_extraporder3,          basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_freepts_extraporder3,        maxquasiset_tchi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_freepts_extraporder3,         maxquasiset_txi0_freepts_extraporder3,         basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_freepts_extraporder3,      maxquasiset_chichi0_freepts_extraporder3,      basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_freepts_extraporder3,       maxquasiset_chixi0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_freepts_extraporder3,        maxquasiset_xixi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_freepts_extraporder3,       maxquasiset_trace0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_freepts_extraporder3, maxquasiset_massdensity0_freepts_extraporder3, basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_freepts_extraporder3,               maxbdyphi0_freepts_extraporder3,               basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);    
+                        MPI_Allreduce(lquasiset_tt0_freepts_extraporder3,          minquasiset_tt0_freepts_extraporder3,          basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_freepts_extraporder3,        minquasiset_tchi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_freepts_extraporder3,         minquasiset_txi0_freepts_extraporder3,         basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_freepts_extraporder3,      minquasiset_chichi0_freepts_extraporder3,      basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_freepts_extraporder3,       minquasiset_chixi0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_freepts_extraporder3,        minquasiset_xixi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_freepts_extraporder3,       minquasiset_trace0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_freepts_extraporder3, minquasiset_massdensity0_freepts_extraporder3, basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_freepts_extraporder3,               minbdyphi0_freepts_extraporder3,               basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);    
+                        for (i=0; i<basenumbdypoints_freepts_extraporder3; i++)
+                        { 
+                            if (uniSize>1)
+                            {
+                                    quasiset_tt0_freepts_extraporder3          [i] = maxquasiset_tt0_freepts_extraporder3          [i] + minquasiset_tt0_freepts_extraporder3          [i];
+                                    quasiset_tchi0_freepts_extraporder3        [i] = maxquasiset_tchi0_freepts_extraporder3        [i] + minquasiset_tchi0_freepts_extraporder3        [i];
+                                    quasiset_txi0_freepts_extraporder3         [i] = maxquasiset_txi0_freepts_extraporder3         [i] + minquasiset_txi0_freepts_extraporder3         [i];
+                                    quasiset_chichi0_freepts_extraporder3      [i] = maxquasiset_chichi0_freepts_extraporder3      [i] + minquasiset_chichi0_freepts_extraporder3      [i];
+                                    quasiset_chixi0_freepts_extraporder3       [i] = maxquasiset_chixi0_freepts_extraporder3       [i] + minquasiset_chixi0_freepts_extraporder3       [i];
+                                    quasiset_xixi0_freepts_extraporder3        [i] = maxquasiset_xixi0_freepts_extraporder3        [i] + minquasiset_xixi0_freepts_extraporder3        [i];
+                                    quasiset_trace0_freepts_extraporder3       [i] = maxquasiset_trace0_freepts_extraporder3       [i] + minquasiset_trace0_freepts_extraporder3       [i];
+                                    quasiset_massdensity0_freepts_extraporder3 [i] = maxquasiset_massdensity0_freepts_extraporder3 [i] + minquasiset_massdensity0_freepts_extraporder3 [i];
+                                    bdyphi0_freepts_extraporder3               [i] = maxbdyphi0_freepts_extraporder3               [i] + minbdyphi0_freepts_extraporder3               [i];
+                                }
+                                else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+                                {
+                                    quasiset_tt0_freepts_extraporder3          [i] = maxquasiset_tt0_freepts_extraporder3          [i];
+                                    quasiset_tchi0_freepts_extraporder3        [i] = maxquasiset_tchi0_freepts_extraporder3        [i];
+                                    quasiset_txi0_freepts_extraporder3         [i] = maxquasiset_txi0_freepts_extraporder3         [i];
+                                    quasiset_chichi0_freepts_extraporder3      [i] = maxquasiset_chichi0_freepts_extraporder3      [i];
+                                    quasiset_chixi0_freepts_extraporder3       [i] = maxquasiset_chixi0_freepts_extraporder3       [i];
+                                    quasiset_xixi0_freepts_extraporder3        [i] = maxquasiset_xixi0_freepts_extraporder3        [i];
+                                    quasiset_trace0_freepts_extraporder3       [i] = maxquasiset_trace0_freepts_extraporder3       [i];
+                                    quasiset_massdensity0_freepts_extraporder3 [i] = maxquasiset_massdensity0_freepts_extraporder3 [i];
+                                    bdyphi0_freepts_extraporder3               [i] = maxbdyphi0_freepts_extraporder3               [i];
+                                }  
+                        }       
+
+                        if (my_rank==0)
+                        {     
+                            FILE *fp;  
+    
+                            if (alltimes_ascii)
+                            {     
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+                                    
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }        
+                                    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }      
+        
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }
+    
+                            } //closes if(alltimes_ascii) condition 
+    
+                            if (timestep_ascii)
+                            {     
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder3[j],yextrap0_freepts_extraporder3[j],zextrap0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder3[j],yextrap0_freepts_extraporder3[j],zextrap0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                            } //closes if (timestep_ascii) condition          
+                        } //closes if (my_rank==0) condition            //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+                    
+                        if (output_AdS_mass)
+                        { 
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) printf("\nTHE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT RELIABLE...NOT COMPUTING AdS MASS\n");
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("\nRUNNING ON ONLY 1 PROCESS...THE NUMERICAL APPROXIMATION OF AdS MASS FOR FREE POINTS, FIRST ORDER EXTRAPOLATION IS RELIABLE ON 1 PROCESS...COMPUTING AdS MASS\n");      
+                                *rhobdy0_freepts_extraporder3=1;
+                                chibdy_xibdy_(chibdy0_freepts_extraporder3,xibdy0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3,&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3);    
+                                doubleintegralonsphere_(AdS_mass0_freepts_extraporder3,quasiset_massdensity0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,rhobdy0_freepts_extraporder3,chibdy0_freepts_extraporder3,xibdy0_freepts_extraporder3,&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3);          
+                                FILE *fp;
+                                sprintf(name,"AdSbdy_freepts_extraporder3_%st_AdSmass.txt",AMRD_save_tag);
+                                fp = fopen(name, "a+");
+                                fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0_freepts_extraporder3);
+                                fclose(fp);
+                            }
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+                    
                 }//closes condition on bdy_freepts_extrap  
 
                 //FIXED POINTS EXTRAPOLATION
@@ -4256,7 +5208,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4282,7 +5234,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4310,7 +5262,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4337,7 +5289,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4364,7 +5316,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4386,7 +5338,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4412,7 +5364,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4440,7 +5392,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4467,7 +5419,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4572,7 +5524,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4598,7 +5550,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4626,7 +5578,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4653,7 +5605,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -4680,7 +5632,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4702,7 +5654,7 @@ void AdS4D_pre_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4728,7 +5680,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4756,7 +5708,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4783,7 +5735,7 @@ void AdS4D_pre_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -4824,6 +5776,324 @@ void AdS4D_pre_tstep(int L)
                             }
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FIXED POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+                        //basenumbdypoints is set in AdS4D_post_init
+                        MPI_Allreduce(lquasiset_tt0_fixedpts_extraporder3,          maxquasiset_tt0_fixedpts_extraporder3,          basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_fixedpts_extraporder3,        maxquasiset_tchi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_fixedpts_extraporder3,         maxquasiset_txi0_fixedpts_extraporder3,         basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_fixedpts_extraporder3,      maxquasiset_chichi0_fixedpts_extraporder3,      basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_fixedpts_extraporder3,       maxquasiset_chixi0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_fixedpts_extraporder3,        maxquasiset_xixi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_fixedpts_extraporder3,       maxquasiset_trace0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_fixedpts_extraporder3, maxquasiset_massdensity0_fixedpts_extraporder3, basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_fixedpts_extraporder3,               maxbdyphi0_fixedpts_extraporder3,               basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);  
+                        MPI_Allreduce(lquasiset_tt0_fixedpts_extraporder3,          minquasiset_tt0_fixedpts_extraporder3,          basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_fixedpts_extraporder3,        minquasiset_tchi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_fixedpts_extraporder3,         minquasiset_txi0_fixedpts_extraporder3,         basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_fixedpts_extraporder3,      minquasiset_chichi0_fixedpts_extraporder3,      basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_fixedpts_extraporder3,       minquasiset_chixi0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_fixedpts_extraporder3,        minquasiset_xixi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_fixedpts_extraporder3,       minquasiset_trace0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_fixedpts_extraporder3, minquasiset_massdensity0_fixedpts_extraporder3, basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_fixedpts_extraporder3,               minbdyphi0_fixedpts_extraporder3,               basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);  
+                        for (i=0; i<basenumbdypoints_fixedpts_extraporder3; i++)
+                        {
+                            if (uniSize>1)
+                            {
+                                quasiset_tt0_fixedpts_extraporder3          [i] = maxquasiset_tt0_fixedpts_extraporder3          [i] + minquasiset_tt0_fixedpts_extraporder3          [i];
+                                quasiset_tchi0_fixedpts_extraporder3        [i] = maxquasiset_tchi0_fixedpts_extraporder3        [i] + minquasiset_tchi0_fixedpts_extraporder3        [i];
+                                quasiset_txi0_fixedpts_extraporder3         [i] = maxquasiset_txi0_fixedpts_extraporder3         [i] + minquasiset_txi0_fixedpts_extraporder3         [i];
+                                quasiset_chichi0_fixedpts_extraporder3      [i] = maxquasiset_chichi0_fixedpts_extraporder3      [i] + minquasiset_chichi0_fixedpts_extraporder3      [i];
+                                quasiset_chixi0_fixedpts_extraporder3       [i] = maxquasiset_chixi0_fixedpts_extraporder3       [i] + minquasiset_chixi0_fixedpts_extraporder3       [i];
+                                quasiset_xixi0_fixedpts_extraporder3        [i] = maxquasiset_xixi0_fixedpts_extraporder3        [i] + minquasiset_xixi0_fixedpts_extraporder3        [i];
+                                quasiset_trace0_fixedpts_extraporder3       [i] = maxquasiset_trace0_fixedpts_extraporder3       [i] + minquasiset_trace0_fixedpts_extraporder3       [i];
+                                quasiset_massdensity0_fixedpts_extraporder3 [i] = maxquasiset_massdensity0_fixedpts_extraporder3 [i] + minquasiset_massdensity0_fixedpts_extraporder3 [i];
+                                bdyphi0_fixedpts_extraporder3               [i] = maxbdyphi0_fixedpts_extraporder3               [i] + minbdyphi0_fixedpts_extraporder3               [i];
+                            }
+                            else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+                            {
+                                quasiset_tt0_fixedpts_extraporder3          [i] = maxquasiset_tt0_fixedpts_extraporder3          [i];
+                                quasiset_tchi0_fixedpts_extraporder3        [i] = maxquasiset_tchi0_fixedpts_extraporder3        [i];
+                                quasiset_txi0_fixedpts_extraporder3         [i] = maxquasiset_txi0_fixedpts_extraporder3         [i];
+                                quasiset_chichi0_fixedpts_extraporder3      [i] = maxquasiset_chichi0_fixedpts_extraporder3      [i];
+                                quasiset_chixi0_fixedpts_extraporder3       [i] = maxquasiset_chixi0_fixedpts_extraporder3       [i];
+                                quasiset_xixi0_fixedpts_extraporder3        [i] = maxquasiset_xixi0_fixedpts_extraporder3        [i];
+                                quasiset_trace0_fixedpts_extraporder3       [i] = maxquasiset_trace0_fixedpts_extraporder3       [i];
+                                quasiset_massdensity0_fixedpts_extraporder3 [i] = maxquasiset_massdensity0_fixedpts_extraporder3 [i];
+                                bdyphi0_fixedpts_extraporder3               [i] = maxbdyphi0_fixedpts_extraporder3               [i];
+                            }
+                        }       
+
+                        if (my_rank==0)
+                        {   
+                            FILE *fp;   
+                            if (alltimes_ascii)
+                            {   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                            } //closes if(alltimes_ascii) condition 
+                            if (timestep_ascii)
+                            {   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder3[j],yextrap0_fixedpts_extraporder3[j],zextrap0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder3[j],yextrap0_fixedpts_extraporder3[j],zextrap0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                            } //closes if (timestep_ascii) condition    
+                        } //closes if (my_rank==0) condition            
+                        //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) printf("\nTHE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT RELIABLE...NOT COMPUTING AdS MASS\n");
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("\nRUNNING ON ONLY 1 PROCESS...THE NUMERICAL APPROXIMATION OF AdS MASS FOR FIXED POINTS, FIRST ORDER EXTRAPOLATION IS RELIABLE ON 1 PROCESS...COMPUTING AdS MASS\n");    
+                                *rhobdy0_fixedpts_extraporder3=1;
+                                chibdy_xibdy_(chibdy0_fixedpts_extraporder3,xibdy0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3,&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3);
+                                doubleintegralonsphere_(AdS_mass0_fixedpts_extraporder3,quasiset_massdensity0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,rhobdy0_fixedpts_extraporder3,chibdy0_fixedpts_extraporder3,xibdy0_fixedpts_extraporder3,&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3);  
+                                FILE *fp;
+                                sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_AdSmass.txt",AMRD_save_tag);
+                                fp = fopen(name, "a+");
+                                    fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0_fixedpts_extraporder3);
+                                fclose(fp);
+                            }
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_fixedpts_extrap  
             }//closes output_bdyquantities if-condition
         }//closes lsteps==0 if-condition
@@ -4908,6 +6178,7 @@ void AdS4D_pre_tstep(int L)
                             free(xibdy0_freepts_extraporder1);    
                         }   
                     }//closes condition on output_bdy_extraporder1  
+
                     //FREE POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {   
@@ -4975,6 +6246,75 @@ void AdS4D_pre_tstep(int L)
                             free(xibdy0_freepts_extraporder2);  
                         }   
                     } //closes condition on output_bdy_extraporder2 
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {      
+                        free(vecbdypoints_freepts_extraporder3);
+                        free(dsplsbdypoints_freepts_extraporder3);
+                        free(quasiset_tt_freepts_extraporder3);
+                        free(quasiset_tchi_freepts_extraporder3);
+                        free(quasiset_txi_freepts_extraporder3);
+                        free(quasiset_chichi_freepts_extraporder3);
+                        free(quasiset_chixi_freepts_extraporder3);
+                        free(quasiset_xixi_freepts_extraporder3);
+                        free(quasiset_trace_freepts_extraporder3);
+                        free(quasiset_massdensity_freepts_extraporder3);
+                        free(bdyphi_freepts_extraporder3);  
+                        free(xextrap_freepts_extraporder3);
+                        free(yextrap_freepts_extraporder3);
+                        free(zextrap_freepts_extraporder3);   
+                        free(lquasiset_tt0_freepts_extraporder3);        
+                        free(lquasiset_tchi0_freepts_extraporder3);
+                        free(lquasiset_txi0_freepts_extraporder3);
+                        free(lquasiset_chichi0_freepts_extraporder3);
+                        free(lquasiset_chixi0_freepts_extraporder3);
+                        free(lquasiset_xixi0_freepts_extraporder3);
+                        free(lquasiset_trace0_freepts_extraporder3);
+                        free(lquasiset_massdensity0_freepts_extraporder3);
+                        free(lbdyphi0_freepts_extraporder3);      
+                        free(maxquasiset_tt0_freepts_extraporder3);        
+                        free(maxquasiset_tchi0_freepts_extraporder3);
+                        free(maxquasiset_txi0_freepts_extraporder3);
+                        free(maxquasiset_chichi0_freepts_extraporder3);
+                        free(maxquasiset_chixi0_freepts_extraporder3);
+                        free(maxquasiset_xixi0_freepts_extraporder3);
+                        free(maxquasiset_trace0_freepts_extraporder3);
+                        free(maxquasiset_massdensity0_freepts_extraporder3);
+                        free(maxbdyphi0_freepts_extraporder3);    
+                        free(minquasiset_tt0_freepts_extraporder3);
+                        free(minquasiset_tchi0_freepts_extraporder3);
+                        free(minquasiset_txi0_freepts_extraporder3);
+                        free(minquasiset_chichi0_freepts_extraporder3);
+                        free(minquasiset_chixi0_freepts_extraporder3);
+                        free(minquasiset_xixi0_freepts_extraporder3);
+                        free(minquasiset_trace0_freepts_extraporder3);
+                        free(minquasiset_massdensity0_freepts_extraporder3);
+                        free(minbdyphi0_freepts_extraporder3);    
+                        free(quasiset_tt0_freepts_extraporder3);
+                        free(quasiset_tchi0_freepts_extraporder3);
+                        free(quasiset_txi0_freepts_extraporder3);
+                        free(quasiset_chichi0_freepts_extraporder3);
+                        free(quasiset_chixi0_freepts_extraporder3);
+                        free(quasiset_xixi0_freepts_extraporder3);
+                        free(quasiset_trace0_freepts_extraporder3);
+                        free(quasiset_massdensity0_freepts_extraporder3);
+                        free(bdyphi0_freepts_extraporder3);
+                        free(AdS_mass0_freepts_extraporder3);     
+                        free(xextrap0_freepts_extraporder3);
+                        free(yextrap0_freepts_extraporder3);
+                        free(zextrap0_freepts_extraporder3);          
+                        if (output_AdS_mass)
+                        {
+                            free(rhoextrap0_freepts_extraporder3);
+                            free(chiextrap0_freepts_extraporder3);
+                            free(xiextrap0_freepts_extraporder3);             
+                            free(rhobdy0_freepts_extraporder3);
+                            free(chibdy0_freepts_extraporder3);
+                            free(xibdy0_freepts_extraporder3);    
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_freepts_extrap       
                 
                 //FIXED POINTS EXTRAPOLATION
@@ -5047,6 +6387,7 @@ void AdS4D_pre_tstep(int L)
                             free(xibdy0_fixedpts_extraporder1); 
                         }   
                     }//closes condition on output_bdy_extraporder1  
+
                     //FIXED POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {   
@@ -5114,6 +6455,75 @@ void AdS4D_pre_tstep(int L)
                             free(xibdy0_fixedpts_extraporder2); 
                         }   
                     } //closes condition on output_bdy_extraporder2 
+
+                    //FIXED POINTS, FIRST ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {   
+                        free(vecbdypoints_fixedpts_extraporder3);
+                        free(dsplsbdypoints_fixedpts_extraporder3);
+                        free(quasiset_tt_fixedpts_extraporder3);
+                        free(quasiset_tchi_fixedpts_extraporder3);
+                        free(quasiset_txi_fixedpts_extraporder3);
+                        free(quasiset_chichi_fixedpts_extraporder3);
+                        free(quasiset_chixi_fixedpts_extraporder3);
+                        free(quasiset_xixi_fixedpts_extraporder3);
+                        free(quasiset_trace_fixedpts_extraporder3);
+                        free(quasiset_massdensity_fixedpts_extraporder3);
+                        free(bdyphi_fixedpts_extraporder3); 
+                        free(xextrap_fixedpts_extraporder3);
+                        free(yextrap_fixedpts_extraporder3);
+                        free(zextrap_fixedpts_extraporder3);    
+                        free(lquasiset_tt0_fixedpts_extraporder3);
+                        free(lquasiset_tchi0_fixedpts_extraporder3);
+                        free(lquasiset_txi0_fixedpts_extraporder3);
+                        free(lquasiset_chichi0_fixedpts_extraporder3);
+                        free(lquasiset_chixi0_fixedpts_extraporder3);
+                        free(lquasiset_xixi0_fixedpts_extraporder3);
+                        free(lquasiset_trace0_fixedpts_extraporder3);
+                        free(lquasiset_massdensity0_fixedpts_extraporder3);
+                        free(lbdyphi0_fixedpts_extraporder3);   
+                        free(maxquasiset_tt0_fixedpts_extraporder3);
+                        free(maxquasiset_tchi0_fixedpts_extraporder3);
+                        free(maxquasiset_txi0_fixedpts_extraporder3);
+                        free(maxquasiset_chichi0_fixedpts_extraporder3);
+                        free(maxquasiset_chixi0_fixedpts_extraporder3);
+                        free(maxquasiset_xixi0_fixedpts_extraporder3);
+                        free(maxquasiset_trace0_fixedpts_extraporder3);
+                        free(maxquasiset_massdensity0_fixedpts_extraporder3);
+                        free(maxbdyphi0_fixedpts_extraporder3); 
+                        free(minquasiset_tt0_fixedpts_extraporder3);
+                        free(minquasiset_tchi0_fixedpts_extraporder3);
+                        free(minquasiset_txi0_fixedpts_extraporder3);
+                        free(minquasiset_chichi0_fixedpts_extraporder3);
+                        free(minquasiset_chixi0_fixedpts_extraporder3);
+                        free(minquasiset_xixi0_fixedpts_extraporder3);
+                        free(minquasiset_trace0_fixedpts_extraporder3);
+                        free(minquasiset_massdensity0_fixedpts_extraporder3);
+                        free(minbdyphi0_fixedpts_extraporder3); 
+                        free(quasiset_tt0_fixedpts_extraporder3);
+                        free(quasiset_tchi0_fixedpts_extraporder3);
+                        free(quasiset_txi0_fixedpts_extraporder3);
+                        free(quasiset_chichi0_fixedpts_extraporder3);
+                        free(quasiset_chixi0_fixedpts_extraporder3);
+                        free(quasiset_xixi0_fixedpts_extraporder3);
+                        free(quasiset_trace0_fixedpts_extraporder3);
+                        free(quasiset_massdensity0_fixedpts_extraporder3);
+                        free(bdyphi0_fixedpts_extraporder3);
+                        free(AdS_mass0_fixedpts_extraporder3);  
+                        free(xextrap0_fixedpts_extraporder3);
+                        free(yextrap0_fixedpts_extraporder3);
+                        free(zextrap0_fixedpts_extraporder3);   
+                        if (output_AdS_mass)
+                        {
+                            free(rhoextrap0_fixedpts_extraporder3);
+                            free(chiextrap0_fixedpts_extraporder3);
+                            free(xiextrap0_fixedpts_extraporder3);  
+                            free(rhobdy0_fixedpts_extraporder3);
+                            free(chibdy0_fixedpts_extraporder3);
+                            free(xibdy0_fixedpts_extraporder3); 
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_fixedpts_extrap  
             } //closes condition on output_bdyquantities
             valid=PAMR_next_g();
@@ -5360,6 +6770,76 @@ void AdS4D_post_tstep(int L)
             }   
             if (output_bdyquantities)
             {   
+
+    			calc_leadordcoeff_phi1_(leadordcoeff_phi1,
+                      		phi1_n,phi1_nm1,phi1_np1,
+                      		x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+            	calc_quasiset_ll_(
+                        	quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+                        	quasiset_chichi_ll,quasiset_chixi_ll,
+                        	quasiset_xixi_ll,
+                        	quasiset_massdensityll,
+                        	gb_tt_n,gb_tt_nm1,gb_tt_np1,
+                        	gb_tx_n,gb_tx_nm1,gb_tx_np1,
+                        	gb_ty_n,gb_ty_nm1,gb_ty_np1,
+                        	gb_tz_n,gb_tz_nm1,gb_tz_np1,
+                        	gb_xx_n,gb_xx_nm1,gb_xx_np1,
+                        	gb_xy_n,gb_xy_nm1,gb_xy_np1,
+                        	gb_xz_n,gb_xz_nm1,gb_xz_np1,
+                        	gb_yy_n,gb_yy_nm1,gb_yy_np1,
+                        	gb_yz_n,gb_yz_nm1,gb_yz_np1,
+                        	psi_n,psi_nm1,psi_np1,
+                        	x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+
+        		if (bdy_extrap_freepts)
+        		{   
+            		if (output_bdy_extraporder1)
+            		{
+                		bdy_extrap_order=1; //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
+                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}   
+            		if (output_bdy_extraporder2)
+            		{
+                		bdy_extrap_order=2;
+                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}  
+            		if (output_bdy_extraporder3)
+            		{
+                		bdy_extrap_order=3;
+                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}  
+        		}   
+        		if (bdy_extrap_fixedpts)
+        		{   
+            		//set fixed_coords, i.e. the values (fixed for all resolutions) of coordinates of points that we use for use boundary extrapolation
+            		if(AMRD_cp_restart)
+            		{
+            			for (i=0;i<num_fixed_coords;i++)
+            			{
+                			fixed_coords[i]=x[i*ind_distance_fixedpts]; 
+            			}
+            		}
+
+            		if (output_bdy_extraporder1)
+            		{
+                		bdy_extrap_order=1;
+                		nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}   
+            		if (output_bdy_extraporder2)
+            		{
+                		bdy_extrap_order=2;
+                		nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}  
+					if (output_bdy_extraporder3)
+            		{
+                		bdy_extrap_order=3;
+                		nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+            		}   
+        		}   
+            	//reduce boundary points if needed  
+            	//         int reduced_numbdypoints=10000;    
+            	//         if (numbdypoints*uniSize>reduced_numbdypoints) numbdypoints=roundl(reduced_numbdypoints/uniSize)+1;  
+
                 //FREE POINTS EXTRAPOLATION
                 if (bdy_extrap_freepts)
                 {
@@ -5566,7 +7046,6 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder1,yextrap_freepts_extraporder1,zextrap_freepts_extraporder1,
                                 chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,
@@ -5586,6 +7065,7 @@ void AdS4D_post_tstep(int L)
                             lbdyphi0_freepts_extraporder1                [i] = bdyphi_freepts_extraporder1[i-is_bdy_freepts_extraporder1];
                         }   
                     }//closes condition on output_bdy_extraporder1  
+
                     //FREE POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {
@@ -5782,7 +7262,6 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder2,yextrap_freepts_extraporder2,zextrap_freepts_extraporder2,
                                 chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,
@@ -5802,6 +7281,231 @@ void AdS4D_post_tstep(int L)
                             lbdyphi0_freepts_extraporder2                [i] = bdyphi_freepts_extraporder2[i-is_bdy_freepts_extraporder2];
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
+                        vecbdypoints_freepts_extraporder3 = malloc(uniSize*sizeof(int));
+                        dsplsbdypoints_freepts_extraporder3 = malloc(uniSize*sizeof(int));    
+                        //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+                        MPI_Allgather(&numbdypoints_freepts_extraporder3,1,MPI_INT,vecbdypoints_freepts_extraporder3,1,MPI_INT,MPI_COMM_WORLD); 
+                        //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
+                        MPI_Allreduce(&numbdypoints_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);  
+                        //printf("numbdypoints_freepts_extraporder3=%i\n",numbdypoints_freepts_extraporder3);
+                        //fflush(stdout); 
+                        quasiset_tt_freepts_extraporder3              = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_tchi_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_txi_freepts_extraporder3             = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chichi_freepts_extraporder3          = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chixi_freepts_extraporder3           = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_xixi_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_trace_freepts_extraporder3           = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_massdensity_freepts_extraporder3     = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        bdyphi_freepts_extraporder3                   = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));   
+                        xextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        yextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
+                        zextrap_freepts_extraporder3                  = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));   
+                        lquasiset_tt0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_tchi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_txi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_chichi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_chixi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_xixi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_trace0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lquasiset_massdensity0_freepts_extraporder3   = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        lbdyphi0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        maxquasiset_tt0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_tchi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_txi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_chichi0_freepts_extraporder3      = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_chixi0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_xixi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_trace0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxquasiset_massdensity0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        maxbdyphi0_freepts_extraporder3               = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        minquasiset_tt0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_tchi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_txi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_chichi0_freepts_extraporder3      = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_chixi0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_xixi0_freepts_extraporder3        = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_trace0_freepts_extraporder3       = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minquasiset_massdensity0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        minbdyphi0_freepts_extraporder3               = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+                        quasiset_tt0_freepts_extraporder3             = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_tchi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_txi0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chichi0_freepts_extraporder3         = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_chixi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_xixi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_trace0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        quasiset_massdensity0_freepts_extraporder3    = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        AdS_mass0_freepts_extraporder3                = malloc(sizeof(real));
+                        bdyphi0_freepts_extraporder3                  = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));    
+                        xextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        yextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                        zextrap0_freepts_extraporder3                 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
+
+                        //initialize
+                        for (i=0;i<numbdypoints_freepts_extraporder3;i++)
+                        {
+                            quasiset_tt_freepts_extraporder3             [i] = 0;
+                            quasiset_tchi_freepts_extraporder3           [i] = 0;
+                            quasiset_txi_freepts_extraporder3            [i] = 0;
+                            quasiset_chichi_freepts_extraporder3         [i] = 0;
+                            quasiset_chixi_freepts_extraporder3          [i] = 0;
+                            quasiset_xixi_freepts_extraporder3           [i] = 0;
+                            quasiset_trace_freepts_extraporder3          [i] = 0;
+                            quasiset_massdensity_freepts_extraporder3    [i] = 0;
+                            bdyphi_freepts_extraporder3                  [i] = 0;   
+                            xextrap_freepts_extraporder3                 [i] = 0;
+                            yextrap_freepts_extraporder3                 [i] = 0;
+                            zextrap_freepts_extraporder3                 [i] = 0;
+                        }   
+                        for (i=0;i<basenumbdypoints_freepts_extraporder3;i++)
+                        {   
+                            lquasiset_tt0_freepts_extraporder3            [i] = 0;
+                            lquasiset_tchi0_freepts_extraporder3          [i] = 0;
+                            lquasiset_txi0_freepts_extraporder3           [i] = 0;
+                            lquasiset_chichi0_freepts_extraporder3        [i] = 0;
+                            lquasiset_chixi0_freepts_extraporder3         [i] = 0;
+                            lquasiset_xixi0_freepts_extraporder3          [i] = 0;
+                            lquasiset_trace0_freepts_extraporder3         [i] = 0;
+                            lquasiset_massdensity0_freepts_extraporder3   [i] = 0;
+                            lbdyphi0_freepts_extraporder3                 [i] = 0;             
+                            maxquasiset_tt0_freepts_extraporder3          [i] = 0;
+                            maxquasiset_tchi0_freepts_extraporder3        [i] = 0;
+                            maxquasiset_txi0_freepts_extraporder3         [i] = 0;
+                            maxquasiset_chichi0_freepts_extraporder3      [i] = 0;
+                            maxquasiset_chixi0_freepts_extraporder3       [i] = 0;
+                            maxquasiset_xixi0_freepts_extraporder3        [i] = 0;
+                            maxquasiset_trace0_freepts_extraporder3       [i] = 0;
+                            maxquasiset_massdensity0_freepts_extraporder3 [i] = 0;
+                            maxbdyphi0_freepts_extraporder3               [i] = 0;  
+                            minquasiset_tt0_freepts_extraporder3          [i] = 0;
+                            minquasiset_tchi0_freepts_extraporder3        [i] = 0;
+                            minquasiset_txi0_freepts_extraporder3         [i] = 0;
+                            minquasiset_chichi0_freepts_extraporder3      [i] = 0;
+                            minquasiset_chixi0_freepts_extraporder3       [i] = 0;
+                            minquasiset_xixi0_freepts_extraporder3        [i] = 0;
+                            minquasiset_trace0_freepts_extraporder3       [i] = 0;
+                            minquasiset_massdensity0_freepts_extraporder3 [i] = 0;
+                            minbdyphi0_freepts_extraporder3               [i] = 0;  
+                            quasiset_tt0_freepts_extraporder3             [i] = 0;
+                            quasiset_tchi0_freepts_extraporder3           [i] = 0;
+                            quasiset_txi0_freepts_extraporder3            [i] = 0;
+                            quasiset_chichi0_freepts_extraporder3         [i] = 0;
+                            quasiset_chixi0_freepts_extraporder3          [i] = 0;
+                            quasiset_xixi0_freepts_extraporder3           [i] = 0;
+                            quasiset_trace0_freepts_extraporder3          [i] = 0;
+                            quasiset_massdensity0_freepts_extraporder3    [i] = 0;
+                            bdyphi0_freepts_extraporder3                  [i] = 0;   
+                            xextrap0_freepts_extraporder3                 [i] = 0;
+                            yextrap0_freepts_extraporder3                 [i] = 0;
+                            zextrap0_freepts_extraporder3                 [i] = 0;  
+                        }
+                        *AdS_mass0_freepts_extraporder3                    = 0; 
+                        
+                        //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+                        is_bdy_freepts_extraporder3=0;
+                        if (my_rank==0)
+                        {
+                            ie_bdy_freepts_extraporder3=vecbdypoints_freepts_extraporder3[0];
+                        }
+                        else
+                        {
+                            for (j=0; j<my_rank; j++)
+                            {
+                                is_bdy_freepts_extraporder3=is_bdy_freepts_extraporder3+vecbdypoints_freepts_extraporder3[j];
+                            }
+                            ie_bdy_freepts_extraporder3=is_bdy_freepts_extraporder3+vecbdypoints_freepts_extraporder3[my_rank];
+                        }      
+                        //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+                        for (i=0; i<uniSize; i++)
+                        {
+                            dsplsbdypoints_freepts_extraporder3[i]=0;
+                        }         
+                        for (i=0; i<uniSize; i++)
+                        {
+                            if (i!=0)
+                            {
+                                for (j=0; j<i; j++)
+                                {
+                                    dsplsbdypoints_freepts_extraporder3[i]=dsplsbdypoints_freepts_extraporder3[i]+vecbdypoints_freepts_extraporder3[j];
+                                }
+                            }
+                        }   
+                        
+                        xyzextrap_(xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);    
+                        
+                        //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+                        MPI_Allgatherv(xextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,xextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(yextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,yextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(zextrap_freepts_extraporder3,numbdypoints_freepts_extraporder3,MPI_DOUBLE,zextrap0_freepts_extraporder3,vecbdypoints_freepts_extraporder3,dsplsbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);    //the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) 
+                                {
+                                    printf("THE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT TRUSTWORTHY...\n NOT ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS\n");
+                                    printf("...setting output_AdS_mass to 0...");
+                                }
+                                output_AdS_mass=0;
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("RUNNING ON ONLY 1 PROCESS...ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS FOR FREE POINTS, FIRST ORDER EXTRAPOLATION ON ONLY 1 PROCESS\n");
+                                rhoextrap0_freepts_extraporder3 = malloc(sizeof(real));
+                                chiextrap0_freepts_extraporder3 = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
+                                xiextrap0_freepts_extraporder3  = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real)); 
+                                chixiextrap_(rhoextrap0_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3);  
+                                basebdy_Nchi_freepts_extraporder3=0;//initialize
+                                basebdy_Nxi_freepts_extraporder3=0; //initialize
+                                bdyn_(&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3);  
+                                rhobdy0_freepts_extraporder3 = malloc(sizeof(real));
+                                chibdy0_freepts_extraporder3 = malloc(basebdy_Nchi_freepts_extraporder3*sizeof(real));
+                                xibdy0_freepts_extraporder3  = malloc(basebdy_Nxi_freepts_extraporder3*sizeof(real));   
+                            }
+                        }
+
+   
+                        extrap_bdyphi_freepts_(bdyphi_freepts_extraporder3,
+                                        leadordcoeff_phi1,
+                                        xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
+                                        chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
+                                        &bdy_extrap_order,
+                                        x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        extrap_quasiset_freepts_(quasiset_tt_freepts_extraporder3,quasiset_tchi_freepts_extraporder3,quasiset_txi_freepts_extraporder3,
+                                quasiset_chichi_freepts_extraporder3,quasiset_chixi_freepts_extraporder3,
+                                quasiset_xixi_freepts_extraporder3,
+                                quasiset_trace_freepts_extraporder3,
+                                quasiset_massdensity_freepts_extraporder3,
+                                quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+                                quasiset_chichi_ll,quasiset_chixi_ll,
+                                quasiset_xixi_ll,
+                                quasiset_massdensityll,
+                                xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
+                                chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
+                                &bdy_extrap_order,
+                                x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
+                        for (i=is_bdy_freepts_extraporder3; i<ie_bdy_freepts_extraporder3; i++)
+                        {
+                            lquasiset_tt0_freepts_extraporder3           [i] = quasiset_tt_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_tchi0_freepts_extraporder3         [i] = quasiset_tchi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_txi0_freepts_extraporder3          [i] = quasiset_txi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_chichi0_freepts_extraporder3       [i] = quasiset_chichi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_chixi0_freepts_extraporder3        [i] = quasiset_chixi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_xixi0_freepts_extraporder3         [i] = quasiset_xixi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_trace0_freepts_extraporder3        [i] = quasiset_trace_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lquasiset_massdensity0_freepts_extraporder3  [i] = quasiset_massdensity_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                            lbdyphi0_freepts_extraporder3                [i] = bdyphi_freepts_extraporder3[i-is_bdy_freepts_extraporder3];
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_extrap_freepts
 
                 //FIXED POINTS EXTRAPOLATION
@@ -6005,7 +7709,6 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder1,yextrap_fixedpts_extraporder1,zextrap_fixedpts_extraporder1,
                                 chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,
@@ -6225,7 +7928,6 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
-                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder2,yextrap_fixedpts_extraporder2,zextrap_fixedpts_extraporder2,
                                 chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,
@@ -6246,7 +7948,230 @@ void AdS4D_post_tstep(int L)
                             lbdyphi0_fixedpts_extraporder2                [i] = bdyphi_fixedpts_extraporder2[i-is_bdy_fixedpts_extraporder2];
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                     //FIXED POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        MPI_Comm_size(MPI_COMM_WORLD,&uniSize);
+                        vecbdypoints_fixedpts_extraporder3 = malloc(uniSize*sizeof(int));
+                        dsplsbdypoints_fixedpts_extraporder3 = malloc(uniSize*sizeof(int)); 
+                        //the ith element of vecbdypoints contains the number of nexttobdypoints identified by nexttobdypoints routine for the ith process
+                        MPI_Allgather(&numbdypoints_fixedpts_extraporder3,1,MPI_INT,vecbdypoints_fixedpts_extraporder3,1,MPI_INT,MPI_COMM_WORLD);   
+                        //basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
+                        MPI_Allreduce(&numbdypoints_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);    
+                        quasiset_tt_fixedpts_extraporder3              = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_tchi_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_txi_fixedpts_extraporder3             = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chichi_fixedpts_extraporder3          = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chixi_fixedpts_extraporder3           = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_xixi_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_trace_fixedpts_extraporder3           = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_massdensity_fixedpts_extraporder3     = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        bdyphi_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        xextrap_fixedpts_extraporder3                  = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        yextrap_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        zextrap_fixedpts_extraporder3                   = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));    
+                        lquasiset_tt0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_tchi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_txi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_chichi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_chixi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_xixi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_trace0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lquasiset_massdensity0_fixedpts_extraporder3   = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        lbdyphi0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        maxquasiset_tt0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_tchi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_txi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_chichi0_fixedpts_extraporder3      = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_chixi0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_xixi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_trace0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxquasiset_massdensity0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        maxbdyphi0_fixedpts_extraporder3               = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        minquasiset_tt0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_tchi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_txi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_chichi0_fixedpts_extraporder3      = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_chixi0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_xixi0_fixedpts_extraporder3        = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_trace0_fixedpts_extraporder3       = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minquasiset_massdensity0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        minbdyphi0_fixedpts_extraporder3               = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        quasiset_tt0_fixedpts_extraporder3             = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_tchi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_txi0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chichi0_fixedpts_extraporder3         = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_chixi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_xixi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_trace0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        quasiset_massdensity0_fixedpts_extraporder3    = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        AdS_mass0_fixedpts_extraporder3                = malloc(sizeof(real));
+                        bdyphi0_fixedpts_extraporder3                  = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        xextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        yextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        zextrap0_fixedpts_extraporder3                 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        //initialize
+                        for (i=0;i<numbdypoints_fixedpts_extraporder3;i++)
+                        {
+                            quasiset_tt_fixedpts_extraporder3             [i] = 0;
+                            quasiset_tchi_fixedpts_extraporder3           [i] = 0;
+                            quasiset_txi_fixedpts_extraporder3            [i] = 0;
+                            quasiset_chichi_fixedpts_extraporder3         [i] = 0;
+                            quasiset_chixi_fixedpts_extraporder3          [i] = 0;
+                            quasiset_xixi_fixedpts_extraporder3           [i] = 0;
+                            quasiset_trace_fixedpts_extraporder3          [i] = 0;
+                            quasiset_massdensity_fixedpts_extraporder3    [i] = 0;
+                            bdyphi_fixedpts_extraporder3                  [i] = 0;  
+                            xextrap_fixedpts_extraporder3                 [i] = 0;
+                            yextrap_fixedpts_extraporder3                 [i] = 0;
+                            zextrap_fixedpts_extraporder3                 [i] = 0;
+                        }   
+                        for (i=0;i<basenumbdypoints_fixedpts_extraporder3;i++)
+                        {   
+                            lquasiset_tt0_fixedpts_extraporder3            [i] = 0;
+                            lquasiset_tchi0_fixedpts_extraporder3          [i] = 0;
+                            lquasiset_txi0_fixedpts_extraporder3           [i] = 0;
+                            lquasiset_chichi0_fixedpts_extraporder3        [i] = 0;
+                            lquasiset_chixi0_fixedpts_extraporder3         [i] = 0;
+                            lquasiset_xixi0_fixedpts_extraporder3          [i] = 0;
+                            lquasiset_trace0_fixedpts_extraporder3         [i] = 0;
+                            lquasiset_massdensity0_fixedpts_extraporder3   [i] = 0;
+                            lbdyphi0_fixedpts_extraporder3                 [i] = 0; 
+                            maxquasiset_tt0_fixedpts_extraporder3          [i] = 0;
+                            maxquasiset_tchi0_fixedpts_extraporder3        [i] = 0;
+                            maxquasiset_txi0_fixedpts_extraporder3         [i] = 0;
+                            maxquasiset_chichi0_fixedpts_extraporder3      [i] = 0;
+                            maxquasiset_chixi0_fixedpts_extraporder3       [i] = 0;
+                            maxquasiset_xixi0_fixedpts_extraporder3        [i] = 0;
+                            maxquasiset_trace0_fixedpts_extraporder3       [i] = 0;
+                            maxquasiset_massdensity0_fixedpts_extraporder3 [i] = 0;
+                            maxbdyphi0_fixedpts_extraporder3               [i] = 0; 
+                            minquasiset_tt0_fixedpts_extraporder3          [i] = 0;
+                            minquasiset_tchi0_fixedpts_extraporder3        [i] = 0;
+                            minquasiset_txi0_fixedpts_extraporder3         [i] = 0;
+                            minquasiset_chichi0_fixedpts_extraporder3      [i] = 0;
+                            minquasiset_chixi0_fixedpts_extraporder3       [i] = 0;
+                            minquasiset_xixi0_fixedpts_extraporder3        [i] = 0;
+                            minquasiset_trace0_fixedpts_extraporder3       [i] = 0;
+                            minquasiset_massdensity0_fixedpts_extraporder3 [i] = 0;
+                            minbdyphi0_fixedpts_extraporder3               [i] = 0; 
+                            quasiset_tt0_fixedpts_extraporder3             [i] = 0;
+                            quasiset_tchi0_fixedpts_extraporder3           [i] = 0;
+                            quasiset_txi0_fixedpts_extraporder3            [i] = 0;
+                            quasiset_chichi0_fixedpts_extraporder3         [i] = 0;
+                            quasiset_chixi0_fixedpts_extraporder3          [i] = 0;
+                            quasiset_xixi0_fixedpts_extraporder3           [i] = 0;
+                            quasiset_trace0_fixedpts_extraporder3          [i] = 0;
+                            quasiset_massdensity0_fixedpts_extraporder3    [i] = 0;
+                            bdyphi0_fixedpts_extraporder3                  [i] = 0; 
+                            xextrap0_fixedpts_extraporder3                 [i] = 0;
+                            yextrap0_fixedpts_extraporder3                 [i] = 0;
+                            zextrap0_fixedpts_extraporder3                 [i] = 0; 
+                        }
+                        *AdS_mass0_fixedpts_extraporder3                    = 0;    
+                        //we want the indices from is to ie to identify the bdypoints of each processor starting the count from the last bdypoint of the previous processor
+                        is_bdy_fixedpts_extraporder3=0;
+                        if (my_rank==0)
+                        {
+                            ie_bdy_fixedpts_extraporder3=vecbdypoints_fixedpts_extraporder3[0];
+                        }
+                        else
+                        {
+                            for (j=0; j<my_rank; j++)
+                            {
+                                is_bdy_fixedpts_extraporder3=is_bdy_fixedpts_extraporder3+vecbdypoints_fixedpts_extraporder3[j];
+                            }
+                            ie_bdy_fixedpts_extraporder3=is_bdy_fixedpts_extraporder3+vecbdypoints_fixedpts_extraporder3[my_rank];
+                        }   
+                        //the ith element of dsplsbdypoints contains the number of nexttobdypoints of the processor i-1. We need this array as displacement array for MPI_Allgatherv below.
+                        for (i=0; i<uniSize; i++)
+                        {
+                            dsplsbdypoints_fixedpts_extraporder3[i]=0;
+                        }   
+                        for (i=0; i<uniSize; i++)
+                        {
+                            if (i!=0)
+                            {
+                                for (j=0; j<i; j++)
+                                {
+                                    dsplsbdypoints_fixedpts_extraporder3[i]=dsplsbdypoints_fixedpts_extraporder3[i]+vecbdypoints_fixedpts_extraporder3[j];
+                                }
+                            }
+                        }
+
+                        xyzextrap_(xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);   
+                        //x/y/zextrap0 are arrays with xextrap,yextrap,zextrap from all the processors one after the other
+                        MPI_Allgatherv(xextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,xextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(yextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,yextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);
+                        MPI_Allgatherv(zextrap_fixedpts_extraporder3,numbdypoints_fixedpts_extraporder3,MPI_DOUBLE,zextrap0_fixedpts_extraporder3,vecbdypoints_fixedpts_extraporder3,dsplsbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_COMM_WORLD);   //the following bit allocates memory to compute AdS_mass0 (see below) if we're running on only 1 process
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) 
+                                {
+                                    printf("THE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT TRUSTWORTHY...\n NOT ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS\n");
+                                    printf("...setting output_AdS_mass to 0");
+                                }
+                                output_AdS_mass=0;
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("RUNNING ON ONLY 1 PROCESS...ALLOCATING MEMORY FOR COMPUTATION OF AdS MASS FOR FIXED POINTS, FIRST ORDER EXTRAPOLATION ON ONLY 1 PROCESS\n");
+                                rhoextrap0_fixedpts_extraporder3 = malloc(sizeof(real));
+                                chiextrap0_fixedpts_extraporder3 = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                                xiextrap0_fixedpts_extraporder3  = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
+                                chixiextrap_(rhoextrap0_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3);   
+                                basebdy_Nchi_fixedpts_extraporder3=0;//initialize
+                                basebdy_Nxi_fixedpts_extraporder3=0; //initialize
+                                bdyn_(&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3); 
+                                rhobdy0_fixedpts_extraporder3 = malloc(sizeof(real));
+                                chibdy0_fixedpts_extraporder3 = malloc(basebdy_Nchi_fixedpts_extraporder3*sizeof(real));
+                                xibdy0_fixedpts_extraporder3  = malloc(basebdy_Nxi_fixedpts_extraporder3*sizeof(real)); 
+                            }
+                        }   
+                        extrap_bdyphi_fixedpts_(bdyphi_fixedpts_extraporder3,
+                                        leadordcoeff_phi1,
+                                        xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
+                                        chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
+                                        &bdy_extrap_order,
+                                        &ind_distance_fixedpts,
+                                        x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+                        extrap_quasiset_fixedpts_(quasiset_tt_fixedpts_extraporder3,quasiset_tchi_fixedpts_extraporder3,quasiset_txi_fixedpts_extraporder3,
+                                quasiset_chichi_fixedpts_extraporder3,quasiset_chixi_fixedpts_extraporder3,
+                                quasiset_xixi_fixedpts_extraporder3,
+                                quasiset_trace_fixedpts_extraporder3,
+                                quasiset_massdensity_fixedpts_extraporder3,
+                                quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
+                                quasiset_chichi_ll,quasiset_chixi_ll,
+                                quasiset_xixi_ll,
+                                quasiset_massdensityll,
+                                xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
+                                chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
+                                &bdy_extrap_order,
+                                &ind_distance_fixedpts,
+                                x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
+
+                        //distributing the values of the quasiset components of each process over an array lquasiset_ll0 defined globally. This array will be different for each process, in fact it will be zero everywhere except for a certain position (next to the one for the previous processor) containing the values of quasiset_ll of a specific process. This is repeated after each step of the evolution. 
+                        for (i=is_bdy_fixedpts_extraporder3; i<ie_bdy_fixedpts_extraporder3; i++)
+                        {
+                            lquasiset_tt0_fixedpts_extraporder3           [i] = quasiset_tt_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_tchi0_fixedpts_extraporder3         [i] = quasiset_tchi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_txi0_fixedpts_extraporder3          [i] = quasiset_txi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_chichi0_fixedpts_extraporder3       [i] = quasiset_chichi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_chixi0_fixedpts_extraporder3        [i] = quasiset_chixi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_xixi0_fixedpts_extraporder3         [i] = quasiset_xixi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_trace0_fixedpts_extraporder3        [i] = quasiset_trace_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lquasiset_massdensity0_fixedpts_extraporder3  [i] = quasiset_massdensity_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];
+                            lbdyphi0_fixedpts_extraporder3                [i] = bdyphi_fixedpts_extraporder3[i-is_bdy_fixedpts_extraporder3];   //           *lAdS_mass0_fixedpts_extraporder3                 = *AdS_mass_fixedpts_extraporder3;
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
+
                 }//closes condition on bdy_fixedpts_extrap  
+
             } //closes condition on output_bdyquantities    
             valid=PAMR_next_g();
         }
@@ -6349,7 +8274,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -6377,7 +8302,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -6407,7 +8332,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -6436,7 +8361,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);  
         
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -6466,7 +8391,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -6490,7 +8415,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp); 
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -6518,7 +8443,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);  
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -6548,7 +8473,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -6577,7 +8502,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);   
     
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -6683,7 +8608,7 @@ void AdS4D_post_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -6709,7 +8634,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -6737,7 +8662,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -6764,7 +8689,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
@@ -6791,7 +8716,7 @@ void AdS4D_post_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder2[j],yextrap0_freepts_extraporder2[j],zextrap0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -6813,7 +8738,7 @@ void AdS4D_post_tstep(int L)
                                     fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder2[j],j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -6839,7 +8764,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -6867,7 +8792,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -6894,7 +8819,7 @@ void AdS4D_post_tstep(int L)
                                                 j);
                                 }
                                 fclose(fp); 
-                            if (reduced_ascii)
+                            if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
                                 sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                 fp = fopen(name, "w+");
@@ -6935,6 +8860,343 @@ void AdS4D_post_tstep(int L)
                             }
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+                        //basenumbdypoints is set in AdS4D_post_init
+                        MPI_Allreduce(lquasiset_tt0_freepts_extraporder3,          maxquasiset_tt0_freepts_extraporder3,          basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_freepts_extraporder3,        maxquasiset_tchi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_freepts_extraporder3,         maxquasiset_txi0_freepts_extraporder3,         basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_freepts_extraporder3,      maxquasiset_chichi0_freepts_extraporder3,      basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_freepts_extraporder3,       maxquasiset_chixi0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_freepts_extraporder3,        maxquasiset_xixi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_freepts_extraporder3,       maxquasiset_trace0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_freepts_extraporder3, maxquasiset_massdensity0_freepts_extraporder3, basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_freepts_extraporder3,               maxbdyphi0_freepts_extraporder3,               basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);    
+                        MPI_Allreduce(lquasiset_tt0_freepts_extraporder3,          minquasiset_tt0_freepts_extraporder3,          basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_freepts_extraporder3,        minquasiset_tchi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_freepts_extraporder3,         minquasiset_txi0_freepts_extraporder3,         basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_freepts_extraporder3,      minquasiset_chichi0_freepts_extraporder3,      basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_freepts_extraporder3,       minquasiset_chixi0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_freepts_extraporder3,        minquasiset_xixi0_freepts_extraporder3,        basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_freepts_extraporder3,       minquasiset_trace0_freepts_extraporder3,       basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_freepts_extraporder3, minquasiset_massdensity0_freepts_extraporder3, basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_freepts_extraporder3,               minbdyphi0_freepts_extraporder3,               basenumbdypoints_freepts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);    
+                        for (i=0; i<basenumbdypoints_freepts_extraporder3; i++)
+                        { 
+                            if (uniSize>1)
+                            {
+                                    quasiset_tt0_freepts_extraporder3          [i] = maxquasiset_tt0_freepts_extraporder3          [i] + minquasiset_tt0_freepts_extraporder3          [i];
+                                    quasiset_tchi0_freepts_extraporder3        [i] = maxquasiset_tchi0_freepts_extraporder3        [i] + minquasiset_tchi0_freepts_extraporder3        [i];
+                                    quasiset_txi0_freepts_extraporder3         [i] = maxquasiset_txi0_freepts_extraporder3         [i] + minquasiset_txi0_freepts_extraporder3         [i];
+                                    quasiset_chichi0_freepts_extraporder3      [i] = maxquasiset_chichi0_freepts_extraporder3      [i] + minquasiset_chichi0_freepts_extraporder3      [i];
+                                    quasiset_chixi0_freepts_extraporder3       [i] = maxquasiset_chixi0_freepts_extraporder3       [i] + minquasiset_chixi0_freepts_extraporder3       [i];
+                                    quasiset_xixi0_freepts_extraporder3        [i] = maxquasiset_xixi0_freepts_extraporder3        [i] + minquasiset_xixi0_freepts_extraporder3        [i];
+                                    quasiset_trace0_freepts_extraporder3       [i] = maxquasiset_trace0_freepts_extraporder3       [i] + minquasiset_trace0_freepts_extraporder3       [i];
+                                    quasiset_massdensity0_freepts_extraporder3 [i] = maxquasiset_massdensity0_freepts_extraporder3 [i] + minquasiset_massdensity0_freepts_extraporder3 [i];
+                                    bdyphi0_freepts_extraporder3               [i] = maxbdyphi0_freepts_extraporder3               [i] + minbdyphi0_freepts_extraporder3               [i];
+                                }
+                                else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+                                {
+                                    quasiset_tt0_freepts_extraporder3          [i] = maxquasiset_tt0_freepts_extraporder3          [i];
+                                    quasiset_tchi0_freepts_extraporder3        [i] = maxquasiset_tchi0_freepts_extraporder3        [i];
+                                    quasiset_txi0_freepts_extraporder3         [i] = maxquasiset_txi0_freepts_extraporder3         [i];
+                                    quasiset_chichi0_freepts_extraporder3      [i] = maxquasiset_chichi0_freepts_extraporder3      [i];
+                                    quasiset_chixi0_freepts_extraporder3       [i] = maxquasiset_chixi0_freepts_extraporder3       [i];
+                                    quasiset_xixi0_freepts_extraporder3        [i] = maxquasiset_xixi0_freepts_extraporder3        [i];
+                                    quasiset_trace0_freepts_extraporder3       [i] = maxquasiset_trace0_freepts_extraporder3       [i];
+                                    quasiset_massdensity0_freepts_extraporder3 [i] = maxquasiset_massdensity0_freepts_extraporder3 [i];
+                                    bdyphi0_freepts_extraporder3               [i] = maxbdyphi0_freepts_extraporder3               [i];
+                                }  
+                        }       
+
+                        if (my_rank==0)
+                        {     
+                            FILE *fp;  
+    
+                            if (alltimes_ascii)
+                            {     
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+                                    
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }        
+                                    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }      
+        
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+        
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }
+    
+                            } //closes if(alltimes_ascii) condition 
+    
+                            if (timestep_ascii)
+                            {     
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder3[j],yextrap0_freepts_extraporder3[j],zextrap0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_freepts_extraporder3[j],yextrap0_freepts_extraporder3[j],zextrap0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_freepts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);  
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_freepts_extraporder3[j],quasiset_tchi0_freepts_extraporder3[j],quasiset_txi0_freepts_extraporder3[j],quasiset_chichi0_freepts_extraporder3[j],quasiset_chixi0_freepts_extraporder3[j],quasiset_xixi0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp);   
+    
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_freepts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }     
+    
+                            } //closes if (timestep_ascii) condition          
+                        } //closes if (my_rank==0) condition            //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+                    
+                        if (output_AdS_mass)
+                        { 
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) printf("\nTHE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT RELIABLE...NOT COMPUTING AdS MASS\n");
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("\nRUNNING ON ONLY 1 PROCESS...THE NUMERICAL APPROXIMATION OF AdS MASS FOR FREE POINTS, FIRST ORDER EXTRAPOLATION IS RELIABLE ON 1 PROCESS...COMPUTING AdS MASS\n");      
+                                *rhobdy0_freepts_extraporder3=1;
+                                chibdy_xibdy_(chibdy0_freepts_extraporder3,xibdy0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,chiextrap0_freepts_extraporder3,xiextrap0_freepts_extraporder3,&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3);    
+                                doubleintegralonsphere_(AdS_mass0_freepts_extraporder3,quasiset_massdensity0_freepts_extraporder3,xextrap0_freepts_extraporder3,yextrap0_freepts_extraporder3,zextrap0_freepts_extraporder3,&basenumbdypoints_freepts_extraporder3,rhobdy0_freepts_extraporder3,chibdy0_freepts_extraporder3,xibdy0_freepts_extraporder3,&basebdy_Nchi_freepts_extraporder3,&basebdy_Nxi_freepts_extraporder3);          
+                                FILE *fp;
+                                sprintf(name,"AdSbdy_freepts_extraporder3_%st_AdSmass.txt",AMRD_save_tag);
+                                fp = fopen(name, "a+");
+                                fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0_freepts_extraporder3);
+                                fclose(fp);
+                            }
+                        }   
+                    }//closes condition on output_bdy_extraporder3 
+
                 }//closes condition on bdy_freepts_extrap  
 
                 //FIXED POINTS EXTRAPOLATION
@@ -7004,7 +9266,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7030,7 +9292,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7058,7 +9320,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7085,7 +9347,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7112,7 +9374,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder1[j],yextrap0_fixedpts_extraporder1[j],zextrap0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7134,7 +9396,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder1[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7160,7 +9422,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7188,7 +9450,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7215,7 +9477,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7320,7 +9582,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7346,7 +9608,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7374,7 +9636,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7401,7 +9663,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
@@ -7428,7 +9690,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder2[j],yextrap0_fixedpts_extraporder2[j],zextrap0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7450,7 +9712,7 @@ void AdS4D_post_tstep(int L)
                                         fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder2[j],j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7476,7 +9738,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7504,7 +9766,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7531,7 +9793,7 @@ void AdS4D_post_tstep(int L)
                                                     j);
                                     }
                                     fclose(fp); 
-                                if (reduced_ascii)
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
                                     sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
                                     fp = fopen(name, "w+");
@@ -7571,6 +9833,324 @@ void AdS4D_post_tstep(int L)
                             }
                         }   
                     }//closes condition on output_bdy_extraporder2  
+
+                    //FIXED POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {
+                        bdy_extrap_order=3; 
+                        // for each n,i point on the outer bdy, save sum{lquasisetll[n,i]}_allprocessors into quasisetll[n,i]
+                        //basenumbdypoints is set in AdS4D_post_init
+                        MPI_Allreduce(lquasiset_tt0_fixedpts_extraporder3,          maxquasiset_tt0_fixedpts_extraporder3,          basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_fixedpts_extraporder3,        maxquasiset_tchi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_fixedpts_extraporder3,         maxquasiset_txi0_fixedpts_extraporder3,         basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_fixedpts_extraporder3,      maxquasiset_chichi0_fixedpts_extraporder3,      basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_fixedpts_extraporder3,       maxquasiset_chixi0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_fixedpts_extraporder3,        maxquasiset_xixi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_fixedpts_extraporder3,       maxquasiset_trace0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_fixedpts_extraporder3, maxquasiset_massdensity0_fixedpts_extraporder3, basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_fixedpts_extraporder3,               maxbdyphi0_fixedpts_extraporder3,               basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);  
+                        MPI_Allreduce(lquasiset_tt0_fixedpts_extraporder3,          minquasiset_tt0_fixedpts_extraporder3,          basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_tchi0_fixedpts_extraporder3,        minquasiset_tchi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_txi0_fixedpts_extraporder3,         minquasiset_txi0_fixedpts_extraporder3,         basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chichi0_fixedpts_extraporder3,      minquasiset_chichi0_fixedpts_extraporder3,      basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_chixi0_fixedpts_extraporder3,       minquasiset_chixi0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_xixi0_fixedpts_extraporder3,        minquasiset_xixi0_fixedpts_extraporder3,        basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_trace0_fixedpts_extraporder3,       minquasiset_trace0_fixedpts_extraporder3,       basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lquasiset_massdensity0_fixedpts_extraporder3, minquasiset_massdensity0_fixedpts_extraporder3, basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+                        MPI_Allreduce(lbdyphi0_fixedpts_extraporder3,               minbdyphi0_fixedpts_extraporder3,               basenumbdypoints_fixedpts_extraporder3,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);  
+                        for (i=0; i<basenumbdypoints_fixedpts_extraporder3; i++)
+                        {
+                            if (uniSize>1)
+                            {
+                                quasiset_tt0_fixedpts_extraporder3          [i] = maxquasiset_tt0_fixedpts_extraporder3          [i] + minquasiset_tt0_fixedpts_extraporder3          [i];
+                                quasiset_tchi0_fixedpts_extraporder3        [i] = maxquasiset_tchi0_fixedpts_extraporder3        [i] + minquasiset_tchi0_fixedpts_extraporder3        [i];
+                                quasiset_txi0_fixedpts_extraporder3         [i] = maxquasiset_txi0_fixedpts_extraporder3         [i] + minquasiset_txi0_fixedpts_extraporder3         [i];
+                                quasiset_chichi0_fixedpts_extraporder3      [i] = maxquasiset_chichi0_fixedpts_extraporder3      [i] + minquasiset_chichi0_fixedpts_extraporder3      [i];
+                                quasiset_chixi0_fixedpts_extraporder3       [i] = maxquasiset_chixi0_fixedpts_extraporder3       [i] + minquasiset_chixi0_fixedpts_extraporder3       [i];
+                                quasiset_xixi0_fixedpts_extraporder3        [i] = maxquasiset_xixi0_fixedpts_extraporder3        [i] + minquasiset_xixi0_fixedpts_extraporder3        [i];
+                                quasiset_trace0_fixedpts_extraporder3       [i] = maxquasiset_trace0_fixedpts_extraporder3       [i] + minquasiset_trace0_fixedpts_extraporder3       [i];
+                                quasiset_massdensity0_fixedpts_extraporder3 [i] = maxquasiset_massdensity0_fixedpts_extraporder3 [i] + minquasiset_massdensity0_fixedpts_extraporder3 [i];
+                                bdyphi0_fixedpts_extraporder3               [i] = maxbdyphi0_fixedpts_extraporder3               [i] + minbdyphi0_fixedpts_extraporder3               [i];
+                            }
+                            else //if uniSize==1, i.e. there is only 1 process, maxquasiset=minquasiset so we have to take only one of them into consideration
+                            {
+                                quasiset_tt0_fixedpts_extraporder3          [i] = maxquasiset_tt0_fixedpts_extraporder3          [i];
+                                quasiset_tchi0_fixedpts_extraporder3        [i] = maxquasiset_tchi0_fixedpts_extraporder3        [i];
+                                quasiset_txi0_fixedpts_extraporder3         [i] = maxquasiset_txi0_fixedpts_extraporder3         [i];
+                                quasiset_chichi0_fixedpts_extraporder3      [i] = maxquasiset_chichi0_fixedpts_extraporder3      [i];
+                                quasiset_chixi0_fixedpts_extraporder3       [i] = maxquasiset_chixi0_fixedpts_extraporder3       [i];
+                                quasiset_xixi0_fixedpts_extraporder3        [i] = maxquasiset_xixi0_fixedpts_extraporder3        [i];
+                                quasiset_trace0_fixedpts_extraporder3       [i] = maxquasiset_trace0_fixedpts_extraporder3       [i];
+                                quasiset_massdensity0_fixedpts_extraporder3 [i] = maxquasiset_massdensity0_fixedpts_extraporder3 [i];
+                                bdyphi0_fixedpts_extraporder3               [i] = maxbdyphi0_fixedpts_extraporder3               [i];
+                            }
+                        }       
+
+                        if (my_rank==0)
+                        {   
+                            FILE *fp;   
+                            if (alltimes_ascii)
+                            {   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    fp = fopen(name, "a+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                            } //closes if(alltimes_ascii) condition 
+                            if (timestep_ascii)
+                            {   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder3[j],yextrap0_fixedpts_extraporder3[j],zextrap0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_xext_yext_zext_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %i \n",ct,xextrap0_fixedpts_extraporder3[j],yextrap0_fixedpts_extraporder3[j],zextrap0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",ct,bdyphi0_fixedpts_extraporder3[j],j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    // save quasiset_ll as ascii
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    j_red=0;
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %24.16e %24.16e  %24.16e %24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_tt0_fixedpts_extraporder3[j],quasiset_tchi0_fixedpts_extraporder3[j],quasiset_txi0_fixedpts_extraporder3[j],quasiset_chichi0_fixedpts_extraporder3[j],quasiset_chixi0_fixedpts_extraporder3[j],quasiset_xixi0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_trace0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j);
+                                    }
+                                    fclose(fp); 
+                                if ((reduced_ascii) && (reduction_factor_ascii!=0))
+                                {
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_tstep%d.txt",AMRD_save_tag,lsteps);
+                                    fp = fopen(name, "w+");
+                                    for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
+                                    {
+                                        if ((j%reduction_factor_ascii)==0)
+                                        {
+                                            fprintf(fp,"%24.16e %24.16e %i \n",
+                                                    ct,
+                                                    quasiset_massdensity0_fixedpts_extraporder3[j],
+                                                    j_red);
+                                            j_red=j_red+1;
+                                        }
+                                    }
+                                    fclose(fp);
+                                }   
+                            } //closes if (timestep_ascii) condition    
+                        } //closes if (my_rank==0) condition            
+                        //the following bit computes and prints AdS_mass0 (see below) if we're running on only 1 process
+
+                        if (output_AdS_mass)
+                        {
+                            if (uniSize>1)
+                            {
+                                if (my_rank==0) printf("\nTHE COMPUTATION OF AdS MASS ON MORE THAN 1 PROCESS IS NOT RELIABLE...NOT COMPUTING AdS MASS\n");
+                            }
+                            else //i.e. we're running on only 1 process
+                            {
+                                printf("\nRUNNING ON ONLY 1 PROCESS...THE NUMERICAL APPROXIMATION OF AdS MASS FOR FIXED POINTS, FIRST ORDER EXTRAPOLATION IS RELIABLE ON 1 PROCESS...COMPUTING AdS MASS\n");    
+                                *rhobdy0_fixedpts_extraporder3=1;
+                                chibdy_xibdy_(chibdy0_fixedpts_extraporder3,xibdy0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,chiextrap0_fixedpts_extraporder3,xiextrap0_fixedpts_extraporder3,&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3);
+                                doubleintegralonsphere_(AdS_mass0_fixedpts_extraporder3,quasiset_massdensity0_fixedpts_extraporder3,xextrap0_fixedpts_extraporder3,yextrap0_fixedpts_extraporder3,zextrap0_fixedpts_extraporder3,&basenumbdypoints_fixedpts_extraporder3,rhobdy0_fixedpts_extraporder3,chibdy0_fixedpts_extraporder3,xibdy0_fixedpts_extraporder3,&basebdy_Nchi_fixedpts_extraporder3,&basebdy_Nxi_fixedpts_extraporder3);  
+                                FILE *fp;
+                                sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_AdSmass.txt",AMRD_save_tag);
+                                fp = fopen(name, "a+");
+                                    fprintf(fp,"%24.16e %24.16e \n",ct,*AdS_mass0_fixedpts_extraporder3);
+                                fclose(fp);
+                            }
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_fixedpts_extrap  
             }//closes output_bdyquantities if-condition
         }//closes if condition on lsteps
@@ -7654,6 +10234,7 @@ void AdS4D_post_tstep(int L)
                             free(xibdy0_freepts_extraporder1);    
                         }   
                     }//closes condition on output_bdy_extraporder1  
+
                     //FREE POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {   
@@ -7720,8 +10301,78 @@ void AdS4D_post_tstep(int L)
                             free(chibdy0_freepts_extraporder2);
                             free(xibdy0_freepts_extraporder2);  
                         }   
-                    } //closes condition on output_bdy_extraporder2 
-                }//closes condition on bdy_freepts_extrap       
+                    } //closes condition on output_bdy_extraporder2
+
+                    //FREE POINTS, THIRD ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {      
+                        free(vecbdypoints_freepts_extraporder3);
+                        free(dsplsbdypoints_freepts_extraporder3);
+                        free(quasiset_tt_freepts_extraporder3);
+                        free(quasiset_tchi_freepts_extraporder3);
+                        free(quasiset_txi_freepts_extraporder3);
+                        free(quasiset_chichi_freepts_extraporder3);
+                        free(quasiset_chixi_freepts_extraporder3);
+                        free(quasiset_xixi_freepts_extraporder3);
+                        free(quasiset_trace_freepts_extraporder3);
+                        free(quasiset_massdensity_freepts_extraporder3);
+                        free(bdyphi_freepts_extraporder3);  
+                        free(xextrap_freepts_extraporder3);
+                        free(yextrap_freepts_extraporder3);
+                        free(zextrap_freepts_extraporder3);   
+                        free(lquasiset_tt0_freepts_extraporder3);        
+                        free(lquasiset_tchi0_freepts_extraporder3);
+                        free(lquasiset_txi0_freepts_extraporder3);
+                        free(lquasiset_chichi0_freepts_extraporder3);
+                        free(lquasiset_chixi0_freepts_extraporder3);
+                        free(lquasiset_xixi0_freepts_extraporder3);
+                        free(lquasiset_trace0_freepts_extraporder3);
+                        free(lquasiset_massdensity0_freepts_extraporder3);
+                        free(lbdyphi0_freepts_extraporder3);      
+                        free(maxquasiset_tt0_freepts_extraporder3);        
+                        free(maxquasiset_tchi0_freepts_extraporder3);
+                        free(maxquasiset_txi0_freepts_extraporder3);
+                        free(maxquasiset_chichi0_freepts_extraporder3);
+                        free(maxquasiset_chixi0_freepts_extraporder3);
+                        free(maxquasiset_xixi0_freepts_extraporder3);
+                        free(maxquasiset_trace0_freepts_extraporder3);
+                        free(maxquasiset_massdensity0_freepts_extraporder3);
+                        free(maxbdyphi0_freepts_extraporder3);    
+                        free(minquasiset_tt0_freepts_extraporder3);
+                        free(minquasiset_tchi0_freepts_extraporder3);
+                        free(minquasiset_txi0_freepts_extraporder3);
+                        free(minquasiset_chichi0_freepts_extraporder3);
+                        free(minquasiset_chixi0_freepts_extraporder3);
+                        free(minquasiset_xixi0_freepts_extraporder3);
+                        free(minquasiset_trace0_freepts_extraporder3);
+                        free(minquasiset_massdensity0_freepts_extraporder3);
+                        free(minbdyphi0_freepts_extraporder3);    
+                        free(quasiset_tt0_freepts_extraporder3);
+                        free(quasiset_tchi0_freepts_extraporder3);
+                        free(quasiset_txi0_freepts_extraporder3);
+                        free(quasiset_chichi0_freepts_extraporder3);
+                        free(quasiset_chixi0_freepts_extraporder3);
+                        free(quasiset_xixi0_freepts_extraporder3);
+                        free(quasiset_trace0_freepts_extraporder3);
+                        free(quasiset_massdensity0_freepts_extraporder3);
+                        free(bdyphi0_freepts_extraporder3);
+                        free(AdS_mass0_freepts_extraporder3);     
+                        free(xextrap0_freepts_extraporder3);
+                        free(yextrap0_freepts_extraporder3);
+                        free(zextrap0_freepts_extraporder3);          
+                        if (output_AdS_mass)
+                        {
+                            free(rhoextrap0_freepts_extraporder3);
+                            free(chiextrap0_freepts_extraporder3);
+                            free(xiextrap0_freepts_extraporder3);             
+                            free(rhobdy0_freepts_extraporder3);
+                            free(chibdy0_freepts_extraporder3);
+                            free(xibdy0_freepts_extraporder3);    
+                        }   
+                    }//closes condition on output_bdy_extraporder3               
+
+                }//closes condition on bdy_freepts_extrap    
+
                 //FIXED POINTS EXTRAPOLATION
                 if (bdy_extrap_fixedpts)
                 {
@@ -7792,6 +10443,7 @@ void AdS4D_post_tstep(int L)
                             free(xibdy0_fixedpts_extraporder1); 
                         }   
                     }//closes condition on output_bdy_extraporder1  
+
                     //FIXED POINTS, SECOND ORDER EXTRAPOLATION
                     if (output_bdy_extraporder2)
                     {   
@@ -7858,7 +10510,76 @@ void AdS4D_post_tstep(int L)
                             free(chibdy0_fixedpts_extraporder2);
                             free(xibdy0_fixedpts_extraporder2); 
                         }   
-                    } //closes condition on output_bdy_extraporder2 
+                    } //closes condition on output_bdy_extraporder2
+
+                    //FIXED POINTS, FIRST ORDER EXTRAPOLATION
+                    if (output_bdy_extraporder3)
+                    {   
+                        free(vecbdypoints_fixedpts_extraporder3);
+                        free(dsplsbdypoints_fixedpts_extraporder3);
+                        free(quasiset_tt_fixedpts_extraporder3);
+                        free(quasiset_tchi_fixedpts_extraporder3);
+                        free(quasiset_txi_fixedpts_extraporder3);
+                        free(quasiset_chichi_fixedpts_extraporder3);
+                        free(quasiset_chixi_fixedpts_extraporder3);
+                        free(quasiset_xixi_fixedpts_extraporder3);
+                        free(quasiset_trace_fixedpts_extraporder3);
+                        free(quasiset_massdensity_fixedpts_extraporder3);
+                        free(bdyphi_fixedpts_extraporder3); 
+                        free(xextrap_fixedpts_extraporder3);
+                        free(yextrap_fixedpts_extraporder3);
+                        free(zextrap_fixedpts_extraporder3);    
+                        free(lquasiset_tt0_fixedpts_extraporder3);
+                        free(lquasiset_tchi0_fixedpts_extraporder3);
+                        free(lquasiset_txi0_fixedpts_extraporder3);
+                        free(lquasiset_chichi0_fixedpts_extraporder3);
+                        free(lquasiset_chixi0_fixedpts_extraporder3);
+                        free(lquasiset_xixi0_fixedpts_extraporder3);
+                        free(lquasiset_trace0_fixedpts_extraporder3);
+                        free(lquasiset_massdensity0_fixedpts_extraporder3);
+                        free(lbdyphi0_fixedpts_extraporder3);   
+                        free(maxquasiset_tt0_fixedpts_extraporder3);
+                        free(maxquasiset_tchi0_fixedpts_extraporder3);
+                        free(maxquasiset_txi0_fixedpts_extraporder3);
+                        free(maxquasiset_chichi0_fixedpts_extraporder3);
+                        free(maxquasiset_chixi0_fixedpts_extraporder3);
+                        free(maxquasiset_xixi0_fixedpts_extraporder3);
+                        free(maxquasiset_trace0_fixedpts_extraporder3);
+                        free(maxquasiset_massdensity0_fixedpts_extraporder3);
+                        free(maxbdyphi0_fixedpts_extraporder3); 
+                        free(minquasiset_tt0_fixedpts_extraporder3);
+                        free(minquasiset_tchi0_fixedpts_extraporder3);
+                        free(minquasiset_txi0_fixedpts_extraporder3);
+                        free(minquasiset_chichi0_fixedpts_extraporder3);
+                        free(minquasiset_chixi0_fixedpts_extraporder3);
+                        free(minquasiset_xixi0_fixedpts_extraporder3);
+                        free(minquasiset_trace0_fixedpts_extraporder3);
+                        free(minquasiset_massdensity0_fixedpts_extraporder3);
+                        free(minbdyphi0_fixedpts_extraporder3); 
+                        free(quasiset_tt0_fixedpts_extraporder3);
+                        free(quasiset_tchi0_fixedpts_extraporder3);
+                        free(quasiset_txi0_fixedpts_extraporder3);
+                        free(quasiset_chichi0_fixedpts_extraporder3);
+                        free(quasiset_chixi0_fixedpts_extraporder3);
+                        free(quasiset_xixi0_fixedpts_extraporder3);
+                        free(quasiset_trace0_fixedpts_extraporder3);
+                        free(quasiset_massdensity0_fixedpts_extraporder3);
+                        free(bdyphi0_fixedpts_extraporder3);
+                        free(AdS_mass0_fixedpts_extraporder3);  
+                        free(xextrap0_fixedpts_extraporder3);
+                        free(yextrap0_fixedpts_extraporder3);
+                        free(zextrap0_fixedpts_extraporder3);   
+                        if (output_AdS_mass)
+                        {
+                            free(rhoextrap0_fixedpts_extraporder3);
+                            free(chiextrap0_fixedpts_extraporder3);
+                            free(xiextrap0_fixedpts_extraporder3);  
+                            free(rhobdy0_fixedpts_extraporder3);
+                            free(chibdy0_fixedpts_extraporder3);
+                            free(xibdy0_fixedpts_extraporder3); 
+                        }   
+                    }//closes condition on output_bdy_extraporder3  
+
                 }//closes condition on bdy_extrap_fixedpts
             } //closes condition on output_bdyquantities
             valid=PAMR_next_g();
