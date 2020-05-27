@@ -186,8 +186,8 @@ diss_all := 1
 
 #------- check-pointing (off) ---------------------------------------------
 
-cp_restart := 1
-cp_delta_t_hrs := 0.001
+cp_restart := 0
+cp_delta_t_hrs := 0.0
 cp_save_fname := "cp_L1p5"
 cp_restore_fname := "cp_L1p5_A"
 

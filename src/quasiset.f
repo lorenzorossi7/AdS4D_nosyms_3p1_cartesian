@@ -966,7 +966,7 @@ c----------------------------------------------------------------------
      &            ) then
                    chrbdy(i,j,k)=ex
               else if ((k+ind_distance_fixedpts).le.Nz) then !ensures that the index k+1 is not out of bounds
-                 if (chrbdy2(i,j,k+1).ne.ex) then
+                 if (chrbdy2(i,j,k+ind_distance_fixedpts).ne.ex) then
                    chrbdy(i,j,k)=ex
                  end if
               end if

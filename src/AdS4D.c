@@ -2227,7 +2227,7 @@ void AdS4D_pre_io_calc(void)
                 	bdy_extrap_order=2;
                 	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
             	}  
-				if (output_bdy_extraporder3)
+		if (output_bdy_extraporder3)
             	{
                 	bdy_extrap_order=3;
                 	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
