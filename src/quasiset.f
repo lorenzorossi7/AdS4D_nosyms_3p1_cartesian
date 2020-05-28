@@ -3416,9 +3416,9 @@ c-------------------------------------------------------------------------------
 
 
               else
-                  yp2=y(i+1)
-                  yp3=y(i+2)
-                  yp4=y(i+3)
+                  yp2=y(j+1)
+                  yp3=y(j+2)
+                  yp4=y(j+3)
                   quasiset_tt_p2=quasiset_tt_ll(i,j+1,k)
                   quasiset_tt_p3=quasiset_tt_ll(i,j+2,k)
                   quasiset_tt_p4=quasiset_tt_ll(i,j+3,k)
@@ -4646,9 +4646,9 @@ c-------------------------------------------------------------------------------
 
 
               else
-                  yp2=y(i+1*ind_distance_fixedpts)
-                  yp3=y(i+2*ind_distance_fixedpts)
-                  yp4=y(i+3*ind_distance_fixedpts)
+                  yp2=y(j+1*ind_distance_fixedpts)
+                  yp3=y(j+2*ind_distance_fixedpts)
+                  yp4=y(j+3*ind_distance_fixedpts)
                   quasiset_tt_p2=
      &                quasiset_tt_ll(i,j+1*ind_distance_fixedpts,k)
                   quasiset_tt_p3=
