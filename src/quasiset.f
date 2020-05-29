@@ -1019,6 +1019,7 @@ c----------------------------------------------------------------------
 
            if (chrbdy(i,j,k).ne.ex) then
              numbdypoints=numbdypoints+1
+
            end if
 
 
@@ -1965,6 +1966,7 @@ c----------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
+     &                  quasiset_tracell,
      &                  quasiset_massdensityll,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -2003,6 +2005,7 @@ c----------------------------------------------------------------------
         real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
+        real*8 quasiset_tracell(Nx,Ny,Nz)
         real*8 quasiset_massdensityll(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
@@ -2360,6 +2363,7 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
               quasiset_massdensityll(i,j,k)=0
 
             if (no_derivatives) then
@@ -2392,6 +2396,14 @@ c----------------------------------------------------------------------
      &                                  +PI**2*(3*(gbsph_n(1,1)/q)
      &                                  -2*(gbsph_n(2,2)/q)))
      &                                  )/(4*PI)
+
+      !trace of quasi local stress-tensor in terms of regularised metric components (this should be the same as the one above, within numerical error)
+               quasiset_tracell(i,j,k)=
+     &           (3/(32*PI**3))
+     &           *(4*PI**2*(gbsph_n(1,1)/q)
+     &             -4*(gbsph_n(3,3)/q)
+     &             -4*PI**2*(gbsph_n(2,2)/q)
+     &             -(gbsph_n(4,4)/q)/((sin(PI*chi0))**2) )
 
 
                quasiset_massdensityll(i,j,k)=(sin(PI*chi0))
@@ -2426,6 +2438,7 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
               quasiset_massdensityll(i,j,k)=0
 
           end if
@@ -2547,11 +2560,12 @@ c----------------------------------------------------------------------
 !        write(*,*) "COMPUTING TRACE DIRECTLY FROM DERIVATIVES 
 !    &               OF METRIC COMPONENTS"
 !
-!             quasiset_tracell(i,j,k)=(3/(32*PI**3))
-!    &           *(4*PI**2*(-dgbsph_tt_drho_n)
-!    &             -4*(-dgbsph_chichi_drho_n)
-!    &             -4*PI**2*(-dgbsph_rhorho_drho_n)
-!    &             -(-dgbsph_xixi_drho_n)/((sin(PI*chi0))**2) )
+             quasiset_tracell(i,j,k)=
+     &        (3/(32*PI**3))
+     &           *(4*PI**2*(-dgbsph_tt_drho_n)
+     &             -4*(-dgbsph_chichi_drho_n)
+     &             -4*PI**2*(-dgbsph_rhorho_drho_n)
+     &             -(-dgbsph_xixi_drho_n)/((sin(PI*chi0))**2) )
 
                quasiset_massdensityll(i,j,k)=
      &                                     (sin(PI*chi0))
@@ -2572,6 +2586,7 @@ c----------------------------------------------------------------------
               quasiset_chichi_ll(i,j,k)=0
               quasiset_chixi_ll(i,j,k)=0
               quasiset_xixi_ll(i,j,k)=0
+              quasiset_tracell(i,j,k)=0
               quasiset_massdensityll(i,j,k)=0
             end if
 
@@ -2604,6 +2619,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
+     &                  quasiset_tracell,
      &                  quasiset_massdensityll,
      &                  xextrap,yextrap,zextrap,
      &                  chrbdy,numbdypoints,
@@ -2639,26 +2655,31 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
         real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
         real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
+        real*8 quasiset_tracell(Nx,Ny,Nz)
         real*8 quasiset_massdensityll(Nx,Ny,Nz)
 
         real*8 quasiset_tt_p1,quasiset_tchi_p1
         real*8 quasiset_txi_p1,quasiset_chichi_p1
         real*8 quasiset_chixi_p1,quasiset_xixi_p1
+        real*8 quasiset_trace_p1
         real*8 quasiset_massdensity_p1
 
         real*8 quasiset_tt_p2,quasiset_tchi_p2
         real*8 quasiset_txi_p2,quasiset_chichi_p2
         real*8 quasiset_chixi_p2,quasiset_xixi_p2
+        real*8 quasiset_trace_p2
         real*8 quasiset_massdensity_p2
 
         real*8 quasiset_tt_p3,quasiset_tchi_p3
         real*8 quasiset_txi_p3,quasiset_chichi_p3
         real*8 quasiset_chixi_p3,quasiset_xixi_p3
+        real*8 quasiset_trace_p3
         real*8 quasiset_massdensity_p3
 
         real*8 quasiset_tt_p4,quasiset_tchi_p4
         real*8 quasiset_txi_p4,quasiset_chichi_p4
         real*8 quasiset_chixi_p4,quasiset_xixi_p4
+        real*8 quasiset_trace_p4
         real*8 quasiset_massdensity_p4
 
 
@@ -2672,8 +2693,8 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
         real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
         real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
-        real*8 quasiset_massdensity(numbdypoints)
         real*8 quasiset_trace(numbdypoints)
+        real*8 quasiset_massdensity(numbdypoints)
 
         real*8 xextrap(numbdypoints)
         real*8 yextrap(numbdypoints)
@@ -2753,6 +2774,7 @@ c-------------------------------------------------------------------------------
            quasiset_chichi_p1=quasiset_chichi_ll(i,j,k)
            quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
            quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
+           quasiset_trace_p1=quasiset_tracell(i,j,k)
            quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
@@ -2790,6 +2812,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i-1,j,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i-1,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i-1,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i-1,j,k)
 
@@ -2802,6 +2825,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i+1,j,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i+1,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
+                  quasiset_trace_p2=quasiset_tracell(i+1,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i+1,j,k)
 
@@ -2827,14 +2851,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,xp1,xp2,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,xp1,xp2,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,xp1,xp2,xex)
@@ -2848,6 +2875,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j-1,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j-1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j-1,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j-1,k)
 
@@ -2861,6 +2889,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j+1,k)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j+1,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
+                  quasiset_trace_p2=quasiset_tracell(i,j+1,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j+1,k)
 
@@ -2886,14 +2915,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,yp1,yp2,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,yp1,yp2,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,yp1,yp2,yex)
@@ -2906,6 +2938,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j,k-1)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k-1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k-1)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k-1)
 
@@ -2918,6 +2951,7 @@ c-------------------------------------------------------------------------------
                   quasiset_chichi_p2=quasiset_chichi_ll(i,j,k+1)
                   quasiset_chixi_p2=quasiset_chixi_ll(i,j,k+1)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
+                  quasiset_trace_p2=quasiset_tracell(i,j,k+1)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k+1)
 
@@ -2943,14 +2977,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,zp1,zp2,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,zp1,zp2,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,zp1,zp2,zex)
@@ -2959,6 +2996,8 @@ c-------------------------------------------------------------------------------
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
             end if !closes condition on bdy_extrap_order.eq.1
+
+
 
 
              if (bdy_extrap_order.eq.2) then
@@ -2979,6 +3018,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i-2,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i-2,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i-1,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i-2,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i-1,j,k)
                   quasiset_massdensity_p3=
@@ -3000,6 +3043,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i+2,j,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i+2,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i+1,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i+2,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i+1,j,k)
                   quasiset_massdensity_p3=
@@ -3045,14 +3092,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   xp1,xp2,xp3,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   xp1,xp2,xp3,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3077,6 +3130,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i,j-2,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j-2,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j-1,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j-2,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j-1,k)
                   quasiset_massdensity_p3=
@@ -3099,6 +3156,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i,j+2,k)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j+2,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j+1,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j+2,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j+1,k)
                   quasiset_massdensity_p3=
@@ -3142,14 +3203,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   yp1,yp2,yp3,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   yp1,yp2,yp3,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3172,6 +3239,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i,j,k-2)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j,k-2)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k-1)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k-2)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k-1)
                   quasiset_massdensity_p3=
@@ -3192,6 +3263,10 @@ c-------------------------------------------------------------------------------
                   quasiset_chixi_p3=quasiset_chixi_ll(i,j,k+2)
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j,k+2)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k+1)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k+2)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k+1)
                   quasiset_massdensity_p3=
@@ -3235,14 +3310,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   zp1,zp2,zp3,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   zp1,zp2,zp3,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3283,6 +3364,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i-1,j,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i-2,j,k)
                   quasiset_xixi_p4=quasiset_xixi_ll(i-3,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i-1,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i-2,j,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i-3,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i-1,j,k)
                   quasiset_massdensity_p3=
@@ -3313,6 +3400,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i+1,j,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i+2,j,k)
                   quasiset_xixi_p4=quasiset_xixi_ll(i+3,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i+1,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i+2,j,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i+3,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i+1,j,k)
                   quasiset_massdensity_p3=
@@ -3366,14 +3459,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   xp1,xp2,xp3,xp4,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   xp1,xp2,xp3,xp4,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3407,6 +3507,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j-1,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j-2,k)
                   quasiset_xixi_p4=quasiset_xixi_ll(i,j-3,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j-1,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j-2,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j-3,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j-1,k)
                   quasiset_massdensity_p3=
@@ -3437,6 +3543,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j+1,k)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j+2,k)
                   quasiset_xixi_p4=quasiset_xixi_ll(i,j+3,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j+1,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j+2,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j+3,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j+1,k)
                   quasiset_massdensity_p3=
@@ -3490,14 +3602,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   yp1,yp2,yp3,yp4,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   yp1,yp2,yp3,yp4,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3529,6 +3648,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k-1)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j,k-2)
                   quasiset_xixi_p4=quasiset_xixi_ll(i,j,k-3)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k-1)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k-2)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j,k-3)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k-1)
                   quasiset_massdensity_p3=
@@ -3559,6 +3684,12 @@ c-------------------------------------------------------------------------------
                   quasiset_xixi_p2=quasiset_xixi_ll(i,j,k+1)
                   quasiset_xixi_p3=quasiset_xixi_ll(i,j,k+2)
                   quasiset_xixi_p4=quasiset_xixi_ll(i,j,k+3)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k+1)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k+2)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j,k+3)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k+1)
                   quasiset_massdensity_p3=
@@ -3612,14 +3743,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   zp1,zp2,zp3,zp4,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   zp1,zp2,zp3,zp4,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -3669,6 +3807,7 @@ c-------------------------------------------------------------------------------
      &                  quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
      &                  quasiset_chichi_ll,quasiset_chixi_ll,
      &                  quasiset_xixi_ll,
+     &                  quasiset_tracell,
      &                  quasiset_massdensityll,
      &                  xextrap,yextrap,zextrap,
      &                  chrbdy,numbdypoints,
@@ -3705,26 +3844,31 @@ c-------------------------------------------------------------------------------
        real*8 quasiset_tt_ll(Nx,Ny,Nz),quasiset_tchi_ll(Nx,Ny,Nz)
        real*8 quasiset_txi_ll(Nx,Ny,Nz),quasiset_chichi_ll(Nx,Ny,Nz)
        real*8 quasiset_chixi_ll(Nx,Ny,Nz),quasiset_xixi_ll(Nx,Ny,Nz)
+       real*8 quasiset_tracell(Nx,Ny,Nz)
        real*8 quasiset_massdensityll(Nx,Ny,Nz)
 
        real*8 quasiset_tt_p1,quasiset_tchi_p1
        real*8 quasiset_txi_p1,quasiset_chichi_p1
        real*8 quasiset_chixi_p1,quasiset_xixi_p1
+       real*8 quasiset_trace_p1
        real*8 quasiset_massdensity_p1
 
        real*8 quasiset_tt_p2,quasiset_tchi_p2
        real*8 quasiset_txi_p2,quasiset_chichi_p2
        real*8 quasiset_chixi_p2,quasiset_xixi_p2
+       real*8 quasiset_trace_p2
        real*8 quasiset_massdensity_p2
 
        real*8 quasiset_tt_p3,quasiset_tchi_p3
        real*8 quasiset_txi_p3,quasiset_chichi_p3
        real*8 quasiset_chixi_p3,quasiset_xixi_p3
+       real*8 quasiset_trace_p3
        real*8 quasiset_massdensity_p3
 
        real*8 quasiset_tt_p4,quasiset_tchi_p4
        real*8 quasiset_txi_p4,quasiset_chichi_p4
        real*8 quasiset_chixi_p4,quasiset_xixi_p4
+       real*8 quasiset_trace_p4
        real*8 quasiset_massdensity_p4
 
        real*8 gamma0sphbdy_uu_tt
@@ -3737,8 +3881,8 @@ c-------------------------------------------------------------------------------
        real*8 quasiset_tt(numbdypoints),quasiset_tchi(numbdypoints)
        real*8 quasiset_txi(numbdypoints),quasiset_chichi(numbdypoints)
        real*8 quasiset_chixi(numbdypoints),quasiset_xixi(numbdypoints)
-       real*8 quasiset_massdensity(numbdypoints)
        real*8 quasiset_trace(numbdypoints)
+       real*8 quasiset_massdensity(numbdypoints)
 
        real*8 xextrap(numbdypoints)
        real*8 yextrap(numbdypoints)
@@ -3824,6 +3968,7 @@ c-------------------------------------------------------------------------------
           quasiset_chixi_p1=quasiset_chixi_ll(i,j,k)
           quasiset_xixi_p1=quasiset_xixi_ll(i,j,k)
           quasiset_massdensity_p1=quasiset_massdensityll(i,j,k)
+          quasiset_trace_p1=quasiset_tracell(i,j,k)
           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
           if (chrbdy(i,j,k).ne.ex) then
@@ -3866,6 +4011,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i-ind_distance_fixedpts,j,k)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i-ind_distance_fixedpts,j,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i-ind_distance_fixedpts,j,k)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i-ind_distance_fixedpts,j,k)
 
@@ -3884,6 +4031,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i+ind_distance_fixedpts,j,k)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i+ind_distance_fixedpts,j,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i+ind_distance_fixedpts,j,k)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i+ind_distance_fixedpts,j,k)
 
@@ -3909,14 +4058,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,xp1,xp2,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,xp1,xp2,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,xp1,xp2,xex)
@@ -3937,6 +4089,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i,j-ind_distance_fixedpts,k)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i,j-ind_distance_fixedpts,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j-ind_distance_fixedpts,k)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i,j-ind_distance_fixedpts,k)
 
@@ -3955,6 +4109,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i,j+ind_distance_fixedpts,k)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i,j+ind_distance_fixedpts,k)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j+ind_distance_fixedpts,k)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i,j+ind_distance_fixedpts,k)
 
@@ -3981,14 +4137,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,yp1,yp2,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,yp1,yp2,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,yp1,yp2,yex)
@@ -4007,6 +4166,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i,j,k-ind_distance_fixedpts)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i,j,k-ind_distance_fixedpts)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j,k-ind_distance_fixedpts)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i,j,k-ind_distance_fixedpts)
 
@@ -4024,6 +4185,8 @@ c-------------------------------------------------------------------------------
      &               quasiset_chixi_ll(i,j,k+ind_distance_fixedpts)
                  quasiset_xixi_p2=
      &               quasiset_xixi_ll(i,j,k+ind_distance_fixedpts)
+                 quasiset_trace_p2=
+     &               quasiset_tracell(i,j,k+ind_distance_fixedpts)
                  quasiset_massdensity_p2=
      &               quasiset_massdensityll(i,j,k+ind_distance_fixedpts)
 
@@ -4049,14 +4212,17 @@ c-------------------------------------------------------------------------------
      &                 firstord_extrap(quasiset_xixi_p1
      &                  ,quasiset_xixi_p2,zp1,zp2,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 firstord_extrap(quasiset_trace_p1
+     &                  ,quasiset_trace_p2,zp1,zp2,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 firstord_extrap(quasiset_massdensity_p1
      &                  ,quasiset_massdensity_p2,zp1,zp2,zex)
@@ -4097,6 +4263,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i-ind_distance_fixedpts,j,k)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i-ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i-2*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i-ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p3=
@@ -4130,6 +4300,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i+ind_distance_fixedpts,j,k)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i+ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i+2*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i+ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p3=
@@ -4175,14 +4349,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   xp1,xp2,xp3,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   xp1,xp2,xp3,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4219,6 +4399,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i,j-ind_distance_fixedpts,k)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j-ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j-2*ind_distance_fixedpts,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j-ind_distance_fixedpts,k)
                   quasiset_massdensity_p3=
@@ -4253,6 +4437,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i,j+ind_distance_fixedpts,k)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j+ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j+2*ind_distance_fixedpts,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j+ind_distance_fixedpts,k)
                   quasiset_massdensity_p3=
@@ -4296,14 +4484,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   yp1,yp2,yp3,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   yp1,yp2,yp3,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4338,6 +4532,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i,j,k-ind_distance_fixedpts)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k-ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k-2*ind_distance_fixedpts)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k-ind_distance_fixedpts)
                   quasiset_massdensity_p3=
@@ -4370,6 +4568,10 @@ c-------------------------------------------------------------------------------
      &             quasiset_xixi_ll(i,j,k+ind_distance_fixedpts)
                   quasiset_xixi_p3=
      &             quasiset_xixi_ll(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k+ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k+2*ind_distance_fixedpts)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k+ind_distance_fixedpts)
                   quasiset_massdensity_p3=
@@ -4413,14 +4615,20 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p3,
      &                   zp1,zp2,zp3,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 secondord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   zp1,zp2,zp3,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 secondord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4477,6 +4685,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i-2*ind_distance_fixedpts,j,k)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i-3*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i-1*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i-2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i-3*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i-1*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p3=
@@ -4525,6 +4739,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i+2*ind_distance_fixedpts,j,k)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i+3*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i+1*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i+2*ind_distance_fixedpts,j,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i+3*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i+1*ind_distance_fixedpts,j,k)
                   quasiset_massdensity_p3=
@@ -4578,14 +4798,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   xp1,xp2,xp3,xp4,xex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   xp1,xp2,xp3,xp4,xex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4637,6 +4864,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i,j-2*ind_distance_fixedpts,k)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i,j-3*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j-1*ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j-2*ind_distance_fixedpts,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j-3*ind_distance_fixedpts,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j-1*ind_distance_fixedpts,k)
                   quasiset_massdensity_p3=
@@ -4685,6 +4918,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i,j+2*ind_distance_fixedpts,k)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i,j+3*ind_distance_fixedpts,k)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j+1*ind_distance_fixedpts,k)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j+2*ind_distance_fixedpts,k)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j+3*ind_distance_fixedpts,k)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j+1*ind_distance_fixedpts,k)
                   quasiset_massdensity_p3=
@@ -4738,14 +4977,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   yp1,yp2,yp3,yp4,yex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   yp1,yp2,yp3,yp4,yex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4795,6 +5041,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i,j,k-2*ind_distance_fixedpts)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i,j,k-3*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k-1*ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k-2*ind_distance_fixedpts)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j,k-3*ind_distance_fixedpts)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k-1*ind_distance_fixedpts)
                   quasiset_massdensity_p3=
@@ -4843,6 +5095,12 @@ c-------------------------------------------------------------------------------
      &                quasiset_xixi_ll(i,j,k+2*ind_distance_fixedpts)
                   quasiset_xixi_p4=
      &                quasiset_xixi_ll(i,j,k+3*ind_distance_fixedpts)
+                  quasiset_trace_p2=
+     &             quasiset_tracell(i,j,k+1*ind_distance_fixedpts)
+                  quasiset_trace_p3=
+     &             quasiset_tracell(i,j,k+2*ind_distance_fixedpts)
+                  quasiset_trace_p4=
+     &             quasiset_tracell(i,j,k+3*ind_distance_fixedpts)
                   quasiset_massdensity_p2=
      &             quasiset_massdensityll(i,j,k+1*ind_distance_fixedpts)
                   quasiset_massdensity_p3=
@@ -4896,14 +5154,21 @@ c-------------------------------------------------------------------------------
      &                   quasiset_xixi_p4,
      &                   zp1,zp2,zp3,zp4,zex)
                  quasiset_trace(lind)=
-     &           (
-     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
-     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
-     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
-     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
-     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
-     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
-     &                   )
+     &                 thirdord_extrap(
+     &                   quasiset_trace_p1,
+     &                   quasiset_trace_p2,
+     &                   quasiset_trace_p3,
+     &                   quasiset_trace_p4,
+     &                   zp1,zp2,zp3,zp4,zex)
+!                 quasiset_trace(lind)=
+!     &           (
+!     &           gamma0sphbdy_uu_tt*quasiset_tt(lind)
+!     &        +2*gamma0sphbdy_uu_tchi*quasiset_tchi(lind)
+!     &        +2*gamma0sphbdy_uu_txi*quasiset_txi(lind)
+!     &          +gamma0sphbdy_uu_chichi*quasiset_chichi(lind)
+!     &        +2*gamma0sphbdy_uu_chixi*quasiset_chixi(lind)
+!     &          +gamma0sphbdy_uu_xixi*quasiset_xixi(lind)
+!     &                   )
                  quasiset_massdensity(lind)=
      &                 thirdord_extrap(
      &                   quasiset_massdensity_p1,
@@ -4914,6 +5179,576 @@ c-------------------------------------------------------------------------------
               end if
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!            if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
+!             if (xp1.gt.0) then
+!               write(*,*) "EXTRAP_ORDER 3
+!     &       i,
+!     &       x(i),
+!     &       quasiset_tt_ll(i,j,k),
+!     &       quasiset_tchi_ll(i,j,k),
+!     &       quasiset_txi_ll(i,j,k),
+!     &       quasiset_chichi_ll(i,j,k),
+!     &       quasiset_chixi_ll(i,j,k),
+!     &       quasiset_xixi_ll(i,j,k),
+!     &       i-1*ind_distance_fixedpts,
+!     &       x(i-1*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       i-2*ind_distance_fixedpts,
+!     &       x(i-2*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       i-3*ind_distance_fixedpts,
+!     &       x(i-3*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       lind,
+!     &       xex,
+!     &       yex,
+!     &       zex,
+!     &       quasiset_tt(lind),
+!     &       quasiset_tchi(lind),
+!     &       quasiset_txi(lind),
+!     &       quasiset_chichi(lind),
+!     &       quasiset_chixi(lind),
+!     &       quasiset_xixi(lind),
+!     &       quasiset_trace(lind)=",
+!     &       i,
+!     &       x(i),
+!     &       quasiset_tt_ll(i,j,k),
+!     &       quasiset_tchi_ll(i,j,k),
+!     &       quasiset_txi_ll(i,j,k),
+!     &       quasiset_chichi_ll(i,j,k),
+!     &       quasiset_chixi_ll(i,j,k),
+!     &       quasiset_xixi_ll(i,j,k),
+!     &       i-1*ind_distance_fixedpts,
+!     &       x(i-1*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-1*ind_distance_fixedpts,j,k),
+!     &       i-2*ind_distance_fixedpts,
+!     &       x(i-2*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-2*ind_distance_fixedpts,j,k),
+!     &       i-3*ind_distance_fixedpts,
+!     &       x(i-3*ind_distance_fixedpts),
+!     &       quasiset_tt_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_tchi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_txi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_chichi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_chixi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       quasiset_xixi_ll(i-3*ind_distance_fixedpts,j,k),
+!     &       lind,
+!     &       xex,
+!     &       yex,
+!     &       zex,
+!     &       quasiset_tt(lind),
+!     &       quasiset_tchi(lind),
+!     &       quasiset_txi(lind),
+!     &       quasiset_chichi(lind),
+!     &       quasiset_chixi(lind),
+!     &       quasiset_xixi(lind),
+!     &       quasiset_trace(lind)
+!
+!             else
+!               write(*,*) "EXTRAP_ORDER 3
+!     &         i,
+!     &         x(i),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         i+1*ind_distance_fixedpts,
+!     &         x(i+1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         i+2*ind_distance_fixedpts,
+!     &         x(i+2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         i+3*ind_distance_fixedpts,
+!     &         x(i+3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)=",
+!     &         i,
+!     &         x(i),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         i+1*ind_distance_fixedpts,
+!     &         x(i+1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+1*ind_distance_fixedpts,j,k),
+!     &         i+2*ind_distance_fixedpts,
+!     &         x(i+2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+2*ind_distance_fixedpts,j,k),
+!     &         i+3*ind_distance_fixedpts,
+!     &         x(i+3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_tchi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_txi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_chichi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_chixi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         quasiset_xixi_ll(i+3*ind_distance_fixedpts,j,k),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)
+!             end if
+!           else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
+!            if (yp1.gt.0) then
+!               write(*,*) "EXTRAP_ORDER 3
+!     &         j,
+!     &         y(j),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         j-1*ind_distance_fixedpts,
+!     &         y(j-1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         j-2*ind_distance_fixedpts,
+!     &         y(j-2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         j-3*ind_distance_fixedpts,
+!     &         y(j-3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)=",
+!     &         j,
+!     &         y(j),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         j-1*ind_distance_fixedpts,
+!     &         y(j-1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-1*ind_distance_fixedpts,k),
+!     &         j-2*ind_distance_fixedpts,
+!     &         y(j-2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-2*ind_distance_fixedpts,k),
+!     &         j-3*ind_distance_fixedpts,
+!     &         y(j-3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_tchi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_txi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_chichi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_chixi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         quasiset_xixi_ll(i,j-3*ind_distance_fixedpts,k),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)
+!             else
+!               write(*,*) "EXTRAP_ORDER 3
+!     &        j,
+!     &        y(j),
+!     &        quasiset_tt_ll(i,j,k),
+!     &        quasiset_tchi_ll(i,j,k),
+!     &        quasiset_txi_ll(i,j,k),
+!     &        quasiset_chichi_ll(i,j,k),
+!     &        quasiset_chixi_ll(i,j,k),
+!     &        quasiset_xixi_ll(i,j,k),
+!     &        j+1*ind_distance_fixedpts,
+!     &        y(j+1*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        j+2*ind_distance_fixedpts,
+!     &        y(j+2*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        j+3*ind_distance_fixedpts,
+!     &        y(j+3*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        lind,
+!     &        xex,
+!     &        yex,
+!     &        zex,
+!     &        quasiset_tt(lind),
+!     &        quasiset_tchi(lind),
+!     &        quasiset_txi(lind),
+!     &        quasiset_chichi(lind),
+!     &        quasiset_chixi(lind),
+!     &        quasiset_xixi(lind),
+!     &        quasiset_trace(lind)=",
+!     &        j,
+!     &        y(j),
+!     &        quasiset_tt_ll(i,j,k),
+!     &        quasiset_tchi_ll(i,j,k),
+!     &        quasiset_txi_ll(i,j,k),
+!     &        quasiset_chichi_ll(i,j,k),
+!     &        quasiset_chixi_ll(i,j,k),
+!     &        quasiset_xixi_ll(i,j,k),
+!     &        j+1*ind_distance_fixedpts,
+!     &        y(j+1*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+1*ind_distance_fixedpts,k),
+!     &        j+2*ind_distance_fixedpts,
+!     &        y(j+2*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+2*ind_distance_fixedpts,k),
+!     &        j+3*ind_distance_fixedpts,
+!     &        y(j+3*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_tchi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_txi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_chichi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_chixi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        quasiset_xixi_ll(i,j+3*ind_distance_fixedpts,k),
+!     &        lind,
+!     &        xex,
+!     &        yex,
+!     &        zex,
+!     &        quasiset_tt(lind),
+!     &        quasiset_tchi(lind),
+!     &        quasiset_txi(lind),
+!     &        quasiset_chichi(lind),
+!     &        quasiset_chixi(lind),
+!     &        quasiset_xixi(lind),
+!     &        quasiset_trace(lind)
+!             end if
+!           else
+!            if (zp1.gt.0) then
+!               write(*,*) "EXTRAP_ORDER 3
+!     &        k,
+!     &        z(k),
+!     &        quasiset_tt_ll(i,j,k),
+!     &        quasiset_tchi_ll(i,j,k),
+!     &        quasiset_txi_ll(i,j,k),
+!     &        quasiset_chichi_ll(i,j,k),
+!     &        quasiset_chixi_ll(i,j,k),
+!     &        quasiset_xixi_ll(i,j,k),
+!     &        k-1*ind_distance_fixedpts,
+!     &        z(k-1*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        k-2*ind_distance_fixedpts,
+!     &        z(k-2*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        k-3*ind_distance_fixedpts,
+!     &        z(k-3*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        lind,
+!     &        xex,
+!     &        yex,
+!     &        zex,
+!     &        quasiset_tt(lind),
+!     &        quasiset_tchi(lind),
+!     &        quasiset_txi(lind),
+!     &        quasiset_chichi(lind),
+!     &        quasiset_chixi(lind),
+!     &        quasiset_xixi(lind),
+!     &        quasiset_trace(lind)=",
+!     &        k,
+!     &        z(k),
+!     &        quasiset_tt_ll(i,j,k),
+!     &        quasiset_tchi_ll(i,j,k),
+!     &        quasiset_txi_ll(i,j,k),
+!     &        quasiset_chichi_ll(i,j,k),
+!     &        quasiset_chixi_ll(i,j,k),
+!     &        quasiset_xixi_ll(i,j,k),
+!     &        k-1*ind_distance_fixedpts,
+!     &        z(k-1*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-1*ind_distance_fixedpts),
+!     &        k-2*ind_distance_fixedpts,
+!     &        z(k-2*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-2*ind_distance_fixedpts),
+!     &        k-3*ind_distance_fixedpts,
+!     &        z(k-3*ind_distance_fixedpts),
+!     &        quasiset_tt_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_tchi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_txi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_chichi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_chixi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        quasiset_xixi_ll(i,j,k-3*ind_distance_fixedpts),
+!     &        lind,
+!     &        xex,
+!     &        yex,
+!     &        zex,
+!     &        quasiset_tt(lind),
+!     &        quasiset_tchi(lind),
+!     &        quasiset_txi(lind),
+!     &        quasiset_chichi(lind),
+!     &        quasiset_chixi(lind),
+!     &        quasiset_xixi(lind),
+!     &        quasiset_trace(lind)
+!             else
+!               write(*,*) "EXTRAP_ORDER 3
+!     &         k,
+!     &         z(k),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         k+1*ind_distance_fixedpts,
+!     &         z(k+1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         k+2*ind_distance_fixedpts,
+!     &         z(k+2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         k+3*ind_distance_fixedpts,
+!     &         z(k+3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)=",
+!     &         k,
+!     &         z(k),
+!     &         quasiset_tt_ll(i,j,k),
+!     &         quasiset_tchi_ll(i,j,k),
+!     &         quasiset_txi_ll(i,j,k),
+!     &         quasiset_chichi_ll(i,j,k),
+!     &         quasiset_chixi_ll(i,j,k),
+!     &         quasiset_xixi_ll(i,j,k),
+!     &         k+1*ind_distance_fixedpts,
+!     &         z(k+1*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+1*ind_distance_fixedpts),
+!     &         k+2*ind_distance_fixedpts,
+!     &         z(k+2*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+2*ind_distance_fixedpts),
+!     &         k+3*ind_distance_fixedpts,
+!     &         z(k+3*ind_distance_fixedpts),
+!     &         quasiset_tt_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_tchi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_txi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_chichi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_chixi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         quasiset_xixi_ll(i,j,k+3*ind_distance_fixedpts),
+!     &         lind,
+!     &         xex,
+!     &         yex,
+!     &         zex,
+!     &         quasiset_tt(lind),
+!     &         quasiset_tchi(lind),
+!     &         quasiset_txi(lind),
+!     &         quasiset_chichi(lind),
+!     &         quasiset_chixi(lind),
+!     &         quasiset_xixi(lind),
+!     &         quasiset_trace(lind)
+   !
+!             end if
+!            end if
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             end if !closes condition on bdy_extrap_order.eq.3
 

@@ -207,6 +207,7 @@ int uniSize;
 real *leadordcoeff_phi1;
 real *quasiset_tt_ll,*quasiset_tchi_ll,*quasiset_txi_ll;
 real *quasiset_chichi_ll,*quasiset_chixi_ll,*quasiset_xixi_ll;
+real *quasiset_tracell;
 real *quasiset_massdensityll;
 
 real *quasiset_tt_freepts_extraporder1;
@@ -376,6 +377,7 @@ int leadordcoeff_phi1_gfn;
 int quasiset_tt_ll_gfn;
 int quasiset_tchi_ll_gfn,quasiset_txi_ll_gfn;
 int quasiset_chichi_ll_gfn,quasiset_chixi_ll_gfn,quasiset_xixi_ll_gfn;
+int quasiset_tracell_gfn;
 int quasiset_massdensityll_gfn;
 int relkretschcentregrid_gfn;
 
@@ -918,6 +920,7 @@ void set_gfns(void)
     if ((quasiset_chichi_ll_gfn    = PAMR_get_gfn("quasiset_chichi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_chixi_ll_gfn    = PAMR_get_gfn("quasiset_chixi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_xixi_ll_gfn    = PAMR_get_gfn("quasiset_xixi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((quasiset_tracell_gfn    = PAMR_get_gfn("quasiset_tracell",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_massdensityll_gfn    = PAMR_get_gfn("quasiset_massdensityll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((relkretschcentregrid_gfn    = PAMR_get_gfn("relkretschcentregrid",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -1151,6 +1154,7 @@ void ldptr(void)
     quasiset_chichi_ll  = gfs[quasiset_chichi_ll_gfn-1];
     quasiset_chixi_ll  = gfs[quasiset_chixi_ll_gfn-1];
     quasiset_xixi_ll  = gfs[quasiset_xixi_ll_gfn-1];
+    quasiset_tracell  = gfs[quasiset_tracell_gfn-1];
     quasiset_massdensityll  = gfs[quasiset_massdensityll_gfn-1];
     relkretschcentregrid = gfs[relkretschcentregrid_gfn-1];
     hb_t_res  = gfs[hb_t_res_gfn-1];
@@ -2179,6 +2183,7 @@ void AdS4D_pre_io_calc(void)
                         quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                         quasiset_chichi_ll,quasiset_chixi_ll,
                         quasiset_xixi_ll,
+                        quasiset_tracell,
                         quasiset_massdensityll,
                         gb_tt_np1,gb_tt_n,gb_tt_nm1,
                         gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -2215,7 +2220,7 @@ void AdS4D_pre_io_calc(void)
             	for (i=0;i<num_fixed_coords;i++)
             	{
                 	fixed_coords[i]=x[i*ind_distance_fixedpts]; 
-                	//         printf("i=%i,fixed_coords[i]=%lf\n",i,fixed_coords[i]);
+//                	if (my_rank==0) {printf("i=%i,fixed_coords[i]=%lf\n",i,fixed_coords[i]);}
             	}           
             	if (output_bdy_extraporder1)
             	{
@@ -2987,6 +2992,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder1,yextrap_freepts_extraporder1,zextrap_freepts_extraporder1,
                                 chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,
@@ -3204,6 +3210,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder2,yextrap_freepts_extraporder2,zextrap_freepts_extraporder2,
                                 chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,
@@ -3428,6 +3435,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
                                 chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
@@ -3651,6 +3659,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder1,yextrap_fixedpts_extraporder1,zextrap_fixedpts_extraporder1,
                                 chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,
@@ -3871,6 +3880,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder2,yextrap_fixedpts_extraporder2,zextrap_fixedpts_extraporder2,
                                 chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,
@@ -4090,6 +4100,7 @@ void AdS4D_pre_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
                                 chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
@@ -6778,6 +6789,7 @@ void AdS4D_post_tstep(int L)
                         	quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                         	quasiset_chichi_ll,quasiset_chixi_ll,
                         	quasiset_xixi_ll,
+                        	quasiset_tracell,
                         	quasiset_massdensityll,
                         	gb_tt_n,gb_tt_nm1,gb_tt_np1,
                         	gb_tx_n,gb_tx_nm1,gb_tx_np1,
@@ -7046,6 +7058,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder1,yextrap_freepts_extraporder1,zextrap_freepts_extraporder1,
                                 chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,
@@ -7262,6 +7275,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder2,yextrap_freepts_extraporder2,zextrap_freepts_extraporder2,
                                 chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,
@@ -7486,6 +7500,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_freepts_extraporder3,yextrap_freepts_extraporder3,zextrap_freepts_extraporder3,
                                 chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,
@@ -7709,6 +7724,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder1,yextrap_fixedpts_extraporder1,zextrap_fixedpts_extraporder1,
                                 chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,
@@ -7928,6 +7944,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder2,yextrap_fixedpts_extraporder2,zextrap_fixedpts_extraporder2,
                                 chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,
@@ -8147,6 +8164,7 @@ void AdS4D_post_tstep(int L)
                                 quasiset_tt_ll,quasiset_tchi_ll,quasiset_txi_ll,
                                 quasiset_chichi_ll,quasiset_chixi_ll,
                                 quasiset_xixi_ll,
+                                quasiset_tracell,
                                 quasiset_massdensityll,
                                 xextrap_fixedpts_extraporder3,yextrap_fixedpts_extraporder3,zextrap_fixedpts_extraporder3,
                                 chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,
