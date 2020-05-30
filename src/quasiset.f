@@ -7,7 +7,7 @@ c----------------------------------------------------------------------
         subroutine nexttobdypoints_freepts(
      &                  chrbdy,
      &                  numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 !----------------------------------------------------------------------
@@ -32,7 +32,7 @@ c----------------------------------------------------------------------
         real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
-        integer bdy_extrap_order
+        integer bdy_extrappt_order
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -129,7 +129,7 @@ c----------------------------------------------------------------------
           if (chrbdy(i,j,k).ne.ex) then
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-           if (bdy_extrap_order.eq.1) then
+           if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then 
               if ((i-1).lt.is) then !it ensures that the index i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -215,10 +215,10 @@ c----------------------------------------------------------------------
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
            
 
-           end if !closes condition on bdy_extrap_order.eq.1
+           end if !closes condition on bdy_extrappt_order.eq.1
 
 
-           if (bdy_extrap_order.eq.2) then
+           if (bdy_extrappt_order.eq.2) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then
               if ((i-2).lt.is) then !it ensures that the index i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -328,11 +328,11 @@ c----------------------------------------------------------------------
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
 
 
-           end if !closes condition on bdy_extrap_order.eq.2
+           end if !closes condition on bdy_extrappt_order.eq.2
 
 
 
-          if (bdy_extrap_order.eq.3) then
+          if (bdy_extrappt_order.eq.3) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then
               if ((i-3).lt.is) then !it ensures that the index i-3,i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -466,7 +466,7 @@ c----------------------------------------------------------------------
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
 
 
-           end if !closes condition on bdy_extrap_order.eq.3
+           end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -496,13 +496,13 @@ c-------------------------------------------------------------------------------
 c----------------------------------------------------------------------
 c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
 c
-c routine for setting the mask chrbdy to a value different from ex at grid points that are at large rho=sqrt(x**2+y**2+z**2) and next to excised points and have coordinates in a range of fixed values for all resolutions (in order to be able to show convergence of boundary extrapolated quantities), so we're identifying the last not excised grid points near the boundary. We will use them to extrapolate the value of the quasi-local boundary stress-energy tensor at the boundary
+c routine for setting the mask chrbdy to a value different from ex at grid points that are at large rho=sqrt(x**2+y**2+z**2), are not excised points, have coordinates in a range of fixed values for all resolutions (in order to be able to show convergence of boundary extrapolated quantities), and such that their neighbours used for extrapolation are also not excised.
 c----------------------------------------------------------------------
 
         subroutine nexttobdypoints_fixedpts(
      &                  chrbdy,
      &                  numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  ind_distance_fixedpts,
      &                  currentres_ratio_Lhighres_Llowres,
      &                  num_fixed_coords,
@@ -532,7 +532,7 @@ c----------------------------------------------------------------------
         real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
-        integer bdy_extrap_order
+        integer bdy_extrappt_order
 
         real*8 currentres_ratio_Lhighres_Llowres
         integer num_fixed_coords
@@ -673,7 +673,7 @@ c----------------------------------------------------------------------
           if (chrbdy(i,j,k).ne.ex) then
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
-           if (bdy_extrap_order.eq.1) then
+           if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then
               if ((i-ind_distance_fixedpts).lt.is) then !it ensures that the index i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -757,11 +757,11 @@ c----------------------------------------------------------------------
 
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
 
-           end if !closes condition on bdy_extrap_order.eq.1
+           end if !closes condition on bdy_extrappt_order.eq.1
 
            
 
-           if (bdy_extrap_order.eq.2) then
+           if (bdy_extrappt_order.eq.2) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then
               if ((i-2*ind_distance_fixedpts).lt.is) then !it ensures that the index i-2*ind_distance_fixedpts,i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -869,11 +869,11 @@ c----------------------------------------------------------------------
 
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
 
-           end if !closes condition on bdy_extrap_order.eq.2
+           end if !closes condition on bdy_extrappt_order.eq.2
 
 
 
-          if (bdy_extrap_order.eq.3) then
+          if (bdy_extrappt_order.eq.3) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then
               if ((i-3*ind_distance_fixedpts).lt.is) then !it ensures that the index i-3,i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
@@ -1007,7 +1007,7 @@ c----------------------------------------------------------------------
             end if !closes condition on (abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))
 
 
-           end if !closes condition on bdy_extrap_order.eq.3
+           end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -1037,11 +1037,12 @@ c-------------------------------------------------------------------------------
 c------------------------------------------------------------------------------------------------------
 c in Cartesian coordinates t,x,y,z for x/y/z in [-1,1]
 c
-c routine for setting the mask chrbdy to a value different from ex at grid points that are at large rho=sqrt(x**2+y**2+z**2) and next to excised points, so we're identifying the last not excised grid points near the boundary. We will use them to extrapolate the value of the quasi-local boundary stress-energy tensor at the boundary
+c routine for computing the Cartesian coordinates of each boundary point where we want to extrapolate the value of functions AND the coordinates the outermost point used for extrapolation at each boundary point
 c-------------------------------------------------------------------------------------------------------------------------
 
-        subroutine xyzextrap(
-     &                  xextrap,yextrap,zextrap,
+        subroutine xyz_extrap_outermost(
+     &                  x_extrappt,y_extrappt,z_extrappt,
+     &                  x_outermostpt,y_outermostpt,z_outermostpt,
      &                  chrbdy,
      &                  numbdypoints,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,ghost_width)
@@ -1069,9 +1070,12 @@ c-------------------------------------------------------------------------------
         real*8 xp1,yp1,zp1
         real*8 maxxyzp1
         integer numbdypoints
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
+        real*8 x_outermostpt(numbdypoints)
+        real*8 y_outermostpt(numbdypoints)
+        real*8 z_outermostpt(numbdypoints)
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -1109,41 +1113,46 @@ c-------------------------------------------------------------------------------
 
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
+
+              x_outermostpt=xp1
+              y_outermostpt=yp1
+              z_outermostpt=zp1
+
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                if (xp1.gt.0) then
-                  xextrap(lind)=sqrt(1-yp1**2-zp1**2)
-                  yextrap(lind)=yp1
-                  zextrap(lind)=zp1
+                  x_extrappt(lind)=sqrt(1-yp1**2-zp1**2)
+                  y_extrappt(lind)=yp1
+                  z_extrappt(lind)=zp1
               else
-                  xextrap(lind)=-sqrt(1-yp1**2-zp1**2)
-                  yextrap(lind)=yp1
-                  zextrap(lind)=zp1
+                  x_extrappt(lind)=-sqrt(1-yp1**2-zp1**2)
+                  y_extrappt(lind)=yp1
+                  z_extrappt(lind)=zp1
               end if
              else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
               if (yp1.gt.0) then
-                  yextrap(lind)=sqrt(1-xp1**2-zp1**2)
-                  xextrap(lind)=xp1
-                  zextrap(lind)=zp1
+                  y_extrappt(lind)=sqrt(1-xp1**2-zp1**2)
+                  x_extrappt(lind)=xp1
+                  z_extrappt(lind)=zp1
               else
-                  yextrap(lind)=-sqrt(1-xp1**2-zp1**2)
-                  xextrap(lind)=xp1
-                  zextrap(lind)=zp1
+                  y_extrappt(lind)=-sqrt(1-xp1**2-zp1**2)
+                  x_extrappt(lind)=xp1
+                  z_extrappt(lind)=zp1
               end if
              else
                  if (zp1.gt.0) then
-                  zextrap(lind)=sqrt(1-yp1**2-xp1**2)
-                  yextrap(lind)=yp1
-                  xextrap(lind)=xp1
+                  z_extrappt(lind)=sqrt(1-yp1**2-xp1**2)
+                  y_extrappt(lind)=yp1
+                  x_extrappt(lind)=xp1
               else
-                  zextrap(lind)=-sqrt(1-yp1**2-xp1**2)
-                  yextrap(lind)=yp1
-                  xextrap(lind)=xp1
+                  z_extrappt(lind)=-sqrt(1-yp1**2-xp1**2)
+                  y_extrappt(lind)=yp1
+                  x_extrappt(lind)=xp1
                end if
               end if
 
-!               xextrap(lind)=xp1   !TEST
-!               yextrap(lind)=yp1   !TEST
-!               zextrap(lind)=zp1   !TEST
+!               x_extrappt(lind)=xp1   !TEST
+!               y_extrappt(lind)=yp1   !TEST
+!               z_extrappt(lind)=zp1   !TEST
 
             end if
           end do
@@ -1283,9 +1292,9 @@ c----------------------------------------------------------------------
 
         subroutine extrap_bdyphi_freepts(bdyphi,
      &                  leadordcoeff_phi1,
-     &                  xextrap,yextrap,zextrap,
+     &                  x_extrappt,y_extrappt,z_extrappt,
      &                  chrbdy,numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 !----------------------------------------------------------------------
@@ -1295,7 +1304,7 @@ c----------------------------------------------------------------------
         integer Nx,Ny,Nz
         integer phys_bdy(6),ghost_width(6)
         integer numbdypoints
-        integer bdy_extrap_order
+        integer bdy_extrappt_order
         real*8 chrbdy(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 L
@@ -1322,9 +1331,9 @@ c----------------------------------------------------------------------
         real*8 leadordcoeff_phi1_p4
         real*8 bdyphi(numbdypoints)
 
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 xp1,yp1,zp1
         real*8 xp2,yp2,zp2
@@ -1374,9 +1383,9 @@ c----------------------------------------------------------------------
            if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
 
-                   xex=xextrap(lind)
-                   yex=yextrap(lind)
-                   zex=zextrap(lind)
+                   xex=x_extrappt(lind)
+                   yex=y_extrappt(lind)
+                   zex=z_extrappt(lind)
                    rhoex=sqrt(xex**2+yex**2+zex**2)
                    chiex=(1/PI)*acos(xex/rhoex)
                 if (zex.lt.0) then
@@ -1385,7 +1394,7 @@ c----------------------------------------------------------------------
                    xiex=(1/(2*PI))*atan2(zex,yex)
                 end if
 
-             if (bdy_extrap_order.eq.1) then
+             if (bdy_extrappt_order.eq.1) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-1)
@@ -1426,11 +1435,11 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.1
+            end if !closes condition on bdy_extrappt_order.eq.1
 
 
 
-             if (bdy_extrap_order.eq.2) then
+             if (bdy_extrappt_order.eq.2) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-1)
@@ -1492,12 +1501,12 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.2
+            end if !closes condition on bdy_extrappt_order.eq.2
 
 
 
 
-             if (bdy_extrap_order.eq.3) then
+             if (bdy_extrappt_order.eq.3) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-1)
@@ -1574,7 +1583,7 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.3
+            end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -1603,9 +1612,9 @@ c----------------------------------------------------------------------
 
         subroutine extrap_bdyphi_fixedpts(bdyphi,
      &                  leadordcoeff_phi1,
-     &                  xextrap,yextrap,zextrap,
+     &                  x_extrappt,y_extrappt,z_extrappt,
      &                  chrbdy,numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  ind_distance_fixedpts,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
@@ -1616,7 +1625,7 @@ c----------------------------------------------------------------------
         integer Nx,Ny,Nz
         integer phys_bdy(6),ghost_width(6)
         integer numbdypoints
-        integer bdy_extrap_order
+        integer bdy_extrappt_order
         real*8 chrbdy(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 L
@@ -1643,9 +1652,9 @@ c----------------------------------------------------------------------
         real*8 leadordcoeff_phi1_p4
         real*8 bdyphi(numbdypoints)
 
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 xp1,yp1,zp1
         real*8 xp2,yp2,zp2
@@ -1701,9 +1710,9 @@ c----------------------------------------------------------------------
            if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
 
-                   xex=xextrap(lind)
-                   yex=yextrap(lind)
-                   zex=zextrap(lind)
+                   xex=x_extrappt(lind)
+                   yex=y_extrappt(lind)
+                   zex=z_extrappt(lind)
                    rhoex=sqrt(xex**2+yex**2+zex**2)
                    chiex=(1/PI)*acos(xex/rhoex)
                 if (zex.lt.0) then
@@ -1712,7 +1721,7 @@ c----------------------------------------------------------------------
                    xiex=(1/(2*PI))*atan2(zex,yex)
                 end if
 
-             if (bdy_extrap_order.eq.1) then
+             if (bdy_extrappt_order.eq.1) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-ind_distance_fixedpts)
@@ -1759,9 +1768,9 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.1
+            end if !closes condition on bdy_extrappt_order.eq.1
 
-             if (bdy_extrap_order.eq.2) then
+             if (bdy_extrappt_order.eq.2) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-ind_distance_fixedpts)
@@ -1835,11 +1844,11 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.2
+            end if !closes condition on bdy_extrappt_order.eq.2
 
 
 
-            if (bdy_extrap_order.eq.3) then
+            if (bdy_extrappt_order.eq.3) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
                   xp2=x(i-1*ind_distance_fixedpts)
@@ -1934,7 +1943,7 @@ c----------------------------------------------------------------------
 !              write(*,*) "lind-1,xp1,yp1,zp1",lind-1,xp1,yp1,zp1
 !             write(*,*) "bdyphi(lind)=",bdyphi(lind)
 
-            end if !closes condition on bdy_extrap_order.eq.3
+            end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -2621,9 +2630,9 @@ c-------------------------------------------------------------------------------
      &                  quasiset_xixi_ll,
      &                  quasiset_tracell,
      &                  quasiset_massdensityll,
-     &                  xextrap,yextrap,zextrap,
+     &                  x_extrappt,y_extrappt,z_extrappt,
      &                  chrbdy,numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 !----------------------------------------------------------------------
@@ -2633,7 +2642,7 @@ c-------------------------------------------------------------------------------
         integer Nx,Ny,Nz
         integer phys_bdy(6),ghost_width(6)
         integer numbdypoints
-        integer bdy_extrap_order
+        integer bdy_extrappt_order
         real*8 chrbdy(Nx,Ny,Nz)
         real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
         real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
@@ -2696,9 +2705,9 @@ c-------------------------------------------------------------------------------
         real*8 quasiset_trace(numbdypoints)
         real*8 quasiset_massdensity(numbdypoints)
 
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 rhoextrap
         real*8 chiextrap(numbdypoints)
@@ -2782,9 +2791,9 @@ c-------------------------------------------------------------------------------
 
               lind=lind+1
 
-                  xex=xextrap(lind)
-                  yex=yextrap(lind)
-                  zex=zextrap(lind)
+                  xex=x_extrappt(lind)
+                  yex=y_extrappt(lind)
+                  zex=z_extrappt(lind)
                   rhoex=sqrt(xex**2+yex**2+zex**2)
                   chiex=(1/PI)*acos(xex/rhoex)
                   if (zex.lt.0) then
@@ -2801,7 +2810,7 @@ c-------------------------------------------------------------------------------
                   gamma0sphbdy_uu_chixi=0
                   gamma0sphbdy_uu_xixi=1/((sin(PI*chiex))**2)/4/PI**2
 
-             if (bdy_extrap_order.eq.1) then
+             if (bdy_extrappt_order.eq.1) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
@@ -2995,12 +3004,12 @@ c-------------------------------------------------------------------------------
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if !closes condition on bdy_extrap_order.eq.1
+            end if !closes condition on bdy_extrappt_order.eq.1
 
 
 
 
-             if (bdy_extrap_order.eq.2) then
+             if (bdy_extrappt_order.eq.2) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
@@ -3334,12 +3343,12 @@ c-------------------------------------------------------------------------------
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if !closes condition on bdy_extrap_order.eq.2
+            end if !closes condition on bdy_extrappt_order.eq.2
 
 
 
 
-             if (bdy_extrap_order.eq.3) then
+             if (bdy_extrappt_order.eq.3) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
@@ -3769,7 +3778,7 @@ c-------------------------------------------------------------------------------
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if !closes condition on bdy_extrap_order.eq.3
+            end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -3780,8 +3789,8 @@ c-------------------------------------------------------------------------------
         end do
 
 !        do lind=1,numbdypoints
-!         write(*,*) "lind,xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &              ,lind,xextrap(lind),yextrap(lind),zextrap(lind)
+!         write(*,*) "lind,x_extrappt(lind),y_extrappt(lind),z_extrappt(lind)="
+!     &              ,lind,x_extrappt(lind),y_extrappt(lind),z_extrappt(lind)
 !         write(*,*) "quasiset_trace(lind)=",quasiset_trace(lind)
 !        end do
 
@@ -3809,9 +3818,9 @@ c-------------------------------------------------------------------------------
      &                  quasiset_xixi_ll,
      &                  quasiset_tracell,
      &                  quasiset_massdensityll,
-     &                  xextrap,yextrap,zextrap,
+     &                  x_extrappt,y_extrappt,z_extrappt,
      &                  chrbdy,numbdypoints,
-     &                  bdy_extrap_order,
+     &                  bdy_extrappt_order,
      &                  ind_distance_fixedpts,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
@@ -3822,7 +3831,7 @@ c-------------------------------------------------------------------------------
        integer Nx,Ny,Nz
        integer phys_bdy(6),ghost_width(6)
        integer numbdypoints
-       integer bdy_extrap_order
+       integer bdy_extrappt_order
        real*8 chrbdy(Nx,Ny,Nz)
        real*8 gb_tt_np1(Nx,Ny,Nz),gb_tt_n(Nx,Ny,Nz),gb_tt_nm1(Nx,Ny,Nz)
        real*8 gb_tx_np1(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
@@ -3884,9 +3893,9 @@ c-------------------------------------------------------------------------------
        real*8 quasiset_trace(numbdypoints)
        real*8 quasiset_massdensity(numbdypoints)
 
-       real*8 xextrap(numbdypoints)
-       real*8 yextrap(numbdypoints)
-       real*8 zextrap(numbdypoints)
+       real*8 x_extrappt(numbdypoints)
+       real*8 y_extrappt(numbdypoints)
+       real*8 z_extrappt(numbdypoints)
 
        real*8 rhoextrap
        real*8 chiextrap(numbdypoints)
@@ -3975,9 +3984,9 @@ c-------------------------------------------------------------------------------
 
              lind=lind+1
 
-                 xex=xextrap(lind)
-                 yex=yextrap(lind)
-                 zex=zextrap(lind)
+                 xex=x_extrappt(lind)
+                 yex=y_extrappt(lind)
+                 zex=z_extrappt(lind)
                  rhoex=sqrt(xex**2+yex**2+zex**2)
                  chiex=(1/PI)*acos(xex/rhoex)
                  if (zex.lt.0) then
@@ -3994,7 +4003,7 @@ c-------------------------------------------------------------------------------
                  gamma0sphbdy_uu_chixi=0
                  gamma0sphbdy_uu_xixi=1/((sin(PI*chiex))**2)/4/PI**2
 
-           if (bdy_extrap_order.eq.1) then
+           if (bdy_extrappt_order.eq.1) then
              if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                if (xp1.gt.0) then
 
@@ -4230,10 +4239,10 @@ c-------------------------------------------------------------------------------
 
 !              quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if !closes condition on bdy_extrap_order.eq.1
+            end if !closes condition on bdy_extrappt_order.eq.1
 
 
-             if (bdy_extrap_order.eq.2) then
+             if (bdy_extrappt_order.eq.2) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
@@ -4639,10 +4648,10 @@ c-------------------------------------------------------------------------------
 
 !               quasiset_massdensity(lind)=sin(PI*chiex)*cos(2*PI*xiex)  !TEST
 
-            end if !closes condition on bdy_extrap_order.eq.2
+            end if !closes condition on bdy_extrappt_order.eq.2
 
 
-             if (bdy_extrap_order.eq.3) then
+             if (bdy_extrappt_order.eq.3) then
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                 if (xp1.gt.0) then
 
@@ -5750,7 +5759,7 @@ c-------------------------------------------------------------------------------
 
 
 
-            end if !closes condition on bdy_extrap_order.eq.3
+            end if !closes condition on bdy_extrappt_order.eq.3
 
 
 
@@ -5762,8 +5771,8 @@ c-------------------------------------------------------------------------------
 
 
 !       do lind=1,numbdypoints
-!        write(*,*) "lind,xextrap(lind),yextrap(lind),zextrap(lind)="
-!     &             ,lind,xextrap(lind),yextrap(lind),zextrap(lind)
+!        write(*,*) "lind,x_extrappt(lind),y_extrappt(lind),z_extrappt(lind)="
+!     &             ,lind,x_extrappt(lind),y_extrappt(lind),z_extrappt(lind)
 !        write(*,*) "quasiset_trace(lind)=",quasiset_trace(lind)
 !       end do
 
@@ -5900,7 +5909,7 @@ c The following routine performs the double integral on the S^2 boundary. We app
 c------------------------------------------------------------------------------------------------------------------------------
 
         subroutine doubleintegralonsphere(integral,density,
-     &                  xextrap,yextrap,zextrap,numbdypoints,
+     &                  x_extrappt,y_extrappt,z_extrappt,numbdypoints,
      &                  rhobdy,chibdy,xibdy,
      &                  bdy_Nchi,bdy_Nxi)
 
@@ -5909,9 +5918,9 @@ c-------------------------------------------------------------------------------
         implicit none
         integer numbdypoints
         real*8 density(numbdypoints)
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 integral
 
@@ -5972,55 +5981,56 @@ c-------------------------------------------------------------------------------
            y_chipp1xipp1=rhobdy*sin(PI*chibdy(i+1))*cos(2*PI*xibdy(j+1))
            z_chipp1xipp1=rhobdy*sin(PI*chibdy(i+1))*sin(2*PI*xibdy(j+1))
 
-             dist_extr_bdypp_min=sqrt((xextrap(1)-x_chipxip)**2
-     &                              +(yextrap(1)-y_chipxip)**2
-     &                              +(zextrap(1)-z_chipxip)**2)
+             dist_extr_bdypp_min=sqrt((x_extrappt(1)-x_chipxip)**2
+     &                              +(y_extrappt(1)-y_chipxip)**2
+     &                              +(z_extrappt(1)-z_chipxip)**2)
              lind_chipxip=1
 
-             dist_extr_bdyppp1_min=sqrt((xextrap(1)-x_chipxipp1)**2
-     &                              +(yextrap(1)-y_chipxipp1)**2
-     &                              +(zextrap(1)-z_chipxipp1)**2)
+             dist_extr_bdyppp1_min=sqrt((x_extrappt(1)-x_chipxipp1)**2
+     &                              +(y_extrappt(1)-y_chipxipp1)**2
+     &                              +(z_extrappt(1)-z_chipxipp1)**2)
              lind_chipxipp1=1
 
-             dist_extr_bdypp1p_min=sqrt((xextrap(1)-x_chipp1xip)**2
-     &                              +(yextrap(1)-y_chipp1xip)**2
-     &                              +(zextrap(1)-z_chipp1xip)**2)
+             dist_extr_bdypp1p_min=sqrt((x_extrappt(1)-x_chipp1xip)**2
+     &                              +(y_extrappt(1)-y_chipp1xip)**2
+     &                              +(z_extrappt(1)-z_chipp1xip)**2)
              lind_chipp1xip=1
 
-             dist_extr_bdypp1pp1_min=sqrt((xextrap(1)-x_chipp1xipp1)**2
-     &                              +(yextrap(1)-y_chipp1xipp1)**2
-     &                              +(zextrap(1)-z_chipp1xipp1)**2)
+             dist_extr_bdypp1pp1_min=sqrt((x_extrappt(1)-x_chipp1xipp1)**2
+     &                              +(y_extrappt(1)-y_chipp1xipp1)**2
+     &                              +(z_extrappt(1)-z_chipp1xipp1)**2)
              lind_chipp1xipp1=1
 
            do lind=2,numbdypoints
 
-              dist_extr_bdypp_a=sqrt((xextrap(lind)-x_chipxip)**2
-     &                              +(yextrap(lind)-y_chipxip)**2
-     &                              +(zextrap(lind)-z_chipxip)**2)
+              dist_extr_bdypp_a=sqrt((x_extrappt(lind)-x_chipxip)**2
+     &                              +(y_extrappt(lind)-y_chipxip)**2
+     &                              +(z_extrappt(lind)-z_chipxip)**2)
               if (dist_extr_bdypp_a.lt.dist_extr_bdypp_min) then
                   dist_extr_bdypp_min=dist_extr_bdypp_a
                   lind_chipxip=lind
               end if
 
-              dist_extr_bdyppp1_a=sqrt((xextrap(lind)-x_chipxipp1)**2
-     &                              +(yextrap(lind)-y_chipxipp1)**2
-     &                              +(zextrap(lind)-z_chipxipp1)**2)
+              dist_extr_bdyppp1_a=sqrt((x_extrappt(lind)-x_chipxipp1)**2
+     &                              +(y_extrappt(lind)-y_chipxipp1)**2
+     &                              +(z_extrappt(lind)-z_chipxipp1)**2)
               if (dist_extr_bdyppp1_a.lt.dist_extr_bdyppp1_min) then
                   dist_extr_bdyppp1_min=dist_extr_bdyppp1_a
                   lind_chipxipp1=lind
               end if
 
-              dist_extr_bdypp1p_a=sqrt((xextrap(lind)-x_chipp1xip)**2
-     &                              +(yextrap(lind)-y_chipp1xip)**2
-     &                              +(zextrap(lind)-z_chipp1xip)**2)
+              dist_extr_bdypp1p_a=sqrt((x_extrappt(lind)-x_chipp1xip)**2
+     &                              +(y_extrappt(lind)-y_chipp1xip)**2
+     &                              +(z_extrappt(lind)-z_chipp1xip)**2)
               if (dist_extr_bdypp1p_a.lt.dist_extr_bdypp1p_min) then
                   dist_extr_bdypp1p_min=dist_extr_bdypp1p_a
                    lind_chipp1xip=lind
               end if
 
-             dist_extr_bdypp1pp1_a=sqrt((xextrap(lind)-x_chipp1xipp1)**2
-     &                              +(yextrap(lind)-y_chipp1xipp1)**2
-     &                              +(zextrap(lind)-z_chipp1xipp1)**2)
+             dist_extr_bdypp1pp1_a=
+     &        sqrt((x_extrappt(lind)-x_chipp1xipp1)**2
+     &         +(y_extrappt(lind)-y_chipp1xipp1)**2
+     &         +(z_extrappt(lind)-z_chipp1xipp1)**2)
               if (dist_extr_bdypp1pp1_a.lt.dist_extr_bdypp1pp1_min) then
                   dist_extr_bdypp1pp1_min=dist_extr_bdypp1pp1_a
                    lind_chipp1xipp1=lind
@@ -6045,16 +6055,16 @@ c-------------------------------------------------------------------------------
 
         subroutine chixiextrap(
      &                         rhoextrap,chiextrap,xiextrap,
-     &                         xextrap,yextrap,zextrap,
+     &                         x_extrappt,y_extrappt,z_extrappt,
      &                         numbdypoints)
 
 !----------------------------------------------------------------------
 
         integer numbdypoints
 
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 rhoextrap
         real*8 chiextrap(numbdypoints)
@@ -6069,11 +6079,12 @@ c-------------------------------------------------------------------------------
 
         rhoextrap=1.0d0
         do e=1,numbdypoints
-         chiextrap(e)=(1/PI)*acos(xextrap(e)/rhoextrap)
-         if (zextrap(e).lt.0) then
-             xiextrap(e)=(1/(2*PI))*(atan2(zextrap(e),yextrap(e))+2*PI)
+         chiextrap(e)=(1/PI)*acos(x_extrappt(e)/rhoextrap)
+         if (z_extrappt(e).lt.0) then
+             xiextrap(e)=(1/(2*PI))
+     &        *(atan2(z_extrappt(e),y_extrappt(e))+2*PI)
          else
-             xiextrap(e)=(1/(2*PI))*atan2(zextrap(e),yextrap(e))
+             xiextrap(e)=(1/(2*PI))*atan2(z_extrappt(e),y_extrappt(e))
          end if
         end do
 
@@ -6095,9 +6106,9 @@ c-------------------------------------------------------------------------------
 
         implicit none
         integer numbdypoints
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 chiextrap(numbdypoints)
         real*8 xiextrap(numbdypoints)
@@ -6145,15 +6156,15 @@ c-------------------------------------------------------------------------------
 
         subroutine chibdy_xibdy(
      &                  chibdy,xibdy,
-     &                  xextrap,yextrap,zextrap,numbdypoints,
+     &                  x_extrappt,y_extrappt,z_extrappt,numbdypoints,
      &                  chiextrap,xiextrap,
      &                  bdy_Nchi,bdy_Nxi)
 
         implicit none
         integer numbdypoints
-        real*8 xextrap(numbdypoints)
-        real*8 yextrap(numbdypoints)
-        real*8 zextrap(numbdypoints)
+        real*8 x_extrappt(numbdypoints)
+        real*8 y_extrappt(numbdypoints)
+        real*8 z_extrappt(numbdypoints)
 
         real*8 chiextrap(numbdypoints)
         real*8 xiextrap(numbdypoints)

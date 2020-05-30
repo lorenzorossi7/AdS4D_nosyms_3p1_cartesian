@@ -517,15 +517,17 @@ void nexttobdypoints_freepts_(real *chrbdy,
 void nexttobdypoints_fixedpts_(real *chrbdy,
                       int *numbdypoints, int *extrap_order, int *ind_distance_fixedpts, real *currentres_ratio_Lhighres_Llowres, int *num_fixed_coords, real *fixed_coords, real *x, real *y, real *z, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *phys_bdy, int *ghost_width);
 
-void xyzextrap_(real *xextrap, real *yextrap, real *zextrap, real *chrbdy, int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *ghost_width);
+void xyz_extrap_outermost_(real *x_extrappt, real *y_extrappt, real *z_extrappt, 
+                            real *x_outermostpt, real *y_outermostpt, real *z_outermostpt,
+                            real *chrbdy, int *numbdypoints, real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *ghost_width);
 
-void chixiextrap_(real *rhoextrap0,real *chiextrap0,real *xiextrap0,real *xextrap0,real *yextrap0,real *zextrap0,int *basenumbdypoints);
+void chixiextrap_(real *rhoextrap0,real *chiextrap0,real *xiextrap0,real *x_extrappt0,real *y_extrappt0,real *z_extrappt0,int *basenumbdypoints);
 
 void bdyn_(int *basebdy_Nchi, int *basebdy_Nxi, int *basenumbdypoints, real *chiextrap0, real *xiextrap0);
 
-void chibdy_xibdy_(real *chibdy0,real *xibdy0,real *xextrap0, real *yextrap0, real *zextrap0, int *basenumbdypoints, real *chiextrap0, real *xiextrap0, int *basebdy_Nchi, int *basebdy_Nxi);
+void chibdy_xibdy_(real *chibdy0,real *xibdy0,real *x_extrappt0, real *y_extrappt0, real *z_extrappt0, int *basenumbdypoints, real *chiextrap0, real *xiextrap0, int *basebdy_Nchi, int *basebdy_Nxi);
 
-void doubleintegralonsphere_(real *AdS_mass0, real *quasiset_massdensity0, real *xextrap0, real *yextrap0, real *zextrap0, int *basenumbdypoints, real *rhobdy0, real *chibdy0, real *xibdy0, int *basebdy_Nchi, int *basebdy_Nxi);
+void doubleintegralonsphere_(real *AdS_mass0, real *quasiset_massdensity0, real *x_extrappt0, real *y_extrappt0, real *z_extrappt0, int *basenumbdypoints, real *rhobdy0, real *chibdy0, real *xibdy0, int *basebdy_Nchi, int *basebdy_Nxi);
 
 void calc_leadordcoeff_phi1_(real *leadordcoeff_phi1,
                             real *phi1_np1,real *phi1_n,real *phi1_nm1,
@@ -533,14 +535,14 @@ void calc_leadordcoeff_phi1_(real *leadordcoeff_phi1,
 
 void extrap_bdyphi_freepts_(real *bdyphi,
                   real *leadordcoeff_phi1,
-                           real *xextrap,real *yextrap,real *zextrap,
+                           real *x_extrappt,real *y_extrappt,real *z_extrappt,
                            real *chrbdy,int *numbdypoints,
                            int *extrap_order,
                            real *x,real *y,real *z,real *dt,real *chr,real *AdS_L,real *ex,int *Nx,int *Ny,int *Nz,int *phys_bdy,int *ghost_width);
 
 void extrap_bdyphi_fixedpts_(real *bdyphi,
                   real *leadordcoeff_phi1,
-                           real *xextrap,real *yextrap,real *zextrap,
+                           real *x_extrappt,real *y_extrappt,real *z_extrappt,
                            real *chrbdy,int *numbdypoints,
                            int *extrap_order,
                            int *ind_distance_fixedpts,
@@ -572,7 +574,7 @@ void extrap_quasiset_freepts_(    real *quasiset_tt, real *quasiset_tchi, real *
                    real *quasiset_xixi_ll,
                    real *quasiset_tracell,
                    real *quasiset_massdensityll,
-                   real *xextrap, real *yextrap, real *zextrap,
+                   real *x_extrappt, real *y_extrappt, real *z_extrappt,
                    real *chrbdy, int *numbdypoints,
                    int *extrap_order,
                    real *x, real *y, real *z, real *dt, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz, int *phys_bdy, int *ghost_width);
@@ -585,7 +587,7 @@ void extrap_quasiset_fixedpts_(    real *quasiset_tt, real *quasiset_tchi, real 
                    real *quasiset_xixi_ll,
                    real *quasiset_tracell,
                    real *quasiset_massdensityll,
-                   real *xextrap, real *yextrap, real *zextrap,
+                   real *x_extrappt, real *y_extrappt, real *z_extrappt,
                    real *chrbdy, int *numbdypoints,
                    int *extrap_order,
                    int *ind_distance_fixedpts,
