@@ -1114,9 +1114,9 @@ c-------------------------------------------------------------------------------
             if (chrbdy(i,j,k).ne.ex) then
               lind=lind+1
 
-              x_outermostpt=xp1
-              y_outermostpt=yp1
-              z_outermostpt=zp1
+              x_outermostpt(lind)=xp1
+              y_outermostpt(lind)=yp1
+              z_outermostpt(lind)=zp1
 
               if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
                if (xp1.gt.0) then
