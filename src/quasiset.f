@@ -109,15 +109,29 @@ c----------------------------------------------------------------------
            zp1=z(k)
            rhop1=sqrt(xp1**2+yp1**2+zp1**2)
 
+
+           if (chrbdy(i,j,k).ne.ex) then
+
+
+! eliminate troublesome points
+!removing points with abs(x)=abs(y)=abs(z): even if the grid function quasiset_tracell is converging at these points, the extrapolated boundary quantity quasisettrace, obtained using these points, is not converging. It would be interesting to understand why. For now, we just eliminate these points from the set of points used for extrapolation
+            if (
+     &          (abs(abs(xp1)-abs(yp1)).lt.10.0d0**(-10)).and.
+     &          (abs(abs(xp1)-abs(zp1)).lt.10.0d0**(-10))
+     &         ) then
+                  chrbdy(i,j,k)=ex
+            end if
+
+
+
+
 ! eliminate troublesome points
 !removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
-           if (chrbdy(i,j,k).ne.ex) then
             if (
      &          (abs(zp1).lt.10.0d0**(-10)) 
      &         ) then
              chrbdy(i,j,k)=ex
             end if
-           end if
 
 
 !If we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke). Therefore, for extrapolation, we can only select near boundary points whose neighbors used for extrapolation in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
@@ -126,8 +140,7 @@ c----------------------------------------------------------------------
 !The condition (chrbdy2(i+1,j,k).ne.ex) makes sure that (i,j,k) is the outmost point satisfying the conditions of the previous for-loop, which sets chrbdy2 as well as chrbdy. In other words, if there's an outer point w.r.t. (i,j,k) that satisfies those conditions, then we don't want to use (i,j,k) for extrapolation, but we will use that other point. 
 
 
-          if (chrbdy(i,j,k).ne.ex) then
-           maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
+          maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
 
            if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
@@ -655,6 +668,17 @@ c----------------------------------------------------------------------
 
 
 ! eliminate troublesome points
+!removing points with abs(x)=abs(y)=abs(z): even if the grid function quasiset_tracell is converging at these points, the extrapolated boundary quantity quasisettrace, obtained using these points, is not converging. It would be interesting to understand why. For now, we just eliminate these points from the set of points used for extrapolation
+            if (
+     &          (abs(abs(xp1)-abs(yp1)).lt.10.0d0**(-10)).and.
+     &          (abs(abs(xp1)-abs(zp1)).lt.10.0d0**(-10))
+     &         ) then
+                  chrbdy(i,j,k)=ex
+            end if
+
+
+
+! eliminate troublesome points
 !removing z=0 implies that we remove in particular the troublesome points with chi=0,1 (which have y=z=0,x=1,-1) and points with xi=0,1 (which have z=0,y>0,any x). We will fill and impose regularity at these points in Mathematica.
             if (
      &          (abs(zp1).lt.10.0d0**(-10))
@@ -663,16 +687,12 @@ c----------------------------------------------------------------------
             end if
 
 
-           end if
-
 !NOTICE: for example, in the case of extrapolation along x, x>0, if the closest point to the AdS boundary that we use is (i,j,k), the second fixed (for all resolutions) point that we want to use is (i-ind_distance_fixedpts,j,k)
 !If we use derivatives to define near boundary quantities, we will only define them at points between is and ie (js and je, ks and ke). Therefore, for extrapolation, we can only select near boundary points whose neighbors used for extrapolation in the direction of the bulk along the axes (i.e. the direction of extrapolation) are within that range
 !We also define near boundary quantities at points where y0 and z0 are not both 0. So we need to make sure that we select points such that neighbouring points used for extrapolation don't have such values of y0,z0. Notice, we've already imposed that z(k) is not 0, we only need to impose the condition when extrapolation is along z, so the value of the z-coordinate of the second point used is different from the first one.
 !The condition (chrbdy2(i+ind_distance_fixedpts,j,k).ne.ex) makes sure that (i,j,k) is the outmost point satisfying the conditions of the previous for-loop, which sets chrbdy2 as well as chrbdy. In other words, if there's an outer point w.r.t. (i,j,k) that satisfies those conditions, then we don't want to use (i,j,k) for extrapolation, but we will use that other point.
 
-          if (chrbdy(i,j,k).ne.ex) then
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
-
            if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
              if (xp1.gt.0) then

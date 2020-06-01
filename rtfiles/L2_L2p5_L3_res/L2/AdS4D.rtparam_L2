@@ -53,6 +53,7 @@ background := 0
 skip_constraints := 0
 output_ires := 1
 output_bdyquantities := 1
+output_outermostpts := 1
 bdy_extrap_freepts := 1
 bdy_extrap_fixedpts := 1
 output_bdy_extraporder1 := 1
@@ -222,8 +223,8 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 4
-save_1_vars := [ "iresall" "gb_res" "gb_xx" "kg_ires" ]
+num_save_1_vars := 5
+save_1_vars := [ "iresall" "gb_res" "gb_xx" "kg_ires" "quasiset_tracell" ]
 
 num_save_2_vars := 5
 save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" ]
