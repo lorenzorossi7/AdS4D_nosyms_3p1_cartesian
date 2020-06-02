@@ -4379,12 +4379,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
                         y_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
                         z_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        }   
+                       	x_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+  
                         lquasiset_tt0_freepts_extraporder1            = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder1          = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
@@ -4425,12 +4423,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         y_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         z_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder1;i++)
@@ -4447,12 +4443,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_freepts_extraporder1               [i] = 0;
                             y_extrappt_freepts_extraporder1               [i] = 0;
                             z_extrappt_freepts_extraporder1               [i] = 0;
-                        	if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder1            [i] = 0;
-                            	y_outermostpt_freepts_extraporder1            [i] = 0;
-                            	z_outermostpt_freepts_extraporder1            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder1            [i] = 0;
+                           	y_outermostpt_freepts_extraporder1            [i] = 0;
+                           	z_outermostpt_freepts_extraporder1            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder1;i++)
                         {   
@@ -4495,12 +4489,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_freepts_extraporder1              [i] = 0;
                             y_extrappt0_freepts_extraporder1              [i] = 0;
                             z_extrappt0_freepts_extraporder1              [i] = 0;
-                        	if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder1           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder1           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder1           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder1           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder1           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder1           [i] = 0;
+                        	
                         }
                         *AdS_mass0_freepts_extraporder1                    = 0; 
                         
@@ -4638,12 +4630,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));
                         y_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));
                         z_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_freepts_extraporder2            = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder2          = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
@@ -4684,12 +4674,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         y_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         z_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder2;i++)
@@ -4706,12 +4694,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_freepts_extraporder2               [i] = 0;
                             y_extrappt_freepts_extraporder2               [i] = 0;
                             z_extrappt_freepts_extraporder2               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder2            [i] = 0;
-                            	y_outermostpt_freepts_extraporder2            [i] = 0;
-                            	z_outermostpt_freepts_extraporder2            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder2            [i] = 0;
+                           	y_outermostpt_freepts_extraporder2            [i] = 0;
+                           	z_outermostpt_freepts_extraporder2            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder2;i++)
                         {   
@@ -4754,12 +4740,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_freepts_extraporder2              [i] = 0;
                             y_extrappt0_freepts_extraporder2              [i] = 0;
                             z_extrappt0_freepts_extraporder2              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder2           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder2           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder2           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder2           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder2           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder2           [i] = 0;
+                        	
                         }
                         *AdS_mass0_freepts_extraporder2                    = 0; 
                         
@@ -4896,12 +4880,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
                         y_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
                         z_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
@@ -4942,12 +4924,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         y_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         z_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder3;i++)
@@ -4964,12 +4944,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_freepts_extraporder3               [i] = 0;
                             y_extrappt_freepts_extraporder3               [i] = 0;
                             z_extrappt_freepts_extraporder3               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder3            [i] = 0;
-                            	y_outermostpt_freepts_extraporder3            [i] = 0;
-                            	z_outermostpt_freepts_extraporder3            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder3            [i] = 0;
+                           	y_outermostpt_freepts_extraporder3            [i] = 0;
+                           	z_outermostpt_freepts_extraporder3            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder3;i++)
                         {   
@@ -5012,12 +4990,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_freepts_extraporder3              [i] = 0;
                             y_extrappt0_freepts_extraporder3              [i] = 0;
                             z_extrappt0_freepts_extraporder3              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder3           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder3           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder3           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder3           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder3           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder3           [i] = 0;
+                        	
                         }
                         *AdS_mass0_freepts_extraporder3                    = 0; 
                         
@@ -5160,12 +5136,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
                         y_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
                         z_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	y_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	z_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	y_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	z_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_fixedpts_extraporder1            = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder1          = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
@@ -5206,12 +5180,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder1;i++)
@@ -5228,12 +5200,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_fixedpts_extraporder1               [i] = 0;
                             y_extrappt_fixedpts_extraporder1               [i] = 0;
                             z_extrappt_fixedpts_extraporder1               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_fixedpts_extraporder1            [i] = 0;
-                            	y_outermostpt_fixedpts_extraporder1            [i] = 0;
-                            	z_outermostpt_fixedpts_extraporder1            [i] = 0;
-                        	}
+                           	x_outermostpt_fixedpts_extraporder1            [i] = 0;
+                           	y_outermostpt_fixedpts_extraporder1            [i] = 0;
+                           	z_outermostpt_fixedpts_extraporder1            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder1;i++)
                         {   
@@ -5276,12 +5246,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_fixedpts_extraporder1              [i] = 0;
                             y_extrappt0_fixedpts_extraporder1              [i] = 0;
                             z_extrappt0_fixedpts_extraporder1              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                            	y_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                            	z_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                        	}
+                           	x_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                           	y_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                           	z_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                        	
                         }
                         *AdS_mass0_fixedpts_extraporder1                    = 0; 
                         
@@ -5420,12 +5388,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
                         y_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
                         z_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            y_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            z_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real)); 
-                        } 
+                        x_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        y_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        z_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real)); 
+                        
                         lquasiset_tt0_fixedpts_extraporder2            = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder2          = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
@@ -5466,12 +5432,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            y_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            z_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
-                        }
+                        x_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        y_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        z_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder2;i++)
@@ -5488,12 +5452,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_fixedpts_extraporder2               [i] = 0;
                             y_extrappt_fixedpts_extraporder2               [i] = 0;
                             z_extrappt_fixedpts_extraporder2               [i] = 0;
-                            if(output_outermostpts)
-                            {
-                                x_outermostpt_fixedpts_extraporder2            [i] = 0;
-                                y_outermostpt_fixedpts_extraporder2            [i] = 0;
-                                z_outermostpt_fixedpts_extraporder2            [i] = 0;
-                            }
+                            x_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            y_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            z_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder2;i++)
                         {   
@@ -5536,12 +5498,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_fixedpts_extraporder2              [i] = 0;
                             y_extrappt0_fixedpts_extraporder2              [i] = 0;
                             z_extrappt0_fixedpts_extraporder2              [i] = 0;  
-                            if(output_outermostpts)
-                            {  
-                                x_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                                y_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                                z_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                            }
+                            x_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            y_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            z_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            
                         }
                         *AdS_mass0_fixedpts_extraporder2                    = 0; 
                         
@@ -5680,12 +5640,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
                         y_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
                         z_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            y_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            z_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
-                        } 
+                        x_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        y_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        z_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                         
                         lquasiset_tt0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
@@ -5726,12 +5684,10 @@ void AdS4D_pre_tstep(int L)
                         x_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            y_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            z_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
-                        }
+                        x_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        y_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        z_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder3;i++)
@@ -5748,12 +5704,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt_fixedpts_extraporder3               [i] = 0;
                             y_extrappt_fixedpts_extraporder3               [i] = 0;
                             z_extrappt_fixedpts_extraporder3               [i] = 0;
-                            if(output_outermostpts)
-                            {
-                                x_outermostpt_fixedpts_extraporder3            [i] = 0;
-                                y_outermostpt_fixedpts_extraporder3            [i] = 0;
-                                z_outermostpt_fixedpts_extraporder3            [i] = 0;
-                            }
+                            x_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            y_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            z_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder3;i++)
                         {   
@@ -5796,12 +5750,10 @@ void AdS4D_pre_tstep(int L)
                             x_extrappt0_fixedpts_extraporder3              [i] = 0;
                             y_extrappt0_fixedpts_extraporder3              [i] = 0;
                             z_extrappt0_fixedpts_extraporder3              [i] = 0;  
-                            if(output_outermostpts)
-                            {  
-                                x_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                                y_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                                z_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                            }
+                            x_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            y_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            z_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            
                         }
                         *AdS_mass0_fixedpts_extraporder3                    = 0; 
                         
@@ -8107,12 +8059,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_freepts_extraporder1);
                         free(y_extrappt_freepts_extraporder1);
                         free(z_extrappt_freepts_extraporder1);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_freepts_extraporder1);
-                        	free(y_outermostpt_freepts_extraporder1);
-                        	free(z_outermostpt_freepts_extraporder1);   
-                        }
+                       	free(x_outermostpt_freepts_extraporder1);
+                       	free(y_outermostpt_freepts_extraporder1);
+                       	free(z_outermostpt_freepts_extraporder1);   
+                        
                         free(lquasiset_tt0_freepts_extraporder1);        
                         free(lquasiset_tchi0_freepts_extraporder1);
                         free(lquasiset_txi0_freepts_extraporder1);
@@ -8153,12 +8103,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_freepts_extraporder1);
                         free(y_extrappt0_freepts_extraporder1);
                         free(z_extrappt0_freepts_extraporder1);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_freepts_extraporder1);
-                        	free(y_outermostpt0_freepts_extraporder1);
-                        	free(z_outermostpt0_freepts_extraporder1);  
-                        }       
+                       	free(x_outermostpt0_freepts_extraporder1);
+                       	free(y_outermostpt0_freepts_extraporder1);
+                       	free(z_outermostpt0_freepts_extraporder1);  
+                               
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder1);
@@ -8187,12 +8135,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_freepts_extraporder2);
                         free(y_extrappt_freepts_extraporder2);
                         free(z_extrappt_freepts_extraporder2);  
-                        if(output_outermostpts)
-                        { 
-                        	free(x_outermostpt_freepts_extraporder2);
-                        	free(y_outermostpt_freepts_extraporder2);
-                        	free(z_outermostpt_freepts_extraporder2);  
-                        } 
+                       	free(x_outermostpt_freepts_extraporder2);
+                       	free(y_outermostpt_freepts_extraporder2);
+                       	free(z_outermostpt_freepts_extraporder2);  
+                        
                         free(lquasiset_tt0_freepts_extraporder2);        
                         free(lquasiset_tchi0_freepts_extraporder2);
                         free(lquasiset_txi0_freepts_extraporder2);
@@ -8233,12 +8179,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_freepts_extraporder2);
                         free(y_extrappt0_freepts_extraporder2);
                         free(z_extrappt0_freepts_extraporder2);  
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt0_freepts_extraporder2);
-                        	free(y_outermostpt0_freepts_extraporder2);
-                        	free(z_outermostpt0_freepts_extraporder2);  
-                        }        
+                       	free(x_outermostpt0_freepts_extraporder2);
+                       	free(y_outermostpt0_freepts_extraporder2);
+                       	free(z_outermostpt0_freepts_extraporder2);  
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder2);
@@ -8267,12 +8211,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_freepts_extraporder3);
                         free(y_extrappt_freepts_extraporder3);
                         free(z_extrappt_freepts_extraporder3); 
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt_freepts_extraporder3);
-                        	free(y_outermostpt_freepts_extraporder3);
-                        	free(z_outermostpt_freepts_extraporder3);   
-                        }
+                       	free(x_outermostpt_freepts_extraporder3);
+                       	free(y_outermostpt_freepts_extraporder3);
+                       	free(z_outermostpt_freepts_extraporder3);   
+                        
                         free(lquasiset_tt0_freepts_extraporder3);        
                         free(lquasiset_tchi0_freepts_extraporder3);
                         free(lquasiset_txi0_freepts_extraporder3);
@@ -8313,12 +8255,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_freepts_extraporder3);
                         free(y_extrappt0_freepts_extraporder3);
                         free(z_extrappt0_freepts_extraporder3); 
-                        if(output_outermostpts)
-                        { 
-                        	free(x_outermostpt0_freepts_extraporder3);
-                        	free(y_outermostpt0_freepts_extraporder3);
-                        	free(z_outermostpt0_freepts_extraporder3);   
-                        }       
+                       	free(x_outermostpt0_freepts_extraporder3);
+                       	free(y_outermostpt0_freepts_extraporder3);
+                       	free(z_outermostpt0_freepts_extraporder3);   
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder3);
@@ -8352,12 +8292,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder1);
                         free(y_extrappt_fixedpts_extraporder1);
                         free(z_extrappt_fixedpts_extraporder1); 
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt_fixedpts_extraporder1);
-                        	free(y_outermostpt_fixedpts_extraporder1);
-                        	free(z_outermostpt_fixedpts_extraporder1);  
-                        } 
+                       	free(x_outermostpt_fixedpts_extraporder1);
+                       	free(y_outermostpt_fixedpts_extraporder1);
+                       	free(z_outermostpt_fixedpts_extraporder1);  
+                        
                         free(lquasiset_tt0_fixedpts_extraporder1);        
                         free(lquasiset_tchi0_fixedpts_extraporder1);
                         free(lquasiset_txi0_fixedpts_extraporder1);
@@ -8398,12 +8336,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder1);
                         free(y_extrappt0_fixedpts_extraporder1);
                         free(z_extrappt0_fixedpts_extraporder1);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_fixedpts_extraporder1);
-                        	free(y_outermostpt0_fixedpts_extraporder1);
-                        	free(z_outermostpt0_fixedpts_extraporder1);    
-                        }      
+                       	free(x_outermostpt0_fixedpts_extraporder1);
+                       	free(y_outermostpt0_fixedpts_extraporder1);
+                       	free(z_outermostpt0_fixedpts_extraporder1);    
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder1);
@@ -8432,12 +8368,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder2);
                         free(y_extrappt_fixedpts_extraporder2);
                         free(z_extrappt_fixedpts_extraporder2);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_fixedpts_extraporder2);
-                        	free(y_outermostpt_fixedpts_extraporder2);
-                        	free(z_outermostpt_fixedpts_extraporder2);   
-                        }
+                       	free(x_outermostpt_fixedpts_extraporder2);
+                       	free(y_outermostpt_fixedpts_extraporder2);
+                       	free(z_outermostpt_fixedpts_extraporder2);   
+                        
                         free(lquasiset_tt0_fixedpts_extraporder2);        
                         free(lquasiset_tchi0_fixedpts_extraporder2);
                         free(lquasiset_txi0_fixedpts_extraporder2);
@@ -8478,12 +8412,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder2);
                         free(y_extrappt0_fixedpts_extraporder2);
                         free(z_extrappt0_fixedpts_extraporder2);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_fixedpts_extraporder2);
-                        	free(y_outermostpt0_fixedpts_extraporder2);
-                        	free(z_outermostpt0_fixedpts_extraporder2);    
-                        }      
+                       	free(x_outermostpt0_fixedpts_extraporder2);
+                       	free(y_outermostpt0_fixedpts_extraporder2);
+                       	free(z_outermostpt0_fixedpts_extraporder2);    
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder2);
@@ -8512,12 +8444,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder3);
                         free(y_extrappt_fixedpts_extraporder3);
                         free(z_extrappt_fixedpts_extraporder3);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_fixedpts_extraporder3);
-                        	free(y_outermostpt_fixedpts_extraporder3);
-                        	free(z_outermostpt_fixedpts_extraporder3);
-                        }   
+                       	free(x_outermostpt_fixedpts_extraporder3);
+                       	free(y_outermostpt_fixedpts_extraporder3);
+                       	free(z_outermostpt_fixedpts_extraporder3);
+                        
                         free(lquasiset_tt0_fixedpts_extraporder3);        
                         free(lquasiset_tchi0_fixedpts_extraporder3);
                         free(lquasiset_txi0_fixedpts_extraporder3);
@@ -8558,12 +8488,10 @@ void AdS4D_pre_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder3);
                         free(y_extrappt0_fixedpts_extraporder3);
                         free(z_extrappt0_fixedpts_extraporder3);  
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt0_fixedpts_extraporder3);
-                        	free(y_outermostpt0_fixedpts_extraporder3);
-                        	free(z_outermostpt0_fixedpts_extraporder3);   
-                        }       
+                       	free(x_outermostpt0_fixedpts_extraporder3);
+                       	free(y_outermostpt0_fixedpts_extraporder3);
+                       	free(z_outermostpt0_fixedpts_extraporder3);   
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder3);
@@ -10351,12 +10279,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
                         y_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
                         z_extrappt_freepts_extraporder1               = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        }   
+                       	x_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder1            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_freepts_extraporder1            = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder1          = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
@@ -10397,12 +10323,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         y_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
                         z_extrappt0_freepts_extraporder1              = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder1           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder1;i++)
@@ -10419,12 +10343,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_freepts_extraporder1               [i] = 0;
                             y_extrappt_freepts_extraporder1               [i] = 0;
                             z_extrappt_freepts_extraporder1               [i] = 0;
-                        	if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder1            [i] = 0;
-                            	y_outermostpt_freepts_extraporder1            [i] = 0;
-                            	z_outermostpt_freepts_extraporder1            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder1            [i] = 0;
+                           	y_outermostpt_freepts_extraporder1            [i] = 0;
+                           	z_outermostpt_freepts_extraporder1            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder1;i++)
                         {   
@@ -10467,12 +10389,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_freepts_extraporder1              [i] = 0;
                             y_extrappt0_freepts_extraporder1              [i] = 0;
                             z_extrappt0_freepts_extraporder1              [i] = 0;
-                        	if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder1           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder1           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder1           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder1           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder1           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder1           [i] = 0;
+                        	
                         }
                         *AdS_mass0_freepts_extraporder1                    = 0; 
                         
@@ -10610,12 +10530,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));
                         y_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));
                         z_extrappt_freepts_extraporder2               = malloc((numbdypoints_freepts_extraporder2)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder2            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_freepts_extraporder2            = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder2          = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
@@ -10656,12 +10574,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         y_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));
                         z_extrappt0_freepts_extraporder2              = malloc((basenumbdypoints_freepts_extraporder2)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder2           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder2;i++)
@@ -10678,12 +10594,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_freepts_extraporder2               [i] = 0;
                             y_extrappt_freepts_extraporder2               [i] = 0;
                             z_extrappt_freepts_extraporder2               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder2            [i] = 0;
-                            	y_outermostpt_freepts_extraporder2            [i] = 0;
-                            	z_outermostpt_freepts_extraporder2            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder2            [i] = 0;
+                           	y_outermostpt_freepts_extraporder2            [i] = 0;
+                           	z_outermostpt_freepts_extraporder2            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder2;i++)
                         {   
@@ -10726,12 +10640,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_freepts_extraporder2              [i] = 0;
                             y_extrappt0_freepts_extraporder2              [i] = 0;
                             z_extrappt0_freepts_extraporder2              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder2           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder2           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder2           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder2           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder2           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder2           [i] = 0;
+                        	
                         }
                         *AdS_mass0_freepts_extraporder2                    = 0; 
                         
@@ -10868,12 +10780,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
                         y_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));
                         z_extrappt_freepts_extraporder3               = malloc((numbdypoints_freepts_extraporder3)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt_freepts_extraporder3            = malloc((numbdypoints_freepts_extraporder1)*sizeof(real)); 
+
                         lquasiset_tt0_freepts_extraporder3            = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         lquasiset_tchi0_freepts_extraporder3          = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         lquasiset_txi0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
@@ -10914,12 +10824,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         y_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));
                         z_extrappt0_freepts_extraporder3              = malloc((basenumbdypoints_freepts_extraporder3)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_freepts_extraporder3           = malloc((basenumbdypoints_freepts_extraporder1)*sizeof(real));   
+
 
                         //initialize
                         for (i=0;i<numbdypoints_freepts_extraporder3;i++)
@@ -10936,12 +10844,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_freepts_extraporder3               [i] = 0;
                             y_extrappt_freepts_extraporder3               [i] = 0;
                             z_extrappt_freepts_extraporder3               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_freepts_extraporder3            [i] = 0;
-                            	y_outermostpt_freepts_extraporder3            [i] = 0;
-                            	z_outermostpt_freepts_extraporder3            [i] = 0;
-                        	}
+                           	x_outermostpt_freepts_extraporder3            [i] = 0;
+                           	y_outermostpt_freepts_extraporder3            [i] = 0;
+                           	z_outermostpt_freepts_extraporder3            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_freepts_extraporder3;i++)
                         {   
@@ -10984,12 +10890,9 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_freepts_extraporder3              [i] = 0;
                             y_extrappt0_freepts_extraporder3              [i] = 0;
                             z_extrappt0_freepts_extraporder3              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_freepts_extraporder3           [i] = 0;
-                            	y_outermostpt0_freepts_extraporder3           [i] = 0;
-                            	z_outermostpt0_freepts_extraporder3           [i] = 0;
-                        	}
+                           	x_outermostpt0_freepts_extraporder3           [i] = 0;
+                           	y_outermostpt0_freepts_extraporder3           [i] = 0;
+                           	z_outermostpt0_freepts_extraporder3           [i] = 0;
                         }
                         *AdS_mass0_freepts_extraporder3                    = 0; 
                         
@@ -11132,12 +11035,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
                         y_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
                         z_extrappt_fixedpts_extraporder1               = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	y_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	z_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real)); 
-                        } 
+                       	x_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	y_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	z_outermostpt_fixedpts_extraporder1            = malloc((numbdypoints_fixedpts_extraporder1)*sizeof(real)); 
+                        
                         lquasiset_tt0_fixedpts_extraporder1            = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder1          = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
@@ -11178,12 +11079,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder1              = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                        	x_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	y_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
-                        	z_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
-                        }
+                       	x_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	y_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));
+                       	z_outermostpt0_fixedpts_extraporder1           = malloc((basenumbdypoints_fixedpts_extraporder1)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder1;i++)
@@ -11200,12 +11099,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_fixedpts_extraporder1               [i] = 0;
                             y_extrappt_fixedpts_extraporder1               [i] = 0;
                             z_extrappt_fixedpts_extraporder1               [i] = 0;
-                            if(output_outermostpts)
-                        	{
-                            	x_outermostpt_fixedpts_extraporder1            [i] = 0;
-                            	y_outermostpt_fixedpts_extraporder1            [i] = 0;
-                            	z_outermostpt_fixedpts_extraporder1            [i] = 0;
-                        	}
+                           	x_outermostpt_fixedpts_extraporder1            [i] = 0;
+                           	y_outermostpt_fixedpts_extraporder1            [i] = 0;
+                           	z_outermostpt_fixedpts_extraporder1            [i] = 0;
+                        	
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder1;i++)
                         {   
@@ -11248,12 +11145,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_fixedpts_extraporder1              [i] = 0;
                             y_extrappt0_fixedpts_extraporder1              [i] = 0;
                             z_extrappt0_fixedpts_extraporder1              [i] = 0;  
-                            if(output_outermostpts)
-                        	{  
-                            	x_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                            	y_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                            	z_outermostpt0_fixedpts_extraporder1           [i] = 0;
-                        	}
+                           	x_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                           	y_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                           	z_outermostpt0_fixedpts_extraporder1           [i] = 0;
+                        	
                         }
                         *AdS_mass0_fixedpts_extraporder1                    = 0; 
                         
@@ -11392,12 +11287,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
                         y_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
                         z_extrappt_fixedpts_extraporder2               = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            y_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            z_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real)); 
-                        } 
+                        x_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        y_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        z_outermostpt_fixedpts_extraporder2            = malloc((numbdypoints_fixedpts_extraporder2)*sizeof(real)); 
+                        
                         lquasiset_tt0_fixedpts_extraporder2            = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder2          = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
@@ -11438,12 +11331,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder2              = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            y_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
-                            z_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
-                        }
+                        x_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        y_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));
+                        z_outermostpt0_fixedpts_extraporder2           = malloc((basenumbdypoints_fixedpts_extraporder2)*sizeof(real));   
+                        
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder2;i++)
@@ -11460,12 +11351,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_fixedpts_extraporder2               [i] = 0;
                             y_extrappt_fixedpts_extraporder2               [i] = 0;
                             z_extrappt_fixedpts_extraporder2               [i] = 0;
-                            if(output_outermostpts)
-                            {
-                                x_outermostpt_fixedpts_extraporder2            [i] = 0;
-                                y_outermostpt_fixedpts_extraporder2            [i] = 0;
-                                z_outermostpt_fixedpts_extraporder2            [i] = 0;
-                            }
+                            x_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            y_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            z_outermostpt_fixedpts_extraporder2            [i] = 0;
+                            
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder2;i++)
                         {   
@@ -11508,12 +11397,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_fixedpts_extraporder2              [i] = 0;
                             y_extrappt0_fixedpts_extraporder2              [i] = 0;
                             z_extrappt0_fixedpts_extraporder2              [i] = 0;  
-                            if(output_outermostpts)
-                            {  
-                                x_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                                y_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                                z_outermostpt0_fixedpts_extraporder2           [i] = 0;
-                            }
+                            x_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            y_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            z_outermostpt0_fixedpts_extraporder2           [i] = 0;
+                            
                         }
                         *AdS_mass0_fixedpts_extraporder2                    = 0; 
                         
@@ -11652,12 +11539,10 @@ void AdS4D_post_tstep(int L)
                         x_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
                         y_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
                         z_extrappt_fixedpts_extraporder3               = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));  
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            y_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            z_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
-                        } 
+                        x_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        y_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        z_outermostpt_fixedpts_extraporder3            = malloc((numbdypoints_fixedpts_extraporder3)*sizeof(real)); 
+                        
                         lquasiset_tt0_fixedpts_extraporder3            = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         lquasiset_tchi0_fixedpts_extraporder3          = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         lquasiset_txi0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
@@ -11698,12 +11583,9 @@ void AdS4D_post_tstep(int L)
                         x_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         y_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
                         z_extrappt0_fixedpts_extraporder3              = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
-                        if(output_outermostpts)
-                        {
-                            x_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            y_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
-                            z_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
-                        }
+                        x_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        y_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));
+                        z_outermostpt0_fixedpts_extraporder3           = malloc((basenumbdypoints_fixedpts_extraporder3)*sizeof(real));   
 
                         //initialize
                         for (i=0;i<numbdypoints_fixedpts_extraporder3;i++)
@@ -11720,12 +11602,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt_fixedpts_extraporder3               [i] = 0;
                             y_extrappt_fixedpts_extraporder3               [i] = 0;
                             z_extrappt_fixedpts_extraporder3               [i] = 0;
-                            if(output_outermostpts)
-                            {
-                                x_outermostpt_fixedpts_extraporder3            [i] = 0;
-                                y_outermostpt_fixedpts_extraporder3            [i] = 0;
-                                z_outermostpt_fixedpts_extraporder3            [i] = 0;
-                            }
+                            x_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            y_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            z_outermostpt_fixedpts_extraporder3            [i] = 0;
+                            
                         }   
                         for (i=0;i<basenumbdypoints_fixedpts_extraporder3;i++)
                         {   
@@ -11768,12 +11648,10 @@ void AdS4D_post_tstep(int L)
                             x_extrappt0_fixedpts_extraporder3              [i] = 0;
                             y_extrappt0_fixedpts_extraporder3              [i] = 0;
                             z_extrappt0_fixedpts_extraporder3              [i] = 0;  
-                            if(output_outermostpts)
-                            {  
-                                x_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                                y_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                                z_outermostpt0_fixedpts_extraporder3           [i] = 0;
-                            }
+                            x_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            y_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            z_outermostpt0_fixedpts_extraporder3           [i] = 0;
+                            
                         }
                         *AdS_mass0_fixedpts_extraporder3                    = 0; 
                         
@@ -14078,12 +13956,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_freepts_extraporder1);
                         free(y_extrappt_freepts_extraporder1);
                         free(z_extrappt_freepts_extraporder1);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_freepts_extraporder1);
-                        	free(y_outermostpt_freepts_extraporder1);
-                        	free(z_outermostpt_freepts_extraporder1);   
-                        }
+	                   	free(x_outermostpt_freepts_extraporder1);
+    	               	free(y_outermostpt_freepts_extraporder1);
+                       	free(z_outermostpt_freepts_extraporder1);   
+                        
                         free(lquasiset_tt0_freepts_extraporder1);        
                         free(lquasiset_tchi0_freepts_extraporder1);
                         free(lquasiset_txi0_freepts_extraporder1);
@@ -14124,12 +14000,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_freepts_extraporder1);
                         free(y_extrappt0_freepts_extraporder1);
                         free(z_extrappt0_freepts_extraporder1);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_freepts_extraporder1);
-                        	free(y_outermostpt0_freepts_extraporder1);
-                        	free(z_outermostpt0_freepts_extraporder1);  
-                        }       
+                       	free(x_outermostpt0_freepts_extraporder1);
+                       	free(y_outermostpt0_freepts_extraporder1);
+                       	free(z_outermostpt0_freepts_extraporder1);  
+                              
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder1);
@@ -14158,12 +14032,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_freepts_extraporder2);
                         free(y_extrappt_freepts_extraporder2);
                         free(z_extrappt_freepts_extraporder2);  
-                        if(output_outermostpts)
-                        { 
-                        	free(x_outermostpt_freepts_extraporder2);
-                        	free(y_outermostpt_freepts_extraporder2);
-                        	free(z_outermostpt_freepts_extraporder2);  
-                        } 
+                       	free(x_outermostpt_freepts_extraporder2);
+                       	free(y_outermostpt_freepts_extraporder2);
+                       	free(z_outermostpt_freepts_extraporder2);  
+                        
                         free(lquasiset_tt0_freepts_extraporder2);        
                         free(lquasiset_tchi0_freepts_extraporder2);
                         free(lquasiset_txi0_freepts_extraporder2);
@@ -14204,12 +14076,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_freepts_extraporder2);
                         free(y_extrappt0_freepts_extraporder2);
                         free(z_extrappt0_freepts_extraporder2);  
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt0_freepts_extraporder2);
-                        	free(y_outermostpt0_freepts_extraporder2);
-                        	free(z_outermostpt0_freepts_extraporder2);  
-                        }        
+                       	free(x_outermostpt0_freepts_extraporder2);
+                       	free(y_outermostpt0_freepts_extraporder2);
+                       	free(z_outermostpt0_freepts_extraporder2);  
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder2);
@@ -14238,12 +14108,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_freepts_extraporder3);
                         free(y_extrappt_freepts_extraporder3);
                         free(z_extrappt_freepts_extraporder3); 
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt_freepts_extraporder3);
-                        	free(y_outermostpt_freepts_extraporder3);
-                        	free(z_outermostpt_freepts_extraporder3);   
-                        }
+                       	free(x_outermostpt_freepts_extraporder3);
+                       	free(y_outermostpt_freepts_extraporder3);
+                       	free(z_outermostpt_freepts_extraporder3);   
+                        
                         free(lquasiset_tt0_freepts_extraporder3);        
                         free(lquasiset_tchi0_freepts_extraporder3);
                         free(lquasiset_txi0_freepts_extraporder3);
@@ -14284,12 +14152,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_freepts_extraporder3);
                         free(y_extrappt0_freepts_extraporder3);
                         free(z_extrappt0_freepts_extraporder3); 
-                        if(output_outermostpts)
-                        { 
-                        	free(x_outermostpt0_freepts_extraporder3);
-                        	free(y_outermostpt0_freepts_extraporder3);
-                        	free(z_outermostpt0_freepts_extraporder3);   
-                        }       
+                       	free(x_outermostpt0_freepts_extraporder3);
+                       	free(y_outermostpt0_freepts_extraporder3);
+                       	free(z_outermostpt0_freepts_extraporder3);   
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_freepts_extraporder3);
@@ -14323,12 +14189,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder1);
                         free(y_extrappt_fixedpts_extraporder1);
                         free(z_extrappt_fixedpts_extraporder1); 
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt_fixedpts_extraporder1);
-                        	free(y_outermostpt_fixedpts_extraporder1);
-                        	free(z_outermostpt_fixedpts_extraporder1);  
-                        } 
+                       	free(x_outermostpt_fixedpts_extraporder1);
+                       	free(y_outermostpt_fixedpts_extraporder1);
+                       	free(z_outermostpt_fixedpts_extraporder1);  
+                        
                         free(lquasiset_tt0_fixedpts_extraporder1);        
                         free(lquasiset_tchi0_fixedpts_extraporder1);
                         free(lquasiset_txi0_fixedpts_extraporder1);
@@ -14369,12 +14233,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder1);
                         free(y_extrappt0_fixedpts_extraporder1);
                         free(z_extrappt0_fixedpts_extraporder1);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_fixedpts_extraporder1);
-                        	free(y_outermostpt0_fixedpts_extraporder1);
-                        	free(z_outermostpt0_fixedpts_extraporder1);    
-                        }      
+                       	free(x_outermostpt0_fixedpts_extraporder1);
+                       	free(y_outermostpt0_fixedpts_extraporder1);
+                       	free(z_outermostpt0_fixedpts_extraporder1);    
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder1);
@@ -14403,12 +14265,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder2);
                         free(y_extrappt_fixedpts_extraporder2);
                         free(z_extrappt_fixedpts_extraporder2);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_fixedpts_extraporder2);
-                        	free(y_outermostpt_fixedpts_extraporder2);
-                        	free(z_outermostpt_fixedpts_extraporder2);   
-                        }
+                       	free(x_outermostpt_fixedpts_extraporder2);
+                       	free(y_outermostpt_fixedpts_extraporder2);
+                       	free(z_outermostpt_fixedpts_extraporder2);   
+                        
                         free(lquasiset_tt0_fixedpts_extraporder2);        
                         free(lquasiset_tchi0_fixedpts_extraporder2);
                         free(lquasiset_txi0_fixedpts_extraporder2);
@@ -14449,12 +14309,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder2);
                         free(y_extrappt0_fixedpts_extraporder2);
                         free(z_extrappt0_fixedpts_extraporder2);
-                        if(output_outermostpts)
-                        {  
-                        	free(x_outermostpt0_fixedpts_extraporder2);
-                        	free(y_outermostpt0_fixedpts_extraporder2);
-                        	free(z_outermostpt0_fixedpts_extraporder2);    
-                        }      
+                       	free(x_outermostpt0_fixedpts_extraporder2);
+                       	free(y_outermostpt0_fixedpts_extraporder2);
+                       	free(z_outermostpt0_fixedpts_extraporder2);    
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder2);
@@ -14483,12 +14341,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt_fixedpts_extraporder3);
                         free(y_extrappt_fixedpts_extraporder3);
                         free(z_extrappt_fixedpts_extraporder3);   
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt_fixedpts_extraporder3);
-                        	free(y_outermostpt_fixedpts_extraporder3);
-                        	free(z_outermostpt_fixedpts_extraporder3);
-                        }   
+                       	free(x_outermostpt_fixedpts_extraporder3);
+                       	free(y_outermostpt_fixedpts_extraporder3);
+                       	free(z_outermostpt_fixedpts_extraporder3);
+                        
                         free(lquasiset_tt0_fixedpts_extraporder3);        
                         free(lquasiset_tchi0_fixedpts_extraporder3);
                         free(lquasiset_txi0_fixedpts_extraporder3);
@@ -14529,12 +14385,10 @@ void AdS4D_post_tstep(int L)
                         free(x_extrappt0_fixedpts_extraporder3);
                         free(y_extrappt0_fixedpts_extraporder3);
                         free(z_extrappt0_fixedpts_extraporder3);  
-                        if(output_outermostpts)
-                        {
-                        	free(x_outermostpt0_fixedpts_extraporder3);
-                        	free(y_outermostpt0_fixedpts_extraporder3);
-                        	free(z_outermostpt0_fixedpts_extraporder3);   
-                        }       
+                       	free(x_outermostpt0_fixedpts_extraporder3);
+                       	free(y_outermostpt0_fixedpts_extraporder3);
+                       	free(z_outermostpt0_fixedpts_extraporder3);   
+                        
                         if (output_AdS_mass)
                         {
                             free(rhoextrap0_fixedpts_extraporder3);
