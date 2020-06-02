@@ -173,7 +173,9 @@ int ind_distance_fixedpts;
 int num_fixed_coords;
 real *fixed_coords;
 
-int remove_repeated_bdypoints=1;
+int remove_repeated_bdypoints=0;
+//Option to remove repeated boundary points that could appear from different outermost bulk points in different processes that have the same corresponding extrapolated point
+//WARNING: if we use many processes removing repeated points can take loop will take a long time. In that case it's better to eliminate repeated points in post-processing
 
 int numbdypoints_tmp;
 int basenumbdypoints_tmp;
@@ -1904,7 +1906,8 @@ void AdS4D_t0_cnst_data(void)
 
     ldptr_mg(); 
 
-    //   printf("AdS4D_t0_cnst_data is called"); 
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (my_rank==0) {printf("AdS4D_t0-cnst_data is called\n"); fflush(stdout); }
     
     // initialize time derivatives of gbars,hbars
     if (gb_xx_nm1)
@@ -1943,7 +1946,24 @@ void AdS4D_t0_cnst_data(void)
                     Hb_z_n,
                     Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                     Hb_z_t_n,
-                    &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);   //   for (i=0; i<Nx; i++)  //   {    //      for (j=0; j<Ny; j++)    //      {   //       for (k=0; k<Nz; k++)  //       {    //        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    //        { //         ind=i+Nx*(j+Ny*k);    //         printf("AdS4D_AMRH_var_clear-POST init_ghbdot_\n");  //         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n" //                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));   //         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);  //        }   //       } //      }    //   }  
+                    &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);   
+//   for (i=0; i<Nx; i++)  
+//   {    
+//      for (j=0; j<Ny; j++)    
+//      {   
+//       for (k=0; k<Nz; k++)  
+//       {    
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    
+//        { 
+//         ind=i+Nx*(j+Ny*k);    
+//         printf("AdS4D_AMRH_var_clear-POST init_ghbdot_\n");  
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n" 
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));   
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);  
+//        }   
+//       } 
+//      }   
+//    }  
     }   
     // initialize gbars and nm1, np1 time levels
     if ((background || skip_constraints) && ief_bh_r0==0)
@@ -2100,7 +2120,25 @@ void AdS4D_t0_cnst_data(void)
                     gb_yz,
                     psi,Hb_t,Hb_x,Hb_y,
                     Hb_z,
-                    &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);    //   for (i=0; i<Nx; i++)   //   { //      for (j=0; j<Ny; j++) //      {    //       for (k=0; k<Nz; k++)   //       { //        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1) //        {  //         ind=i+Nx*(j+Ny*k); //         printf("AdS4D_AMRH_var_clear-POST init_ghb_\n");  //         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n" //                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));   ////         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);    //         printf("gb_xx[ind]=%lf,gb_xx_nm1[ind]=%lf,gb_xx_n[ind]=%lf,gb_xx_np1[ind]=%lf\n",gb_xx[ind],gb_xx_nm1[ind],gb_xx_n[ind],gb_xx_np1[ind]); //        }  //       }    //      }   //   } 
+                    &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);    
+//   for (i=0; i<Nx; i++)   
+//   { 
+//      for (j=0; j<Ny; j++) 
+//      {    
+//       for (k=0; k<Nz; k++)   
+//       { 
+//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1) 
+//        {  
+//         ind=i+Nx*(j+Ny*k); 
+//         printf("AdS4D_AMRH_var_clear-POST init_ghb_\n");  
+//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n" 
+//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));   
+//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);    
+//         printf("gb_xx[ind]=%lf,gb_xx_nm1[ind]=%lf,gb_xx_n[ind]=%lf,gb_xx_np1[ind]=%lf\n",gb_xx[ind],gb_xx_nm1[ind],gb_xx_n[ind],gb_xx_np1[ind]); 
+//        }  
+//       }    
+//      }   
+//   } 
         }   
     }   
     // initialize hbars 
@@ -2263,9 +2301,8 @@ void AdS4D_pre_io_calc(void)
     int ivecNt=AMRD_steps/AMRD_save_ivec0[3]+1; //+1 to include t=0
     int lsteps=AMRD_lsteps[Lc-1];  
 
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    printf("AdS4D_pre_io_calc is called,lsteps=%i\n",lsteps);
-//    fflush(stdout); 
+    //MPI_Barrier(MPI_COMM_WORLD);
+    //if (my_rank==0) {printf("AdS4D_pre_io_calc is called,lsteps=%i\n",lsteps); fflush(stdout); }
 
     // compute independent residuals of the AdS4D system
     if (ct!=0)
@@ -2308,7 +2345,9 @@ void AdS4D_pre_io_calc(void)
         // so here, time level np1 is the most advanced time level) 
         //we call the following functions just to save and output the values of the grid functions chrbdy, leadordcoeff_phi1 and quasiset_ll for t=0. These will be later then used to extrapolate the value of bdyphi and quasiset componenents at the AdS boundary in pre_tstep for t=0 (and post_tstep for later times)
         if (output_bdyquantities)
-        {   
+        {  
+
+ 
             calc_leadordcoeff_phi1_(leadordcoeff_phi1,
                                     phi1_np1,phi1_n,phi1_nm1,
                                     x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
@@ -2338,6 +2377,7 @@ void AdS4D_pre_io_calc(void)
                 	if (remove_repeated_bdypoints)
                 	{
                 		//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
+
                 		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 	
                 		MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
@@ -2348,6 +2388,7 @@ void AdS4D_pre_io_calc(void)
                     	MPI_Allgather(&numbdypoints_tmp,1,MPI_INT,vecbdypoints_tmp,1,MPI_INT,MPI_COMM_WORLD); 
                     	//basenumbdypoints contains the sum of the number of nexttobdypoints from all processes, i.e. the total number of nexttobdypoints, hence the total number of points at the boundary where we extrapolate the stress-energy tensor
                     	MPI_Allreduce(&numbdypoints_tmp,&basenumbdypoints_tmp,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);  
+
 	
                     	x_extrappt_tmp               = malloc((numbdypoints_tmp)*sizeof(real));
                     	y_extrappt_tmp               = malloc((numbdypoints_tmp)*sizeof(real));
@@ -2360,7 +2401,8 @@ void AdS4D_pre_io_calc(void)
                     	z_extrappt0_tmp              = malloc((basenumbdypoints_tmp)*sizeof(real));   
                     	x_outermostpt0_tmp           = malloc((basenumbdypoints_tmp)*sizeof(real));
                     	y_outermostpt0_tmp           = malloc((basenumbdypoints_tmp)*sizeof(real));
-                    	z_outermostpt0_tmp           = malloc((basenumbdypoints_tmp)*sizeof(real));   
+                    	z_outermostpt0_tmp           = malloc((basenumbdypoints_tmp)*sizeof(real));
+
 	
                     	//initialize
                     	for (i=0;i<numbdypoints_tmp;i++)
@@ -2410,12 +2452,12 @@ void AdS4D_pre_io_calc(void)
                                 	dsplsbdypoints_tmp[i]=dsplsbdypoints_tmp[i]+vecbdypoints_tmp[j];
                             	}
                         	}
-                    	}   
+                    	}  
+
 	
                     	xyz_extrap_outermost_(x_extrappt_tmp,y_extrappt_tmp,z_extrappt_tmp,
                         			x_outermostpt_tmp,y_outermostpt_tmp,z_outermostpt_tmp,
                         			chrbdy_freepts_extraporder1,&numbdypoints_tmp,x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,ghost_width);    
-	
 	
                     	//x/y/z_extrappt0 are arrays with x_extrappt,y_extrappt,z_extrappt from all the processors one after the other
                     	MPI_Allgatherv(x_extrappt_tmp,numbdypoints_tmp,MPI_DOUBLE,x_extrappt0_tmp,vecbdypoints_tmp,dsplsbdypoints_tmp,MPI_DOUBLE,MPI_COMM_WORLD);
@@ -2427,6 +2469,7 @@ void AdS4D_pre_io_calc(void)
 
 
                     	//Correct chrbdy and numbdypoints by eliminating grid points from different processes that give the same extrapolated boundary point
+                    	//WARNING: if we use many processes basenumbdypoints can become quite large which means the following loop will take a long time. In that case it's better to eliminate repeated points in post-processing
                     	for (m=0;m<basenumbdypoints_tmp;m++)
                     	{
                     		//Strategy: consider point m and check if there is another point l with the same coordinates but different outermost point 
@@ -2436,6 +2479,7 @@ void AdS4D_pre_io_calc(void)
                         	xout1=x_outermostpt0_tmp[m];
                         	yout1=y_outermostpt0_tmp[m];
                         	zout1=z_outermostpt0_tmp[m];
+
                         	for (l=0;l<basenumbdypoints_tmp;l++)
                         	{
                             	xex2=x_extrappt0_tmp[l];
@@ -2553,8 +2597,7 @@ void AdS4D_pre_io_calc(void)
                             }
                         }
                         numbdypoints_freepts_extraporder1=numbdypoints_tmp;
-	
-	
+
 	
                     	free(vecbdypoints_tmp);
                     	free(dsplsbdypoints_tmp);
@@ -2570,6 +2613,8 @@ void AdS4D_pre_io_calc(void)
                     	free(x_outermostpt0_tmp);
                     	free(y_outermostpt0_tmp);
                     	free(z_outermostpt0_tmp);
+
+
                 	} //closes condition on remove_repeated_bdypoints
                 	else
                 	{
@@ -4328,9 +4373,8 @@ void AdS4D_pre_tstep(int L)
 
     //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1; 
 
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    printf("AdS4D_pre_tstep is called");
-//    fflush(stdout); 
+    //MPI_Barrier(MPI_COMM_WORLD);
+    //if (my_rank==0) {printf("AdS4D_pre_tstep is called"); fflush(stdout);}
 
     if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below   
     if (pre_tstep_global_first)
