@@ -3120,11 +3120,11 @@ void AdS4D_pre_io_calc(void)
         	}   
         	if (bdy_extrap_fixedpts)
         	{   
-            	//set fixed_coords, i.e. the values (fixed for all resolutions) of coordinates of points that we use for use boundary extrapolation
+            	//set fixed_coords, i.e. the values (fixed for all resolutions) of coordinates of points that we use for boundary extrapolation
             	for (i=0;i<num_fixed_coords;i++)
             	{
-                	fixed_coords[i]=x[i*ind_distance_fixedpts]; 
-                	//if (my_rank==0) {printf("i=%i,fixed_coords[i]=%lf\n",i,fixed_coords[i]);}
+                	fixed_coords[i]=-1+i*ind_distance_fixedpts*dx; 
+//                	if (my_rank==0) {printf("pre_io_calc: i=%i,ind_distance_fixedpts=%i,num_fixed_coords=%i,fixed_coords[i]=%lf\n",i,ind_distance_fixedpts,num_fixed_coords,fixed_coords[i]);}
             	}   
 
             	if (output_bdy_extraporder1)
@@ -3369,6 +3369,7 @@ void AdS4D_pre_io_calc(void)
                     {
                         nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
+
             	}   
 
             	if (output_bdy_extraporder2)
@@ -4366,15 +4367,17 @@ void AdS4D_pre_tstep(int L)
     int n,i,j,k,ind,j_red,l,e,Lf,Lc;
     int count_relkretschcentregrid;
     real rho;
-    real rh,mh,rhoh;    
+    real rh,mh,rhoh;   
+
+
+    //MPI_Barrier(MPI_COMM_WORLD);
+    //if (my_rank==0) {printf("AdS4D_pre_tstep is called"); fflush(stdout);}
+ 
     ct=PAMR_get_time(L);    
     Lf=PAMR_get_max_lev(PAMR_AMRH);
     Lc=PAMR_get_min_lev(PAMR_AMRH);  
 
     //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; else Lc=1; 
-
-    //MPI_Barrier(MPI_COMM_WORLD);
-    //if (my_rank==0) {printf("AdS4D_pre_tstep is called"); fflush(stdout);}
 
     if (AMRD_state!=AMRD_STATE_EVOLVE) return; // if disable, enable(?) reset_AH_shapes below   
     if (pre_tstep_global_first)
@@ -8778,6 +8781,9 @@ void AdS4D_post_tstep(int L)
     //printf("AdS4D_post_tstep is called");
     //fflush(stdout); 
 
+    dx=x[1]-x[0]; dy=y[1]-y[0]; dz=z[1]-z[0];
+
+
     ct = PAMR_get_time(L);  
     Lf=PAMR_get_max_lev(PAMR_AMRH);
     Lc=PAMR_get_min_lev(PAMR_AMRH);  //if (PAMR_get_max_lev(PAMR_AMRH)>1) Lc=2; elise Lc=1;
@@ -9564,7 +9570,7 @@ void AdS4D_post_tstep(int L)
             		{
             			for (i=0;i<num_fixed_coords;i++)
             			{
-                			fixed_coords[i]=x[i*ind_distance_fixedpts]; 
+					fixed_coords[i]=-1+i*ind_distance_fixedpts*dx;
             			}
             		}
 
