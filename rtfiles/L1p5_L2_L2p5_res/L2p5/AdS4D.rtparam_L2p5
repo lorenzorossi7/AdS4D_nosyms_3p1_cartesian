@@ -226,8 +226,8 @@ max_t_interp_order := 3
 num_save_1_vars := 5
 save_1_vars := [ "iresall" "gb_res" "gb_xx" "kg_ires" "quasiset_tracell" ]
 
-num_save_2_vars := 5
-save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" ]
+num_save_2_vars := 6
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" "gb_tt" ]
 
 num_save_3_vars := 2
 save_3_vars := [ "gb_xx" "Hb_x" ]
