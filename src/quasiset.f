@@ -6016,7 +6016,8 @@ c-------------------------------------------------------------------------------
      &                              +(z_extrappt(1)-z_chipp1xip)**2)
              lind_chipp1xip=1
 
-             dist_extr_bdypp1pp1_min=sqrt((x_extrappt(1)-x_chipp1xipp1)**2
+             dist_extr_bdypp1pp1_min=
+     &                             sqrt((x_extrappt(1)-x_chipp1xipp1)**2
      &                              +(y_extrappt(1)-y_chipp1xipp1)**2
      &                              +(z_extrappt(1)-z_chipp1xipp1)**2)
              lind_chipp1xipp1=1
