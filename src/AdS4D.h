@@ -512,10 +512,10 @@ void dmdiss3d_ex_gen_(real *f,real *work,real *eps,int *do_bdy,int *phys_bdy_typ
                       int *nz, real *chr, real *ex, int *do_ex, int *ind_sweeps, int *kmax);
 
 void nexttobdypoints_freepts_(real *chrbdy, 
-                      int *numbdypoints, int *extrap_order, real *x, real *y, real *z, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *phys_bdy, int *ghost_width);
+                      int *numbdypoints, int *extrap_order, real *smallest_coord_extrap, real *x, real *y, real *z, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *phys_bdy, int *ghost_width);
 
 void nexttobdypoints_fixedpts_(real *chrbdy,
-                      int *numbdypoints, int *extrap_order, int *ind_distance_fixedpts, real *currentres_ratio_Lhighres_Llowres, int *num_fixed_coords, real *fixed_coords, real *x, real *y, real *z, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *phys_bdy, int *ghost_width);
+                      int *numbdypoints, int *extrap_order, int *ind_distance_fixedpts, real *currentres_ratio_Lhighres_Llowres, int *num_fixed_coords, real *fixed_coords, real *smallest_coord_extrap, real *x, real *y, real *z, real *chr, real *AdS_L, real *ex, int *Nx, int *Ny, int *Nz,  int *phys_bdy, int *ghost_width);
 
 void xyz_extrap_outermost_(real *x_extrappt, real *y_extrappt, real *z_extrappt, 
                             real *x_outermostpt, real *y_outermostpt, real *z_outermostpt,
