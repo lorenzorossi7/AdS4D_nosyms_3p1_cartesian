@@ -76,7 +76,7 @@ int output_bdy_extraporder2;
 int output_bdy_extraporder3;
 int output_bdy_extraporder4;
 int bdy_extrap_order;
-real smallest_coord_extrap;
+real smallest_rho_extrap;
 real ratio_Lhighres_Llowres;
 int resolution_degree;
 int max_resolution_degree;
@@ -1574,7 +1574,7 @@ void AdS4D_var_post_init(char *pfile)
     output_bdy_extraporder2=0; AMRD_int_param(pfile,"output_bdy_extraporder2",&output_bdy_extraporder2,1);
     output_bdy_extraporder3=0; AMRD_int_param(pfile,"output_bdy_extraporder3",&output_bdy_extraporder3,1);
     output_bdy_extraporder4=0; AMRD_int_param(pfile,"output_bdy_extraporder4",&output_bdy_extraporder4,1);  
-    smallest_coord_extrap=0; AMRD_real_param(pfile,"smallest_coord_extrap",&smallest_coord_extrap,1);
+    smallest_rho_extrap=0; AMRD_real_param(pfile,"smallest_rho_extrap",&smallest_rho_extrap,1);
 
     //allocate memory for relative Kretschmann scalar at the centre of the grid
     if (output_relkretschcentregrid)
@@ -2380,7 +2380,7 @@ void AdS4D_pre_io_calc(void)
                 	{
                 		//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
 
-                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 	
                 		MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                     	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -2620,7 +2620,7 @@ void AdS4D_pre_io_calc(void)
                 	} //closes condition on remove_repeated_bdypoints
                 	else
                 	{
-                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                 	}
 
             	}   
@@ -2631,7 +2631,7 @@ void AdS4D_pre_io_calc(void)
                 	if (remove_repeated_bdypoints)
                     {
                         //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
     
                         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -2868,7 +2868,7 @@ void AdS4D_pre_io_calc(void)
                     } //closes condition on remove_repeated_bdypoints
                     else
                     {
-                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
 
             	}  
@@ -2879,7 +2879,7 @@ void AdS4D_pre_io_calc(void)
                     if (remove_repeated_bdypoints)
                     {
                         //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
     
                         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -3114,7 +3114,7 @@ void AdS4D_pre_io_calc(void)
                     } //closes condition on remove_repeated_bdypoints
                     else
                     {
-                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
 
             	}
@@ -3135,7 +3135,7 @@ void AdS4D_pre_io_calc(void)
                     if (remove_repeated_bdypoints)
                     {
                         //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -3369,7 +3369,7 @@ void AdS4D_pre_io_calc(void)
                     } //closes condition on remove_repeated_bdypoints
                     else
                     {
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
 
             	}   
@@ -3380,7 +3380,7 @@ void AdS4D_pre_io_calc(void)
                     if (remove_repeated_bdypoints)
                     {
                         //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -3614,7 +3614,7 @@ void AdS4D_pre_io_calc(void)
                     } //closes condition on remove_repeated_bdypoints
                     else
                     {
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
             	}  
 
@@ -3624,7 +3624,7 @@ void AdS4D_pre_io_calc(void)
                     if (remove_repeated_bdypoints)
                     {
                         //routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -3858,7 +3858,7 @@ void AdS4D_pre_io_calc(void)
                     } //closes condition on remove_repeated_bdypoints
                     else
                     {
-                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     }
             	}   
 
@@ -8838,7 +8838,7 @@ void AdS4D_post_tstep(int L)
                 		if (remove_repeated_bdypoints)
                 		{
                 			//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                			nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                			nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 		
                 			MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                     		vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -9073,7 +9073,7 @@ void AdS4D_post_tstep(int L)
                 		} //closes condition on remove_repeated_bdypoints
                 		else
                 		{
-                			nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                			nexttobdypoints_freepts_(chrbdy_freepts_extraporder1,&numbdypoints_freepts_extraporder1,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                 		}
             		}   
             		if (output_bdy_extraporder2)
@@ -9082,7 +9082,7 @@ void AdS4D_post_tstep(int L)
                 		if (remove_repeated_bdypoints)
                     	{
                         	//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 	    
                         	MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -9317,7 +9317,7 @@ void AdS4D_post_tstep(int L)
                     	} //closes condition on remove_repeated_bdypoints
                     	else
                     	{
-                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder2,&numbdypoints_freepts_extraporder2,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     	}
             		}  
             		if (output_bdy_extraporder3)
@@ -9326,7 +9326,7 @@ void AdS4D_post_tstep(int L)
                     	if (remove_repeated_bdypoints)
                     	{
                         	//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
 	    
                         	MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
@@ -9561,7 +9561,7 @@ void AdS4D_post_tstep(int L)
                     	} //closes condition on remove_repeated_bdypoints
                     	else
                     	{
-                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_freepts_(chrbdy_freepts_extraporder3,&numbdypoints_freepts_extraporder3,&bdy_extrap_order,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     	}
             		}  
         		}   
@@ -9582,7 +9582,7 @@ void AdS4D_post_tstep(int L)
                     	if (remove_repeated_bdypoints)
                     	{
                         	//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         	MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         	dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -9816,7 +9816,7 @@ void AdS4D_post_tstep(int L)
                     	} //closes condition on remove_repeated_bdypoints
                     	else
                     	{
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder1,&numbdypoints_fixedpts_extraporder1,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     	}
             		}   
             		if (output_bdy_extraporder2)
@@ -9825,7 +9825,7 @@ void AdS4D_post_tstep(int L)
                      	if (remove_repeated_bdypoints)
                     	{
                         	//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         	MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         	dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -10059,7 +10059,7 @@ void AdS4D_post_tstep(int L)
                     	} //closes condition on remove_repeated_bdypoints
                     	else
                     	{
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder2,&numbdypoints_fixedpts_extraporder2,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     	}
             		}  
 					if (output_bdy_extraporder3)
@@ -10068,7 +10068,7 @@ void AdS4D_post_tstep(int L)
                     	if (remove_repeated_bdypoints)
                     	{
                         	//routine that sets a mask for near bdy points. We will call these "nexttobdypoints". The number of nexttobdypoints is also the number of points at the boundary where we will extrapolate the stress-energy tensor in AdS4D_pre_tstep and AdS4D_post_tstep. We call this number numbdypoints.
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_tmp,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                         	MPI_Comm_size(MPI_COMM_WORLD,&uniSize); 
                         	vecbdypoints_tmp = malloc(uniSize*sizeof(int));
                         	dsplsbdypoints_tmp = malloc(uniSize*sizeof(int));    
@@ -10302,7 +10302,7 @@ void AdS4D_post_tstep(int L)
                     	} //closes condition on remove_repeated_bdypoints
                     	else
                     	{
-                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_coord_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+                        	nexttobdypoints_fixedpts_(chrbdy_fixedpts_extraporder3,&numbdypoints_fixedpts_extraporder3,&bdy_extrap_order,&ind_distance_fixedpts,&currentres_ratio_Lhighres_Llowres,&num_fixed_coords,fixed_coords,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
                     	}
             		}   
         		}   
