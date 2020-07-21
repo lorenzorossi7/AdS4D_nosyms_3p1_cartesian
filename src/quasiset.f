@@ -78,7 +78,7 @@ c----------------------------------------------------------------------
            end if
 
 !select only points that have radius smaller than (1-5*dx/2).
-!For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2
+!For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
             if ((rhop1.lt.(1-5*dx/2))
      &          .and.(rhop1.gt.smallest_rho_extrap)
      &          .and.(chr(i,j,k).ne.ex)
@@ -148,9 +148,6 @@ c----------------------------------------------------------------------
 
            if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then 
               if ((i-1).lt.is) then !it ensures that the index i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -175,9 +172,6 @@ c----------------------------------------------------------------------
 
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-1).lt.js) then !it ensures that the index j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation  at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -201,9 +195,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-1).lt.ks) then !it ensures that the index k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -246,9 +237,6 @@ c----------------------------------------------------------------------
 
            if (bdy_extrappt_order.eq.2) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then
               if ((i-2).lt.is) then !it ensures that the index i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -277,9 +265,6 @@ c----------------------------------------------------------------------
 
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-2).lt.js) then !it ensures that the index j-2,j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -307,9 +292,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-2).lt.ks) then !it ensures that the index k-2,k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -369,9 +351,6 @@ c----------------------------------------------------------------------
 
           if (bdy_extrappt_order.eq.3) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then
               if ((i-3).lt.is) then !it ensures that the index i-3,i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -404,9 +383,6 @@ c----------------------------------------------------------------------
 
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-3).lt.js) then !it ensures that the index j-2,j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -438,9 +414,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-3).lt.ks) then !it ensures that the index k-2,k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -632,7 +605,7 @@ c----------------------------------------------------------------------
            end if
 
 !select only points that have radius smaller than (1-5*currentres_ratio_Lhighres_Llowres*dx/2).
-!for the lowest degree resolution, currentres_ratio_Lhighres_Llowres=1. For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2 
+!for the lowest degree resolution, currentres_ratio_Lhighres_Llowres=1. For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
 
             if ((rhop1.lt.
      &          (1-5*currentres_ratio_Lhighres_Llowres*dx/2))
@@ -730,9 +703,6 @@ c----------------------------------------------------------------------
            maxxyzp1=max(abs(xp1),abs(yp1),abs(zp1))
            if (bdy_extrappt_order.eq.1) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then
               if ((i-ind_distance_fixedpts).lt.is) then !it ensures that the index i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -756,9 +726,6 @@ c----------------------------------------------------------------------
              end if
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-ind_distance_fixedpts).lt.js) then !it ensures that the index j-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation  at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -782,9 +749,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-ind_distance_fixedpts).lt.ks) then !it ensures that the index k-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -827,9 +791,6 @@ c----------------------------------------------------------------------
 
            if (bdy_extrappt_order.eq.2) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then
               if ((i-2*ind_distance_fixedpts).lt.is) then !it ensures that the index i-2*ind_distance_fixedpts,i-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -857,9 +818,6 @@ c----------------------------------------------------------------------
              end if
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-2*ind_distance_fixedpts).lt.js) then !it ensures that the index j-2*ind_distance_fixedpts,j-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -887,9 +845,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-2*ind_distance_fixedpts).lt.ks) then !it ensures that the index k-2*ind_distance_fixedpts,k-ind_distance_fixedpts is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -948,9 +903,6 @@ c----------------------------------------------------------------------
 
           if (bdy_extrappt_order.eq.3) then
             if ((abs(maxxyzp1-abs(xp1)).lt.10.0d0**(-10))) then
-!             if (abs(xp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (xp1.gt.0) then
               if ((i-3*ind_distance_fixedpts).lt.is) then !it ensures that the index i-3,i-2,i-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -983,9 +935,6 @@ c----------------------------------------------------------------------
 
 
             else if ((abs(maxxyzp1-abs(yp1)).lt.10.0d0**(-10))) then
-!             if (abs(yp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (yp1.gt.0) then
               if ((j-3*ind_distance_fixedpts).lt.js) then !it ensures that the index j-2,j-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex
@@ -1017,9 +966,6 @@ c----------------------------------------------------------------------
              end if
 
             else !i.e. when maxxyzp1.eq.abs(zp1)
-!             if (abs(zp1).lt.smallest_rho_extrap) then !it ensures that the first extrapolated point is not too far from the AdS boundary
-!                   chrbdy(i,j,k)=ex
-!             else 
              if (zp1.gt.0) then
               if ((k-3*ind_distance_fixedpts).lt.ks) then !it ensures that the index k-2,k-1 is not out of bounds and that near-boundary quantities are defined at other points used for extrapolation
                    chrbdy(i,j,k)=ex

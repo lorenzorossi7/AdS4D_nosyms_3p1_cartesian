@@ -24,7 +24,7 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 0000
+AH_max_iter := 10000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
@@ -32,10 +32,10 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 4
-AH_freq_aft := 40
+AH_freq := 8
+AH_freq_aft := 80
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 1.0
+ex_rbuf := 0.15
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
@@ -56,7 +56,7 @@ output_bdyquantities := 1
 output_outermostpts := 1
 bdy_extrap_freepts := 1
 bdy_extrap_fixedpts := 1
-smallest_rho_extrap := 0.9
+smallest_rho_extrap := 0.94
 output_bdy_extraporder1 := 1
 output_bdy_extraporder2 := 1
 output_bdy_extraporder3 := 1
@@ -65,8 +65,8 @@ output_AdS_mass := 0
 #setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
 output_relkretschcentregrid := 1
 output_kretsch := 1
-reduced_ascii := 0
-reduction_factor_ascii := 1
+reduced_ascii := 1
+reduction_factor_ascii := 48
 alltimes_ascii := 1
 timestep_ascii := 1
 
@@ -238,6 +238,6 @@ global_var_norm_floor := 1
 
 save_tag := "AdS4D_3p1_gauge3_L2_"
 
-save_ivec := 1-*/4
+save_ivec := 1-*/8
 
 #-----------------------------------------------------
