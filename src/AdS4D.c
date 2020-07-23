@@ -6019,7 +6019,7 @@ void AdS4D_pre_tstep(int L)
     
                             if (alltimes_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6029,7 +6029,7 @@ void AdS4D_pre_tstep(int L)
     
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
@@ -6044,7 +6044,7 @@ void AdS4D_pre_tstep(int L)
                                 }     
                                     
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6057,7 +6057,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
@@ -6074,7 +6074,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }        
                                     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6087,7 +6087,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6103,7 +6103,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }      
         
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6116,7 +6116,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -6381,7 +6381,7 @@ void AdS4D_pre_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6390,7 +6390,7 @@ void AdS4D_pre_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
@@ -6404,7 +6404,7 @@ void AdS4D_pre_tstep(int L)
                                 fclose(fp);
                             }   
                                 // save quasiset_ll as ascii
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6416,7 +6416,7 @@ void AdS4D_pre_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
@@ -6432,7 +6432,7 @@ void AdS4D_pre_tstep(int L)
                                 }
                                 fclose(fp);
                             }   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6444,7 +6444,7 @@ void AdS4D_pre_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6459,7 +6459,7 @@ void AdS4D_pre_tstep(int L)
                                 }
                                 fclose(fp);
                             }   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6471,7 +6471,7 @@ void AdS4D_pre_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -6729,7 +6729,7 @@ void AdS4D_pre_tstep(int L)
     
                             if (alltimes_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -6739,7 +6739,7 @@ void AdS4D_pre_tstep(int L)
     
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
@@ -6754,7 +6754,7 @@ void AdS4D_pre_tstep(int L)
                                 }     
                                     
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -6767,7 +6767,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
@@ -6784,7 +6784,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }        
                                     
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -6797,7 +6797,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -6813,7 +6813,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }      
         
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -6826,7 +6826,7 @@ void AdS4D_pre_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -7097,7 +7097,7 @@ void AdS4D_pre_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7106,7 +7106,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
@@ -7120,7 +7120,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7132,7 +7132,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
@@ -7148,7 +7148,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7160,7 +7160,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7175,7 +7175,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7187,7 +7187,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -7444,7 +7444,7 @@ void AdS4D_pre_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7453,7 +7453,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
@@ -7467,7 +7467,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7479,7 +7479,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
@@ -7495,7 +7495,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7507,7 +7507,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7522,7 +7522,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7534,7 +7534,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -7791,7 +7791,7 @@ void AdS4D_pre_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -7800,7 +7800,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
@@ -7814,7 +7814,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -7826,7 +7826,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
@@ -7842,7 +7842,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -7854,7 +7854,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -7869,7 +7869,7 @@ void AdS4D_pre_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -7881,7 +7881,7 @@ void AdS4D_pre_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -11920,7 +11920,7 @@ void AdS4D_post_tstep(int L)
     
                             if (alltimes_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -11930,7 +11930,7 @@ void AdS4D_post_tstep(int L)
     
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
@@ -11945,7 +11945,7 @@ void AdS4D_post_tstep(int L)
                                 }     
                                     
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -11958,7 +11958,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
@@ -11975,7 +11975,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }        
                                     
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -11988,7 +11988,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -12004,7 +12004,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }      
         
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -12017,7 +12017,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder1; j++ )
                                     {
@@ -12282,7 +12282,7 @@ void AdS4D_post_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12291,7 +12291,7 @@ void AdS4D_post_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
@@ -12305,7 +12305,7 @@ void AdS4D_post_tstep(int L)
                                 fclose(fp);
                             }   
                                 // save quasiset_ll as ascii
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12317,7 +12317,7 @@ void AdS4D_post_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 j_red=0;
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
@@ -12333,7 +12333,7 @@ void AdS4D_post_tstep(int L)
                                 }
                                 fclose(fp);
                             }   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12345,7 +12345,7 @@ void AdS4D_post_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12360,7 +12360,7 @@ void AdS4D_post_tstep(int L)
                                 }
                                 fclose(fp);
                             }   
-                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12372,7 +12372,7 @@ void AdS4D_post_tstep(int L)
                                 fclose(fp); 
                             if ((reduced_ascii) && (reduction_factor_ascii!=0))
                             {
-                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                sprintf(name,"AdSbdy_freepts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                 fp = fopen(name, "a+");
                                 for( j = 0; j < basenumbdypoints_freepts_extraporder2; j++ )
                                 {
@@ -12630,7 +12630,7 @@ void AdS4D_post_tstep(int L)
     
                             if (alltimes_ascii)
                             {     
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12640,7 +12640,7 @@ void AdS4D_post_tstep(int L)
     
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
@@ -12655,7 +12655,7 @@ void AdS4D_post_tstep(int L)
                                 }     
                                     
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12668,7 +12668,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
@@ -12685,7 +12685,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }        
                                     
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12698,7 +12698,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12714,7 +12714,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }      
         
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12727,7 +12727,7 @@ void AdS4D_post_tstep(int L)
         
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_freepts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_freepts_extraporder3; j++ )
                                     {
@@ -12998,7 +12998,7 @@ void AdS4D_post_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13007,7 +13007,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
@@ -13021,7 +13021,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13033,7 +13033,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
@@ -13049,7 +13049,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13061,7 +13061,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13076,7 +13076,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13088,7 +13088,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder1_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder1; j++ )
                                     {
@@ -13345,7 +13345,7 @@ void AdS4D_post_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13354,7 +13354,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
@@ -13368,7 +13368,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13380,7 +13380,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
@@ -13396,7 +13396,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13408,7 +13408,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13423,7 +13423,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13435,7 +13435,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder2_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder2; j++ )
                                     {
@@ -13692,7 +13692,7 @@ void AdS4D_post_tstep(int L)
                             FILE *fp;   
                             if (alltimes_ascii)
                             {   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -13701,7 +13701,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_bdyphi_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
@@ -13715,7 +13715,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp);
                                 }   
                                     // save quasiset_ll as ascii
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -13727,7 +13727,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetll_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     j_red=0;
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
@@ -13743,7 +13743,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -13755,7 +13755,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisettrace_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -13770,7 +13770,7 @@ void AdS4D_post_tstep(int L)
                                     }
                                     fclose(fp);
                                 }   
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
@@ -13782,7 +13782,7 @@ void AdS4D_post_tstep(int L)
                                     fclose(fp); 
                                 if ((reduced_ascii) && (reduction_factor_ascii!=0))
                                 {
-                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint.txt",AMRD_save_tag);
+                                    sprintf(name,"AdSbdy_fixedpts_extraporder3_reduced_%st_quasisetmassdensity_indbdypoint_alltsteps.txt",AMRD_save_tag);
                                     fp = fopen(name, "a+");
                                     for( j = 0; j < basenumbdypoints_fixedpts_extraporder3; j++ )
                                     {
