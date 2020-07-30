@@ -5764,7 +5764,7 @@ c-------------------------------------------------------------------------------
 !     &         quasiset_chixi(lind),
 !     &         quasiset_xixi(lind),
 !     &         quasiset_trace(lind)
-   !
+!
 !             end if
 !            end if
 
