@@ -506,9 +506,6 @@ c----------------------------------------------------------------------
          end do
         end do
 
-        write(*,*) "numbdypoints,half_steps_from_bdy="
-     &             ,numbdypoints,half_steps_from_bdy
-
         return
         end
 

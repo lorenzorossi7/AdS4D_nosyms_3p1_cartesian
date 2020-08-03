@@ -32,8 +32,8 @@ AH_r1 := 0.50
 AH_xc :=[0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 18
-AH_freq_aft := 180
+AH_freq := 8
+AH_freq_aft := 80
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
 ex_rbuf := 0.15
 AH_reset_scale := 1.1
@@ -56,18 +56,23 @@ output_bdyquantities := 1
 output_outermostpts := 1
 bdy_extrap_freepts := 1
 bdy_extrap_fixedpts := 1
-half_steps_from_bdy := 9
+half_steps_from_bdy_paramset1 := 9
+half_steps_from_bdy_paramset2 := 5
 smallest_rho_extrap := 0.945
-output_bdy_extraporder1 := 1
-output_bdy_extraporder2 := 1
-output_bdy_extraporder3 := 1
-output_bdy_extraporder4 := 0
+output_bdy_extraporder1_paramset1 := 1
+output_bdy_extraporder2_paramset1 := 1
+output_bdy_extraporder3_paramset1 := 1
+output_bdy_extraporder4_paramset1 := 0
+output_bdy_extraporder1_paramset2 := 1
+output_bdy_extraporder2_paramset2 := 1
+output_bdy_extraporder3_paramset2 := 1
+output_bdy_extraporder4_paramset2 := 0
 output_AdS_mass := 0
 #setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
 output_relkretschcentregrid := 1
 output_kretsch := 1
-reduced_ascii := 1
-reduction_factor_ascii := 108
+reduced_ascii := 0
+reduction_factor_ascii := 48
 alltimes_ascii := 1
 timestep_ascii := 1
 
@@ -101,12 +106,12 @@ ID_DV_trace := 0
 #------ grid/parallel/AMR parameters ---------------------------------------
 ratio_Lhighres_Llowres := 1.5
 #resolution_degree is the degree of the current resolution w.r.t. to the lowest resolution that we are going to use to for the convergence factor, i.e. 1 for the lowest resolution, 2 for the middle one and  3 for the highest one
-resolution_degree := 3
+resolution_degree := 2
 max_resolution_degree := 3
 #reduction_factor is the factor by which we need to reduce the number points of the lowest resolution used for convergence (i.e. the resolution with degree 1) so that we only select points that are present also in the resolutions with degree 2 and 3. To get the exact same points in higher resolutions, we need to reduce by a factor (reduction_factor**(max_resolution_degree-1))*((ratio_Lhighres_Llowres)**(resolution_degree-1)). ratio_Lhighres_Llowres and reduction_factor must be chosen so that this factor is an integer for all resolutions
 reduction_factor := 2
 
-base_shape := [325 325 325]
+base_shape := [145 145 145]
 max_lev := 1
 lambda := 0.15
 rho_sp := 2
@@ -191,8 +196,8 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 0.0
-cp_save_fname := "cp_L3"
-cp_restore_fname := "cp_L3_A"
+cp_save_fname := "cp_L2"
+cp_restore_fname := "cp_L2_A"
 
 #------- solution related -------------------------------------------------
 
@@ -237,8 +242,8 @@ save_3_vars := [ "gb_xx" "Hb_x" ]
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_3p1_gauge3_L3_"
+save_tag := "AdS4D_3p1_gauge3_L2_"
 
-save_ivec := 1-*/18
+save_ivec := 1-*/8
 
 #-----------------------------------------------------
