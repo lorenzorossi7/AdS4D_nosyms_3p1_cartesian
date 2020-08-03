@@ -3144,8 +3144,8 @@ void AdS4D_pre_io_calc(void)
                 	else
                 	{
                 		nexttobdypoints_freepts_(chrbdy_freepts_extraporder1_paramset1,&numbdypoints_freepts_extraporder1_paramset1,&bdy_extrap_order,&half_steps_from_bdy_paramset1,&smallest_rho_extrap,x,y,z,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
-                		printf("half_steps_from_bdy_paramset1=%i\n",half_steps_from_bdy_paramset1);
-                		printf("numbdypoints_freepts_extraporder1_paramset1=%i\n",numbdypoints_freepts_extraporder1_paramset1);
+                		//printf("half_steps_from_bdy_paramset1=%i\n",half_steps_from_bdy_paramset1);
+                		//printf("numbdypoints_freepts_extraporder1_paramset1=%i\n",numbdypoints_freepts_extraporder1_paramset1);
                 	}
 
             	}   
