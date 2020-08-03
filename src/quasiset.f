@@ -8,6 +8,7 @@ c----------------------------------------------------------------------
      &                  chrbdy,
      &                  numbdypoints,
      &                  bdy_extrappt_order,
+     &                  half_steps_from_bdy,
      &                  smallest_rho_extrap,
      &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
@@ -33,6 +34,7 @@ c----------------------------------------------------------------------
         real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
+        integer half_steps_from_bdy
         real*8 smallest_rho_extrap
         integer bdy_extrappt_order
 
@@ -78,8 +80,8 @@ c----------------------------------------------------------------------
            end if
 
 !select only points that have radius smaller than (1-5*dx/2).
-!For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
-            if ((rhop1.lt.(1-5*dx/2))
+!For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. However, we see that we get good convergence only if we use points with rho<1-9*dx/2. This should be understood in the future. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
+            if ((rhop1.lt.(1-half_steps_from_bdy*dx/2))
      &          .and.(rhop1.gt.smallest_rho_extrap)
      &          .and.(chr(i,j,k).ne.ex)
      &         ) then
@@ -524,6 +526,7 @@ c----------------------------------------------------------------------
      &                  currentres_ratio_Lhighres_Llowres,
      &                  num_fixed_coords,
      &                  fixed_coords,
+     &                  half_steps_from_bdy,
      &                  smallest_rho_extrap,
      &                  x,y,z,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
@@ -550,6 +553,7 @@ c----------------------------------------------------------------------
         real*8 xp1,yp1,zp1,rhop1,chip1,xip1
         real*8 maxxyzp1
         integer numbdypoints
+        integer half_steps_from_bdy
         real*8 smallest_rho_extrap
         integer bdy_extrappt_order
 
@@ -605,10 +609,11 @@ c----------------------------------------------------------------------
            end if
 
 !select only points that have radius smaller than (1-5*currentres_ratio_Lhighres_Llowres*dx/2).
-!for the lowest degree resolution, currentres_ratio_Lhighres_Llowres=1. For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
+!for the lowest degree resolution, currentres_ratio_Lhighres_Llowres=1. For each resolution, points between rhobdy=1 and 1-dx/2 are excised, points between rhobdy=1 and 1-3*dx/2 use forward/backward stencils (so when we cannot expect convergence at these points because the stencils used are different for different resolutions), points between rhobdy=1 and 1-5*dx/2 use points that are set by forward/backward stencils, so we cannot expect convergence. If we want to check convergence at the grid points used for extrapolation at the boundary, we need to pick points that have rho<1-5*dx/2. However, we see that we get good convergence only if we use points with rho<1-9*dx/2. This should be understood in the future. The condition rhop1>smallest_rho_extrap ensures that the first suitable point for extrapolation is not too far from the AdS boundary.
 
             if ((rhop1.lt.
-     &          (1-5*currentres_ratio_Lhighres_Llowres*dx/2))
+     &          (1-half_steps_from_bdy
+     &             *currentres_ratio_Lhighres_Llowres*dx/2))
      &          .and.(rhop1.gt.smallest_rho_extrap)
      &          .and.(chr(i,j,k).ne.ex)
      &         ) then
