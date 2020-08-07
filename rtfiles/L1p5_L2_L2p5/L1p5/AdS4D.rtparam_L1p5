@@ -58,6 +58,8 @@ bdy_extrap_freepts := 1
 bdy_extrap_fixedpts := 1
 half_steps_from_bdy_ext_paramset1 := 9
 half_steps_from_bdy_ext_paramset2 := 5
+half_steps_from_bdy_int_paramset1 := 12
+half_steps_from_bdy_int_paramset2 := 12
 output_bdy_extraporder1_paramset1 := 1
 output_bdy_extraporder2_paramset1 := 1
 output_bdy_extraporder3_paramset1 := 1
@@ -110,9 +112,9 @@ max_resolution_degree := 3
 #reduction_factor is the factor by which we need to reduce the number points of the lowest resolution used for convergence (i.e. the resolution with degree 1) so that we only select points that are present also in the resolutions with degree 2 and 3. To get the exact same points in higher resolutions, we need to reduce by a factor (reduction_factor**(max_resolution_degree-1))*((ratio_Lhighres_Llowres)**(resolution_degree-1)). ratio_Lhighres_Llowres and reduction_factor must be chosen so that this factor is an integer for all resolutions
 reduction_factor := 2
 
-base_shape := [33 33 33]
+base_shape := [97 97 97]
 max_lev := 1
-lambda := 0.15
+lambda := 0.3
 rho_sp := 2
 rho_tm := 2
 

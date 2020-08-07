@@ -58,6 +58,8 @@ bdy_extrap_freepts := 1
 bdy_extrap_fixedpts := 1
 half_steps_from_bdy_ext_paramset1 := 9
 half_steps_from_bdy_ext_paramset2 := 5
+half_steps_from_bdy_int_paramset1 := 12
+half_steps_from_bdy_int_paramset2 := 12
 output_bdy_extraporder1_paramset1 := 1
 output_bdy_extraporder2_paramset1 := 1
 output_bdy_extraporder3_paramset1 := 1
@@ -112,7 +114,7 @@ reduction_factor := 2
 
 base_shape := [145 145 145]
 max_lev := 1
-lambda := 0.15
+lambda := 0.3
 rho_sp := 2
 rho_tm := 2
 
