@@ -58,14 +58,12 @@ int cp_version;
 real ex_rbuf[MAX_BHS];
 int ex_reset_rbuf;
 int ex_max_repop,ex_repop_buf,ex_repop_io;
+//Option important when restarting from checkpoint: in case the excision surface of the new run is smaller than the one in the old one, this option makes sure that all the points excised in the previous run are excised in the current one
+int excise_prev_run_ex_pts;
+real prev_run_ex_r[MAX_BHS][3];
 
 // "internal" excision parameters, set by AH finder (eventually)
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
-
-//Option important when restarting from checkpoint: in case the excision surface of the new run is smaller than the one in the old one, this option makes sure that all the points excised in the previous run are excised in the current one
-int excise_prev_ex_pts=1;
-// "internal" excision parameters, set manually when enabling excise_prev_ex_pts=1
-real prev_run_ex_r_xp[MAX_BHS],prev_run_ex_r_yp[MAX_BHS],prev_run_ex_r_zp[MAX_BHS];
 
 int background,skip_constraints;
 int output_ires,output_relkretschcentregrid,output_kretsch,output_relkretsch;
@@ -193,9 +191,7 @@ int ind_distance_fixedpts;
 int num_fixed_coords;
 real *fixed_coords;
 
-int remove_repeated_bdypoints=0;
-//Option to remove repeated boundary points that could appear from different outermost bulk points in different processes that have the same corresponding extrapolated point
-//WARNING: if we use many processes removing repeated points can take loop will take a long time. In that case it's better to eliminate repeated points in post-processing
+int remove_repeated_bdypoints;
 
 int numbdypoints_tmp;
 int basenumbdypoints_tmp;
@@ -2103,6 +2099,7 @@ void AdS4D_var_post_init(char *pfile)
     half_steps_from_bdy_ext_paramset2=1; AMRD_int_param(pfile,"half_steps_from_bdy_ext_paramset2",&half_steps_from_bdy_ext_paramset2,1);
     half_steps_from_bdy_int_paramset1=1; AMRD_int_param(pfile,"half_steps_from_bdy_int_paramset1",&half_steps_from_bdy_int_paramset1,1);
     half_steps_from_bdy_int_paramset2=1; AMRD_int_param(pfile,"half_steps_from_bdy_int_paramset2",&half_steps_from_bdy_int_paramset2,1);
+    remove_repeated_bdypoints=0; AMRD_int_param(pfile,"remove_repeated_bdypoints",&remove_repeated_bdypoints,1);
 
     //allocate memory for relative Kretschmann scalar at the centre of the grid
     if (output_relkretschcentregrid)
@@ -2224,11 +2221,20 @@ void AdS4D_var_post_init(char *pfile)
         AMRD_real_param(pfile,buf,&AH_omt_scale[l],1);  
         if (!AMRD_cp_restart || !found_AH[l])
         {
-            AH_xc[l][0]=AH_xc[l][1]=0;
+            for (i=0;i<AMRD_dim;i++) {AH_xc[l][i]=0.0;}
             if (l==0) sprintf(buf,"AH_xc");
             else sprintf(buf,"AH_xc_%i",l+1);
             AMRD_real_param(pfile,buf,AH_xc[l],AMRD_dim);
-        }   
+        }
+	if (AMRD_cp_restart) {excise_prev_run_ex_pts=0; AMRD_int_param(pfile,"excise_prev_run_ex_pts",&excise_prev_run_ex_pts,1);}
+	if (AMRD_cp_restart&&excise_prev_run_ex_pts)
+	{
+		for (i=0;i<AMRD_dim;i++) {prev_run_ex_r[l][i]=0.0;}
+		if (l==0) sprintf(buf,"prev_run_ex_r");
+	        else sprintf(buf,"prev_run_ex_r_%i",l+1);
+        	AMRD_real_param(pfile,buf,prev_run_ex_r[l],AMRD_dim);
+	}
+ 
         if (AH_rsteps[l]<1) AMRD_stop("error ... AH_rsteps<1\n","");    
         AH_theta[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real)); 
         if (output_metricatAH)
@@ -6298,7 +6304,7 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
 {
     int i,j,k,ind,l;
     real x,y,z,dx,dy,dz,rho,xp,yp,zp,ex_r_xp,ex_r_yp,ex_r_zp,r; 
-    real prev_run_r;
+    real prev_run_ex_r_xp,prev_run_ex_r_yp,prev_run_ex_r_zp,prev_run_r;
 
     //if (my_rank==0) {printf("AdS4D_fill_ex_mask is called\n");  fflush(stdout);}
 
@@ -6349,15 +6355,18 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                                 mask[ind]=excised;
                             }
 
- 	    	            //when restarting from checkpoint, it is possible that the new excision surface is smaller than the old one (usually because the AH found is smaller than the one in the old run), which causes issues. In that case, there might be (depending on the value of the excision buffer and the shape of the AH) points not excised where the various grid functions (e.g. gb_xx_n) are 0 because they were excised in the previous run. The next piece makes sure that those points are also excised. SET excise_prev_ex_pts=1 IF YOU WANT TO DO THIS
+ 	    	            //when restarting from checkpoint, it is possible that the new excision surface is smaller than the old one (usually because the AH found is smaller than the one in the old run), which causes issues. In that case, there might be (depending on the value of the excision buffer and the shape of the AH) points not excised where the various grid functions (e.g. gb_xx_n) are 0 because they were excised in the previous run. The next piece makes sure that those points are also excised. SET excise_prev_run_ex_pts=1 IF YOU WANT TO DO THIS
 
-			    else if ((AMRD_cp_restart)&&(excise_prev_ex_pts))
+			    else if ((AMRD_cp_restart)&&(excise_prev_run_ex_pts))
 			    {
 				if (ex_r[l][0]>0.0)
 				{
-					if ((prev_run_ex_r_xp[l]>ex_r_xp)||(prev_run_ex_r_yp[l]>ex_r_yp)||(prev_run_ex_r_zp[l]>ex_r_zp))
+					prev_run_ex_r_xp=prev_run_ex_r[l][0];
+                                        prev_run_ex_r_yp=prev_run_ex_r[l][1];
+                                        prev_run_ex_r_zp=prev_run_ex_r[l][2];
+					if ((prev_run_ex_r_xp>ex_r_xp)||(prev_run_ex_r_yp>ex_r_yp)||(prev_run_ex_r_zp>ex_r_zp))
 					{
-                                        	prev_run_r=sqrt(xp*xp/prev_run_ex_r_xp[l]/prev_run_ex_r_xp[l]+yp*yp/prev_run_ex_r_yp[l]/prev_run_ex_r_yp[l]+zp*zp/prev_run_ex_r_zp[l]/prev_run_ex_r_zp[l]);
+                                        	prev_run_r=sqrt(xp*xp/prev_run_ex_r_xp/prev_run_ex_r_xp+yp*yp/prev_run_ex_r_yp/prev_run_ex_r_yp+zp*zp/prev_run_ex_r_zp/prev_run_ex_r_zp);
                                                 if (prev_run_r<1)
                                                 {
                                            	     mask[ind]=excised;
@@ -14891,23 +14900,8 @@ void AdS4D_pre_tstep(int L)
     if (do_reinit_ex)
     {   //     remove_redundant_AH();
 	//if (my_rank==0) {printf("...setting excision mask...\n");}
-        if ((AMRD_cp_restart)&&(excise_prev_ex_pts))
+        if ((AMRD_cp_restart)&&(excise_prev_run_ex_pts))
         {
-
-
-		//set the excision ellipse semi-axes of the last excision surface of the previous run manually when enabling excise_prev_ex_pts=1
-		prev_run_ex_r_xp[0]=0.234346;
-		prev_run_ex_r_yp[0]=0.225798;
-		prev_run_ex_r_zp[0]=0.225800;
-		prev_run_ex_r_xp[1]=0.0;
-		prev_run_ex_r_yp[1]=0.0;
-		prev_run_ex_r_zp[1]=0.0;
-		prev_run_ex_r_xp[2]=0.0;
-		prev_run_ex_r_yp[2]=0.0;
-		prev_run_ex_r_zp[2]=0.0;
-		prev_run_ex_r_xp[3]=0.0;
-		prev_run_ex_r_yp[3]=0.0;
-		prev_run_ex_r_zp[3]=0.0;
 
 	        if (my_rank==0)
 	        {       
@@ -14915,11 +14909,11 @@ void AdS4D_pre_tstep(int L)
 	                {       
 	                        if (ex_r[l][0]>0.0)
 	                        {     
-                                        if ((prev_run_ex_r_xp[l]>ex_r[l][0]*(1-ex_rbuf[l]))||(prev_run_ex_r_yp[l]>ex_r[l][1]*(1-ex_rbuf[l]))||(prev_run_ex_r_zp[l]>ex_r[l][2]*(1-ex_rbuf[l])))
+                                        if ((prev_run_ex_r[l][0]>ex_r[l][0]*(1-ex_rbuf[l]))||(prev_run_ex_r[l][1]>ex_r[l][1]*(1-ex_rbuf[l]))||(prev_run_ex_r[l][2]>ex_r[l][2]*(1-ex_rbuf[l])))
                                         {  
 		                                printf("WARNING: for excised region %i, at least one excision ellipse semi-axis is smaller than the last corresponding one in the previous run...\n",l);
 		                                printf("...excising points that were excised in the previous run but are outside the excision surface of the current run\n");                      
-	        	                        printf("effective excision ellipse semiaxes (hard-coded manually in app_pre_tstep before calling PAMR_excision_on for now!): (prev_run_ex_r_xp[%i],prev_run_ex_r_yp[%i],prev_run_ex_r_zp[%i])=(%lf,%lf,%lf)\n",l,l,l,prev_run_ex_r_xp[l],prev_run_ex_r_yp[l],prev_run_ex_r_zp[l]);
+	        	                        printf("effective excision ellipse semiaxes (read from parameter file for now!): (prev_run_ex_r[%i][0],prev_run_ex_r[%i][1],prev_run_ex_r[%i][2])=(%lf,%lf,%lf)\n",l,l,l,prev_run_ex_r[l][0],prev_run_ex_r[l][1],prev_run_ex_r[l][2]);
 					}
 	                        }
 	                }

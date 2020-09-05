@@ -5,7 +5,7 @@ refsym := 0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 10.0
+phi1_amp_1 := 0.55
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.2
 phi1_x0_1 := [0.0 0.0 0.0]
@@ -24,24 +24,31 @@ ief_bh_r0 := 0.0
 AH_Lmin := 1
 AH_rsteps := 10
 AH_eps := 0.0
-AH_max_iter := 0000
+AH_max_iter := 10000
 AH_lambda := 0.0001
 AH_tol := 1e-2
 AH_r0 := 0.10
 AH_r1 := 0.50
-AH_xc :=[0.0 0.0 0.0]
+AH_xc := [0.0 0.0 0.0]
 AH_Nchi := 9
 AH_Nphi := 17
-AH_freq := 1
-AH_freq_aft := 1
+AH_freq := 81
+AH_freq_aft := 810
 #excision buffer, i.e. how wide the region to evolve within the AH (or the AdS boundary if there is no BH) is
-ex_rbuf := 0.65
+ex_rbuf := 0.35
 AH_reset_scale := 1.1
 AH_max_iter_2 := 0
 AH_max_iter_3 := 0
 AH_max_iter_4 := 0
 AH_tmin := 0
 output_metricatAH := 1
+#Option important when restarting from checkpoint: in case the excision surface of the new run is smaller than the one in the old one, this option makes sure that all the points excised in the previous run are excised in the current one
+excise_prev_run_ex_pts := 0
+#excision ellipse semi-axes of the previous run when restarting from checkpoint: they must be set only if we are enabling excise_prev_run_ex_pts
+prev_run_ex_r := [0.0 0.0 0.0]
+prev_run_ex_r_2 := [0.0 0.0 0.0]
+prev_run_ex_r_3 := [0.0 0.0 0.0]
+prev_run_ex_r_4 := [0.0 0.0 0.0]
 
 #general (set skip_constraints=1 to make sure Hb_a=0 set to zero;#
 #         otherwise init_hb.f will set Hb_a=-C_a not exactly zero)#
@@ -53,14 +60,32 @@ background := 0
 skip_constraints := 0
 output_ires := 1
 output_bdyquantities := 1
+output_outermostpts := 1
+bdy_extrap_freepts := 1
+bdy_extrap_fixedpts := 1
+half_steps_from_bdy_ext_paramset1 := 9
+half_steps_from_bdy_ext_paramset2 := 5
+half_steps_from_bdy_int_paramset1 := 12
+half_steps_from_bdy_int_paramset2 := 12
+output_bdy_extraporder1_paramset1 := 1
+output_bdy_extraporder2_paramset1 := 1
+output_bdy_extraporder3_paramset1 := 1
+output_bdy_extraporder4_paramset1 := 0
+output_bdy_extraporder1_paramset2 := 1
+output_bdy_extraporder2_paramset2 := 1
+output_bdy_extraporder3_paramset2 := 1
+output_bdy_extraporder4_paramset2 := 0
 output_AdS_mass := 0
+output_kretsch := 1
 #setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
 output_relkretschcentregrid := 1
-output_kretsch := 1
 reduced_ascii := 0
-reduction_factor := 1
-alltimes_ascii := 1
+reduction_factor_ascii := 81
+alltimes_ascii := 0
 timestep_ascii := 1
+#Option to remove repeated boundary points that could appear from different outermost bulk points in different processes that have the same corresponding extrapolated point
+#WARNING: if we use many processes removing repeated points can take loop will take a long time. In that case it's better to eliminate repeated points in post-processing
+remove_repeated_bdypoints := 0
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
 
@@ -90,9 +115,16 @@ evo_DV_trace_t_off := 1
 ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
-base_shape := [65 65 65]
+ratio_Lhighres_Llowres := 1.5
+#resolution_degree is the degree of the current resolution w.r.t. to the lowest resolution that we are going to use to for the convergence factor, i.e. 1 for the lowest resolution, 2 for the middle one and  3 for the highest one
+resolution_degree := 4
+max_resolution_degree := 4
+#reduction_factor is the factor by which we need to reduce the number points of the lowest resolution used for convergence (i.e. the resolution with degree 1) so that we only select points that are present also in the resolutions with degree 2 and 3. To get the exact same points in higher resolutions, we need to reduce by a factor (reduction_factor**(max_resolution_degree-1))*((ratio_Lhighres_Llowres)**(resolution_degree-1)). ratio_Lhighres_Llowres and reduction_factor must be chosen so that this factor is an integer for all resolutions
+reduction_factor := 2
+
+base_shape := [487 487 487]
 max_lev := 1
-lambda := 0.2
+lambda := 0.3
 rho_sp := 2
 rho_tm := 2
 
@@ -175,12 +207,12 @@ diss_all := 1
 
 cp_restart := 0
 cp_delta_t_hrs := 0.0
-cp_save_fname := "cp_L1"
-cp_restore_fname := "cp_L1_A"
+cp_save_fname := "cp_L3p5"
+cp_restore_fname := "cp_L3p5_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 2
+steps := 3
 evo_max_iter := 25
 evo_min_iter := 1
 evo_tol := 1.0e-10
@@ -209,11 +241,11 @@ max_t_interp_order := 3
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 8
-save_1_vars := [ "iresall" "gb_res" "gb_xx" "Hb_x" "chr" "chrbdy" "leadordcoeff_phi1" "quasiset_tt_ll" ]
+num_save_1_vars := 5
+save_1_vars := [ "iresall" "gb_res" "gb_xx" "kg_ires" "quasiset_tracell" ]
 
-num_save_2_vars := 5
-save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" ]
+num_save_2_vars := 6
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" "gb_tt" ]
 
 num_save_3_vars := 2
 save_3_vars := [ "gb_xx" "Hb_x" ]
@@ -221,8 +253,8 @@ save_3_vars := [ "gb_xx" "Hb_x" ]
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS4D_3p1_gauge3_L1_"
+save_tag := "AdS4D_3p1_gauge3_L3p5_"
 
-save_ivec := 1-*/1
+save_ivec := 1-*/81
 
 #-----------------------------------------------------
