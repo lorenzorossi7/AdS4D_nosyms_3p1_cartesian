@@ -62,6 +62,11 @@ int ex_max_repop,ex_repop_buf,ex_repop_io;
 // "internal" excision parameters, set by AH finder (eventually)
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
+//Option important when restarting from checkpoint: in case the excision surface of the new run is smaller than the one in the old one, this option makes sure that all the points excised in the previous run are excised in the current one
+int excise_prev_ex_pts=1;
+// "internal" excision parameters, set manually when enabling excise_prev_ex_pts=1
+real prev_run_ex_r_xp[MAX_BHS],prev_run_ex_r_yp[MAX_BHS],prev_run_ex_r_zp[MAX_BHS];
+
 int background,skip_constraints;
 int output_ires,output_relkretschcentregrid,output_kretsch,output_relkretsch;
 int output_metricatAH;
@@ -6293,12 +6298,15 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
 {
     int i,j,k,ind,l;
     real x,y,z,dx,dy,dz,rho,xp,yp,zp,ex_r_xp,ex_r_yp,ex_r_zp,r; 
+    real prev_run_r;
+
+    //if (my_rank==0) {printf("AdS4D_fill_ex_mask is called\n");  fflush(stdout);}
 
     dx=(bbox[1]-bbox[0])/(shape[0]-1);
     dy=(bbox[3]-bbox[2])/(shape[1]-1);
-    dz=(bbox[5]-bbox[4])/(shape[2]-1);  
+    dz=(bbox[5]-bbox[4])/(shape[2]-1); 
 
-    //printf("AdS4D_fill_ex_mask is called");  
+
     for (i=0; i<shape[0]; i++)
     {
         x=bbox[0]+i*dx;
@@ -6335,18 +6343,38 @@ void AdS4D_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excise
                             ex_r_zp=(ex_r[l][2]*(1-ex_rbuf[l]));    
                             //                 printf("xp=%lf,yp=%lf,zp=%lf\n",xp,yp,zp);   
                             //                 printf("ex_r_xp=%lf,ex_r_yp=%lf,ex_r_zp=%lf\n",ex_r_xp,ex_r_yp,ex_r_zp);    
-                            if ((r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp+zp*zp/ex_r_zp/ex_r_zp))<1) 
+                            r=sqrt(xp*xp/ex_r_xp/ex_r_xp+yp*yp/ex_r_yp/ex_r_yp+zp*zp/ex_r_zp/ex_r_zp);
+                            if (r<1) 
                             {
                                 mask[ind]=excised;
                             }
+
+ 	    	            //when restarting from checkpoint, it is possible that the new excision surface is smaller than the old one (usually because the AH found is smaller than the one in the old run), which causes issues. In that case, there might be (depending on the value of the excision buffer and the shape of the AH) points not excised where the various grid functions (e.g. gb_xx_n) are 0 because they were excised in the previous run. The next piece makes sure that those points are also excised. SET excise_prev_ex_pts=1 IF YOU WANT TO DO THIS
+
+			    else if ((AMRD_cp_restart)&&(excise_prev_ex_pts))
+			    {
+				if (ex_r[l][0]>0.0)
+				{
+					if ((prev_run_ex_r_xp[l]>ex_r_xp)||(prev_run_ex_r_yp[l]>ex_r_yp)||(prev_run_ex_r_zp[l]>ex_r_zp))
+					{
+                                        	prev_run_r=sqrt(xp*xp/prev_run_ex_r_xp[l]/prev_run_ex_r_xp[l]+yp*yp/prev_run_ex_r_yp[l]/prev_run_ex_r_yp[l]+zp*zp/prev_run_ex_r_zp[l]/prev_run_ex_r_zp[l]);
+                                                if (prev_run_r<1)
+                                                {
+                                           	     mask[ind]=excised;
+                                                }
+                                        }
+				}
+			    }
+
+
+
+			   
                         }
                     }
                 }
             }
         }
     }
-
-
 
 }
 
@@ -14862,23 +14890,60 @@ void AdS4D_pre_tstep(int L)
     // re-initialize mask function
     if (do_reinit_ex)
     {   //     remove_redundant_AH();
+	//if (my_rank==0) {printf("...setting excision mask...\n");}
+        if ((AMRD_cp_restart)&&(excise_prev_ex_pts))
+        {
+
+
+		//set the excision ellipse semi-axes of the last excision surface of the previous run manually when enabling excise_prev_ex_pts=1
+		prev_run_ex_r_xp[0]=0.234346;
+		prev_run_ex_r_yp[0]=0.225798;
+		prev_run_ex_r_zp[0]=0.225800;
+		prev_run_ex_r_xp[1]=0.0;
+		prev_run_ex_r_yp[1]=0.0;
+		prev_run_ex_r_zp[1]=0.0;
+		prev_run_ex_r_xp[2]=0.0;
+		prev_run_ex_r_yp[2]=0.0;
+		prev_run_ex_r_zp[2]=0.0;
+		prev_run_ex_r_xp[3]=0.0;
+		prev_run_ex_r_yp[3]=0.0;
+		prev_run_ex_r_zp[3]=0.0;
+
+	        if (my_rank==0)
+	        {       
+	                for (l=0;l<MAX_BHS;l++)
+	                {       
+	                        if (ex_r[l][0]>0.0)
+	                        {     
+                                        if ((prev_run_ex_r_xp[l]>ex_r[l][0]*(1-ex_rbuf[l]))||(prev_run_ex_r_yp[l]>ex_r[l][1]*(1-ex_rbuf[l]))||(prev_run_ex_r_zp[l]>ex_r[l][2]*(1-ex_rbuf[l])))
+                                        {  
+		                                printf("WARNING: for excised region %i, at least one excision ellipse semi-axis is smaller than the last corresponding one in the previous run...\n",l);
+		                                printf("...excising points that were excised in the previous run but are outside the excision surface of the current run\n");                      
+	        	                        printf("effective excision ellipse semiaxes (hard-coded manually in app_pre_tstep before calling PAMR_excision_on for now!): (prev_run_ex_r_xp[%i],prev_run_ex_r_yp[%i],prev_run_ex_r_zp[%i])=(%lf,%lf,%lf)\n",l,l,l,prev_run_ex_r_xp[l],prev_run_ex_r_yp[l],prev_run_ex_r_zp[l]);
+					}
+	                        }
+	                }
+	        }
+			
+	}
         PAMR_excision_on("chr",&AdS4D_fill_ex_mask,AMRD_ex,1);
+
     }   
         // displays initial black hole radius and excision radius
         if (my_rank==0)
         {
-        if (ief_bh_r0!=0) 
-        {
-            rh=-pow(AdS_L,2)
-            /(pow(3,(1.0/3.0)))
-            /(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
-            +(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
-            /(pow(3,(2.0/3.0)));
-            mh=ief_bh_r0/2;
-            rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh; //         ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
-            printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. \n",mh,rh,rhoh);
-            printf("Excision buffer (i.e. size of the evolved region within the AH) ex_rbuf[0]=%lf\n",ex_rbuf[0]);
-        }
+	        if (ief_bh_r0!=0) 
+	        {
+	            rh=-pow(AdS_L,2)
+	            /(pow(3,(1.0/3.0)))
+	            /(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+	            +(pow((9*pow(AdS_L,2)*(ief_bh_r0/2)+sqrt(3.0)*sqrt(pow(AdS_L,6)+27*pow(AdS_L,4)*pow((ief_bh_r0/2),2))),(1.0/3.0)))
+	            /(pow(3,(2.0/3.0)));
+	            mh=ief_bh_r0/2;
+	            rhoh=(-1 + sqrt(1 + pow(rh,2)))/rh; //         ex_r[0][0]=ex_r[0][1]=ex_r[0][2]=rhoh*(1-ex_rbuf[0]);
+	            printf("\n ... we started with a BH of mass mh=%lf, Schwarzschild radius rh=%lf and compactified radius rhoh=%lf. \n",mh,rh,rhoh);
+	            printf("Excision buffer (i.e. size of the evolved region within the AH) ex_rbuf[0]=%lf\n",ex_rbuf[0]);
+	        }
         }   
 
     return;

@@ -2572,8 +2572,17 @@ c----------------------------------------------------------------------
                 if (first) then
                      first=.false.
                      write(*,*) 'df2_int: error in chr stencil (R)'
-                     write(*,*) '    i,j,k,Nx,Ny,Nz,dz=',i,j,k,
-     &                                                   Nx,Ny,Nz,dz
+                     write(*,*) 'i,j,k,Nx,Ny,Nz,dx,
+     &                           xi,yj,zk,rhoijk,
+     &                           zkp1,zkm1,zkp2,zkm2,
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1),
+     &                           chr(i,j,k+2),chr(i,j,k-2),ex='
+     &                           ,i,j,k,Nx,Ny,Nz,dx,
+     &                           x(i),y(j),z(k),sqrt(x(i)*x(i)
+     &                            +y(j)*y(j)+z(k)*z(k)),
+     &                           z(k+1),z(k-1),z(k+2),z(k-2),
+     &                           chr(i,j,k),chr(i,j,k+1),chr(i,j,k-1),
+     &                           chr(i,j,k+2),chr(i,j,k-2),ex
                      write(*,*) '    (first error only)'
                 end if
                    return
