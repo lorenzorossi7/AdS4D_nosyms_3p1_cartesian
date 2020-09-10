@@ -23,8 +23,8 @@ do_ex :=1
 #       See the maple scripts for the exact definitions     
 #==============================================================================
 
-num_hyperbolic_vars := 31
-hyperbolic_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" ]
+num_hyperbolic_vars := 32
+hyperbolic_vars := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" "relriemanncube" ]
 
 #==============================================================================
 # For now only time-symmetric initial data ... 'conformal' to AdS space
@@ -50,8 +50,8 @@ AMRH_work_in_MGH_vars := [ "phi1_res" "gb_res" "gb_ii_res" "hb_t_res" "hb_i_res"
 num_amr_inject   := 30
 amr_inject       := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]
 
-num_amr_sync     := 31
-amr_sync         := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" ]
+num_amr_sync     := 32
+amr_sync         := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" "relkretsch" "relriemanncube" ]
 
 num_amr_interp4  := 30
 amr_interp4      := [ "phi1" "gb_tt" "gb_tx" "gb_ty" "gb_tz" "gb_xx" "gb_xy" "gb_xz" "gb_yy" "gb_yz" "psi" "Hb_t" "Hb_x" "Hb_y" "Hb_z" "phi1_t" "gb_tt_t" "gb_tx_t" "gb_ty_t" "gb_tz_t" "gb_xx_t" "gb_xy_t" "gb_xz_t" "gb_yy_t" "gb_yz_t" "psi_t" "Hb_t_t" "Hb_x_t" "Hb_y_t" "Hb_z_t" ]

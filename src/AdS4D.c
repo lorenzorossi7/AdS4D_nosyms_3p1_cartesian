@@ -66,7 +66,7 @@ real prev_run_ex_r[MAX_BHS][3];
 real ex_r[MAX_BHS][3],ex_xc[MAX_BHS][3];
 
 int background,skip_constraints;
-int output_ires,output_relkretschcentregrid,output_kretsch,output_relkretsch;
+int output_ires,output_relkretschcentregrid,output_kretsch,output_relkretsch,output_riemanncube;
 int output_metricatAH;
 int output_bdyquantities,output_AdS_mass;
 int output_outermostpts;
@@ -155,6 +155,7 @@ real *Hb_z_t,*Hb_z_t_n;
 
 //variables that are defined in hyperbolic_vars but just because we want them to be synchronized (synchronization only affects the current time level)
 real *relkretsch,*relkretsch_n,*relkretsch_np1,*relkretsch_nm1;
+real *relriemanncube,*relriemanncube_n,*relriemanncube_np1,*relriemanncube_nm1;
 
 real *w1,*mg_w1;
 real *w2,*mg_w2;
@@ -561,6 +562,7 @@ int Hb_z_t_gfn,Hb_z_t_n_gfn;
 
 //variables that are defined in hyperbolic_vars but just because we want them to be synchronized (synchronization only affects the current time level)
 int relkretsch_gfn,relkretsch_n_gfn,relkretsch_np1_gfn,relkretsch_nm1_gfn;
+int relriemanncube_gfn,relriemanncube_n_gfn,relriemanncube_np1_gfn,relriemanncube_nm1_gfn;
 
 int mask_gfn,mask_mg_gfn,chr_gfn,chr_mg_gfn;
 
@@ -1466,6 +1468,10 @@ void set_gfns(void)
     if ((relkretsch_nm1_gfn   = PAMR_get_gfn("relkretsch",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((relkretsch_n_gfn   = PAMR_get_gfn("relkretsch",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((relkretsch_np1_gfn   = PAMR_get_gfn("relkretsch",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((relriemanncube_gfn      = PAMR_get_gfn("relriemanncube",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
+    if ((relriemanncube_nm1_gfn   = PAMR_get_gfn("relriemanncube",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
+    if ((relriemanncube_n_gfn   = PAMR_get_gfn("relriemanncube",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((relriemanncube_np1_gfn   = PAMR_get_gfn("relriemanncube",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
 
     if ((zeta_gfn     = PAMR_get_gfn("zeta",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -1705,11 +1711,17 @@ void ldptr(void)
     Hb_y_t  = gfs[Hb_y_t_gfn-1];
     Hb_y_t_n  = gfs[Hb_y_t_n_gfn-1];
     Hb_z_t  = gfs[Hb_z_t_gfn-1];
-    Hb_z_t_n  = gfs[Hb_z_t_n_gfn-1];    //variables that are defined in hyperbolic_vars but just because we want them to be synchronized (synchronization only affects the current time level)
+    Hb_z_t_n  = gfs[Hb_z_t_n_gfn-1];    
+    //variables that are defined in hyperbolic_vars but just because we want them to be synchronized (synchronization only affects the current time level)
     relkretsch     = gfs[relkretsch_gfn-1];
     relkretsch_n   = gfs[relkretsch_n_gfn-1];
     relkretsch_nm1   = gfs[relkretsch_nm1_gfn-1];
     relkretsch_np1   = gfs[relkretsch_np1_gfn-1];   
+    relriemanncube     = gfs[relriemanncube_gfn-1];
+    relriemanncube_n   = gfs[relriemanncube_n_gfn-1];
+    relriemanncube_nm1   = gfs[relriemanncube_nm1_gfn-1];
+    relriemanncube_np1   = gfs[relriemanncube_np1_gfn-1];  
+
     zeta     = gfs[zeta_gfn-1];
     zeta_lop = gfs[zeta_lop_gfn-1];
     zeta_res = gfs[zeta_res_gfn-1];
@@ -2077,6 +2089,7 @@ void AdS4D_var_post_init(char *pfile)
     ex_reset_rbuf=0; AMRD_int_param(pfile,"ex_reset_rbuf",&ex_reset_rbuf,1);
     output_relkretschcentregrid=0; AMRD_int_param(pfile,"output_relkretschcentregrid",&output_relkretschcentregrid,1);
     output_kretsch=0; AMRD_int_param(pfile,"output_kretsch",&output_kretsch,1); 
+    output_riemanncube=0; AMRD_int_param(pfile,"output_riemanncube",&output_riemanncube,1); 
     output_metricatAH=0; AMRD_int_param(pfile,"output_metricatAH",&output_metricatAH,1);    
     output_bdyquantities=0; AMRD_int_param(pfile,"output_bdyquantities",&output_bdyquantities,1);
     output_outermostpts=0; AMRD_int_param(pfile,"output_outermostpts",&output_outermostpts,1);
@@ -2804,6 +2817,28 @@ void AdS4D_t0_cnst_data(void)
                     x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
             //NOTICE: relkretsch_np1 is not synchronized yet at this stage, meaning that only 1 process has a non-zero value at x=y=z=0. This is crucial for how we save and print relkretschcentregrid in pre_tstep    
         }
+
+        if (output_riemanncube)
+        {
+            riemanncube_(relriemanncube_n,
+                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
+                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
+                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
+                    gb_tz_np1,gb_tz_n,gb_tz_nm1,
+                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
+                    gb_xy_np1,gb_xy_n,gb_xy_nm1,
+                    gb_xz_np1,gb_xz_n,gb_xz_nm1,
+                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
+                    gb_yz_np1,gb_yz_n,gb_yz_nm1,
+                    psi_np1,psi_n,psi_nm1,
+                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
+                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
+                    Hb_y_np1,Hb_y_n,Hb_y_nm1,
+                    Hb_z_np1,Hb_z_n,Hb_z_nm1,
+                    phi1_np1,phi1_n,phi1_nm1,
+                    x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
+        }
+
     }     
     return;
 }
@@ -6289,6 +6324,26 @@ void AdS4D_evolve(int iter)
                 Hb_z_np1,Hb_z_n,Hb_z_nm1,
                 phi1_np1,phi1_n,phi1_nm1,
                 x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    //NOTICE: relkretsch_np1 is not synchronized yet at this stage, meaning that only 1 process has a non-zero value at x=y=z=0. This is crucial for how we save and print relkretschcentregrid in post_tstep   
+        }
+        if (output_riemanncube)
+        {       
+            riemanncube_(relriemanncube_np1,
+                gb_tt_np1,gb_tt_n,gb_tt_nm1,
+                gb_tx_np1,gb_tx_n,gb_tx_nm1,
+                gb_ty_np1,gb_ty_n,gb_ty_nm1,
+                gb_tz_np1,gb_tz_n,gb_tz_nm1,
+                gb_xx_np1,gb_xx_n,gb_xx_nm1,
+                gb_xy_np1,gb_xy_n,gb_xy_nm1,
+                gb_xz_np1,gb_xz_n,gb_xz_nm1,
+                gb_yy_np1,gb_yy_n,gb_yy_nm1,
+                gb_yz_np1,gb_yz_n,gb_yz_nm1,
+                psi_np1,psi_n,psi_nm1,
+                Hb_t_np1,Hb_t_n,Hb_t_nm1,
+                Hb_x_np1,Hb_x_n,Hb_x_nm1,
+                Hb_y_np1,Hb_y_n,Hb_y_nm1,
+                Hb_z_np1,Hb_z_n,Hb_z_nm1,
+                phi1_np1,phi1_n,phi1_nm1,
+                x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);
         }   
     }
 

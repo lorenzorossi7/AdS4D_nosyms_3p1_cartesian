@@ -79,6 +79,7 @@ output_AdS_mass := 0
 output_kretsch := 1
 #setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
 output_relkretschcentregrid := 1
+output_riemanncube := 1
 reduced_ascii := 0
 reduction_factor_ascii := 54
 alltimes_ascii := 0
@@ -244,8 +245,8 @@ max_t_interp_order := 3
 num_save_1_vars := 5
 save_1_vars := [ "iresall" "gb_res" "gb_xx" "kg_ires" "quasiset_tracell" ]
 
-num_save_2_vars := 6
-save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" "gb_tt" ]
+num_save_2_vars := 7
+save_2_vars := [ "gb_xx" "psi" "Hb_x" "phi1" "relkretsch" "gb_tt" "relriemanncube" ]
 
 num_save_3_vars := 2
 save_3_vars := [ "gb_xx" "Hb_x" ]
