@@ -41,7 +41,15 @@ AH_max_iter_2 := 0
 AH_max_iter_3 := 0
 AH_max_iter_4 := 0
 AH_tmin := 0
-output_metricatAH := 1
+#if the following are disabled, we only output the position of the AH and the expansion theta in .sdf files
+output_moreAHquant_sdf := 1
+output_metricAH_cart_sdf := 1
+output_metricAH_sph_sdf := 0
+output_moreAHquant_ascii := 0
+output_AHtheta_ascii := 0
+output_metricAH_cart_ascii := 0
+output_metricAH_sph_ascii := 0
+output_diagnosticAH_ascii := 0
 #Option important when restarting from checkpoint: in case the excision surface of the new run is smaller than the one in the old one, this option makes sure that all the points excised in the previous run are excised in the current one
 excise_prev_run_ex_pts := 0
 #excision ellipse semi-axes of the previous run when restarting from checkpoint: they must be set only if we are enabling excise_prev_run_ex_pts
@@ -78,7 +86,7 @@ output_bdy_extraporder4_paramset2 := 0
 output_AdS_mass := 0
 output_kretsch := 1
 #setting output_relkretschcentregrid to 1 will output relative Kretschmann at the centre of the grid only if output_kretsch is enabled
-output_relkretschcentregrid := 1
+output_relkretschcentregrid := 0
 output_riemanncube := 1
 reduced_ascii := 0
 reduction_factor_ascii := 81
