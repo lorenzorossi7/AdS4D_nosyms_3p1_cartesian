@@ -1075,20 +1075,13 @@ c-----------------------------------------------------------------------
                 do b=1,4
                  do c=1,4
                   do d=1,4
+
                    riemann_llll(a,b,c,d)=0.0d0
                    do p=1,4
                     riemann_llll(a,b,c,d)=riemann_llll(a,b,c,d)
      &               +riemann_ulll(p,b,c,d)*g0_ll(p,a)
                    end do
-                  end do
-                 end do
-                end do
-               end do
 
-               do a=1,4
-                do b=1,4
-                 do c=1,4
-                  do d=1,4
                    riemann_uuuu(a,b,c,d)=0.0d0
                    do p=1,4
                     do q=1,4
@@ -1099,15 +1092,7 @@ c-----------------------------------------------------------------------
                      end do
                     end do
                    end do
-                  end do
-                 end do
-                end do
-               end do
 
-               do a=1,4
-                do b=1,4
-                 do c=1,4
-                  do d=1,4
                    riemann_lluu(a,b,c,d)=0
                    do p=1,4
                     do q=1,4
@@ -1118,6 +1103,9 @@ c-----------------------------------------------------------------------
                      end do
                     end do
                    end do
+
+
+
                   end do
                  end do
                 end do
@@ -1135,8 +1123,8 @@ c-----------------------------------------------------------------------
        
                        riemanncube_n(i,j,k)=
      &                         riemanncube_n(i,j,k)
-     &                         +riemann_uuuu(a,b,c,d)
-     &                         *riemann_llll(c,d,e,f)
+     &                         +riemann_llll(a,b,c,d)
+     &                         *riemann_uuuu(c,d,e,f)
      &                         *riemann_lluu(e,f,a,b)
        
                     end do
