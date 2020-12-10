@@ -2025,7 +2025,7 @@ c----------------------------------------------------------------------
      &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                  x,y,z,dt,chr,L,ex,Nx,Ny,Nz,phys_bdy,ghost_width)
 
 !----------------------------------------------------------------------
@@ -2045,7 +2045,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
         real*8 phi1_np1(Nx,Ny,Nz),phi1_n(Nx,Ny,Nz),phi1_nm1(Nx,Ny,Nz)
         real*8 L
         real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
@@ -2169,15 +2169,15 @@ c----------------------------------------------------------------------
         real*8 gb_yz_yz
         real*8 gb_yz_zz
 
-        real*8 psi_t, psi_x, psi_y
-        real*8 psi_z
-        real*8 psi_tt,psi_tx,psi_ty
-        real*8 psi_tz
-        real*8 psi_xx,psi_xy
-        real*8 psi_xz
-        real*8 psi_yy
-        real*8 psi_yz
-        real*8 psi_zz
+        real*8 gb_zz_t, gb_zz_x, gb_zz_y
+        real*8 gb_zz_z
+        real*8 gb_zz_tt,gb_zz_tx,gb_zz_ty
+        real*8 gb_zz_tz
+        real*8 gb_zz_xx,gb_zz_xy
+        real*8 gb_zz_xz
+        real*8 gb_zz_yy
+        real*8 gb_zz_yz
+        real*8 gb_zz_zz
 
 
         real*8 dtdt,dtdrho,dtdchi,dtdxi
@@ -2187,7 +2187,7 @@ c----------------------------------------------------------------------
 
         real*8 g0_tt_ads0,g0_xx_ads0
         real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
-        real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
+        real*8 g0_xy_ads0,g0_yy_ads0,g0_zz_ads0
         real*8 g0_xz_ads0,g0_yz_ads0
 
         real*8 dxcar_dxsph(4,4)
@@ -2320,7 +2320,7 @@ c----------------------------------------------------------------------
         g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
-        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+        g0_zz_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
      &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
      &              /(L**2*(-1+rho0**2)**4
      &              +4*(-1+rho0**2)**2*(rho0**2))
@@ -2336,7 +2336,7 @@ c----------------------------------------------------------------------
         hcar_n(2,4)=gb_xz_n(i,j,k)
         hcar_n(3,3)=gb_yy_n(i,j,k)
         hcar_n(3,4)=gb_yz_n(i,j,k)
-        hcar_n(4,4)=psi_n(i,j,k)
+        hcar_n(4,4)=gb_zz_n(i,j,k)
 
        do a=1,3
           do b=a+1,4
@@ -2354,7 +2354,7 @@ c----------------------------------------------------------------------
         g0car_n(2,4)=g0_xz_ads0+hcar_n(2,4)
         g0car_n(3,3)=g0_yy_ads0+hcar_n(3,3)
         g0car_n(3,4)=g0_yz_ads0+hcar_n(3,4)
-        g0car_n(4,4)=g0_psi_ads0+hcar_n(4,4)
+        g0car_n(4,4)=g0_zz_ads0+hcar_n(4,4)
 
        do a=1,3
           do b=a+1,4
@@ -2692,7 +2692,7 @@ c-------------------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
         real*8 L
         real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
         real*8 dx,dy,dz
@@ -3881,7 +3881,7 @@ c-------------------------------------------------------------------------------
        real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
        real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-       real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+       real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
        real*8 L
        real*8 x(Nx),y(Ny),z(Nz),dt,chr(Nx,Ny,Nz),ex
        real*8 dx,dy,dz

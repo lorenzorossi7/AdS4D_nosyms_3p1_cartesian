@@ -131,7 +131,7 @@ real *gb_xy,*gb_xy_n,*gb_xy_np1,*gb_xy_nm1;
 real *gb_xz,*gb_xz_n,*gb_xz_np1,*gb_xz_nm1;
 real *gb_yy,*gb_yy_n,*gb_yy_np1,*gb_yy_nm1; 
 real *gb_yz,*gb_yz_n,*gb_yz_np1,*gb_yz_nm1;
-real *psi,*psi_n,*psi_np1,*psi_nm1; 
+real *gb_zz,*gb_zz_n,*gb_zz_np1,*gb_zz_nm1; 
 
 real *Hb_t,*Hb_t_n,*Hb_t_np1,*Hb_t_nm1;
 real *Hb_x,*Hb_x_n,*Hb_x_np1,*Hb_x_nm1;
@@ -148,7 +148,7 @@ real *gb_xy_t,*gb_xy_t_n;
 real *gb_xz_t,*gb_xz_t_n;
 real *gb_yy_t,*gb_yy_t_n;
 real *gb_yz_t,*gb_yz_t_n;
-real *psi_t,*psi_t_n;
+real *gb_zz_t,*gb_zz_t_n;
 real *Hb_t_t,*Hb_t_t_n;
 real *Hb_x_t,*Hb_x_t_n;
 real *Hb_y_t,*Hb_y_t_n;
@@ -185,7 +185,7 @@ real *phi1_res,*gb_res;
 real *efe_all_ires;
 real *efe_tt_ires,*efe_tx_ires,*efe_ty_ires;
 real *efe_tz_ires;
-real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires,*efe_psi_ires;
+real *efe_xx_ires,*efe_xy_ires,*efe_yy_ires,*efe_zz_ires;
 real *efe_xz_ires,*efe_yz_ires;
 int currentres_reduction_factor;
 real currentres_ratio_Lhighres_Llowres;
@@ -507,7 +507,7 @@ real *z_outermostpt_fixedpts_extraporder3_paramset2;
 real *relkretschcentregrid, *lrelkretschcentregrid0, *maxrelkretschcentregrid0,*minrelkretschcentregrid0,*relkretschcentregrid0;
 
 real *tfunction,*test1,*test2,*test3,*test4;
-real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*irespsi;
+real *iresall,*irestt,*irestx,*iresty,*iresxx,*iresxy,*iresyy,*ireszz;
 real *irestz;
 real *iresxz;
 real *iresyz;
@@ -538,7 +538,7 @@ int gb_xy_gfn,gb_xy_n_gfn,gb_xy_np1_gfn,gb_xy_nm1_gfn;
 int gb_xz_gfn,gb_xz_n_gfn,gb_xz_np1_gfn,gb_xz_nm1_gfn;
 int gb_yy_gfn,gb_yy_n_gfn,gb_yy_np1_gfn,gb_yy_nm1_gfn; 
 int gb_yz_gfn,gb_yz_n_gfn,gb_yz_np1_gfn,gb_yz_nm1_gfn;
-int psi_gfn,psi_n_gfn,psi_np1_gfn,psi_nm1_gfn; 
+int gb_zz_gfn,gb_zz_n_gfn,gb_zz_np1_gfn,gb_zz_nm1_gfn; 
 
 int Hb_t_gfn,Hb_t_n_gfn,Hb_t_np1_gfn,Hb_t_nm1_gfn;
 int Hb_x_gfn,Hb_x_n_gfn,Hb_x_np1_gfn,Hb_x_nm1_gfn;
@@ -555,7 +555,7 @@ int gb_xy_t_gfn,gb_xy_t_n_gfn;
 int gb_xz_t_gfn,gb_xz_t_n_gfn;
 int gb_yy_t_gfn,gb_yy_t_n_gfn;
 int gb_yz_t_gfn,gb_yz_t_n_gfn;
-int psi_t_gfn,psi_t_n_gfn;
+int gb_zz_t_gfn,gb_zz_t_n_gfn;
 int Hb_t_t_gfn,Hb_t_t_n_gfn;
 int Hb_x_t_gfn,Hb_x_t_n_gfn;
 int Hb_y_t_gfn,Hb_y_t_n_gfn;
@@ -582,14 +582,14 @@ int chrbdy_fixedpts_extraporder2_paramset2_gfn;
 int chrbdy_fixedpts_extraporder3_paramset2_gfn;
 
 
-real *gu_tt,*gu_tx,*gu_ty,*gu_tz,*gu_xx,*gu_xy,*gu_xz,*gu_yy,*gu_yz,*gu_psi,*m_g_det;
+real *gu_tt,*gu_tx,*gu_ty,*gu_tz,*gu_xx,*gu_xy,*gu_xz,*gu_yy,*gu_yz,*gu_zz,*m_g_det;
 int kg_ires_gfn,alpha_gfn,theta_gfn,f_gfn;
 
 int phi1_res_gfn,gb_res_gfn;
 int efe_all_ires_gfn;
 int efe_tt_ires_gfn,efe_tx_ires_gfn,efe_ty_ires_gfn;
 int efe_tz_ires_gfn;
-int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_psi_ires_gfn;
+int efe_xx_ires_gfn,efe_xy_ires_gfn,efe_yy_ires_gfn,efe_zz_ires_gfn;
 int efe_xz_ires_gfn,efe_yz_ires_gfn;
 int leadordcoeff_phi1_gfn;
 int quasiset_tt_ll_gfn;
@@ -600,7 +600,7 @@ int quasiset_massdensityll_gfn;
 int relkretschcentregrid_gfn;
 
 int tfunction_gfn,test1_gfn,test2_gfn,test3_gfn,test4_gfn;
-int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,irespsi_gfn;
+int iresall_gfn,irestt_gfn,irestx_gfn,iresty_gfn,irestz_gfn,iresxx_gfn,iresxy_gfn,iresxz_gfn,iresyy_gfn,iresyz_gfn,ireszz_gfn;
 int ireskg_gfn;
 
 int zeta_gfn,zeta_res_gfn,zeta_lop_gfn,zeta_rhs_gfn;
@@ -617,7 +617,7 @@ int skip_ires=0;
 int skip_exp=0;
 
 int gu_tt_gfn,gu_tx_gfn,gu_ty_gfn,gu_tz_gfn,gu_xx_gfn;
-int gu_xy_gfn,gu_xz_gfn,gu_yy_gfn,gu_yz_gfn,gu_psi_gfn,m_g_det_gfn;
+int gu_xy_gfn,gu_xz_gfn,gu_yy_gfn,gu_yz_gfn,gu_zz_gfn,m_g_det_gfn;
 
 //=============================================================================
 // arrays holding AH shape and other hypersurface info
@@ -629,7 +629,7 @@ real *AH_g0_xy[MAX_BHS];
 real *AH_g0_xz[MAX_BHS];
 real *AH_g0_yy[MAX_BHS];
 real *AH_g0_yz[MAX_BHS];
-real *AH_g0_psi[MAX_BHS];
+real *AH_g0_zz[MAX_BHS];
 real *AH_g0_chichi[MAX_BHS];
 real *AH_g0_chiphi[MAX_BHS];
 real *AH_g0_phiphi[MAX_BHS];
@@ -1392,10 +1392,10 @@ void set_gfns(void)
     if ((gb_yz_n_gfn   = PAMR_get_gfn("gb_yz",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yz_np1_gfn = PAMR_get_gfn("gb_yz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
-    if ((psi_gfn     = PAMR_get_gfn("psi",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
-    if ((psi_nm1_gfn = PAMR_get_gfn("psi",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
-    if ((psi_n_gfn   = PAMR_get_gfn("psi",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((psi_np1_gfn = PAMR_get_gfn("psi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_gfn     = PAMR_get_gfn("gb_zz",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_nm1_gfn = PAMR_get_gfn("gb_zz",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_n_gfn   = PAMR_get_gfn("gb_zz",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_np1_gfn = PAMR_get_gfn("gb_zz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((Hb_t_gfn      = PAMR_get_gfn("Hb_t",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_nm1_gfn  = PAMR_get_gfn("Hb_t",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
@@ -1432,8 +1432,8 @@ void set_gfns(void)
     if ((gb_yz_t_gfn = PAMR_get_gfn("gb_yz_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yz_t_n_gfn = PAMR_get_gfn("gb_yz_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
 
-    if ((psi_t_gfn = PAMR_get_gfn("psi_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
-    if ((psi_t_n_gfn = PAMR_get_gfn("psi_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_t_gfn = PAMR_get_gfn("gb_zz_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
+    if ((gb_zz_t_n_gfn = PAMR_get_gfn("gb_zz_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
 
     if ((Hb_t_t_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_t_n_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
@@ -1504,7 +1504,7 @@ void set_gfns(void)
     if ((efe_xz_ires_gfn    = PAMR_get_gfn("efe_xz_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((efe_yy_ires_gfn    = PAMR_get_gfn("efe_yy_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((efe_yz_ires_gfn    = PAMR_get_gfn("efe_yz_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((efe_psi_ires_gfn    = PAMR_get_gfn("efe_psi_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((efe_zz_ires_gfn    = PAMR_get_gfn("efe_zz_ires",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((leadordcoeff_phi1_gfn    = PAMR_get_gfn("leadordcoeff_phi1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_tt_ll_gfn    = PAMR_get_gfn("quasiset_tt_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((quasiset_tchi_ll_gfn    = PAMR_get_gfn("quasiset_tchi_ll",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
@@ -1545,7 +1545,7 @@ void set_gfns(void)
     if ((iresxz_gfn  = PAMR_get_gfn("iresxz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((iresyy_gfn  = PAMR_get_gfn("iresyy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((iresyz_gfn  = PAMR_get_gfn("iresyz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((irespsi_gfn  = PAMR_get_gfn("irespsi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((ireszz_gfn  = PAMR_get_gfn("ireszz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((ireskg_gfn  = PAMR_get_gfn("ireskg",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((mg_w1_gfn   = PAMR_get_gfn("mg_w1",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -1562,7 +1562,7 @@ void set_gfns(void)
     if ((gu_xz_gfn   = PAMR_get_gfn("gu_xz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((gu_yy_gfn   = PAMR_get_gfn("gu_yy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((gu_yz_gfn   = PAMR_get_gfn("gu_yz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((gu_psi_gfn   = PAMR_get_gfn("gu_psi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((gu_zz_gfn   = PAMR_get_gfn("gu_zz",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((m_g_det_gfn = PAMR_get_gfn("m_g_det",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     g_norms=AMRD_get_global_norms();
@@ -1658,10 +1658,10 @@ void ldptr(void)
     gb_yz_n   = gfs[gb_yz_n_gfn-1];
     gb_yz_np1 = gfs[gb_yz_np1_gfn-1];
     gb_yz_nm1 = gfs[gb_yz_nm1_gfn-1];   
-    psi     = gfs[psi_gfn-1];
-    psi_n   = gfs[psi_n_gfn-1];
-    psi_np1 = gfs[psi_np1_gfn-1];
-    psi_nm1 = gfs[psi_nm1_gfn-1];   
+    gb_zz     = gfs[gb_zz_gfn-1];
+    gb_zz_n   = gfs[gb_zz_n_gfn-1];
+    gb_zz_np1 = gfs[gb_zz_np1_gfn-1];
+    gb_zz_nm1 = gfs[gb_zz_nm1_gfn-1];   
     Hb_t      = gfs[Hb_t_gfn-1];
     Hb_t_n    = gfs[Hb_t_n_gfn-1];
     Hb_t_nm1  = gfs[Hb_t_nm1_gfn-1];
@@ -1698,8 +1698,8 @@ void ldptr(void)
     gb_yy_t_n = gfs[gb_yy_t_n_gfn-1];   
     gb_yz_t = gfs[gb_yz_t_gfn-1];
     gb_yz_t_n = gfs[gb_yz_t_n_gfn-1];   
-    psi_t = gfs[psi_t_gfn-1];
-    psi_t_n = gfs[psi_t_n_gfn-1];   
+    gb_zz_t = gfs[gb_zz_t_gfn-1];
+    gb_zz_t_n = gfs[gb_zz_t_n_gfn-1];   
     Hb_t_t  = gfs[Hb_t_t_gfn-1];
     Hb_t_t_n  = gfs[Hb_t_t_n_gfn-1];
     Hb_x_t  = gfs[Hb_x_t_gfn-1];
@@ -1750,7 +1750,7 @@ void ldptr(void)
     efe_xz_ires  = gfs[efe_xz_ires_gfn-1];
     efe_yy_ires  = gfs[efe_yy_ires_gfn-1];
     efe_yz_ires  = gfs[efe_yz_ires_gfn-1];
-    efe_psi_ires  = gfs[efe_psi_ires_gfn-1];
+    efe_zz_ires  = gfs[efe_zz_ires_gfn-1];
     leadordcoeff_phi1  = gfs[leadordcoeff_phi1_gfn-1];
     quasiset_tt_ll  = gfs[quasiset_tt_ll_gfn-1];
     quasiset_tchi_ll  = gfs[quasiset_tchi_ll_gfn-1];
@@ -1790,7 +1790,7 @@ void ldptr(void)
     iresxz = gfs[iresxz_gfn-1];
     iresyy = gfs[iresyy_gfn-1];
     iresyz = gfs[iresyz_gfn-1];
-    irespsi = gfs[irespsi_gfn-1];
+    ireszz = gfs[ireszz_gfn-1];
     ireskg = gfs[ireskg_gfn-1];
  
     mg_w1    =gfs[mg_w1_gfn-1]; 
@@ -1806,7 +1806,7 @@ void ldptr(void)
     gu_xz = gfs[gu_xz_gfn-1];
     gu_yy = gfs[gu_yy_gfn-1];
     gu_yz = gfs[gu_yz_gfn-1];
-    gu_psi = gfs[gu_psi_gfn-1];
+    gu_zz = gfs[gu_zz_gfn-1];
     m_g_det = gfs[m_g_det_gfn-1];
 
 }
@@ -2261,7 +2261,7 @@ void AdS4D_var_post_init(char *pfile)
         AH_g0_xz[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
         AH_g0_yy[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
         AH_g0_yz[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
-        AH_g0_psi[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
+        AH_g0_zz[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
         AH_g0_chichi[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
         AH_g0_chiphi[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));
         AH_g0_phiphi[l]=(real *)malloc(AH_Nchi[l]*AH_Nphi[l]*sizeof(real));   
@@ -2372,7 +2372,7 @@ void AdS4D_AMRH_var_clear(void)
                  gb_xz_n,
                  gb_yy_n,
                  gb_yz_n,
-                 psi_n,
+                 gb_zz_n,
                  Hb_t_n,Hb_x_n,Hb_y_n,
                  Hb_z_n,
                  &AdS_L,x,y,z,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);
@@ -2482,13 +2482,13 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz_n,
                     gb_yy_n,
                     gb_yz_n,
-                    psi_n,gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,
+                    gb_zz_n,gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,
                     gb_tz_t_n,
                     gb_xx_t_n,gb_xy_t_n,
                     gb_xz_t_n,
                     gb_yy_t_n,
                     gb_yz_t_n,
-                    psi_t_n,Hb_t_n,Hb_x_n,Hb_y_n,
+                    gb_zz_t_n,Hb_t_n,Hb_x_n,Hb_y_n,
                     Hb_z_n,
                     Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                     Hb_z_t_n,
@@ -2537,7 +2537,7 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz,
                     gb_yy,
                     gb_yz,
-                    psi,Hb_t,Hb_x,Hb_y,
+                    gb_zz,Hb_t,Hb_x,Hb_y,
                     Hb_z,
                     &AdS_L,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype); 
                     //   for (i=0; i<Nx; i++)    
@@ -2568,7 +2568,7 @@ void AdS4D_t0_cnst_data(void)
             gb_xz_np1[i]=gb_xz_nm1[i]=gb_xz[i];
             gb_yy_np1[i]=gb_yy_nm1[i]=gb_yy[i];
             gb_yz_np1[i]=gb_yz_nm1[i]=gb_yz[i];
-            psi_np1[i]=psi_nm1[i]=psi[i];
+            gb_zz_np1[i]=gb_zz_nm1[i]=gb_zz[i];
             Hb_t_np1[i]=Hb_t_nm1[i]=Hb_t_n[i];
             Hb_x_np1[i]=Hb_x_nm1[i]=Hb_x_n[i];
             Hb_y_np1[i]=Hb_y_nm1[i]=Hb_y_n[i];
@@ -2603,17 +2603,34 @@ void AdS4D_t0_cnst_data(void)
                             gb_xz,
                             gb_yy,
                             gb_yz,
-                            psi,gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,
+                            gb_zz,gb_tt_t_n,gb_tx_t_n,gb_ty_t_n,
                             gb_tz_t_n,
                             gb_xx_t_n,gb_xy_t_n,
                             gb_xz_t_n,
                             gb_yy_t_n,
                             gb_yz_t_n,
-                            psi_t_n,Hb_t,Hb_x,Hb_y,
+                            gb_zz_t_n,Hb_t,Hb_x,Hb_y,
                             Hb_z,
                             Hb_t_t_n,Hb_x_t_n,Hb_y_t_n,
                             Hb_z_t_n,
-                            phys_bdy,x,y,z,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);   //   for (i=0; i<Nx; i++)  //   {    //      for (j=0; j<Ny; j++)    //      {   //       for (k=0; k<Nz; k++)  //       {    //        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    //        { //         ind=i+Nx*(j+Ny*k);    //         printf("AdS4D_AMRH_var_clear-POST init_ads4d_bh_\n");    //         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"   //                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])); //         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);    //        } //       }   //      }  //   }    
+                            phys_bdy,x,y,z,&dt,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);   
+	//   for (i=0; i<Nx; i++)  
+	//   {    
+	//      for (j=0; j<Ny; j++)    
+	//      {   
+	//       for (k=0; k<Nz; k++)  
+	//       {    
+	//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    
+	//        { 
+	//         ind=i+Nx*(j+Ny*k);    
+	//         printf("AdS4D_AMRH_var_clear-POST init_ads4d_bh_\n");    
+	//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"   
+	//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])); 
+	//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);    
+	//        } 
+	//       }   
+	//      }  
+	//   }    
             for (i=0; i<size; i++)
             {
                 gb_tt_np1[i]=gb_tt_nm1[i]=gb_tt[i];
@@ -2625,7 +2642,7 @@ void AdS4D_t0_cnst_data(void)
                 gb_xz_np1[i]=gb_xz_nm1[i]=gb_xz[i];
                 gb_yy_np1[i]=gb_yy_nm1[i]=gb_yy[i];
                 gb_yz_np1[i]=gb_yz_nm1[i]=gb_yz[i];
-                psi_np1[i]=psi_nm1[i]=psi[i];
+                gb_zz_np1[i]=gb_zz_nm1[i]=gb_zz[i];
                 Hb_t_np1[i]=Hb_t_nm1[i]=Hb_t_n[i];
                 Hb_x_np1[i]=Hb_x_nm1[i]=Hb_x_n[i];
                 Hb_y_np1[i]=Hb_y_nm1[i]=Hb_y_n[i];
@@ -2664,7 +2681,7 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz,
                     gb_yy,
                     gb_yz,
-                    psi,Hb_t,Hb_x,Hb_y,
+                    gb_zz,Hb_t,Hb_x,Hb_y,
                     Hb_z,
                     &AdS_L,mask_mg,phys_bdy,x,y,z,chr_mg,&AMRD_ex,&Nx,&Ny,&Nz,&regtype,&rhoa,&rhob);    
 //   for (i=0; i<Nx; i++)   
@@ -2729,7 +2746,7 @@ void AdS4D_t0_cnst_data(void)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_n,Hb_x_n,Hb_y_n,
                 Hb_z_n,
                 &AdS_L,phys_bdy,x,y,z,&dt,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);   
@@ -2742,7 +2759,7 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz_np1,gb_xz_n,gb_xz_nm1,gb_xz_t_n,
                     gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
                     gb_yz_np1,gb_yz_n,gb_yz_nm1,gb_yz_t_n,
-                    psi_np1,psi_n,psi_nm1,psi_t_n,
+                    gb_zz_np1,gb_zz_n,gb_zz_nm1,gb_zz_t_n,
                     Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                     Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                     Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
@@ -2805,7 +2822,7 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz_np1,gb_xz_n,gb_xz_nm1,
                     gb_yy_np1,gb_yy_n,gb_yy_nm1,
                     gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                    psi_np1,psi_n,psi_nm1,
+                    gb_zz_np1,gb_zz_n,gb_zz_nm1,
                     Hb_t_np1,Hb_t_n,Hb_t_nm1,
                     Hb_x_np1,Hb_x_n,Hb_x_nm1,
                     Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -2827,7 +2844,7 @@ void AdS4D_t0_cnst_data(void)
                     gb_xz_np1,gb_xz_n,gb_xz_nm1,
                     gb_yy_np1,gb_yy_n,gb_yy_nm1,
                     gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                    psi_np1,psi_n,psi_nm1,
+                    gb_zz_np1,gb_zz_n,gb_zz_nm1,
                     Hb_t_np1,Hb_t_n,Hb_t_nm1,
                     Hb_x_np1,Hb_x_n,Hb_x_nm1,
                     Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -2887,7 +2904,7 @@ void AdS4D_pre_io_calc(void)
                 efe_xz_ires,
                 efe_yy_ires,
                 efe_yz_ires,
-                efe_psi_ires,
+                efe_zz_ires,
                 kg_ires,
                 gb_tt_n,gb_tt_nm1,gb_tt_np1,
                 gb_tx_n,gb_tx_nm1,gb_tx_np1,
@@ -2898,7 +2915,7 @@ void AdS4D_pre_io_calc(void)
                 gb_xz_n,gb_xz_nm1,gb_xz_np1,
                 gb_yy_n,gb_yy_nm1,gb_yy_np1,
                 gb_yz_n,gb_yz_nm1,gb_yz_np1,
-                psi_n,psi_nm1,psi_np1,
+                gb_zz_n,gb_zz_nm1,gb_zz_np1,
                 Hb_t_n,Hb_t_nm1,Hb_t_np1,
                 Hb_x_n,Hb_x_nm1,Hb_x_np1,
                 Hb_y_n,Hb_y_nm1,Hb_y_np1,
@@ -2934,7 +2951,7 @@ void AdS4D_pre_io_calc(void)
                         gb_xz_np1,gb_xz_n,gb_xz_nm1,
                         gb_yy_np1,gb_yy_n,gb_yy_nm1,
                         gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                        psi_np1,psi_n,psi_nm1,
+                        gb_zz_np1,gb_zz_n,gb_zz_nm1,
                         x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
         	if (bdy_extrap_freepts)
         	{   
@@ -5936,7 +5953,7 @@ void AdS4D_pre_io_calc(void)
                 efe_xz_ires,
                 efe_yy_ires,
                 efe_yz_ires,
-                efe_psi_ires,
+                efe_zz_ires,
                 kg_ires,
                 gb_tt_np1,gb_tt_n,gb_tt_nm1,
                 gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -5947,7 +5964,7 @@ void AdS4D_pre_io_calc(void)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -5980,7 +5997,7 @@ void AdS4D_pre_io_calc(void)
                         iresxz[ind]=0;
                         iresyy[ind]=0;  
                         iresyz[ind]=0;
-                        irespsi[ind]=0;  
+                        ireszz[ind]=0;  
                         ireskg[ind]=0;
                     }
                     else
@@ -5995,7 +6012,7 @@ void AdS4D_pre_io_calc(void)
                         iresxz[ind]=efe_xz_ires[ind];
                         iresyy[ind]=efe_yy_ires[ind];
                         iresyz[ind]=efe_yz_ires[ind];
-                        irespsi[ind]=efe_psi_ires[ind];
+                        ireszz[ind]=efe_zz_ires[ind];
                         ireskg[ind]=kg_ires[ind];
                     }
                 }
@@ -6107,7 +6124,7 @@ real AdS4D_evo_residual(void)
 //   dmdiss3d_ex_gen_(gb_xx_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //   dmdiss3d_ex_gen_(gb_xy_n,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //   dmdiss3d_ex_gen_(gb_yy_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-//   dmdiss3d_ex_gen_(psi_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//   dmdiss3d_ex_gen_(gb_zz_n,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //   dmdiss3d_ex_gen_(Hb_t_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //   dmdiss3d_ex_gen_(Hb_x_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //   dmdiss3d_ex_gen_(Hb_y_n,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
@@ -6125,7 +6142,7 @@ real AdS4D_evo_residual(void)
 //      dmdiss3d_ex_gen_(gb_xx_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //      dmdiss3d_ex_gen_(gb_xy_nm1,w1,w2,&diss_bdy_k,pbt_odd,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //      dmdiss3d_ex_gen_(gb_yy_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
-//      dmdiss3d_ex_gen_(psi_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
+//      dmdiss3d_ex_gen_(gb_zz_nm1,w1,w2,&diss_bdy_k,pbt_even,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //      dmdiss3d_ex_gen_(Hb_t_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //      dmdiss3d_ex_gen_(Hb_x_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
 //      dmdiss3d_ex_gen_(Hb_y_nm1,w1,w2,&diss_bdy_k,pbt_unknown,&even,&odd,&Nx,&Ny,&Nz,w3,&AMRD_ex,&do_ex,&ind_sweeps,&diss_kmax);
@@ -6168,7 +6185,7 @@ void AdS4D_evolve(int iter)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -6190,7 +6207,7 @@ void AdS4D_evolve(int iter)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -6232,7 +6249,7 @@ void AdS4D_evolve(int iter)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -6316,7 +6333,7 @@ void AdS4D_evolve(int iter)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -6336,7 +6353,7 @@ void AdS4D_evolve(int iter)
                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-                psi_np1,psi_n,psi_nm1,
+                gb_zz_np1,gb_zz_n,gb_zz_nm1,
                 Hb_t_np1,Hb_t_n,Hb_t_nm1,
                 Hb_x_np1,Hb_x_n,Hb_x_nm1,
                 Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -14934,8 +14951,8 @@ void AdS4D_pre_tstep(int L)
         	        	gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_g0_yy[l]);
 	            	    sprintf(name,"%sAH_g0_yz_%i",AMRD_save_tag,l);
     	            	gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_g0_yz[l]);
-	    	            sprintf(name,"%sAH_g0_psi_%i",AMRD_save_tag,l);
-    	    	        gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_g0_psi[l]);
+	    	            sprintf(name,"%sAH_g0_zz_%i",AMRD_save_tag,l);
+    	    	        gft_out_bbox(name,ct,AH_shape,rank,AH_bbox,AH_g0_zz[l]);
     	    	    }
 
     	    	    if (output_metricAH_sph_sdf)
@@ -14994,7 +15011,7 @@ void AdS4D_pre_tstep(int L)
 					   	    {
 	                	   	//format: t,g0_xx,g0_xy,g0_xz,g0_yy,g0_yz,g0_zz,ind (values on horizon)
 	                   		fprintf(fp,"%24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %24.16e %i \n",
-	                   			ct,AH_g0_xx[l][j+AH_Nchi[l]*k],AH_g0_xy[l][j+AH_Nchi[l]*k],AH_g0_xz[l][j+AH_Nchi[l]*k],AH_g0_yy[l][j+AH_Nchi[l]*k],AH_g0_yz[l][j+AH_Nchi[l]*k],AH_g0_psi[l][j+AH_Nchi[l]*k],j+AH_Nchi[l]*k); 
+	                   			ct,AH_g0_xx[l][j+AH_Nchi[l]*k],AH_g0_xy[l][j+AH_Nchi[l]*k],AH_g0_xz[l][j+AH_Nchi[l]*k],AH_g0_yy[l][j+AH_Nchi[l]*k],AH_g0_yz[l][j+AH_Nchi[l]*k],AH_g0_zz[l][j+AH_Nchi[l]*k],j+AH_Nchi[l]*k); 
 	                   		}
 				    	}
 	            	    fclose(fp);
@@ -15186,7 +15203,7 @@ void AdS4D_post_tstep(int L)
                         	gb_xz_n,gb_xz_nm1,gb_xz_np1,
                         	gb_yy_n,gb_yy_nm1,gb_yy_np1,
                         	gb_yz_n,gb_yz_nm1,gb_yz_np1,
-                        	psi_n,psi_nm1,psi_np1,
+                        	gb_zz_n,gb_zz_nm1,gb_zz_np1,
                         	x,y,z,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,&Nz,phys_bdy,ghost_width);    
 
         		if (bdy_extrap_freepts)
@@ -26501,7 +26518,7 @@ void AdS4D_post_regrid(void)
                     gb_xz_n,
                     gb_yy_n,
                     gb_yz_n,
-                    psi_n,Hb_t_n,Hb_x_n,Hb_y_n,
+                    gb_zz_n,Hb_t_n,Hb_x_n,Hb_y_n,
                     Hb_z_n,
                     &AdS_L,x,y,z,chr,&AMRD_ex,&Nx,&Ny,&Nz,&regtype);    
     for (i=0; i<size; i++)
@@ -26515,7 +26532,7 @@ void AdS4D_post_regrid(void)
         gb_xz_nm1[i]=gb_xz_np1[i]=gb_xz_n[i];
         gb_yy_nm1[i]=gb_yy_np1[i]=gb_yy_n[i];
         gb_yz_nm1[i]=gb_yz_np1[i]=gb_yz_n[i];
-        psi_nm1[i]=psi_np1[i]=psi_n[i];
+        gb_zz_nm1[i]=gb_zz_np1[i]=gb_zz_n[i];
     }
 }
 

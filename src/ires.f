@@ -8,7 +8,7 @@ c----------------------------------------------------------------------
      &                  efe_xz_ires,
      &                  efe_yy_ires,
      &                  efe_yz_ires,
-     &                  efe_psi_ires,
+     &                  efe_zz_ires,
      &                  kg_ires,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
@@ -19,7 +19,7 @@ c----------------------------------------------------------------------
      &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -39,7 +39,7 @@ c----------------------------------------------------------------------
         real*8 efe_xz_ires(Nx,Ny,Nz)
         real*8 efe_yy_ires(Nx,Ny,Nz)
         real*8 efe_yz_ires(Nx,Ny,Nz)
-        real*8 efe_psi_ires(Nx,Ny,Nz)
+        real*8 efe_zz_ires(Nx,Ny,Nz)
         real*8 kg_ires(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex
         real*8 x(Nx),y(Ny),z(Nz),dt,L
@@ -52,13 +52,13 @@ c----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz)
         real*8 gb_tz_n(Nx,Ny,Nz)
         real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz)
         real*8 gb_xz_n(Nx,Ny,Nz)
         real*8 gb_yz_n(Nx,Ny,Nz)
-        real*8 psi_n(Nx,Ny,Nz)
+        real*8 gb_zz_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz)
         real*8 gb_tz_nm1(Nx,Ny,Nz)
@@ -66,7 +66,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
@@ -206,7 +206,7 @@ c----------------------------------------------------------------------
      &                gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                psi_np1,psi_n,psi_nm1,
+     &                gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -256,8 +256,8 @@ c----------------------------------------------------------------------
 !     &             ,gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)
 !       write (*,*) 'gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)='
 !     &             ,gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)
-!       write (*,*) 'psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)='
-!     &             ,psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)
+!       write (*,*) 'gb_zz_nm1(i,j,k),gb_zz_n(i,j,k),gb_zz_np1(i,j,k)='
+!     &             ,gb_zz_nm1(i,j,k),gb_zz_n(i,j,k),gb_zz_np1(i,j,k)
 
               ! calculates efe_ires functions at point i,j
               !(efe_ires_ab=G_ab+lambda4*g_ab-8*PI*T_ab)
@@ -276,7 +276,7 @@ c----------------------------------------------------------------------
               efe_xz_ires(i,j,k)=efe_ires(2,4)
               efe_yy_ires(i,j,k)=efe_ires(3,3)
               efe_yz_ires(i,j,k)=efe_ires(3,4)
-              efe_psi_ires(i,j,k)=efe_ires(4,4)
+              efe_zz_ires(i,j,k)=efe_ires(4,4)
 
               ! calculate efe_all_ires function at point i,j,k
               efe_all_ires(i,j,k)=
@@ -287,7 +287,7 @@ c----------------------------------------------------------------------
      &            abs(efe_xz_ires(i,j,k)),
      &            abs(efe_yy_ires(i,j,k)),
      &            abs(efe_yz_ires(i,j,k)),
-     &            abs(efe_psi_ires(i,j,k)))
+     &            abs(efe_zz_ires(i,j,k)))
 
               x0=x(i)
               y0=y(j)
@@ -458,13 +458,13 @@ c----------------------------------------------------------------------
 !     &           sqrt((-(-1+rho0**2)**6*gb_xy_n(i,j,k)**2+
 !     &                (-4+(-1+rho0**2)**3*gb_xx_n(i,j,k))*
 !     &                (-4+(-1+rho0**2)**3*gb_yy_n(i,j,k)))*
-!     &                (-4+(-1+rho0**2)**3*psi_n(i,j,k))**2)!/(-1+rho0**2)**8*y0**4
+!     &                (-4+(-1+rho0**2)**3*gb_zz_n(i,j,k))**2)!/(-1+rho0**2)**8*y0**4
 !              efe_tx_ires(i,j,k)=g0_ll(1,2)!Hads_l(2)+A_l(2)-boxx_l(2)
 !              efe_ty_ires(i,j,k)=g0_ll(1,3)!Hads_l(3)+A_l(3)-boxx_l(3)
 !              efe_xx_ires(i,j,k)=theta(i,j,k)
 !              efe_xy_ires(i,j,k)=boxx_l(2)
 !              efe_yy_ires(i,j,k)=-1/g0_uu(1,1)*(1-x(i)**2-y(j)**2)**2
-!              efe_psi_ires(i,j,k)=0
+!              efe_zz_ires(i,j,k)=0
 !              do a=1,4
 !                do b=1,4
 !                  do c=1,4
@@ -473,7 +473,7 @@ c----------------------------------------------------------------------
 !                        do j1=1,4
 !                          do k1=1,4
 !                            do e=1,4
-!                              efe_psi_ires(i,j,k)=efe_psi_ires(i,j,k)+
+!                              efe_zz_ires(i,j,k)=efe_zz_ires(i,j,k)+
 !     &                                          g0_ll(a,i1)*
 !     &                                          g0_uu(b,j1)*
 !     &                                          g0_uu(c,k1)*
@@ -563,7 +563,7 @@ c-----------------------------------------------------------------------
      &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -586,13 +586,13 @@ c-----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz)
         real*8 gb_tz_n(Nx,Ny,Nz)
         real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz)
         real*8 gb_xz_n(Nx,Ny,Nz)
         real*8 gb_yz_n(Nx,Ny,Nz)
-        real*8 psi_n(Nx,Ny,Nz)
+        real*8 gb_zz_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz)
         real*8 gb_tz_nm1(Nx,Ny,Nz)
@@ -600,7 +600,7 @@ c-----------------------------------------------------------------------
         real*8 gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
@@ -749,7 +749,7 @@ c-----------------------------------------------------------------------
      &                gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                psi_np1,psi_n,psi_nm1,
+     &                gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -869,7 +869,7 @@ c-----------------------------------------------------------------------
      &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -892,13 +892,13 @@ c-----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz)
         real*8 gb_tt_n(Nx,Ny,Nz),gb_tx_n(Nx,Ny,Nz),gb_ty_n(Nx,Ny,Nz)
         real*8 gb_tz_n(Nx,Ny,Nz)
         real*8 gb_xx_n(Nx,Ny,Nz),gb_xy_n(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz)
         real*8 gb_xz_n(Nx,Ny,Nz)
         real*8 gb_yz_n(Nx,Ny,Nz)
-        real*8 psi_n(Nx,Ny,Nz)
+        real*8 gb_zz_n(Nx,Ny,Nz)
         real*8 gb_tt_nm1(Nx,Ny,Nz),gb_tx_nm1(Nx,Ny,Nz)
         real*8 gb_ty_nm1(Nx,Ny,Nz)
         real*8 gb_tz_nm1(Nx,Ny,Nz)
@@ -906,7 +906,7 @@ c-----------------------------------------------------------------------
         real*8 gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_nm1(Nx,Ny,Nz)
 
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
@@ -1055,7 +1055,7 @@ c-----------------------------------------------------------------------
      &                gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                psi_np1,psi_n,psi_nm1,
+     &                gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                Hb_y_np1,Hb_y_n,Hb_y_nm1,

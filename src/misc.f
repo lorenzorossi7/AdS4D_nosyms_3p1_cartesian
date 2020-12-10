@@ -2900,7 +2900,7 @@ c----------------------------------------------------------------------
      &                      gb_xz,
      &                      gb_yy,
      &                      gb_yz,
-     &                      psi,Hb_t,Hb_x,Hb_y,
+     &                      gb_zz,Hb_t,Hb_x,Hb_y,
      &                      Hb_z,
      &                      L,x,y,z,chr,ex,Nx,Ny,Nz,regtype)
         implicit none
@@ -2912,7 +2912,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz(Nx,Ny,Nz)
         real*8 gb_yy(Nx,Ny,Nz)
         real*8 gb_yz(Nx,Ny,Nz)
-        real*8 psi(Nx,Ny,Nz),tfunction(Nx,Ny,Nz),Hb_t(Nx,Ny,Nz)
+        real*8 gb_zz(Nx,Ny,Nz),tfunction(Nx,Ny,Nz),Hb_t(Nx,Ny,Nz)
         real*8 Hb_x(Nx,Ny,Nz),Hb_y(Nx,Ny,Nz)
         real*8 Hb_z(Nx,Ny,Nz)
         real*8 chr(Nx,Ny,Nz),ex,L,x(Nx),y(Ny),z(Nz)
@@ -2939,7 +2939,7 @@ c----------------------------------------------------------------------
               gb_xz(i,j,k)=0
               gb_yy(i,j,k)=0
               gb_yz(i,j,k)=0
-              psi(i,j,k)=0
+              gb_zz(i,j,k)=0
 
               Hb_t(i,j,k)=0
               Hb_x(i,j,k)=0
@@ -3543,13 +3543,13 @@ c----------------------------------------------------------------------
      &                         gb_xz,
      &                         gb_yy,
      &                         gb_yz,
-     &                         psi,gb_tt_t,gb_tx_t,gb_ty_t,
+     &                         gb_zz,gb_tt_t,gb_tx_t,gb_ty_t,
      &                         gb_tz_t,
      &                         gb_xx_t,gb_xy_t,
      &                         gb_xz_t,
      &                         gb_yy_t,
      &                         gb_yz_t,
-     &                         psi_t,Hb_t,Hb_x,Hb_y,
+     &                         gb_zz_t,Hb_t,Hb_x,Hb_y,
      &                         Hb_z,
      &                         Hb_t_t,Hb_x_t,Hb_y_t,
      &                         Hb_z_t,
@@ -3574,10 +3574,10 @@ c----------------------------------------------------------------------
         real*8 gb_tz(Nx,Ny,Nz)
         real*8 gb_xx(Nx,Ny,Nz),gb_xy(Nx,Ny,Nz)
         real*8 gb_xz(Nx,Ny,Nz)
-        real*8 gb_yy(Nx,Ny,Nz),psi(Nx,Ny,Nz)
+        real*8 gb_yy(Nx,Ny,Nz),gb_zz(Nx,Ny,Nz)
         real*8 gb_yz(Nx,Ny,Nz)
         real*8 gb_tt_t(Nx,Ny,Nz),gb_tx_t(Nx,Ny,Nz)
-        real*8 gb_ty_t(Nx,Ny,Nz),psi_t(Nx,Ny,Nz)
+        real*8 gb_ty_t(Nx,Ny,Nz),gb_zz_t(Nx,Ny,Nz)
         real*8 gb_tz_t(Nx,Ny,Nz)
         real*8 gb_xx_t(Nx,Ny,Nz),gb_xy_t(Nx,Ny,Nz)
         real*8 gb_xz_t(Nx,Ny,Nz)
@@ -3635,7 +3635,7 @@ c----------------------------------------------------------------------
               gb_xz_t(i,j,k)=0
               gb_yy_t(i,j,k)=0
               gb_yz_t(i,j,k)=0
-              psi_t(i,j,k)=0
+              gb_zz_t(i,j,k)=0
               Hb_t_t(i,j,k)=0
               Hb_x_t(i,j,k)=0
               Hb_y_t(i,j,k)=0
@@ -3650,7 +3650,7 @@ c----------------------------------------------------------------------
                  gb_xz(i,j,k)=0
                  gb_yy(i,j,k)=0
                  gb_yz(i,j,k)=0
-                 psi(i,j,k)=0
+                 gb_zz(i,j,k)=0
                  Hb_t(i,j,k)=0
                  Hb_x(i,j,k)=0
                  Hb_y(i,j,k)=0
@@ -3768,7 +3768,7 @@ c----------------------------------------------------------------------
      &                        +L**2*(-1+rho0**2)**2
      &                        *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
            if (z0.ne.0.0d0) then
-                 psi(i,j,k)=(1/((-1+rho0**2)**2))
+                 gb_zz(i,j,k)=(1/((-1+rho0**2)**2))
      &                        *(
      &                         (
      &                         8*z0**2*(-x0**2+y0**2+z0**2)
@@ -3788,7 +3788,7 @@ c----------------------------------------------------------------------
      &                         *(rho0+(1.0d0/2.0d0)*r0*(-1+rho0**2))))
      &                        )
            else
-                 psi(i,j,k)=0.0d0
+                 gb_zz(i,j,k)=0.0d0
            end if
 
 
@@ -3802,7 +3802,7 @@ c----------------------------------------------------------------------
 !       write (*,*) ' gb_xz=',gb_xz(i,j,k)
 !       write (*,*) ' gb_yy=',gb_yy(i,j,k)
 !       write (*,*) ' gb_yz=',gb_yz(i,j,k)
-!       write (*,*) ' psi=',psi(i,j,k)
+!       write (*,*) ' gb_zz=',gb_zz(i,j,k)
 !
 !                 ! (Schw coordinates)!
 !                 ! TODO: add AdS_L dependence; currently assumes AdS_L=1!
@@ -3815,7 +3815,7 @@ c----------------------------------------------------------------------
 !                 gb_xz(i,j,k)=0
 !                 gb_yy(i,j,k)=0
 !                 gb_yz(i,j,k)=0
-!                 psi(i,j,k)=0
+!                 gb_zz(i,j,k)=0
 
               end if
             end do
@@ -3949,7 +3949,7 @@ c----------------------------------------------------------------------
      &                  gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -3982,7 +3982,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
         real*8 Hb_t_np1(Nx,Ny,Nz),Hb_t_n(Nx,Ny,Nz),Hb_t_nm1(Nx,Ny,Nz)
         real*8 Hb_x_np1(Nx,Ny,Nz),Hb_x_n(Nx,Ny,Nz),Hb_x_nm1(Nx,Ny,Nz)
         real*8 Hb_y_np1(Nx,Ny,Nz),Hb_y_n(Nx,Ny,Nz),Hb_y_nm1(Nx,Ny,Nz)
@@ -4112,15 +4112,15 @@ c----------------------------------------------------------------------
         real*8 gb_yz_yz
         real*8 gb_yz_zz
 
-        real*8 psi_t, psi_x, psi_y
-        real*8 psi_z
-        real*8 psi_tt,psi_tx,psi_ty
-        real*8 psi_tz
-        real*8 psi_xx,psi_xy
-        real*8 psi_xz
-        real*8 psi_yy
-        real*8 psi_yz
-        real*8 psi_zz
+        real*8 gb_zz_t, gb_zz_x, gb_zz_y
+        real*8 gb_zz_z
+        real*8 gb_zz_tt,gb_zz_tx,gb_zz_ty
+        real*8 gb_zz_tz
+        real*8 gb_zz_xx,gb_zz_xy
+        real*8 gb_zz_xz
+        real*8 gb_zz_yy
+        real*8 gb_zz_yz
+        real*8 gb_zz_zz
 
         real*8 phi1_t, phi1_x, phi1_y
         real*8 phi1_z
@@ -4138,7 +4138,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz0
         real*8 gb_yy0
         real*8 gb_yz0
-        real*8 psi0
+        real*8 gb_zz0
         real*8 phi10
 
         real*8 g0_tt_ads_x,g0_tt_ads_xx,g0_tt_ads_xy
@@ -4195,22 +4195,22 @@ c----------------------------------------------------------------------
         real*8 g0_yz_ads_xz
         real*8 g0_yz_ads_yz
         real*8 g0_yz_ads_zz
-        real*8 g0_psi_ads_x,g0_psi_ads_xx,g0_psi_ads_xy
-        real*8 g0_psi_ads_y,g0_psi_ads_yy
-        real*8 g0_psi_ads_z
-        real*8 g0_psi_ads_xz
-        real*8 g0_psi_ads_yz
-        real*8 g0_psi_ads_zz
+        real*8 g0_zz_ads_x,g0_zz_ads_xx,g0_zz_ads_xy
+        real*8 g0_zz_ads_y,g0_zz_ads_yy
+        real*8 g0_zz_ads_z
+        real*8 g0_zz_ads_xz
+        real*8 g0_zz_ads_yz
+        real*8 g0_zz_ads_zz
 
         real*8 g0_tt_ads0,g0_xx_ads0
         real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
-        real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
+        real*8 g0_xy_ads0,g0_yy_ads0,g0_zz_ads0
         real*8 g0_xz_ads0,g0_yz_ads0
 
         real*8 detg0_ads0
         real*8 g0u_tt_ads0,g0u_xx_ads0
         real*8 g0u_tx_ads0,g0u_ty_ads0,g0u_tz_ads0
-        real*8 g0u_xy_ads0,g0u_yy_ads0,g0u_psi_ads0
+        real*8 g0u_xy_ads0,g0u_yy_ads0,g0u_zz_ads0
         real*8 g0u_xz_ads0,g0u_yz_ads0
 
         real*8 Hb_t_t,Hb_t_x,Hb_t_y,Hb_t_z
@@ -4260,7 +4260,7 @@ c----------------------------------------------------------------------
 !        g0_xz_ads0 =0
 !        g0_yy_ads0 =0
 !        g0_yz_ads0 =0
-!        g0_psi_ads0=0
+!        g0_zz_ads0=0
 !
 !        g0u_tt_ads0 =0
 !        g0u_tx_ads0 =0
@@ -4271,7 +4271,7 @@ c----------------------------------------------------------------------
 !        g0u_xz_ads0 =0
 !        g0u_yy_ads0 =0
 !        g0u_yz_ads0 =0
-!        g0u_psi_ads0=0
+!        g0u_zz_ads0=0
 !
 !        g0_tt_ads_x  =0
 !        g0_tt_ads_y  =0
@@ -4363,15 +4363,15 @@ c----------------------------------------------------------------------
 !        g0_yz_ads_yz =0
 !        g0_yz_ads_zz =0
 !
-!        g0_psi_ads_x  =0
-!        g0_psi_ads_y  =0
-!        g0_psi_ads_z  =0
-!        g0_psi_ads_xx =0
-!        g0_psi_ads_xy =0
-!        g0_psi_ads_xz =0
-!        g0_psi_ads_yy =0
-!        g0_psi_ads_yz =0
-!        g0_psi_ads_zz =0
+!        g0_zz_ads_x  =0
+!        g0_zz_ads_y  =0
+!        g0_zz_ads_z  =0
+!        g0_zz_ads_xx =0
+!        g0_zz_ads_xy =0
+!        g0_zz_ads_xz =0
+!        g0_zz_ads_yy =0
+!        g0_zz_ads_yz =0
+!        g0_zz_ads_zz =0
 !
 !        Hads_l(1)=0
 !        Hads_l(2)=0
@@ -4445,13 +4445,13 @@ c----------------------------------------------------------------------
         g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
-!        g0_psi_ads0=(-8*z0**2*(-x0**2+y0**2+z0**2)
+!        g0_zz_ads0=(-8*z0**2*(-x0**2+y0**2+z0**2)
 !     &              +8*(2*y0**2+z0**2)*rho0**2
 !     &              +4*L**2*(z0**2*(1-2*x0**2+2*z0**2+rho0**4)
 !     &              +y0**2*(2*z0**2+(-1+rho0**2)**2)))
 !     &              /(y0**2+z0**2)/(-1+rho0**2)**2
 !     &              /(4*rho0**2+L**2*(-1+rho0**2)**2)
-        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+        g0_zz_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
      &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
      &              /(L**2*(-1+rho0**2)**4
      &              +4*(-1+rho0**2)**2*(rho0**2))
@@ -4464,7 +4464,7 @@ c----------------------------------------------------------------------
 !       write (*,*) ' g0_xz_ads0=',g0_xz_ads0
 !       write (*,*) ' g0_yy_ads0=',g0_yy_ads0 
 !       write (*,*) ' g0_yz_ads0=',g0_yz_ads0
-!       write (*,*) ' g0_psi_ads0=',g0_psi_ads0
+!       write (*,*) ' g0_zz_ads0=',g0_zz_ads0
 !!!!!!!!!!!!!!!
 
 !!!!!!2+1 version!!!!
@@ -4482,44 +4482,44 @@ c----------------------------------------------------------------------
 
         detg0_ads0=-g0_tt_ads0*(g0_xz_ads0**2*g0_yy_ads0
      &       -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &       +g0_xy_ads0**2*g0_psi_ads0
-     &       +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+     &       +g0_xy_ads0**2*g0_zz_ads0
+     &       +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
 
       if ((detg0_ads0.ne.0.0d0).and.(g0_tt_ads0.ne.0.0d0)) then        
         g0u_tt_ads0 =1/g0_tt_ads0
         g0u_tx_ads0 =0
         g0u_ty_ads0 =0
         g0u_tz_ads0 =0
-        g0u_xx_ads0 =(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0)
+        g0u_xx_ads0 =(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
-        g0u_xy_ads0 =(-g0_xz_ads0*g0_yz_ads0+g0_xy_ads0*g0_psi_ads0)
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
+        g0u_xy_ads0 =(-g0_xz_ads0*g0_yz_ads0+g0_xy_ads0*g0_zz_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
         g0u_xz_ads0 =(g0_xz_ads0*g0_yy_ads0-g0_xy_ads0*g0_yz_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
-        g0u_yy_ads0 =(g0_xz_ads0**2-g0_xx_ads0*g0_psi_ads0)
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
+        g0u_yy_ads0 =(g0_xz_ads0**2-g0_xx_ads0*g0_zz_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
         g0u_yz_ads0 =(-g0_xy_ads0*g0_xz_ads0+g0_xx_ads0*g0_yz_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
-        g0u_psi_ads0 =(g0_xy_ads0**2-g0_xx_ads0*g0_yy_ads0)
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
+        g0u_zz_ads0 =(g0_xy_ads0**2-g0_xx_ads0*g0_yy_ads0)
      &               /(g0_xz_ads0**2*g0_yy_ads0
      &               -2*g0_xy_ads0*g0_xz_ads0*g0_yz_ads0
-     &               +g0_xy_ads0**2*g0_psi_ads0
-     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_psi_ads0))
+     &               +g0_xy_ads0**2*g0_zz_ads0
+     &               +g0_xx_ads0*(g0_yz_ads0**2-g0_yy_ads0*g0_zz_ads0))
       else
        write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
        write (*,*) 'detg0_ads0=',detg0_ads0
@@ -4534,7 +4534,7 @@ c----------------------------------------------------------------------
 !       write (*,*) ' g0u_xz_ads0=',g0u_xz_ads0
 !       write (*,*) ' g0u_yy_ads0=',g0u_yy_ads0
 !       write (*,*) ' g0u_yz_ads0=',g0u_yz_ads0
-!       write (*,*) ' g0u_psi_ads0=',g0u_psi_ads0
+!       write (*,*) ' g0u_zz_ads0=',g0u_zz_ads0
 
         ! set gbar values
         gb_tt0=gb_tt_n(i,j,k)
@@ -4546,7 +4546,7 @@ c----------------------------------------------------------------------
         gb_xz0=gb_xz_n(i,j,k)
         gb_yy0=gb_yy_n(i,j,k)
         gb_yz0=gb_yz_n(i,j,k)
-        psi0=psi_n(i,j,k)
+        gb_zz0=gb_zz_n(i,j,k)
 
         ! set hbar values
         Hb_t0=Hb_t_n(i,j,k)
@@ -5507,7 +5507,7 @@ c----------------------------------------------------------------------
      &                 /((-1+rho0**2)**4
      &                 *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
 
-        g0_psi_ads_x  =-((16*x0*(16*(x0**2+y0**2)**2
+        g0_zz_ads_x  =-((16*x0*(16*(x0**2+y0**2)**2
      &                 +8*(1+x0**2+y0**2)*z0**2-8*z0**4
      &                 +L**4*(-1+rho0**2)**2*((-1+x0**2+y0**2)**2
      &                  +2*(3+x0**2+y0**2)*z0**2+z0**4)
@@ -5516,7 +5516,7 @@ c----------------------------------------------------------------------
      &                 +(3+x0**2+y0**2)*z0**4)))
      &                 /((-1+rho0**2)**3
      &                 *(L**2*(-1+rho0**2)**2+4*(rho0**2))**2))
-        g0_psi_ads_y  =-((16*y0*(16*(x0**2+y0**2)**2
+        g0_zz_ads_y  =-((16*y0*(16*(x0**2+y0**2)**2
      &                 +8*(1+x0**2+y0**2)*z0**2-8*z0**4
      &                 +L**4*(-1+rho0**2)**2*((-1+x0**2+y0**2)**2
      &                  +2*(3+x0**2+y0**2)*z0**2+z0**4)
@@ -5525,7 +5525,7 @@ c----------------------------------------------------------------------
      &                 +(3+x0**2+y0**2)*z0**4)))
      &                 /((-1+rho0**2)**3
      &                 *(L**2*(-1+rho0**2)**2+4*(rho0**2))**2))
-        g0_psi_ads_z  =-((16*z0*(8*(x0**2+y0**2)*(-1+3*rho0**2)
+        g0_zz_ads_z  =-((16*z0*(8*(x0**2+y0**2)*(-1+3*rho0**2)
      &                +L**4*(-1+rho0**2)**2*(3-4*y0**2+4*z0**2
      &                 +((-2+x0)*x0+y0**2+z0**2)
      &                 *(x0*(2+x0)+y0**2+z0**2))
@@ -5537,7 +5537,7 @@ c----------------------------------------------------------------------
      &                 +y0**2*(-30+22*z0**2)))))
      &                /((-1 + rho0**2)**3* (L**2* (-1 +rho0**2)**2
      &                + 4* (rho0**2))**2))
-        g0_psi_ads_xx  =(16*(4*L**4*(-1+rho0**2)**2*(3*(1+5*x0**2-y0**2)
+        g0_zz_ads_xx  =(16*(4*L**4*(-1+rho0**2)**2*(3*(1+5*x0**2-y0**2)
      &                   *(-1+x0**2+y0**2)**2*(x0**2+y0**2)
      &                  +(-1+24*x0**6+4*y0**2+7*y0**4-10*y0**6
      &                  +19*x0**4*(5+2*y0**2)
@@ -5572,7 +5572,7 @@ c----------------------------------------------------------------------
      &                   + z0**4))))
      &                  /((-1+rho0**2)**4
      &                  *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
-        g0_psi_ads_xy  =(32*x0*y0*(-64*z0**2+64*(rho0**2)
+        g0_zz_ads_xy  =(32*x0*y0*(-64*z0**2+64*(rho0**2)
      &                   *(3*(x0**2+y0**2)**2+4*z0**2-3*z0**4)
      &                  +L**6*(-1+rho0**2)**4*(3*(-1+x0**2+y0**2)**2
      &                  +2*(17+3*x0**2+3*y0**2)*z0**2+3*z0**4)
@@ -5588,7 +5588,7 @@ c----------------------------------------------------------------------
      &                   -3*(-14+x0**2+y0**2)*z0**4-6*z0**6))))
      &                  /((-1+rho0**2)**4
      &                  *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
-        g0_psi_ads_xz  =(16*x0*(8*z0*(-1+rho0**2)*(2+L**2*(-1+rho0**2))
+        g0_zz_ads_xz  =(16*x0*(8*z0*(-1+rho0**2)*(2+L**2*(-1+rho0**2))
      &                  *(16*(x0**2+y0**2)**2
      &                  +8*(1+x0**2+y0**2)*z0**2-8*z0**4
      &                  +L**4*(-1+rho0**2)**2*((-1+x0**2+y0**2)**2
@@ -5611,7 +5611,7 @@ c----------------------------------------------------------------------
      &                  +L**2*(-1+rho0**2)*(-1+4*z0**2+(rho0**2)**2)))))
      &                  /((-1+rho0**2)**4
      &                  *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
-        g0_psi_ads_yy  =(16*(-L**6*(-1+rho0**2)**4*((-1+x0**2-5*y0**2)
+        g0_zz_ads_yy  =(16*(-L**6*(-1+rho0**2)**4*((-1+x0**2-5*y0**2)
      &                   *(-1+x0**2+y0**2)**2
      &                  +(-5+2*x0**2+3*x0**4-6*(11+x0**2)*y0**2
      &                   -9*y0**4)*z0**2
@@ -5646,7 +5646,7 @@ c----------------------------------------------------------------------
      &                  -2*(8+x0**2+13*y0**2)*z0**8+z0**10)))
      &                  /((-1+rho0**2)**4
      &                  *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
-        g0_psi_ads_yz  =(16*y0*(8*z0*(-1+rho0**2)*(2+L**2*(-1+rho0**2))
+        g0_zz_ads_yz  =(16*y0*(8*z0*(-1+rho0**2)*(2+L**2*(-1+rho0**2))
      &                  *(16*(x0**2+y0**2)**2
      &                  +8*(1+x0**2+y0**2)*z0**2-8*z0**4
      &                  +L**4*(-1+rho0**2)**2*((-1+x0**2+y0**2)**2
@@ -5669,7 +5669,7 @@ c----------------------------------------------------------------------
      &                  +L**2*(-1+rho0**2)*(-1+4*z0**2+(rho0**2)**2)))))
      &                  /((-1+rho0**2)**4
      &                  *(L**2*(-1+rho0**2)**2+4*(rho0**2))**3)
-        g0_psi_ads_zz  =(16*(-L**6*(-1+rho0**2)**4
+        g0_zz_ads_zz  =(16*(-L**6*(-1+rho0**2)**4
      &                   *((-3+x0**2+y0**2)*(-1+x0**2+y0**2)**2
      &                  -3*(-13+x0**2+y0**2)*(-1+x0**2+y0**2)*z0**2
      &                  -3*(11+3*x0**2+3*y0**2)*z0**4-5*z0**6)
@@ -5798,15 +5798,15 @@ c----------------------------------------------------------------------
 !       write (*,*) ' g0_yz_ads_yz=',g0_yz_ads_yz
 !       write (*,*) ' g0_yz_ads_zz=',g0_yz_ads_zz
 !
-!       write (*,*) ' g0_psi_ads_x=' ,g0_psi_ads_x
-!       write (*,*) ' g0_psi_ads_y=' ,g0_psi_ads_y
-!       write (*,*) ' g0_psi_ads_z=' ,g0_psi_ads_z
-!       write (*,*) ' g0_psi_ads_xx=',g0_psi_ads_xx
-!       write (*,*) ' g0_psi_ads_xy=',g0_psi_ads_xy
-!       write (*,*) ' g0_psi_ads_xz=',g0_psi_ads_xz
-!       write (*,*) ' g0_psi_ads_yy=',g0_psi_ads_yy
-!       write (*,*) ' g0_psi_ads_yz=',g0_psi_ads_yz
-!       write (*,*) ' g0_psi_ads_zz=',g0_psi_ads_zz
+!       write (*,*) ' g0_zz_ads_x=' ,g0_zz_ads_x
+!       write (*,*) ' g0_zz_ads_y=' ,g0_zz_ads_y
+!       write (*,*) ' g0_zz_ads_z=' ,g0_zz_ads_z
+!       write (*,*) ' g0_zz_ads_xx=',g0_zz_ads_xx
+!       write (*,*) ' g0_zz_ads_xy=',g0_zz_ads_xy
+!       write (*,*) ' g0_zz_ads_xz=',g0_zz_ads_xz
+!       write (*,*) ' g0_zz_ads_yy=',g0_zz_ads_yy
+!       write (*,*) ' g0_zz_ads_yz=',g0_zz_ads_yz
+!       write (*,*) ' g0_zz_ads_zz=',g0_zz_ads_zz
 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t,
@@ -5908,17 +5908,17 @@ c----------------------------------------------------------------------
      &       gb_yz_yz,
      &       gb_yz_zz,
      &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_yz')
-        call df2_int(psi_np1,psi_n,psi_nm1,psi_t,psi_x,
-     &       psi_y,
-     &       psi_z,
-     &       psi_tt,psi_tx,psi_ty,
-     &       psi_tz,
-     &       psi_xx,psi_xy,
-     &       psi_xz,
-     &       psi_yy,
-     &       psi_yz,
-     &       psi_zz,
-     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'psi')
+        call df2_int(gb_zz_np1,gb_zz_n,gb_zz_nm1,gb_zz_t,gb_zz_x,
+     &       gb_zz_y,
+     &       gb_zz_z,
+     &       gb_zz_tt,gb_zz_tx,gb_zz_ty,
+     &       gb_zz_tz,
+     &       gb_zz_xx,gb_zz_xy,
+     &       gb_zz_xz,
+     &       gb_zz_yy,
+     &       gb_zz_yz,
+     &       gb_zz_zz,
+     &       x,y,z,dt,i,j,k,chr,ex,Nx,Ny,Nz,'gb_zz')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t,Hb_t_x,
@@ -6060,14 +6060,14 @@ c----------------------------------------------------------------------
 !     &           gb_yz'
 !         end if
 !
-!         if    ((psi_z.ne.0.0d0)
-!     &      .or.(psi_tz.ne.0.0d0)
-!     &      .or.(psi_xz.ne.0.0d0)
-!     &      .or.(psi_yz.ne.0.0d0)
-!     &      .or.(psi_zz.ne.0.0d0)) then
+!         if    ((gb_zz_z.ne.0.0d0)
+!     &      .or.(gb_zz_tz.ne.0.0d0)
+!     &      .or.(gb_zz_xz.ne.0.0d0)
+!     &      .or.(gb_zz_yz.ne.0.0d0)
+!     &      .or.(gb_zz_zz.ne.0.0d0)) then
 !
 !          write(*,*) 'DEBUG from misc.f: non zero z-derivative of 
-!     &           psi'
+!     &           gb_zz'
 !         end if
 !
 !!!TEST
@@ -6162,7 +6162,7 @@ c----------------------------------------------------------------------
         g0_ll(2,4)=g0_xz_ads0+gb_xz0
         g0_ll(3,3)=g0_yy_ads0+gb_yy0
         g0_ll(3,4)=g0_yz_ads0+gb_yz0
-        g0_ll(4,4)=g0_psi_ads0+psi0
+        g0_ll(4,4)=g0_zz_ads0+gb_zz0
 
 !CHECKED WITH MATHEMATICA UP TO HERE
 
@@ -6581,33 +6581,33 @@ c----------------------------------------------------------------------
 !       write (*,*) 'g0_ll_xx(3,4,4,4)=',g0_ll_xx(3,4,4,4)
 
         g0_ll_x(4,4,1)   =0
-     &                   +psi_t
-        g0_ll_x(4,4,2)   =g0_psi_ads_x
-     &                   +psi_x
-        g0_ll_x(4,4,3)   =g0_psi_ads_y
-     &                   +psi_y
-        g0_ll_x(4,4,4)   =g0_psi_ads_z
-     &                   +psi_z
+     &                   +gb_zz_t
+        g0_ll_x(4,4,2)   =g0_zz_ads_x
+     &                   +gb_zz_x
+        g0_ll_x(4,4,3)   =g0_zz_ads_y
+     &                   +gb_zz_y
+        g0_ll_x(4,4,4)   =g0_zz_ads_z
+     &                   +gb_zz_z
         g0_ll_xx(4,4,1,1)=0
-     &                   +psi_tt
+     &                   +gb_zz_tt
         g0_ll_xx(4,4,1,2)=0
-     &                   +psi_tx
+     &                   +gb_zz_tx
         g0_ll_xx(4,4,1,3)=0
-     &                   +psi_ty
+     &                   +gb_zz_ty
         g0_ll_xx(4,4,1,4)=0
-     &                   +psi_tz
-        g0_ll_xx(4,4,2,2)=g0_psi_ads_xx
-     &                   +psi_xx
-        g0_ll_xx(4,4,2,3)=g0_psi_ads_xy
-     &                   +psi_xy
-        g0_ll_xx(4,4,2,4)=g0_psi_ads_xz
-     &                   +psi_xz
-        g0_ll_xx(4,4,3,3)=g0_psi_ads_yy
-     &                   +psi_yy
-        g0_ll_xx(4,4,3,4)=g0_psi_ads_yz
-     &                   +psi_yz
-        g0_ll_xx(4,4,4,4)=g0_psi_ads_zz
-     &                   +psi_zz
+     &                   +gb_zz_tz
+        g0_ll_xx(4,4,2,2)=g0_zz_ads_xx
+     &                   +gb_zz_xx
+        g0_ll_xx(4,4,2,3)=g0_zz_ads_xy
+     &                   +gb_zz_xy
+        g0_ll_xx(4,4,2,4)=g0_zz_ads_xz
+     &                   +gb_zz_xz
+        g0_ll_xx(4,4,3,3)=g0_zz_ads_yy
+     &                   +gb_zz_yy
+        g0_ll_xx(4,4,3,4)=g0_zz_ads_yz
+     &                   +gb_zz_yz
+        g0_ll_xx(4,4,4,4)=g0_zz_ads_zz
+     &                   +gb_zz_zz
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
 !       write (*,*) 'g0_ll(4,4)=',g0_ll(4,4)
@@ -6729,7 +6729,7 @@ c----------------------------------------------------------------------
         gads_ll(2,4)=g0_xz_ads0
         gads_ll(3,3)=g0_yy_ads0
         gads_ll(3,4)=g0_yz_ads0
-        gads_ll(4,4)=g0_psi_ads0
+        gads_ll(4,4)=g0_zz_ads0
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
 !       write (*,*) 'gads_ll(1,1)=',gads_ll(1,1)
@@ -6752,7 +6752,7 @@ c----------------------------------------------------------------------
         gads_uu(2,4)=g0u_xz_ads0
         gads_uu(3,3)=g0u_yy_ads0
         gads_uu(3,4)=g0u_yz_ads0
-        gads_uu(4,4)=g0u_psi_ads0
+        gads_uu(4,4)=g0u_zz_ads0
 
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
@@ -6959,15 +6959,15 @@ c----------------------------------------------------------------------
 !       write (*,*) 'gads_ll_xx(3,4,3,4)=',gads_ll_xx(3,4,3,4)
 !       write (*,*) 'gads_ll_xx(3,4,4,4)=',gads_ll_xx(3,4,4,4)
 
-        gads_ll_x(4,4,2)   =g0_psi_ads_x
-        gads_ll_x(4,4,3)   =g0_psi_ads_y
-        gads_ll_x(4,4,4)   =g0_psi_ads_z
-        gads_ll_xx(4,4,2,2)=g0_psi_ads_xx
-        gads_ll_xx(4,4,2,3)=g0_psi_ads_xy
-        gads_ll_xx(4,4,2,4)=g0_psi_ads_xz
-        gads_ll_xx(4,4,3,3)=g0_psi_ads_yy
-        gads_ll_xx(4,4,3,4)=g0_psi_ads_yz
-        gads_ll_xx(4,4,4,4)=g0_psi_ads_zz
+        gads_ll_x(4,4,2)   =g0_zz_ads_x
+        gads_ll_x(4,4,3)   =g0_zz_ads_y
+        gads_ll_x(4,4,4)   =g0_zz_ads_z
+        gads_ll_xx(4,4,2,2)=g0_zz_ads_xx
+        gads_ll_xx(4,4,2,3)=g0_zz_ads_xy
+        gads_ll_xx(4,4,2,4)=g0_zz_ads_xz
+        gads_ll_xx(4,4,3,3)=g0_zz_ads_yy
+        gads_ll_xx(4,4,3,4)=g0_zz_ads_yz
+        gads_ll_xx(4,4,4,4)=g0_zz_ads_zz
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
 !       write (*,*) 'gads_ll_x(4,4,2)=',gads_ll_x(4,4,2)
@@ -7025,7 +7025,7 @@ c----------------------------------------------------------------------
         h0_ll(2,4)=gb_xz0
         h0_ll(3,3)=gb_yy0
         h0_ll(3,4)=gb_yz0
-        h0_ll(4,4)=psi0
+        h0_ll(4,4)=gb_zz0
 
 !       write (*,*) 'L,i,j,k,x0,y0,z0,rho0,dx=',L,i,j,k,x0,y0,z0,rho0,dx
 !       write (*,*) 'h0_ll(1,1)=',h0_ll(1,1)

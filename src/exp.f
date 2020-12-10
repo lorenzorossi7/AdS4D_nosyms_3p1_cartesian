@@ -62,7 +62,7 @@ c----------------------------------------------------------------------
      &                    gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                    psi_np1,psi_n,psi_nm1,
+     &                    gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                    L,x,y,z,dt,chr,ex,do_ex,
      &                    Nx,Ny,Nz)
         implicit none
@@ -80,7 +80,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke
         integer a,b,c,d,e
@@ -249,7 +249,7 @@ c----------------------------------------------------------------------
      &                 gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                 gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                 gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                 psi_np1,psi_n,psi_nm1,
+     &                 gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                 zeros,zeros,zeros,
      &                 zeros,zeros,zeros,
      &                 zeros,zeros,zeros,
@@ -909,7 +909,7 @@ c-----------------------------------------------------------------------
      &                    da,d_ceq,d_cp,d_cp2,
      &                    AH_x0,AH_y0,AH_z0,
      &                    AH_g0_xx,AH_g0_xy,AH_g0_xz,
-     &                    AH_g0_yy,AH_g0_yz,AH_g0_psi,
+     &                    AH_g0_yy,AH_g0_yz,AH_g0_zz,
      &                    AH_g0_chichi,AH_g0_chiphi,AH_g0_phiphi,
      &                    AH_ahr,AH_dch,AH_dph,
      &                    AH_da0,AH_dcq,AH_dcp,AH_dcp2,
@@ -922,7 +922,7 @@ c-----------------------------------------------------------------------
      &                    gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                    psi_np1,psi_n,psi_nm1,
+     &                    gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                    L,x,y,z,dt,chr,ex,do_ex,
      &                    Nx,Ny,Nz,axisym)
         implicit none
@@ -933,11 +933,11 @@ c-----------------------------------------------------------------------
         real*8 AH_gb_xx(AH_Nchi,AH_Nphi),AH_gb_xy(AH_Nchi,AH_Nphi)
         real*8 AH_gb_xz(AH_Nchi,AH_Nphi)
         real*8 AH_gb_yy(AH_Nchi,AH_Nphi),AH_gb_yz(AH_Nchi,AH_Nphi)
-        real*8 AH_gb_psi(AH_Nchi,AH_Nphi)
+        real*8 AH_gb_zz(AH_Nchi,AH_Nphi)
         real*8 AH_g0_xx(AH_Nchi,AH_Nphi),AH_g0_xy(AH_Nchi,AH_Nphi)
         real*8 AH_g0_xz(AH_Nchi,AH_Nphi)
         real*8 AH_g0_yy(AH_Nchi,AH_Nphi),AH_g0_yz(AH_Nchi,AH_Nphi)
-        real*8 AH_g0_psi(AH_Nchi,AH_Nphi)
+        real*8 AH_g0_zz(AH_Nchi,AH_Nphi)
         real*8 AH_x0(AH_Nchi,AH_Nphi)
         real*8 AH_y0(AH_Nchi,AH_Nphi)
         real*8 AH_z0(AH_Nchi,AH_Nphi)
@@ -963,7 +963,7 @@ c-----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
 
         real*8 cosx(Nx),cosy(Ny),cosz(Nz)
         real*8 sinx(Nx),siny(Ny),sinz(Nz)
@@ -978,7 +978,7 @@ c-----------------------------------------------------------------------
         real*8 dxb_dt,dyb_dt,dzb_dt
         real*8 dxb_dp,dyb_dp,dzb_dp
         real*8 dtt,dpp,dpt
-        real*8 gb_xx0,gb_xy0,gb_yy0,psi0
+        real*8 gb_xx0,gb_xy0,gb_yy0,gb_zz0
 
         real*8 drh_dch,drh_dph
         real*8 dahr_dch,dx_dch,dy_dch,dz_dch
@@ -999,7 +999,7 @@ c-----------------------------------------------------------------------
         real*8 g0_xz_ads0
         real*8 g0_yy_ads0
         real*8 g0_yz_ads0
-        real*8 g0_psi_ads0
+        real*8 g0_zz_ads0
 
         integer is_bad,fill_later
 
@@ -1022,7 +1022,7 @@ c-----------------------------------------------------------------------
         data dxb_dp,dyb_dp,dzb_dp/0.0,0.0,0.0/
         data dtt,dpp,dpt/0.0,0.0,0.0/
         data gb_xx0,gb_xy0,gb_yy0/0.0,0.0,0.0/
-        data psi0/0.0/
+        data gb_zz0/0.0/
 
         data drh_dch,drh_dph,dx_dch,dy_dch,dz_dch/0.0,0.0,0.0,0.0,0.0/
         data g_xx0,g_xy0,g_yy0,g_phph0/0.0,0.0,0.0,0.0/
@@ -1172,7 +1172,7 @@ c-----------------------------------------------------------------------
      &               gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &               gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &               gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &               psi_np1,psi_n,psi_nm1,
+     &               gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &               L,x,y,z,dt,chr,ex,do_ex,Nx,Ny,Nz)
 
           ! interpolate theta from 
@@ -1215,7 +1215,7 @@ c-----------------------------------------------------------------------
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
 
-        g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+        g0_zz_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
      &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
      &              /(L**2*(-1+rho0**2)**4
      &              +4*(-1+rho0**2)**2*(rho0**2))
@@ -1269,21 +1269,21 @@ c-----------------------------------------------------------------------
      &                    (1-fx)*(  fy)*(  fz)  *gb_yz_n(i,j+1,k+1)+
      &                    (  fx)*(  fy)*(  fz)  *gb_yz_n(i+1,j+1,k+1)
 
-          AH_gb_psi(i0,j0)=(1-fx)*(1-fy)*(1-fz)  *psi_n(i,j,k)+
-     &                     (  fx)*(1-fy)*(1-fz)  *psi_n(i+1,j,k)+
-     &                     (1-fx)*(  fy)*(1-fz)  *psi_n(i,j+1,k)+
-     &                     (  fx)*(  fy)*(1-fz)  *psi_n(i+1,j+1,k)+
-     &                     (1-fx)*(1-fy)*(  fz)  *psi_n(i,j,k+1)+
-     &                     (  fx)*(1-fy)*(  fz)  *psi_n(i+1,j,k+1)+
-     &                     (1-fx)*(  fy)*(  fz)  *psi_n(i,j+1,k+1)+
-     &                     (  fx)*(  fy)*(  fz)  *psi_n(i+1,j+1,k+1)
+          AH_gb_zz(i0,j0)=(1-fx)*(1-fy)*(1-fz)  *gb_zz_n(i,j,k)+
+     &                     (  fx)*(1-fy)*(1-fz)  *gb_zz_n(i+1,j,k)+
+     &                     (1-fx)*(  fy)*(1-fz)  *gb_zz_n(i,j+1,k)+
+     &                     (  fx)*(  fy)*(1-fz)  *gb_zz_n(i+1,j+1,k)+
+     &                     (1-fx)*(1-fy)*(  fz)  *gb_zz_n(i,j,k+1)+
+     &                     (  fx)*(1-fy)*(  fz)  *gb_zz_n(i+1,j,k+1)+
+     &                     (1-fx)*(  fy)*(  fz)  *gb_zz_n(i,j+1,k+1)+
+     &                     (  fx)*(  fy)*(  fz)  *gb_zz_n(i+1,j+1,k+1)
 
          AH_g0_xx(i0,j0)  = g0_xx_ads0  + AH_gb_xx(i0,j0)
          AH_g0_xy(i0,j0)  = g0_xy_ads0  + AH_gb_xy(i0,j0)
          AH_g0_xz(i0,j0)  = g0_xz_ads0  + AH_gb_xz(i0,j0)
          AH_g0_yy(i0,j0)  = g0_yy_ads0  + AH_gb_yy(i0,j0)
          AH_g0_yz(i0,j0)  = g0_yz_ads0  + AH_gb_yz(i0,j0)
-         AH_g0_psi(i0,j0) = g0_psi_ads0 + AH_gb_psi(i0,j0)
+         AH_g0_zz(i0,j0) = g0_zz_ads0 + AH_gb_zz(i0,j0)
 
 
 !         write (*,*) "i0,j0=",i0,j0
@@ -1292,7 +1292,7 @@ c-----------------------------------------------------------------------
 !         write (*,*) "AH_g0_xz(i0,j0)=",AH_g0_xz(i0,j0)
 !         write (*,*) "AH_g0_yy(i0,j0)=",AH_g0_yy(i0,j0)
 !         write (*,*) "AH_g0_yz(i0,j0)=",AH_g0_yz(i0,j0)
-!         write (*,*) "AH_g0_psi(i0,j0)=",AH_g0_psi(i0,j0)
+!         write (*,*) "AH_g0_zz(i0,j0)=",AH_g0_zz(i0,j0)
 
         !--------------------------------------------------------------
         ! proper area element
@@ -1352,14 +1352,14 @@ c-----------------------------------------------------------------------
      &                    +2*dx_dch*dz_dch*AH_g0_xz(i0,j0)
      &                    +dy_dch**2*AH_g0_yy(i0,j0)
      &                    +2*dy_dch*dz_dch*AH_g0_yz(i0,j0)
-     &                    +dz_dch**2*AH_g0_psi(i0,j0)
+     &                    +dz_dch**2*AH_g0_zz(i0,j0)
              g0_chiphi0=dx_dch*dx_dph*AH_g0_xx(i0,j0)
      &                    +dx_dch*dy_dph*AH_g0_xy(i0,j0)
      &                    +dx_dch*dz_dph*AH_g0_xz(i0,j0)
      &                    +dy_dch*dy_dph*AH_g0_yy(i0,j0)
      &                    +dy_dch*dx_dph*AH_g0_xy(i0,j0)
      &                    +dy_dch*dz_dph*AH_g0_yz(i0,j0)
-     &                    +dz_dch*dz_dph*AH_g0_psi(i0,j0)
+     &                    +dz_dch*dz_dph*AH_g0_zz(i0,j0)
      &                    +dz_dch*dx_dph*AH_g0_xz(i0,j0)
      &                    +dz_dch*dy_dph*AH_g0_yz(i0,j0)
              g0_phiphi0=dx_dph**2*AH_g0_xx(i0,j0)
@@ -1367,7 +1367,7 @@ c-----------------------------------------------------------------------
      &                    +2*dx_dph*dz_dph*AH_g0_xz(i0,j0)
      &                    +dy_dph**2*AH_g0_yy(i0,j0)
      &                    +2*dy_dph*dz_dph*AH_g0_yz(i0,j0)
-     &                    +dz_dph**2*AH_g0_psi(i0,j0)
+     &                    +dz_dph**2*AH_g0_zz(i0,j0)
 
               AH_det_g0=g0_chichi0*g0_phiphi0-g0_chiphi0**2
 
@@ -1449,7 +1449,7 @@ c-------------------------------------------------------------------------------
 !     &                    AH_g0_tt,
 !     &                    AH_g0_tx,AH_g0_ty,AH_g0_tz,
 !     &                    AH_g0_xx,AH_g0_xy,AH_g0_xz,
-!     &                    AH_g0_yy,AH_g0_yz,AH_g0_psi,
+!     &                    AH_g0_yy,AH_g0_yz,AH_g0_zz,
 !     &                    AH_x0,AH_y0,AH_z0,
 !     &                    AH_g0_chichi,AH_g0_chiphi,AH_g0_phiphi,
 !     &                    AH_ahr,AH_dch,AH_dph,
@@ -1466,7 +1466,7 @@ c-------------------------------------------------------------------------------
 !     &                    gb_xz_n,
 !     &                    gb_yy_n,
 !     &                    gb_yz_n,
-!     &                    psi_n,
+!     &                    gb_zz_n,
 !     &                    L,x,y,z,dt,chr,ex,do_ex,
 !     &                    Nx,Ny,Nz,axisym)
 !
@@ -1481,7 +1481,7 @@ c-------------------------------------------------------------------------------
 !        real*8 AH_g0_xx(AH_Nchi,AH_Nphi),AH_g0_xy(AH_Nchi,AH_Nphi)
 !        real*8 AH_g0_xz(AH_Nchi,AH_Nphi)
 !        real*8 AH_g0_yy(AH_Nchi,AH_Nphi),AH_g0_yz(AH_Nchi,AH_Nphi)
-!        real*8 AH_g0_psi(AH_Nchi,AH_Nphi)
+!        real*8 AH_g0_zz(AH_Nchi,AH_Nphi)
 !        real*8 AH_x0(AH_Nchi,AH_Nphi)
 !        real*8 AH_y0(AH_Nchi,AH_Nphi)
 !        real*8 AH_z0(AH_Nchi,AH_Nphi)
@@ -1507,7 +1507,7 @@ c-------------------------------------------------------------------------------
 !        real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
 !        real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
 !        real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-!        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+!        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
 !
 !        real*8 cosx(Nx),cosy(Ny),cosz(Nz)
 !        real*8 sinx(Nx),siny(Ny),sinz(Nz)
@@ -1522,7 +1522,7 @@ c-------------------------------------------------------------------------------
 !        real*8 dxb_dt,dyb_dt,dzb_dt
 !        real*8 dxb_dp,dyb_dp,dzb_dp
 !        real*8 dtt,dpp,dpt
-!        real*8 gb_xx0,gb_xy0,gb_yy0,psi0
+!        real*8 gb_xx0,gb_xy0,gb_yy0,gb_zz0
 !
 !        real*8 dahr_dch,dx_dch,dy_dch,dz_dch
 !        real*8 dahr_dph,dx_dph,dy_dph,dz_dph
@@ -1542,7 +1542,7 @@ c-------------------------------------------------------------------------------
 !        real*8 g0_xz_ads0
 !        real*8 g0_yy_ads0
 !        real*8 g0_yz_ads0
-!        real*8 g0_psi_ads0
+!        real*8 g0_zz_ads0
 !
 !        integer is_bad,fill_later
 !
@@ -1565,7 +1565,7 @@ c-------------------------------------------------------------------------------
 !        data dxb_dp,dyb_dp,dzb_dp/0.0,0.0,0.0/
 !        data dtt,dpp,dpt/0.0,0.0,0.0/
 !        data gb_xx0,gb_xy0,gb_yy0/0.0,0.0,0.0/
-!        data psi0/0.0/
+!        data gb_zz0/0.0/
 !
 !        data drh_dch,dx_dch,dy_dch/0.0,0.0,0.0/
 !        data dx_dch_rh,dy_dch_rh/0.0,0.0/
@@ -1659,7 +1659,7 @@ c-------------------------------------------------------------------------------
 !           AH_g0_xy(i0,j0)=1E10
 !           AH_g0_yy(i0,j0)=1E10
 !           AH_g0_yz(i0,j0)=1E10
-!           AH_g0_psi(i0,j0)=1E10
+!           AH_g0_zz(i0,j0)=1E10
 !           return
 !        end if
 !
@@ -1673,7 +1673,7 @@ c-------------------------------------------------------------------------------
 !           AH_g0_xy(i0,j0)=0
 !           AH_g0_yy(i0,j0)=0
 !           AH_g0_yz(i0,j0)=0
-!           AH_g0_psi(i0,j0)=0
+!           AH_g0_zz(i0,j0)=0
 !            return
 !        else
 !
@@ -1721,7 +1721,7 @@ c-------------------------------------------------------------------------------
 !                                    AH_g0_xy(i0,j0)=0
 !                                    AH_g0_yy(i0,j0)=0
 !                                    AH_g0_yz(i0,j0)=0
-!                                    AH_g0_psi(i0,j0)=0
+!                                    AH_g0_zz(i0,j0)=0
 !                         return
 !                      end if
 !                   end do
@@ -1766,7 +1766,7 @@ c-------------------------------------------------------------------------------
 !     &              /((-1 + rho0**2)**2
 !     &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
 !
-!        g0_psi_ads0 =(4*(4*(x0**2+y0**2)
+!        g0_zz_ads0 =(4*(4*(x0**2+y0**2)
 !     &                    +L**2*((-1+x0**2+y0**2)**2
 !     &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
 !     &              /(L**2*(-1+rho0**2)**4
@@ -1859,14 +1859,14 @@ c-------------------------------------------------------------------------------
 !     &                    (1-fx)*(  fy)*(  fz)  *gb_yz_n(i,j+1,k+1)+
 !     &                    (  fx)*(  fy)*(  fz)  *gb_yz_n(i+1,j+1,k+1)
 !
-!          AH_gb_psi(i0,j0)=(1-fx)*(1-fy)*(1-fz)  *psi_n(i,j,k)+
-!     &                     (  fx)*(1-fy)*(1-fz)  *psi_n(i+1,j,k)+
-!     &                     (1-fx)*(  fy)*(1-fz)  *psi_n(i,j+1,k)+
-!     &                     (  fx)*(  fy)*(1-fz)  *psi_n(i+1,j+1,k)+
-!     &                     (1-fx)*(1-fy)*(  fz)  *psi_n(i,j,k+1)+
-!     &                     (  fx)*(1-fy)*(  fz)  *psi_n(i+1,j,k+1)+
-!     &                     (1-fx)*(  fy)*(  fz)  *psi_n(i,j+1,k+1)+
-!     &                     (  fx)*(  fy)*(  fz)  *psi_n(i+1,j+1,k+1)
+!          AH_gb_zz(i0,j0)=(1-fx)*(1-fy)*(1-fz)  *gb_zz_n(i,j,k)+
+!     &                     (  fx)*(1-fy)*(1-fz)  *gb_zz_n(i+1,j,k)+
+!     &                     (1-fx)*(  fy)*(1-fz)  *gb_zz_n(i,j+1,k)+
+!     &                     (  fx)*(  fy)*(1-fz)  *gb_zz_n(i+1,j+1,k)+
+!     &                     (1-fx)*(1-fy)*(  fz)  *gb_zz_n(i,j,k+1)+
+!     &                     (  fx)*(1-fy)*(  fz)  *gb_zz_n(i+1,j,k+1)+
+!     &                     (1-fx)*(  fy)*(  fz)  *gb_zz_n(i,j+1,k+1)+
+!     &                     (  fx)*(  fy)*(  fz)  *gb_zz_n(i+1,j+1,k+1)
 !
 !         AH_g0_tt(i0,j0)  = g0_tt_ads0  + AH_gb_tt(i0,j0)
 !         AH_g0_tx(i0,j0)  = g0_tx_ads0  + AH_gb_tx(i0,j0)
@@ -1877,7 +1877,7 @@ c-------------------------------------------------------------------------------
 !         AH_g0_xz(i0,j0)  = g0_xz_ads0  + AH_gb_xz(i0,j0)
 !         AH_g0_yy(i0,j0)  = g0_yy_ads0  + AH_gb_yy(i0,j0)
 !         AH_g0_yz(i0,j0)  = g0_yz_ads0  + AH_gb_yz(i0,j0)
-!         AH_g0_psi(i0,j0) = g0_psi_ads0 + AH_gb_psi(i0,j0)
+!         AH_g0_zz(i0,j0) = g0_zz_ads0 + AH_gb_zz(i0,j0)
 !
 !        !--------------------------------------------------------------
 !        ! proper area element
@@ -1928,14 +1928,14 @@ c-------------------------------------------------------------------------------
 !     &                    +2*dx_dch*dz_dch*AH_g0_xz(i0,j0)
 !     &                    +dy_dch**2*AH_g0_yy(i0,j0)
 !     &                    +2*dy_dch*dz_dch*AH_g0_yz(i0,j0)
-!     &                    +dz_dch**2*AH_g0_psi(i0,j0)
+!     &                    +dz_dch**2*AH_g0_zz(i0,j0)
 !             g0_chiphi0=dx_dch*dx_dph*AH_g0_xx(i0,j0)
 !     &                    +dx_dch*dy_dph*AH_g0_xy(i0,j0)
 !     &                    +dx_dch*dz_dph*AH_g0_xz(i0,j0)
 !     &                    +dy_dch*dy_dph**AH_g0_yy(i0,j0)
 !     &                    +dy_dch*dx_dph**AH_g0_xy(i0,j0)
 !     &                    +dy_dch*dz_dph**AH_g0_yz(i0,j0)
-!     &                    +dz_dch*dz_dph*AH_g0_psi(i0,j0)
+!     &                    +dz_dch*dz_dph*AH_g0_zz(i0,j0)
 !     &                    +dz_dch*dx_dph*AH_g0_xz(i0,j0)
 !     &                    +dz_dch*dy_dph*AH_g0_yz(i0,j0)
 !             g0_phiphi0=dx_dph**2*AH_g0_xx(i0,j0)
@@ -1943,7 +1943,7 @@ c-------------------------------------------------------------------------------
 !     &                    +2*dx_dph*dz_dph*AH_g0_xz(i0,j0)
 !     &                    +dy_dph**2*AH_g0_yy(i0,j0)
 !     &                    +2*dy_dph*dz_dph*AH_g0_yz(i0,j0)
-!     &                    +dz_dph**2*AH_g0_psi(i0,j0)
+!     &                    +dz_dph**2*AH_g0_zz(i0,j0)
 !
 !              AH_det_g0=g0_chichi0*g0_phiphi0-g0_chiphi0**2
 !

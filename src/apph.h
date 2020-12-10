@@ -24,7 +24,7 @@ extern real *AH_g0_xy[MAX_BHS];
 extern real *AH_g0_xz[MAX_BHS];
 extern real *AH_g0_yy[MAX_BHS];
 extern real *AH_g0_yz[MAX_BHS];
-extern real *AH_g0_psi[MAX_BHS];
+extern real *AH_g0_zz[MAX_BHS];
 extern real *AH_g0_chichi[MAX_BHS];
 extern real *AH_g0_chiphi[MAX_BHS];
 extern real *AH_g0_phiphi[MAX_BHS];
@@ -61,7 +61,7 @@ void calc_exp_metric0_(real *AH_R, real *AH_xc, real *AH_theta, int *i0, int *j0
                 real *theta, real *f, real *da, real *d_ceq, real *d_cp, real *d_cp2,
                 real *AH_x0, real *AH_y0, real *AH_z0,
                 real *AH_g0_xx,real *AH_g0_xy,real *AH_g0_xz,
-                real *AH_g0_yy,real *AH_g0_yz,real *AH_g0_psi,
+                real *AH_g0_yy,real *AH_g0_yz,real *AH_g0_zz,
                 real *AH_g0_chichi, real *AH_g0_chiphi, real *AH_g0_phiphi, 
                 real *AH_ahr,real *AH_dch,real *AH_dph,
                 real *AH_da0, real *AH_dcq, real *AH_dcp, real *AH_dcp2,
@@ -74,7 +74,7 @@ void calc_exp_metric0_(real *AH_R, real *AH_xc, real *AH_theta, int *i0, int *j0
                 real *gb_xz_np1, real *gb_xz_n, real *gb_xz_nm1,
                 real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                 real *gb_yz_np1, real *gb_yz_n, real *gb_yz_nm1,
-                real *psi_np1, real *psi_n, real *psi_nm1,
+                real *gb_zz_np1, real *gb_zz_n, real *gb_zz_nm1,
                 real *AdS_L, real *x, real *y, real *z, real *dt, real *chr, 
                 real *ex, int *do_ex, int *Nx, int *Ny, int *Nz, int *axisym);
 

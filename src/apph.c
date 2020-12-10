@@ -125,7 +125,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
       AH_g0_xz[c_AH][i]=0;
       AH_g0_yy[c_AH][i]=0;
       AH_g0_yz[c_AH][i]=0;
-      AH_g0_psi[c_AH][i]=0;
+      AH_g0_zz[c_AH][i]=0;
       AH_g0_chichi[c_AH][i]=0;
       AH_g0_chiphi[c_AH][i]=0;
       AH_g0_phiphi[c_AH][i]=0;
@@ -157,7 +157,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
                          &AH_Nphi[c_AH],theta,f,&da[0],&da[1],&da[2],&da[3],
                          AH_x0[c_AH],AH_y0[c_AH],AH_z0[c_AH],
                          AH_g0_xx[c_AH],AH_g0_xy[c_AH],AH_g0_xz[c_AH],
-                         AH_g0_yy[c_AH],AH_g0_yz[c_AH],AH_g0_psi[c_AH],
+                         AH_g0_yy[c_AH],AH_g0_yz[c_AH],AH_g0_zz[c_AH],
                          AH_g0_chichi[c_AH],AH_g0_chiphi[c_AH],AH_g0_phiphi[c_AH],
                          AH_ahr[c_AH],AH_dch[c_AH],AH_dph[c_AH],
                          AH_da0[c_AH],AH_dcq[c_AH],AH_dcp[c_AH],AH_dcp2[c_AH],
@@ -170,7 +170,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
                          gb_xz_n,gb_xz_nm1,gb_xz_np1,
                          gb_yy_n,gb_yy_nm1,gb_yy_np1,
                          gb_yz_n,gb_yz_nm1,gb_yz_np1,
-                         psi_n,psi_nm1,psi_np1,
+                         gb_zz_n,gb_zz_nm1,gb_zz_np1,
                          &AdS_L,x,y,z,&dt,chr,&AMRD_ex,&AMRD_do_ex,&Nx,&Ny,&Nz,&axisym);
 
                area_owned[0]+=da[0];
@@ -244,9 +244,9 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
         MPI_Allreduce(AH_g0_yz[c_AH],AH_w3[c_AH],np,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
         MPI_Allreduce(AH_g0_yz[c_AH],AH_w4[c_AH],np,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
         for (i=0; i<np; i++) {AH_g0_yz[c_AH][i]=AH_w3[c_AH][i]+AH_w4[c_AH][i];}
-        MPI_Allreduce(AH_g0_psi[c_AH],AH_w3[c_AH],np,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
-        MPI_Allreduce(AH_g0_psi[c_AH],AH_w4[c_AH],np,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
-        for (i=0; i<np; i++) {AH_g0_psi[c_AH][i]=AH_w3[c_AH][i]+AH_w4[c_AH][i];}
+        MPI_Allreduce(AH_g0_zz[c_AH],AH_w3[c_AH],np,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+        MPI_Allreduce(AH_g0_zz[c_AH],AH_w4[c_AH],np,MPI_DOUBLE,MPI_MIN,MPI_COMM_WORLD);
+        for (i=0; i<np; i++) {AH_g0_zz[c_AH][i]=AH_w3[c_AH][i]+AH_w4[c_AH][i];}
       }
       
       if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
@@ -308,7 +308,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
      reg_ah_r_(AH_g0_xz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
      reg_ah_r_(AH_g0_yy[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
      reg_ah_r_(AH_g0_yz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-     reg_ah_r_(AH_g0_psi[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+     reg_ah_r_(AH_g0_zz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
     }
     if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
     {
@@ -333,7 +333,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
             smooth_ah_r_(AH_g0_xz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_(AH_g0_yy[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_(AH_g0_yz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            smooth_ah_r_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            smooth_ah_r_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
           }
           if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
           {
@@ -355,7 +355,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
             smooth_ah_r_b_(AH_g0_xz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_b_(AH_g0_yy[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_b_(AH_g0_yz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            smooth_ah_r_b_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            smooth_ah_r_b_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
           }
           if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
           {
@@ -381,7 +381,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
             smooth_ah_r_(AH_g0_xz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_(AH_g0_yy[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             smooth_ah_r_(AH_g0_yz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            smooth_ah_r_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            smooth_ah_r_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
           }
           if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
           {
@@ -433,11 +433,11 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
             smooth_ah_r_(AH_g0_yz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
             reg_ah_r_(AH_g0_yz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);  
   
-            smooth_ah_r_b_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            smooth_ah_r_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            reg_ah_r_(AH_g0_psi[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]); 
-            smooth_ah_r_(AH_g0_psi[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-            reg_ah_r_(AH_g0_psi[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);   
+            smooth_ah_r_b_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            smooth_ah_r_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            reg_ah_r_(AH_g0_zz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]); 
+            smooth_ah_r_(AH_g0_zz[c_AH],AH_w1[c_AH],&eps0,&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+            reg_ah_r_(AH_g0_zz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);   
           }
           if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
           {
@@ -475,7 +475,7 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
         reg_ah_r_(AH_g0_xz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
         reg_ah_r_(AH_g0_yy[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
         reg_ah_r_(AH_g0_yz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
-        reg_ah_r_(AH_g0_psi[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
+        reg_ah_r_(AH_g0_zz[c_AH],&AH_Nchi[c_AH],&AH_Nphi[c_AH]);
       }
       if (output_metricAH_sph_sdf||output_metricAH_sph_ascii)
       {
@@ -519,8 +519,8 @@ real fill_theta_ahmetric(double *AH_theta0, real eps0, real *area, real *c_equat
          //gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_yy[c_AH]);
          //sprintf(name,"%sAH_%i_g0_yz_iter",AMRD_save_tag,c_AH+1);
          //gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_yz[c_AH]);
-         //sprintf(name,"%sAH_%i_g0_psi_iter",AMRD_save_tag,c_AH+1);
-         //gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_psi[c_AH]);
+         //sprintf(name,"%sAH_%i_g0_zz_iter",AMRD_save_tag,c_AH+1);
+         //gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_zz[c_AH]);
          //sprintf(name,"%sAH_%i_g0_chichi_iter",AMRD_save_tag,c_AH+1);
          //gft_out_bbox(name,AH_ct[c_AH],AH_shape,rank,AH_bbox,AH_g0_chichi[c_AH]);
          //sprintf(name,"%sAH_%i_g0_chiphi_iter",AMRD_save_tag,c_AH+1);

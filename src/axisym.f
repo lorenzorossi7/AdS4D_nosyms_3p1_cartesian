@@ -1,5 +1,6 @@
 c----------------------------------------------------------------------
-c in cartesian coordinates t,x,y,z for x,y,z in [-1,1]
+c NOT NEEDED FOR GENERAL STUDIES SUCH AS 3+1 Cartesian in 4 dimensions
+c in cartesian coordinates t,x,y for x in [-1,1], y in [0,1]
 c
 c routines for computing y=0 axis regularity conditions for
 c metric and scalar fied

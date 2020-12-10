@@ -230,7 +230,7 @@ c-----------------------------------------------------------------------
      &                      gb_xz,
      &                      gb_yy,
      &                      gb_yz,
-     &                      psi,Hb_t,Hb_x,Hb_y,
+     &                      gb_zz,Hb_t,Hb_x,Hb_y,
      &                      Hb_z,
      &                      L,cmask,phys_bdy,
      &                      x,y,z,chr,ex,Nx,Ny,Nz,regtype,rhoa,rhob)
@@ -238,7 +238,7 @@ c-----------------------------------------------------------------------
         integer Nx,Ny,Nz
         real*8 zeta(Nx,Ny,Nz)
         real*8 gb_xx(Nx,Ny,Nz),gb_tt(Nx,Ny,Nz)
-        real*8 gb_yy(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),psi(Nx,Ny,Nz)
+        real*8 gb_yy(Nx,Ny,Nz),gb_tx(Nx,Ny,Nz),gb_zz(Nx,Ny,Nz)
         real*8 gb_ty(Nx,Ny,Nz)
         real*8 gb_tz(Nx,Ny,Nz)
         real*8 gb_xy(Nx,Ny,Nz)
@@ -270,15 +270,14 @@ c-----------------------------------------------------------------------
 
         real*8 g0_tt_ads0,g0_xx_ads0
         real*8 g0_tx_ads0,g0_ty_ads0,g0_tz_ads0
-        real*8 g0_xy_ads0,g0_yy_ads0,g0_psi_ads0
+        real*8 g0_xy_ads0,g0_yy_ads0,g0_zz_ads0
         real*8 g0_xz_ads0,g0_yz_ads0
 
         !--------------------------------------------------------------
 
         ! initialize metric given zeta, using full metric expression
         ! g0_ij=g0_ij_ads*zeta^2, and 
-        ! g-bar expression g0_ij=g0_ij_ads+gb_ij*(1-rho0^2)
-        ! psi expression g0_psi=g0_psi_ads+psi*(1-rho0^2)*y0^2
+        ! g-bar expression g0_ij=g0_ij_ads+gb_ij
         do i=2,Nx-1
           do j=2,Ny-1
            do k=2,Nz-1
@@ -344,7 +343,7 @@ c-----------------------------------------------------------------------
             g0_yz_ads0 =(16 *(-1 + L**2) *y0* z0)
      &              /((-1 + rho0**2)**2
      &               *(4 *rho0**2 +L**2 *(-1 +rho0**2)**2))
-            g0_psi_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
+            g0_zz_ads0=(4*(4*(x0**2+y0**2)+L**2*((-1+x0**2+y0**2)**2
      &              +2*(1+x0**2+y0**2)*z0**2+z0**4)))
      &              /(L**2*(-1+rho0**2)**4
      &              +4*(-1+rho0**2)**2*(rho0**2))
@@ -361,12 +360,12 @@ c-----------------------------------------------------------------------
               gb_xz(i,j,k)=g0_xz_ads0*(zeta0**4-1)
               gb_yy(i,j,k)=g0_yy_ads0*(zeta0**4-1)
               gb_yz(i,j,k)=g0_yz_ads0*(zeta0**4-1)
-              psi(i,j,k)=g0_psi_ads0*(zeta0**4-1)
+              gb_zz(i,j,k)=g0_zz_ads0*(zeta0**4-1)
 
               f1=trans(rho0,rhoa,rhob)
 
-              !consistent with target gauge -gbtt+gbxx+gbyy+gbpsi=0
-              gb_tt(i,j,k)=(gb_xx(i,j,k)+gb_yy(i,j,k)+psi(i,j,k))*f1
+              !consistent with target gauge -gbtt+gbxx+gbyy+gbgb_zz=0
+              gb_tt(i,j,k)=(gb_xx(i,j,k)+gb_yy(i,j,k)+gb_zz(i,j,k))*f1
 
             endif
            end do

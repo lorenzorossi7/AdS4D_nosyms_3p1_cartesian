@@ -10,7 +10,7 @@ c----------------------------------------------------------------------
      &                     gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &                     gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                     gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &                     psi_np1,psi_n,psi_nm1,
+     &                     gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &                     Hb_t_n,Hb_x_n,Hb_y_n,
      &                     Hb_z_n,
      &                     L,phys_bdy,x,y,z,dt,chr,ex,Nx,Ny,Nz,regtype)
@@ -31,7 +31,7 @@ c----------------------------------------------------------------------
         real*8 gb_xz_np1(Nx,Ny,Nz),gb_xz_n(Nx,Ny,Nz),gb_xz_nm1(Nx,Ny,Nz)
         real*8 gb_yy_np1(Nx,Ny,Nz),gb_yy_n(Nx,Ny,Nz),gb_yy_nm1(Nx,Ny,Nz)
         real*8 gb_yz_np1(Nx,Ny,Nz),gb_yz_n(Nx,Ny,Nz),gb_yz_nm1(Nx,Ny,Nz)
-        real*8 psi_np1(Nx,Ny,Nz),psi_n(Nx,Ny,Nz),psi_nm1(Nx,Ny,Nz)
+        real*8 gb_zz_np1(Nx,Ny,Nz),gb_zz_n(Nx,Ny,Nz),gb_zz_nm1(Nx,Ny,Nz)
         real*8 x(Nx),y(Ny),z(Nz)
 
         integer i,j,k,is,ie,js,je,ks,ke,a,b,c,d
@@ -156,7 +156,7 @@ c----------------------------------------------------------------------
      &              gb_xz_np1,gb_xz_n,gb_xz_nm1,
      &              gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &              gb_yz_np1,gb_yz_n,gb_yz_nm1,
-     &              psi_np1,psi_n,psi_nm1,
+     &              gb_zz_np1,gb_zz_n,gb_zz_nm1,
      &              zeros,zeros,zeros,
      &              zeros,zeros,zeros,
      &              zeros,zeros,zeros,
@@ -235,8 +235,8 @@ c----------------------------------------------------------------------
 !     &               ,gb_yy_nm1(i,j,k),gb_yy_n(i,j,k),gb_yy_np1(i,j,k)
 !        write (*,*) ' gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)='
 !     &               ,gb_yz_nm1(i,j,k),gb_yz_n(i,j,k),gb_yz_np1(i,j,k)
-!        write (*,*) ' psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)='
-!     &               ,psi_nm1(i,j,k),psi_n(i,j,k),psi_np1(i,j,k)
+!        write (*,*) ' gb_zz_nm1(i,j,k),gb_zz_n(i,j,k),gb_zz_np1(i,j,k)='
+!     &               ,gb_zz_nm1(i,j,k),gb_zz_n(i,j,k),gb_zz_np1(i,j,k)
 
 !        write (*,*) ' g0_uu(1,1)=',g0_uu(1,1)
 !        write (*,*) ' g0_uu(1,2)=',g0_uu(1,2)
