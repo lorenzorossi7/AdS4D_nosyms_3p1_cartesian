@@ -2589,7 +2589,7 @@ void AdS4D_t0_cnst_data(void)
         //        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    
         //        { 
         //         ind=i+Nx*(j+Ny*k);    
-        //         printf("AdS4D_AMRH_var_clear-PRE init_ads4d_bh_\n"); 
+        //         printf("AdS4D_AMRH_var_clear-PRE init_schwads4d_bh_\n"); 
         //         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"    
         //                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k]));  
         //         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]); 
@@ -2597,7 +2597,7 @@ void AdS4D_t0_cnst_data(void)
         //       }    
         //      }   
         //   } 
-            init_ads4d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,
+            init_schwads4d_bh_(&ief_bh_r0,&AdS_L,gb_tt,gb_tx,gb_ty,
                             gb_tz,
                             gb_xx,gb_xy,
                             gb_xz,
@@ -2623,7 +2623,7 @@ void AdS4D_t0_cnst_data(void)
 	//        if (sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])<1)    
 	//        { 
 	//         ind=i+Nx*(j+Ny*k);    
-	//         printf("AdS4D_AMRH_var_clear-POST init_ads4d_bh_\n");    
+	//         printf("AdS4D_AMRH_var_clear-POST init_schwads4d_bh_\n");    
 	//         printf("i=%i,j=%i,k=%i,Nx=%i,Ny=%i,Nz=%i,x[i]=%lf,y[j]=%lf,z[k]=%lf,rho=%lf\n"   
 	//                ,i,j,k,Nx,Ny,Nz,x[i],y[j],z[k],sqrt(x[i]*x[i]+y[j]*y[j]+z[k]*z[k])); 
 	//         printf("gb_tt_nm1[ind]=%lf,gb_tt_n[ind]=%lf,gb_tt_np1[ind]=%lf\n",gb_tt_nm1[ind],gb_tt_n[ind],gb_tt_np1[ind]);    
