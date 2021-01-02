@@ -3001,7 +3001,6 @@ c----------------------------------------------------------------------
               y0=y(j)
               z0=z(k)
               rho0=sqrt(x0**2+y0**2+z0**2)
-!CHECK AND INCLUDE DEFORMATIONS DEPENDING ON THE OTHER ANGLE
               if (rho0.ne.0.0d0) then
                xi0=acos(x0/rho0)
               end if
@@ -3021,36 +3020,22 @@ c----------------------------------------------------------------------
 
               f1=trans(rho0,rhoc,rhod)
 
-              ! Gaussian phi=amp*exp(-r^2)/r^4 profile 
-              ! remember that phi=phi1*(1-rho^2)^3
+              ! Gaussian phi=amp*exp(-((r-r0)/delta)^2) profile 
+              ! remember that phi=phi1*(1-rho^2)^2
               ! NOTE: compactified coordinate here is: rho
 
               if (stype.eq.0) then
-
-                 ! note that (1-x^2)^4=(1+2r)^4/(1+r)^8
-                 ! = (1-rho^2)^4 (1+rho(4-rho))^4 / (1+rho(2-rho))^8
-
-                 ! note that x=r/(1+r) and r=2rho/(1-rho^2)
-                 ! so x=r/(1+r)=2rho/(1+rho*(2-rho))
 
                  if (rho0.ge.1) then
                     f(i,j,k)=0
                  else if (r.gt.r0) then
                    f(i,j,k)=
-!     &              A*exp(-((2*r/(1+r*(2-r))-r0)/delta)**2)
-!     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
-!     &             +B*cos(chi0)*4*f1*(1-f1)
-!     &             +C*cos(xi0)*4*f1*(1-f1)
      &             A*exp(-((r-r0)/delta)**2)
      &            +B*cos(chi0)*4*f1*(1-f1)
      &            +C*cos(xi0)*4*f1*(1-f1)
                  else
                   if (rho0.ne.0.0d0) then
                    f(i,j,k)=
-!     &              A
-!     &            *(1-rho0**2)*(1+rho0*(4-rho0))**4/(1+rho0*(2-rho0))**8
-!     &             +B*cos(chi0)*4*f1*(1-f1)
-!     &             +C*cos(xi0)*4*f1*(1-f1)
      &             A
      &            +B*cos(chi0)*4*f1*(1-f1)
      &            +C*cos(xi0)*4*f1*(1-f1)
@@ -3534,10 +3519,10 @@ c------------------------------------------------------------------------
 !        end
 
 c----------------------------------------------------------------------
-c initializes the metric to an exact black hole solution
+c initializes the metric to an exact Schwarzschild-AdS black hole solution
 c with radius parameter r0=2*BHmass
 c----------------------------------------------------------------------
-        subroutine init_ads4d_bh(r0,L,gb_tt,gb_tx,gb_ty,
+        subroutine init_schwads4d_bh(r0,L,gb_tt,gb_tx,gb_ty,
      &                         gb_tz,
      &                         gb_xx,gb_xy,
      &                         gb_xz,

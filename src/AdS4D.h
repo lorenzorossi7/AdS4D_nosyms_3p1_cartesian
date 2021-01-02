@@ -298,7 +298,7 @@ void g_evo_opt_(real *gb_res, real *phi1_res, real *cl_res,
                 int *interptype, int *i_shift, int *regtype,
                 int *diss_kmax, real *tfunction);
 
-void init_ads4d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, real *gb_ty,
+void init_schwads4d_bh_(real *ief_bh_r0, real *AdS_L, real *gb_tt, real *gb_tx, real *gb_ty,
                   real *gb_tz,
                   real *gb_xx, real *gb_xy, 
                   real *gb_xz,
