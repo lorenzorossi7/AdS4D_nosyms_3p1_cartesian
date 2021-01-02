@@ -253,6 +253,7 @@ c----------------------------------------------------------------------
                 f0=trans(rho0,rho1,rho2)
                 f1=trans(rho0,rho3,rho4)
                 g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+!                g0=(t_np1/(xi1*(1-f0)))**4
 !        write(*,*) 'f0,f1,g0=',f0,f1,g0
 !        write(*,*) 'F_t_np1,Hb_t_np1(i,j,k)=',F_t_np1,Hb_t_np1(i,j,k)
 
@@ -615,6 +616,9 @@ c-----------------------------------------------------------------------
                 f0=trans(rho0,rho1,rho2)
                 f1=trans(rho0,rho3,rho4)
                 g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+                !the following transition function is 0 at the boundary, i.e., where f0 is 1, at all times. Given that the gauge we employ, together with 
+!                g0=(t_np1/(xi1*(1-f0)))**4 !no transition at the
+!boundary
 
                if (rho0.ne.0.0d0) then
 
