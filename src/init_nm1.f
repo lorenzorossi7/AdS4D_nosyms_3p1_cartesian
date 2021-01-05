@@ -937,7 +937,7 @@ c----------------------------------------------------------------------
      &        .or.is_nan(h0_ll_tt(2,4))
      &        .or.is_nan(h0_ll_tt(3,3))
      &        .or.is_nan(h0_ll_tt(3,4)).or.is_nan(h0_ll_tt(4,4)) ) then
-!          write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+          write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
                 write(*,*) 'h0_ll_tt(1,1)=',h0_ll_tt(1,1)
                 write(*,*) 'h0_ll_tt(1,2)=',h0_ll_tt(1,2)
                 write(*,*) 'h0_ll_tt(1,3)=',h0_ll_tt(1,3)
