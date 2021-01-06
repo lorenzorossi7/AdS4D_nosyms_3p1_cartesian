@@ -938,6 +938,10 @@ c----------------------------------------------------------------------
      &        .or.is_nan(h0_ll_tt(3,3))
      &        .or.is_nan(h0_ll_tt(3,4)).or.is_nan(h0_ll_tt(4,4)) ) then
           write (*,*) 'L,i,j,k,x0,y0,z0,rho0=',L,i,j,k,x0,y0,z0,rho0
+!                write(*,*) 'gb_tt_n(i,j,k)=',gb_tt_n(i,j,k)
+!                write(*,*) 'gb_xx_n(i,j,k)=',gb_xx_n(i,j,k)
+!                write(*,*) 'gb_yy_n(i,j,k)=',gb_yy_n(i,j,k)
+!                write(*,*) 'gb_zz_n(i,j,k)=',gb_zz_n(i,j,k)
                 write(*,*) 'h0_ll_tt(1,1)=',h0_ll_tt(1,1)
                 write(*,*) 'h0_ll_tt(1,2)=',h0_ll_tt(1,2)
                 write(*,*) 'h0_ll_tt(1,3)=',h0_ll_tt(1,3)
@@ -961,7 +965,7 @@ c----------------------------------------------------------------------
               gb_xz_tt0=h0_ll_tt(2,4)
               gb_yy_tt0=h0_ll_tt(3,3)
               gb_yz_tt0=h0_ll_tt(3,4)
-              gb_zz_tt0  =h0_ll_tt(4,4)
+              gb_zz_tt0=h0_ll_tt(4,4)
               phi1_tt0 =phi10_tt/(1-rho0**2)**2
 
               ! initialize past time level by O(h^3) expansion
